@@ -1,30 +1,33 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view />
+  <div class="space-left">
+    <div class="modal" v-if="isToggled" @click="isToggled = false"></div>
+    <HeaderComp />
+    <SideNav :isToggled="isToggled" @toggleSidebar="isToggled = !isToggled" />
+  </div>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+<script>
+import SideNav from "../src/components/nav/SideNav.vue";
+import HeaderComp from "./components/header/HeaderComp.vue";
+export default {
+  components: { SideNav, HeaderComp },
+  data() {
+    return {
+      isToggled: false,
+    };
+  },
+};
+</script>
+<style lang="scss" scoped>
+@import "assets/colors/webColors.scss";
+.space-left {
+  margin-left: 12.5em;
 }
-
-nav {
-  padding: 30px;
-}
-
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-nav a.router-link-exact-active {
-  color: #42b983;
+.modal {
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  background-color: $fakeDark;
+  opacity: 0.4;
 }
 </style>
