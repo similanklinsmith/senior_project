@@ -29,5 +29,6 @@ export default {
   position: fixed;
   background-color: $fakeDark;
   opacity: 0.4;
+  z-index: 9;
 }
 </style>
