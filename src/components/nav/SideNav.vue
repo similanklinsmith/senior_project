@@ -45,28 +45,29 @@ export default {
   name: "SideNav",
   props: ["isToggled"],
   methods: {
-      toggleSidebar() {
-          this.$emit("toggleSidebar");
-      }
-  }
+    toggleSidebar() {
+      this.$emit("toggleSidebar");
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 @import "../../assets/colors/webColors.scss";
 .full-sidebar {
+  z-index: 10;
   position: fixed;
   top: 0;
   left: 0;
   height: 100%;
-  width: 30em;
+  width: 30rem;
   background-color: $primaryGrey;
   display: flex;
   flex-direction: column;
-  padding: 2.4em 3.6em;
+  padding: 2.4rem 3.6rem;
   transition: 0.2s all ease-in-out;
   &.is-expanded {
-    width: 12.5em;
+    width: 12.5rem;
     .button {
       background-color: $primaryGrey;
     }
@@ -83,14 +84,14 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 5em;
-    transform: translateX(1em);
+    margin-top: 5rem;
+    transform: translateX(1rem);
     right: 0;
     position: absolute;
-    height: 3em;
-    width: 3em;
+    height: 3rem;
+    width: 3rem;
     background-color: $primaryViolet;
-    border-radius: 0.5em;
+    border-radius: 0.5rem;
     cursor: pointer;
     .icon {
       color: $white;
@@ -102,15 +103,15 @@ export default {
   }
   .logo {
     img {
-      height: 5.5em;
+      height: 5.5rem;
     }
-    margin-bottom: 10em;
+    margin-bottom: 10rem;
   }
   .asset-image {
     img {
-      height: 13em;
+      height: 13rem;
     }
-    margin-top: 2em;
+    margin-top: 2rem;
   }
   a.router-link-exact-active.button {
     background-color: $primaryViolet;
@@ -123,15 +124,15 @@ export default {
     color: $white;
   }
   .button {
-    height: 5em;
+    height: 5rem;
     background-color: $grey;
-    padding: 1em 0em;
-    border-radius: 1em;
+    padding: 1rem 0rem;
+    border-radius: 1rem;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    margin-bottom: 3em;
+    margin-bottom: 3rem;
     text-decoration: none !important;
     transition: 0.2s all ease-in-out;
   }
@@ -140,10 +141,10 @@ export default {
   }
   .button-text {
     color: $darkViolet;
-    margin-left: 0.5em;
+    margin-left: 0.5rem;
   }
   .icon {
-    font-size: 1.4em;
+    font-size: 1.4rem;
     color: $darkViolet;
   }
 }
