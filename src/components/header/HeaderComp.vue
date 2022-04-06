@@ -1,42 +1,234 @@
 <template>
-  <div class="container grid grid--4-cols">
+  <div class="container grid">
     <div class="remark-text">Meeting Overview</div>
-    <div class="search-input"><input type="text" placeholder="Search anything... "></div>
-    <div class="remark-text">Meeting Overview</div>
-    <div class="remark-text">Meeting Overview</div>
+    <div class="search-input">
+      <div class="input-icon">
+        <i class="icon fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Search anything... " />
+      </div>
+    </div>
+    <div class="last-section">
+      <div class="notification">
+        <div class="alert-circle">2</div>
+        <i class="icon fa-solid fa-bell"></i>
+      </div>
+      <div class="profile" @click="toggleProfileDropdown">
+        <div class="image-profile"></div>
+        <div class="thin-content-text">Alexander Macedonia</div>
+        <i class="icon fa-solid fa-caret-down"></i>
+        <div
+          class="dropdown__content"
+          :class="`${isShowProfile ? 'is-show' : ''}`"
+        >
+          <ul>
+            <li>
+              <i class="icon fa-solid fa-pencil"></i>
+              <div class="thin-content-text">Edit profile</div>
+            </li>
+            <li><div class="line" /></li>
+            <li>
+              <i class="icon fa-solid fa-arrow-right-from-bracket"></i>
+              <div class="thin-content-text">Sign out</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   name: "HeaderComp",
+  data() {
+    return {
+      isShowProfile: false,
+    };
+  },
+  methods: {
+    toggleProfileDropdown() {
+      this.isShowProfile = !this.isShowProfile;
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 @import "../../assets/colors/webColors.scss";
+ul {
+  width: 100%;
+  list-style: none;
+  li {
+    color: $darkViolet !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .icon {
+      font-size: 1.4rem;
+      margin-right: 1rem;
+    }
+    .line {
+      width: 100% !important;
+      margin: 1.5rem 0;
+      height: 0.1rem;
+      background-color: $grey;
+    }
+  }
+}
 .container {
   width: 100%;
-  height: 10em;
+  height: 10rem;
   background-color: $white;
   align-items: center;
-  justify-items: center;
-  padding: 3em 5.5em;
+  grid-template-columns: 1fr 1.5fr 1fr;
+  padding: 3rem 5.5rem;
   .remark-text {
     color: $darkViolet;
   }
   .search-input {
     width: 100%;
-    input[type=text] {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    .input-icon {
       width: 100%;
-      height: 2.4em;
-      border-radius: 0.5em;
-      border: none;
-      background-color: $primaryGrey;
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-items: center;
+      input[type="text"] {
+        padding: 1rem 1.4rem;
+        width: 100%;
+        height: 4rem;
+        border-radius: 0.5rem;
+        border: none;
+        background-color: $primaryGrey;
+        font-family: "Poppins", sans-serif;
+      }
+      input[type="text"]:focus {
+        outline: none;
+        border: 0.1rem solid $primaryViolet;
+      }
+      input::placeholder {
+        color: $darkGrey;
+      }
+      .icon {
+        position: absolute;
+        right: 0;
+        font-size: 1.4rem;
+        margin-right: 1rem;
+        color: $darkGrey;
+      }
     }
-    input[type=text]:focus {
-  border: 1px solid $primaryViolet;
+  }
+  .last-section {
+    display: flex;
+  }
+  .notification {
+    margin-right: 4rem;
+    cursor: pointer;
+    position: relative;
+    width: 3.5rem;
+    height: 3.5rem;
+    background-color: $primaryViolet;
+    border-radius: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.2s all ease-in-out;
+    .icon {
+      color: $white;
+      font-size: 1.6rem;
+    }
+    .alert-circle {
+      transform: translateX(0.6rem) translateY(-0.6rem);
+      top: 0%;
+      right: 0%;
+      width: 1.5rem;
+      height: 1.5rem;
+      position: absolute;
+      border-radius: 50%;
+      background-color: $error;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: $white;
+      font-weight: 600;
+      font-size: 1.1rem;
+      outline: 0.2rem solid $white;
+    }
+  }
+  .notification:hover {
+    background-color: $darkViolet;
+    .icon {
+      animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+    }
+  }
+  .profile {
+    display: flex;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+    .image-profile {
+      width: 3.5rem;
+      height: 3.5rem;
+      background-color: $primaryViolet;
+      border-radius: 1rem;
+      margin-right: 1rem;
+    }
+    .icon {
+      margin-left: 0.8rem;
+      font-size: 1.4rem;
+      color: $darkViolet;
+    }
+    .dropdown__content {
+      box-shadow: 0px 0px 5px $fadedViolet;
+      z-index: -1;
+      display: flex;
+      text-align: center;
+      justify-content: center;
+      align-items: center;
+      margin-top: 12rem;
+      position: absolute;
+      opacity: 0;
+      width: 100%;
+      background-color: $white;
+      overflow: hidden;
+      padding: 2.8rem;
+      transition: 0.3s all ease-in-out;
+      border-radius: 1.5rem;
+      cursor: auto;
+
+      &.is-show {
+        transform: translateY(2rem);
+        opacity: 1;
+        z-index: 1;
+        cursor: pointer;
+      }
+    }
+  }
 }
+@keyframes shake {
+  10%,
+  90% {
+    transform: translate3d(-0.1rem, 0, 0);
+  }
+
+  20%,
+  80% {
+    transform: translate3d(0.1rem, 0, 0);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-0.1rem, 0, 0);
+  }
+
+  40%,
+  60% {
+    transform: translate3d(0.1rem, 0, 0);
   }
 }
 </style>
