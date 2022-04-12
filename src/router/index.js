@@ -1,11 +1,18 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../views/main/HomeView.vue";
+const Home = () => import("../views/main/HomeView.vue");
+const Executive = () => import("../views/main/ExecutiveView.vue");
+const NotFound = () => import("../views/exception/NotFoundView.vue");
 
 const routes = [
   {
     path: "/",
     name: "home",
-    component: HomeView,
+    component: Home,
+  },
+  {
+    path: "/executives-management",
+    name: "executive",
+    component: Executive,
   },
   {
     path: "/about",
@@ -15,6 +22,11 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
+  },
+  {
+    path: "/:catchall(.*)",
+    name: "NotFound",
+    component: NotFound,
   },
 ];
 
