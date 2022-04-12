@@ -59,13 +59,15 @@ ul {
   width: 100%;
   list-style: none;
   li {
-    color: $darkViolet !important;
+    color: $darkViolet;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: 0.3s all ease-in-out;
     .icon {
       font-size: 1.4rem;
       margin-right: 1rem;
+      transition: 0.3s all ease-in-out;
     }
     .line {
       width: 100% !important;
@@ -74,13 +76,19 @@ ul {
       background-color: $grey;
     }
   }
+  li:hover {
+    color: $primaryViolet;
+    .icon {
+      color: $primaryViolet !important;
+    }
+  }
 }
 .container {
   width: 100%;
   height: 10rem;
   background-color: $white;
   align-items: center;
-  grid-template-columns: 1fr 1.5fr 1fr;
+  grid-template-columns: 0.75fr 1.5fr 1fr;
   padding: 3rem 5.5rem;
   .remark-text {
     color: $darkViolet;

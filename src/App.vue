@@ -1,7 +1,10 @@
 <template>
   <div class="space-left">
     <div class="modal" v-if="isToggled" @click="isToggled = false"></div>
-    <HeaderComp />
+    <div style="position:relative;">
+          <HeaderComp id="header" />
+    </div>
+
     <SideNav :isToggled="isToggled" @toggleSidebar="isToggled = !isToggled" />
   </div>
 </template>
@@ -15,6 +18,15 @@ export default {
     return {
       isToggled: false,
     };
+  },
+  mounted() {
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > document.getElementById("header").offsetTop) {
+        document.getElementById("header").classList.add("fixed");
+      } else {
+        document.getElementById("header").classList.remove("fixed");
+      }
+    });
   },
 };
 </script>
@@ -30,5 +42,17 @@ export default {
   background-color: $fakeDark;
   opacity: 0.4;
   z-index: 9;
+}
+.fixed {
+  width: 100%;
+  z-index: 8;
+  top: 0%;
+  position: fixed !important;
+  background-color: rgba(255, 255, 255, 0.75);
+  padding-bottom: 3.6rem;
+  backdrop-filter: blur(10px) saturate(100%) contrast(45%) brightness(130%);
+  -webkit-backdrop-filter: blur(10px) saturate(100%) contrast(45%)
+    brightness(130%);
+  transition: 0.3s all ease-in-out;
 }
 </style>

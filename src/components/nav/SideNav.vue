@@ -92,6 +92,7 @@ export default {
     width: 3rem;
     background-color: $primaryViolet;
     border-radius: 0.5rem;
+    transition: 0.3s ease-in-out;
     cursor: pointer;
     .icon {
       color: $white;
