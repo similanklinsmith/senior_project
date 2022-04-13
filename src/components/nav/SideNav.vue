@@ -20,7 +20,7 @@
         <i class="icon fa-solid fa-calendar"></i>
         <div class="button-text bold-small-text">calendar</div>
       </router-link>
-      <router-link to="/about" class="button">
+      <router-link to="/executives-management" class="button">
         <i class="icon fa-solid fa-user-group"></i>
         <div class="button-text bold-small-text">executives</div>
       </router-link>
@@ -37,7 +37,11 @@
       </div>
     </div>
   </div>
-  <router-view />
+  <router-view v-slot="{ Component }">
+    <transition name="route">
+      <component :is="Component" :key="$route.path"></component>
+    </transition>
+  </router-view>
 </template>
 
 <script>
@@ -139,6 +143,7 @@ export default {
   }
   .button:hover {
     background-color: $fadedViolet;
+    border-radius: 0.6rem;
   }
   .button-text {
     color: $darkViolet;
