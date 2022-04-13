@@ -1,20 +1,24 @@
 @import "/src/assets/colors/webColors.scss";
+
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
   scroll-behavior: smooth;
 }
+
 ::-webkit-scrollbar {
   display: none;
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
 html {
   font-size: 10px;
   overflow-x: hidden;
   background-color: $bgColor;
 }
+
 #app {
   font-family: "Poppins", sans-serif;
   line-height: 1;
@@ -24,87 +28,115 @@ html {
   -moz-osx-font-smoothing: grayscale;
   position: relative;
 }
+
 .section {
   margin-top: 9.6rem;
   margin-bottom: 3.6rem;
 }
+
 .big-header-text {
   font-weight: 700;
   font-size: 4.8em;
 }
+
 .header-text {
   font-weight: 600;
   font-size: 2.8em;
 }
+
 .common-text {
   font-weight: 400;
   font-size: 1.8em;
 }
+
 .remark-text {
   font-weight: 500;
   font-size: 1.8em;
   line-height: 2.7rem;
 }
+
 .content-text {
   font-weight: 400;
   font-size: 1.6em;
 }
+
 .bold-content-text {
   font-weight: 500;
   font-size: 1.6em;
 }
+
 .thin-content-text {
   font-weight: 300;
   font-size: 1.6em;
 }
+
 .small-text {
   font-weight: 400;
   font-size: 1.4em;
 }
+
 .bold-small-text {
   font-weight: 500;
   font-size: 1.4em;
 }
+
 .smallest-text {
   font-weight: 400;
   font-size: 1.2em;
 }
+
 .bold-smallest-text {
   font-weight: 500;
   font-size: 1.2em;
 }
+
 .flex-col-center {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
+
 .grid {
   display: grid;
   column-gap: 4.8rem;
   row-gap: 9.6rem;
 }
+
 .grid--2-cols {
   grid-template-columns: repeat(2, 1fr);
 }
+
 .grid--3-cols {
   grid-template-columns: repeat(3, 1fr);
 }
+
 .grid--4-cols {
   grid-template-columns: repeat(4, 1fr);
 }
+
 .grid--2-rows {
   grid-template-rows: 2fr 1fr;
 }
+
 .route-enter-from {
   opacity: 0;
 }
+
 .route-enter-active {
   transition: all 0.3s ease-in-out;
 }
+
 .route-leave-to {
   opacity: 0;
 }
+
 .route-leave-active {
   transition: 0.3s all ease-in-out;
+}
+
+@media (max-width: 80em) {
+  html {
+    font-size: 8px
+  }
 }
