@@ -50,6 +50,11 @@ export default {
       this.isShowProfile = !this.isShowProfile;
     },
   },
+  mounted() {
+    window.onscroll = () => {
+      this.isShowProfile = false;
+    };
+  },
 };
 </script>
 
@@ -119,6 +124,7 @@ ul {
         border: 0.1rem solid $primaryViolet;
       }
       input::placeholder {
+        font-size: 1.4rem;
         color: $darkGrey;
       }
       .icon {
