@@ -18,7 +18,10 @@
           <div class="remark-text">Start meetings</div>
           <div class="card">
             <div class="image">
-              <img src="../../assets/decorations/create_meetings.png" alt="" />
+              <img
+                src="../../assets/decorations/create_meetings.png"
+                alt="create meeting illustration"
+              />
             </div>
             <div class="card-content">
               <div class="remark-text">
@@ -48,7 +51,7 @@
                     <div class="profile-image">
                       <img
                         src="../../assets/decorations/sample_profile.png"
-                        alt=""
+                        alt="sample profile illustration"
                       />
                     </div>
                     <div class="executive-profile">
@@ -66,7 +69,7 @@
                     <div class="profile-image">
                       <img
                         src="../../assets/decorations/sample_profile.png"
-                        alt=""
+                        alt="sample profile illustration"
                       />
                     </div>
                     <div class="executive-profile">
@@ -157,7 +160,8 @@ export default {
       background-color: $grey;
     }
     .header-section {
-      grid-template-columns: 2fr 1fr;
+      height: 100%;
+      grid-template-columns: 2fr 0.5fr;
       padding: 3rem 5.5rem;
       align-items: center;
       justify-content: center;
