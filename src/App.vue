@@ -1,11 +1,19 @@
 <template>
-  <div class="space-left">
-    <div class="modal" v-if="isToggled" @click="isToggled = false"></div>
-    <div style="position:relative;">
-          <HeaderComp id="header" />
+  <div v-if="$route.name != 'NotFound'">
+    <div class="space-left">
+      <div class="modal" v-if="isToggled" @click="isToggled = false"></div>
+      <div style="position: relative">
+        <HeaderComp id="header" />
+      </div>
+      <SideNav :isToggled="isToggled" @toggleSidebar="isToggled = !isToggled" />
     </div>
-
-    <SideNav :isToggled="isToggled" @toggleSidebar="isToggled = !isToggled" />
+  </div>
+  <div v-else>
+    <router-view v-slot="{ Component }">
+      <transition name="route">
+        <component :is="Component" :key="$route.path"></component>
+      </transition>
+    </router-view>
   </div>
 </template>
 
