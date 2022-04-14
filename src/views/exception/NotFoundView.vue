@@ -71,6 +71,12 @@ export default {
       row-gap: 1.5rem;
       img {
         width: 30rem;
+        animation-name: floating;
+        -webkit-animation-name: floating;
+        animation-duration: 3s;
+        -webkit-animation-duration: 3s;
+        animation-iteration-count: infinite;
+        -webkit-animation-iteration-count: infinite;
       }
       .big-header-text {
         color: $error;
