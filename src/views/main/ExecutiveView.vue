@@ -17,6 +17,7 @@
           textHover="white"
           color="#DBD2FF"
           hoverColor="#23106D"
+          @onClick="isAddExecutive = true"
         >
         </BaseButton>
       </div>
@@ -60,7 +61,10 @@
           </div>
         </div>
         <transition-group name="route">
-          <div class="executive-card grid" v-if="selectedExecutive">
+          <div
+            class="executive-card grid"
+            v-if="executives.length > 0 && isAddExecutive == false"
+          >
             <div @click="toggleDropDown" class="icon-dropdown">
               <i class="fa-solid fa-ellipsis-vertical"></i>
             </div>
@@ -70,12 +74,12 @@
               :class="`${isShowDropdown ? 'is-show' : ''}`"
             >
               <ul>
-                <li>
+                <li @click="editExecutive(selectedExecutive.id)">
                   <i class="icon fa-solid fa-pencil"></i>
                   <div class="thin-content-text">Edit profile</div>
                 </li>
                 <li><div class="line" /></li>
-                <li class="red-color">
+                <li class="red-color" @click="isShowPopup = true">
                   <i class="icon fa-solid fa-user-minus"></i>
                   <div class="thin-content-text">Delete executive</div>
                 </li>
@@ -137,24 +141,215 @@
             </div>
           </div>
         </transition-group>
+        <transition
+          name="route"
+          v-if="isAddExecutive == true || executives.length == 0"
+        >
+          <div class="add-executive-card">
+            <label class="upload-profile" for="upload">
+              <input
+                @change="uploadImage"
+                type="file"
+                accept="image/*"
+                id="upload"
+                name="upload"
+              />
+              <div class="upload-button">
+                <i class="icon fa-solid fa-arrow-up-from-bracket"></i>
+              </div>
+              <div
+                :class="`${
+                  previewImage == '' ? 'profile-image' : 'preview-img'
+                }`"
+              >
+                <img
+                  v-if="previewImage == ''"
+                  src="../../assets/decorations/sample_profile.png"
+                  alt="sample profile illustration"
+                />
+                <img :src="previewImage" alt="" v-else />
+              </div>
+            </label>
+            <div class="information">
+              <div class="input">
+                <div class="input-form">
+                  <label for="title" class="bold-small-text">Title</label>
+                  <select name="title" id="title">
+                    <option value="">none</option>
+                    <option value="Mr">Mr</option>
+                    <option value="Mrs">Mrs</option>
+                    <option value="Ms">Ms</option>
+                    <option value="Dr">Dr</option>
+                    <option value="Professor">Professor</option>
+                    <option value="othes">others</option>
+                  </select>
+                </div>
+                <div class="input-form">
+                  <label for="name" class="bold-small-text">Name</label>
+                  <input
+                    type="text"
+                    placeholder="Name"
+                    id="name"
+                    name="name"
+                    v-model="form.firstname"
+                  />
+                </div>
+              </div>
+              <div class="input">
+                <div class="input-form">
+                  <label for="surname" class="bold-small-text">Surname</label>
+                  <input
+                    type="text"
+                    placeholder="Surname"
+                    id="surname"
+                    name="surname"
+                    v-model="form.lastname"
+                  />
+                </div>
+                <div class="input-form">
+                  <label for="position" class="bold-small-text">Position</label>
+                  <select name="position" id="position">
+                    <option value="">none</option>
+                    <option value="Mr">Mr</option>
+                    <option value="Mrs">Mrs</option>
+                    <option value="Ms">Ms</option>
+                    <option value="Dr">Dr</option>
+                    <option value="Professor">Professor</option>
+                    <option value="othes">others</option>
+                  </select>
+                </div>
+              </div>
+              <div class="input">
+                <div class="input-form">
+                  <label for="email" class="bold-small-text">Email</label>
+                  <input
+                    type="text"
+                    placeholder="Email"
+                    id="email"
+                    name="email"
+                    v-model="form.email"
+                  />
+                </div>
+                <div class="input-form">
+                  <label for="phone-number" class="bold-small-text"
+                    >Phone number</label
+                  >
+                  <input
+                    type="text"
+                    placeholder="e.g. 000-000-0000"
+                    id="phone-number"
+                    name="phone-number"
+                    v-model="form.tel"
+                  />
+                </div>
+              </div>
+              <div class="input">
+                <div class="input-form">
+                  <label for="secretary" class="bold-small-text"
+                    >Report to</label
+                  >
+                  <input
+                    type="text"
+                    placeholder="report to"
+                    id="secretary"
+                    name="secretary"
+                    v-model="form.reportTo"
+                  />
+                </div>
+                <div :style="{ width: '100%' }"></div>
+              </div>
+              <div class="form-button">
+                <BaseButton
+                  v-if="executives.length != 0"
+                  buttonType="outlined-button"
+                  btnText="Cancel"
+                  textColor="#F33C3C"
+                  textHover="white"
+                  color="#F33C3C"
+                  hoverColor="#F33C3C"
+                  @onClick="cancelEdit"
+                >
+                </BaseButton>
+                <div v-else :style="{ width: '100%' }"></div>
+                <BaseButton
+                  buttonType="common-button"
+                  btnText="Create executive"
+                  textColor="white"
+                  textHover="white"
+                  color="#7452FF"
+                  hoverColor="#23106D"
+                >
+                </BaseButton>
+              </div>
+            </div>
+          </div>
+        </transition>
       </div>
     </div>
+    <BasePopup
+      v-if="isShowPopup"
+      @closeModal="isShowPopup = false"
+      :selectedExecutive="selectedExecutive"
+    >
+      <template v-slot:popupContent>
+        This executive(<span :style="{ color: '#C4C4C4 !important' }">{{
+          selectedExecutive.firstname
+        }}</span
+        >) will be deleted immediately after confirming!
+      </template>
+      <template v-slot:buttons>
+        <BaseButton
+          buttonType="common-button"
+          btnText="Confirm delete"
+          textColor="white"
+          textHover="white"
+          color="#F33C3C"
+          hoverColor="#d93333"
+        >
+        </BaseButton>
+        <BaseButton
+          buttonType="outlined-button"
+          btnText="Cancel"
+          textColor="#F33C3C"
+          textHover="white"
+          color="#F33C3C"
+          hoverColor="#F33C3C"
+          @onClick="isShowPopup = false"
+        >
+        </BaseButton>
+      </template>
+    </BasePopup>
   </div>
 </template>
 
 <script>
 import BaseButton from "../../components/UI/BaseButton.vue";
+import BasePopup from "../../components/UI/BasePopup.vue";
 import ExecutiveComp from "../../components/meeting/ExecutiveComp.vue";
 export default {
-  components: { BaseButton, ExecutiveComp },
+  components: { BaseButton, ExecutiveComp, BasePopup },
   name: "ExecutiveView",
   data() {
     return {
+      isAddExecutive: false,
+      isShowPopup: false,
       searchInput: "",
       selectedExecutive: null,
       selectedId: null,
       executives: [],
       isShowDropdown: false,
+      editId: "",
+      previewImage: "",
+      form: {
+        title: "",
+        firstname: "",
+        lastname: "",
+        position: null,
+        email: "",
+        tel: "",
+        reportTo: "",
+        imageProfile: "",
+      },
     };
   },
   computed: {
@@ -184,6 +379,42 @@ export default {
     },
     toggleDropDown() {
       this.isShowDropdown = !this.isShowDropdown;
+    },
+    togglePopup() {
+      this.isShowPopup = true;
+    },
+    cancelEdit() {
+      this.isAddExecutive = false;
+      this.editId = "";
+      // this.form.title = "";
+      this.form.firstname = "";
+      this.form.lastname = "";
+      this.form.email = "";
+      // this.form.position = "";
+      this.form.tel = "";
+      this.form.reportTo = "";
+      // this.form.imageProfile = "";
+    },
+    editExecutive(id) {
+      this.isAddExecutive = true;
+      this.editId = id;
+      // this.form.title = this.selectedExecutive.title;
+      this.form.firstname = this.selectedExecutive.firstname;
+      this.form.lastname = this.selectedExecutive.lastname;
+      this.form.email = this.selectedExecutive.email;
+      // this.form.position = this.selectedExecutive.position;
+      this.form.tel = this.selectedExecutive.tel;
+      this.form.reportTo = this.selectedExecutive.reportTo;
+      // this.form.imageProfile = this.selectedExecutive.imageProfile;
+    },
+    uploadImage(e) {
+      const image = e.target.files[0];
+      this.form.imageProfile = e.target.files[0];
+      const reader = new FileReader();
+      reader.readAsDataURL(image);
+      reader.onload = (e) => {
+        this.previewImage = e.target.result;
+      };
     },
   },
   mounted() {
@@ -488,6 +719,109 @@ export default {
             .content-text {
               color: $primaryViolet;
             }
+          }
+        }
+      }
+      .add-executive-card {
+        width: 100%;
+        height: 100%;
+        border-radius: 2.5rem;
+        background-color: $white;
+        padding: 5.4rem 6.4rem;
+        display: grid;
+        grid-template-rows: 1fr 1.5fr;
+        justify-items: center;
+        align-items: center;
+        .upload-profile {
+          cursor: pointer;
+          width: fit-content;
+          height: fit-content;
+          position: relative;
+          input {
+            display: none;
+          }
+          .upload-button {
+            bottom: 0%;
+            right: 0%;
+            transform: translateX(1rem) translateY(1rem);
+            position: absolute;
+            background-color: $primaryViolet;
+            border-radius: 1rem;
+            padding: 1rem;
+            .icon {
+              font-size: 1.4rem;
+              color: $white;
+            }
+          }
+          .profile-image {
+            border-radius: 2rem;
+            width: 14rem;
+            height: 14rem;
+            background-color: $fadedViolet;
+            padding: 2.4rem;
+            img {
+              width: 100%;
+              height: 100%;
+            }
+          }
+          .preview-img {
+            border-radius: 2rem;
+            width: 14rem;
+            height: 14rem;
+            overflow: hidden;
+            img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+            }
+          }
+        }
+        .information {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          gap: 3rem;
+          .input {
+            display: flex;
+            gap: 5rem;
+            .input-form {
+              width: 100%;
+              display: flex;
+              flex-direction: column;
+              select,
+              input[type="text"] {
+                margin-top: 1rem;
+                padding: 1rem 1.4rem;
+                width: 100%;
+                height: 4rem;
+                border-radius: 0.5rem;
+                border: none;
+                background-color: $primaryGrey;
+                font-family: "Poppins", sans-serif;
+              }
+              input[type="text"]:focus {
+                outline: none;
+                border: 0.1rem solid $primaryViolet;
+              }
+              input::placeholder {
+                font-size: 1.4rem;
+                color: $darkGrey;
+              }
+              select {
+                font-size: 1.4rem;
+              }
+              select:focus {
+                outline: none;
+                border: 0.1rem solid $primaryViolet;
+              }
+            }
+          }
+          .form-button {
+            width: 80%;
+            margin-left: 20%;
+            display: flex;
+            gap: 1.5rem;
           }
         }
       }
