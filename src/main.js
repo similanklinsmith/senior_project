@@ -8,6 +8,5 @@ import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 library.add(fas);
 import '@fortawesome/fontawesome-free/css/all.css'
 import '@fortawesome/fontawesome-free/js/all.js'
-import "../src/assets/colors/WebTheme";
 import "../public/general.scss";
 createApp(App).component('font-awesome-icon', FontAwesomeIcon).use(store).use(router).mount("#app");
