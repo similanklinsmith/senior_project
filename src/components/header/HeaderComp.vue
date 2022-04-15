@@ -1,6 +1,6 @@
 <template>
   <div class="container grid">
-    <div class="remark-text">Meeting Overview</div>
+    <div class="remark-text">{{ headerText }}</div>
     <div class="search-input">
       <div class="input-icon">
         <i class="icon fa-solid fa-magnifying-glass"></i>
@@ -40,6 +40,7 @@
 <script>
 export default {
   name: "HeaderComp",
+  props:["headerText"],
   data() {
     return {
       isShowProfile: false,

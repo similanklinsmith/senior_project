@@ -3,7 +3,7 @@
     <div class="space-left">
       <div class="modal" v-if="isToggled" @click="isToggled = false"></div>
       <div style="position: relative">
-        <HeaderComp id="header" />
+        <HeaderComp id="header" :headerText="getHeaderText" />
       </div>
       <SideNav :isToggled="isToggled" @toggleSidebar="isToggled = !isToggled" />
     </div>
@@ -26,6 +26,20 @@ export default {
     return {
       isToggled: false,
     };
+  },
+  computed: {
+    getHeaderText() {
+      switch (this.$route.name) {
+        case "home":
+          return "Meeting Overview";
+        case "executive":
+          return "My executives";
+        case "meeting":
+          return "My meetings";
+        default:
+          return "Meeting Overview";
+      }
+    },
   },
   mounted() {
     window.addEventListener("scroll", () => {
