@@ -1,17 +1,10 @@
 <template>
   <div class="home">
-    <div class="header">
-      <div class="line" />
-      <div class="header-section grid">
-        <div class="text">
-          <div class="header-text">Remaining Meetings</div>
-          <div class="thin-content-text">
-            This screen show overall of meeting and the executives who you take
-            a responsibility.
-          </div>
-        </div>
-      </div>
-    </div>
+    <BaseHeader
+      :headerText="`Remaining Meetings`"
+      :contentText="`This screen show overall of meeting and the executives who you take a responsibility.`"
+    >
+    </BaseHeader>
     <div class="body">
       <div class="first-body-section grid">
         <div class="create-meeting-card">
@@ -35,8 +28,10 @@
                 color="white"
                 hoverColor="#7452FF"
               >
-                <i class="icon fa-solid fa-plus"></i
-              ></BaseButton>
+                <template v-slot:after-icon>
+                  <i class="icon fa-solid fa-plus"></i>
+                </template>
+              </BaseButton>
             </div>
           </div>
         </div>
@@ -91,8 +86,11 @@
                   color="#7452FF"
                   hoverColor="#23106D"
                 >
-                  <i class="icon fa-solid fa-user-plus"></i
-                ></BaseButton>
+                  <template v-slot:after-icon>
+                    <i class="icon fa-solid fa-user-plus"></i>
+                  </template>
+                  ></BaseButton
+                >
                 <BaseButton
                   buttonType="outlined-button"
                   btnText="Show all"
@@ -101,9 +99,11 @@
                   color="#7452FF"
                   hoverColor="#23106D"
                 >
-                  <div class="badge">
-                    <div class="bold-smallest-text">3</div>
-                  </div>
+                  <template v-slot:after-icon>
+                    <div class="badge">
+                      <div class="bold-smallest-text">3</div>
+                    </div>
+                  </template>
                 </BaseButton>
               </div>
             </div>
@@ -132,9 +132,10 @@
 
 <script>
 import BaseButton from "../../components/UI/BaseButton.vue";
+import BaseHeader from "../../components/UI/BaseHeader.vue";
 import AttendeeGroup from "../../components/meeting/AttendeeGroup.vue";
 export default {
-  components: { BaseButton, AttendeeGroup },
+  components: { BaseButton, BaseHeader, AttendeeGroup },
   name: "HomeView",
 };
 </script>
@@ -148,33 +149,6 @@ export default {
     display: inline-block;
     color: $white;
     position: relative;
-  }
-  .header {
-    width: 100%;
-    height: 15rem;
-    background-color: $white;
-    .line {
-      width: 90%;
-      margin: 0 5%;
-      height: 0.1rem;
-      background-color: $grey;
-    }
-    .header-section {
-      height: 100%;
-      grid-template-columns: 2fr 0.5fr;
-      padding: 3rem 5.5rem;
-      align-items: center;
-      justify-content: center;
-      .text {
-        .header-text {
-          color: $darkViolet;
-          margin-bottom: 1rem;
-        }
-        .thin-content-text {
-          color: $highlightViolet;
-        }
-      }
-    }
   }
   .body {
     padding: 3rem;

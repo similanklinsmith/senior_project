@@ -1,27 +1,20 @@
 <template>
   <div class="executive-screen">
-    <div class="header">
-      <div class="line" />
-      <div class="header-section grid">
-        <div class="text">
-          <div class="header-text">Overall Executives</div>
-          <div class="thin-content-text">
-            This screen has features to show, add, edit, and delete your
-            executives
-          </div>
-        </div>
-        <BaseButton
-          buttonType="common-button"
-          btnText="Add executive +"
-          textColor="#23106D"
-          textHover="white"
-          color="#DBD2FF"
-          hoverColor="#23106D"
-          @onClick="isAddExecutive = true"
-        >
-        </BaseButton>
-      </div>
-    </div>
+    <BaseHeader
+      :headerText="`Overall Executives`"
+      :contentText="`This screen has features to show, add, edit, and delete your executives`"
+    >
+      <BaseButton
+        buttonType="common-button"
+        btnText="Add executive +"
+        textColor="#23106D"
+        textHover="white"
+        color="#DBD2FF"
+        hoverColor="#23106D"
+        @onClick="isAddExecutive = true"
+      >
+      </BaseButton>
+    </BaseHeader>
     <div class="body">
       <div class="first-body-section grid">
         <div class="filter-executive">
@@ -290,6 +283,7 @@
       v-if="isShowPopup"
       @closeModal="isShowPopup = false"
       :selectedExecutive="selectedExecutive"
+      :image="require(`@/assets/decorations/delete_executive.png`)"
     >
       <template v-slot:popupContent>
         This executive(<span :style="{ color: '#C4C4C4 !important' }">{{
@@ -324,10 +318,11 @@
 
 <script>
 import BaseButton from "../../components/UI/BaseButton.vue";
+import BaseHeader from "../../components/UI/BaseHeader.vue";
 import BasePopup from "../../components/UI/BasePopup.vue";
 import ExecutiveComp from "../../components/meeting/ExecutiveComp.vue";
 export default {
-  components: { BaseButton, ExecutiveComp, BasePopup },
+  components: { BaseButton, BaseHeader, ExecutiveComp, BasePopup },
   name: "ExecutiveView",
   data() {
     return {
@@ -455,7 +450,7 @@ export default {
         reportTo: "Alexander Macedonia",
         imageProfile: "",
       },
-    ];
+    ].sort((a, b) => (a.firstname > b.firstname ? 1 : -1));
     if (this.executives.length > 0) {
       this.selectedExecutive = this.executives[0];
       this.selectedId = this.executives[0].id;
@@ -467,35 +462,6 @@ export default {
 <style lang="scss" scoped>
 @import "../../assets/colors/webColors.scss";
 .executive-screen {
-  .header {
-    width: 100%;
-    height: 15rem;
-    background-color: $white;
-    align-items: center;
-    justify-content: center;
-    .line {
-      width: 90%;
-      margin: 0 5%;
-      height: 0.1rem;
-      background-color: $grey;
-    }
-    .header-section {
-      height: 100%;
-      grid-template-columns: 2fr 0.5fr;
-      padding: 3rem 5.5rem;
-      align-items: center;
-      justify-content: center;
-      .text {
-        .header-text {
-          color: $darkViolet;
-          margin-bottom: 1rem;
-        }
-        .thin-content-text {
-          color: $highlightViolet;
-        }
-      }
-    }
-  }
   .body {
     padding: 3rem;
     .first-body-section {
