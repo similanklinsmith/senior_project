@@ -5,8 +5,8 @@
       <div class="pop-up">
         <div class="image">
           <img
-            src="../../assets/decorations/delete_executive.png"
-            alt="create meeting illustration"
+            :src="image"
+            alt="popup illustration"
           />
         </div>
         <div class="pop-up-content flex-col-center">
@@ -24,6 +24,7 @@
 
 <script>
 export default {
+  props:["image"],
   methods: {
     closeModal() {
       this.$emit("closeModal");
