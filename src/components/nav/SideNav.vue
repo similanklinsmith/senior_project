@@ -24,7 +24,7 @@
         <i class="icon fa-solid fa-user-group"></i>
         <div class="button-text bold-small-text">executives</div>
       </router-link>
-      <router-link to="/about" class="button">
+      <router-link to="/meetings-management" class="button">
         <i class="icon fa-solid fa-check-to-slot"></i>
         <div class="button-text bold-small-text">meetings</div>
       </router-link>

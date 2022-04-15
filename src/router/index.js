@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 const Home = () => import("../views/main/HomeView.vue");
 const Executive = () => import("../views/main/ExecutiveView.vue");
+const Meeting = () => import("../views/main/MeetingView.vue");
 const NotFound = () => import("../views/exception/NotFoundView.vue");
 
 const routes = [
@@ -13,6 +14,11 @@ const routes = [
     path: "/executives-management",
     name: "executive",
     component: Executive,
+  },
+  {
+    path: "/meetings-management",
+    name: "meeting",
+    component: Meeting,
   },
   {
     path: "/about",
