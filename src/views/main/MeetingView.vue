@@ -1,0 +1,487 @@
+<template>
+  <div class="meeting-screen">
+    <BaseHeader
+      :headerText="`Create your own meeting`"
+      :contentText="`You can easily create youe own meeting by clicking “Create meeting”`"
+    >
+    </BaseHeader>
+    <div class="body">
+      <div class="meeting-nav">
+        <BaseButton
+          btnText="Create meeting +"
+          height="5rem"
+          textHover="white"
+          color="#7452FF"
+          hoverColor="#23106D"
+          @onClick="onClickNav(1)"
+          :class="isSelected == 1 ? 'common-button' : 'outlined-button'"
+          :style="isSelected == 1 ? { color: 'white' } : { color: '#7452FF' }"
+        >
+        </BaseButton>
+        <BaseButton
+          buttonType="navigator-button"
+          height="5rem"
+          btnText="Inbox"
+          textHover="white"
+          hoverColor="#23106D"
+          @onClick="onClickNav(2)"
+          :style="
+            isSelected == 2
+              ? { backgroundColor: '#7452FF', color: 'white' }
+              : { backgroundColor: '#F4F4F4', color: '#23106D' }
+          "
+        >
+          <template v-slot:before-icon>
+            <i class="fa-solid fa-inbox"></i>
+          </template>
+          <template v-slot:after-icon>
+            <div class="badge">
+              <div class="bold-smallest-text">2</div>
+            </div>
+          </template>
+        </BaseButton>
+        <BaseButton
+          buttonType="navigator-button"
+          height="5rem"
+          btnText="Sent"
+          textHover="white"
+          hoverColor="#23106D"
+          @onClick="onClickNav(3)"
+          :style="
+            isSelected == 3
+              ? { backgroundColor: '#7452FF', color: 'white' }
+              : { backgroundColor: '#F4F4F4', color: '#23106D' }
+          "
+        >
+          <template v-slot:before-icon>
+            <i class="fa-solid fa-paper-plane"></i>
+          </template>
+        </BaseButton>
+        <BaseButton
+          buttonType="navigator-button"
+          height="5rem"
+          btnText="To be confirmed"
+          textHover="white"
+          hoverColor="#23106D"
+          @onClick="onClickNav(4)"
+          :style="
+            isSelected == 4
+              ? { backgroundColor: '#7452FF', color: 'white' }
+              : { backgroundColor: '#F4F4F4', color: '#23106D' }
+          "
+        >
+          <template v-slot:before-icon>
+            <i class="fa-solid fa-clipboard-list"></i>
+          </template>
+          <template v-slot:after-icon>
+            <div class="badge">
+              <div class="bold-smallest-text">3</div>
+            </div>
+          </template>
+        </BaseButton>
+        <BaseButton
+          buttonType="navigator-button"
+          height="5rem"
+          btnText="Confirmed"
+          textHover="white"
+          hoverColor="#23106D"
+          @onClick="onClickNav(5)"
+          :style="
+            isSelected == 5
+              ? { backgroundColor: '#7452FF', color: 'white' }
+              : { backgroundColor: '#F4F4F4', color: '#23106D' }
+          "
+        >
+          <template v-slot:before-icon>
+            <i class="fa-solid fa-square-check"></i>
+          </template>
+          <template v-slot:after-icon>
+            <div class="badge">
+              <div class="bold-smallest-text">1</div>
+            </div>
+          </template>
+        </BaseButton>
+        <BaseButton
+          buttonType="navigator-button"
+          height="5rem"
+          btnText="Trash"
+          textHover="white"
+          hoverColor="#23106D"
+          @onClick="onClickNav(6)"
+          :style="
+            isSelected == 6
+              ? { backgroundColor: '#7452FF', color: 'white' }
+              : { backgroundColor: '#F4F4F4', color: '#23106D' }
+          "
+        >
+          <template v-slot:before-icon>
+            <i class="fa-solid fa-trash"></i>
+          </template>
+        </BaseButton>
+      </div>
+      <div class="first-body-section">
+        <div class="card-section">
+          <div class="add-attendees">
+            <div class="bold-content-text">Add attendees</div>
+            <div class="small-text required-attendees">Required attendees</div>
+            <div class="action-add" @click="isAddAttendees = true">
+              <i class="fa-solid fa-user-plus"></i>
+              <div class="small-text">Add required attendees</div>
+            </div>
+          </div>
+          <div class="add-details"></div>
+        </div>
+      </div>
+    </div>
+    <teleport to="#portal-target" v-if="isAddAttendees">
+      <div class="modal" @click="isAddAttendees = false"></div>
+      <div class="pop-up">
+        <div class="remark-text">Required attendees</div>
+        <div class="search-filter">
+          <div class="input-icon">
+            <i class="icon fa-solid fa-magnifying-glass"></i>
+            <input
+              type="text"
+              placeholder="Search by name"
+              v-model="searchInput"
+            />
+          </div>
+        </div>
+        <div class="pop-up-content">
+          <div
+            class="list-checkbox content-text"
+            v-if="filterByName.length != 0"
+          >
+            <transition-group name="route">
+              <div
+                class="executive-checkbox"
+                v-for="executive in filterByName"
+                :key="executive.id"
+              >
+                <label :for="executive.id">
+                  <div class="profile-image">
+                    <img
+                      src="../../assets/decorations/sample_profile.png"
+                      alt="sample profile illustration"
+                    />
+                  </div>
+                  {{ executive.title }}. {{ executive.firstname }}
+                  {{ executive.lastname }}</label
+                >
+                <input
+                  type="checkbox"
+                  :name="executive.id"
+                  :id="executive.id"
+                  :value="executive.id"
+                />
+              </div>
+            </transition-group>
+          </div>
+          <transition v-else name="route">
+            <div class="remark-text not-found">Not Found</div>
+          </transition>
+        </div>
+        <div class="button-action flex-col-center">
+          <BaseButton
+            buttonType="common-button"
+            btnText="Confirm"
+            textColor="white"
+            textHover="white"
+            color="#7452FF"
+            hoverColor="#23106D"
+          >
+          </BaseButton>
+        </div>
+      </div>
+    </teleport>
+  </div>
+</template>
+
+<script>
+import BaseButton from "../../components/UI/BaseButton.vue";
+import BaseHeader from "../../components/UI/BaseHeader.vue";
+export default {
+  components: { BaseButton, BaseHeader },
+  data() {
+    return {
+      isSelected: 2,
+      isAddAttendees: false,
+      executives: [],
+      searchInput: "",
+    };
+  },
+  computed: {
+    filterByName() {
+      return this.executives.filter((executive) => {
+        return (
+          executive.firstname
+            .toLowerCase()
+            .includes(this.searchInput.toLowerCase()) ||
+          executive.lastname
+            .toLowerCase()
+            .includes(this.searchInput.toLowerCase())
+        );
+      });
+    },
+  },
+  methods: {
+    onClickNav(num) {
+      this.isSelected = num;
+    },
+  },
+  mounted() {
+    this.executives = [
+      {
+        id: 1,
+        title: "Mr",
+        firstname: "Similan",
+        lastname: "Klinsmith",
+        position: "Chief Executive",
+        email: "similan@mail.kmutt.ac.th",
+        tel: "081-000-0000",
+        reportTo: "Alexander Macedonia",
+        imageProfile: "",
+      },
+      {
+        id: 2,
+        title: "Ms",
+        firstname: "Praepanwa",
+        lastname: "Tedprasit",
+        position: "Chief Executive",
+        email: "praepanwa@mail.kmutt.ac.th",
+        tel: "081-000-0000",
+        reportTo: "Alexander Macedonia",
+        imageProfile: "",
+      },
+      {
+        id: 3,
+        title: "Ms",
+        firstname: "Noparat",
+        lastname: "Prasongdee",
+        position: "Chief Executive",
+        email: "noparat@mail.kmutt.ac.th",
+        tel: "081-000-0000",
+        reportTo: "Alexander Macedonia",
+        imageProfile: "",
+      },
+    ].sort((a, b) => (a.firstname > b.firstname ? 1 : -1));
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+@import "../../assets/colors/webColors.scss";
+.modal {
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  background-color: rgba(24, 24, 26, 0.4);
+  z-index: 11;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.pop-up {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  position: fixed;
+  z-index: 12;
+  border-radius: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: $white;
+  width: 44rem;
+  padding: 2.4rem 1.6rem;
+  animation-name: appears;
+  animation-duration: 0.5s;
+  animation-iteration-count: 1;
+  .image {
+    transform: translateY(-3.6rem);
+    img {
+      width: 17.5rem;
+    }
+  }
+  .remark-text {
+    width: 100%;
+    color: $primaryViolet;
+    margin-bottom: 1rem;
+    span {
+      color: $darkGrey !important;
+    }
+  }
+  .search-filter {
+    margin-bottom: 1.5rem;
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    .input-icon {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-items: center;
+      input[type="text"] {
+        padding: 1rem 1.4rem;
+        width: 100%;
+        height: 4rem;
+        border-radius: 0.5rem;
+        border: none;
+        background-color: $primaryGrey;
+        font-family: "Poppins", sans-serif;
+      }
+      input[type="text"]:focus {
+        outline: none;
+        border: 0.1rem solid $primaryViolet;
+      }
+      input::placeholder {
+        font-size: 1.4rem;
+        color: $darkGrey;
+      }
+      .icon {
+        position: absolute;
+        right: 0;
+        font-size: 1.4rem;
+        margin-right: 1rem;
+        color: $darkGrey;
+      }
+    }
+  }
+  .pop-up-content {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+    width: 100%;
+    height: 30rem;
+    overflow: scroll;
+    .not-found {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: $darkGrey;
+      height: 100%;
+    }
+    .list-checkbox {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      color: $darkViolet;
+      row-gap: 1.5rem;
+      .executive-checkbox {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        label {
+          display: flex;
+          align-items: center;
+          column-gap: 1.5rem;
+        }
+        input[type="checkbox"] {
+          border-radius: 0.6rem;
+          width: 2.4rem;
+          height: 2.4rem;
+          -webkit-appearance: none;
+          box-shadow: inset 0 0 0 1px rgba(85, 85, 85, 0.25);
+        }
+        input[type="checkbox"]:checked {
+          background-color: $yellow;
+        }
+        .profile-image {
+          border-radius: 1rem;
+          width: 5rem;
+          height: 5rem;
+          background-color: $fadedViolet;
+          padding: 0.8rem;
+          img {
+            width: 100%;
+            height: 100%;
+          }
+        }
+      }
+    }
+  }
+  .button-action {
+    width: 100%;
+    row-gap: 1rem;
+  }
+}
+@keyframes appears {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.meeting-screen {
+  .badge {
+    padding: 0.6rem 0.8rem;
+    background-color: $error;
+    border-radius: 0.5rem;
+    display: inline-block;
+    color: $white;
+    position: relative;
+    font-size: 1rem;
+  }
+  .body {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 0.4fr 1.6fr;
+    .meeting-nav {
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-color: $white;
+      padding: 3rem 2rem;
+      row-gap: 1.6rem;
+    }
+    .first-body-section {
+      padding: 3rem;
+      width: 100%;
+      height: 100%;
+      .card-section {
+        padding: 5rem 4.4rem;
+        width: 100%;
+        height: 100%;
+        background-color: $white;
+        border-radius: 2.5rem;
+        display: grid;
+        grid-template-columns: 0.5fr 1.5fr;
+        .add-attendees {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          .bold-content-text {
+            margin-bottom: 2rem;
+          }
+          .required-attendees {
+            margin-bottom: 1.4rem;
+          }
+          .action-add {
+            cursor: pointer;
+            display: flex;
+            color: $primaryViolet;
+            align-items: center;
+            column-gap: 0.8rem;
+            transition: 0.2s all ease-in-out;
+          }
+          .action-add:hover {
+            color: $highlightViolet;
+          }
+        }
+        .add-details {
+          width: 100%;
+          height: 100%;
+          background-color: $primaryViolet;
+        }
+      }
+    }
+  }
+}
+</style>
