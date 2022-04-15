@@ -1,21 +1,25 @@
 <template>
   <div :class="buttonType" :style="style" @click="btnAction">
-    <div class="content-text button-text">{{ btnText }}</div>
-    <div class="content-text icon"><slot></slot></div>
+    <div class="content-text button-text">
+      <div class="content-text icon"><slot name="before-icon"></slot></div>
+      {{ btnText }}
+    </div>
+    <div class="content-text icon"><slot name="after-icon"></slot></div>
   </div>
 </template>
 
 <script>
 import "../../assets/colors/webColors.scss";
 export default {
-  props: [
-    "btnText",
-    "textColor",
-    "textHover",
-    "color",
-    "hoverColor",
-    "buttonType",
-  ],
+  props: {
+    btnText: String,
+    textColor: String,
+    textHover: String,
+    color: String,
+    hoverColor: String,
+    buttonType: String,
+    height: String,
+  },
   data() {
     return {
       style: {
@@ -23,6 +27,7 @@ export default {
         "--hovercolor": this.hoverColor,
         "--textcolor": this.textColor,
         "--textHover": this.textHover,
+        "--height": this.height,
       },
     };
   },
@@ -37,6 +42,7 @@ export default {
 <style lang="scss" scoped>
 @import "../../assets/colors/webColors.scss";
 .common-button {
+  height: var(--height);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -67,6 +73,7 @@ export default {
   }
 }
 .outlined-button {
+  height: var(--height);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -96,6 +103,40 @@ export default {
   }
   .icon {
     color: var(--textHover);
+  }
+}
+.navigator-button {
+  height: var(--height);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 1.4rem 2rem;
+  border-radius: 1rem;
+  transition: 0.2s all ease-in-out;
+  background-color: var(--color);
+  .button-text {
+    color: var(--textcolor);
+    transition: 0.2s all ease-in-out;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .icon {
+      margin-right: 0.5rem;
+      color: var(--textcolor);
+      transition: 0.2s all ease-in-out;
+      font-size: 1.2rem;
+    }
+  }
+}
+.navigator-button:hover {
+  background-color: var(--hovercolor) !important;
+  .button-text {
+    color: var(--textHover);
+    .icon {
+      color: var(--textHover);
+    }
   }
 }
 </style>
