@@ -119,89 +119,115 @@
           </template>
         </BaseButton>
       </div>
-      <div class="first-body-section">
-        <div class="card-section">
-          <div class="add-attendees">
-            <div class="bold-content-text">Add attendees</div>
-            <div class="small-text required-attendees">Required attendees</div>
-            <div class="action-add" @click="isAddAttendees = true">
-              <i class="fa-solid fa-user-plus"></i>
-              <div class="small-text">Add required attendees</div>
-            </div>
-          </div>
-          <div class="add-details">
-            <div class="input-form">
-              <label for="title" class="bold-small-text">Title</label>
-              <input
-                class="small-text"
-                type="text"
-                placeholder="Title"
-                id="title"
-                name="title"
-              />
-            </div>
-            <div class="input-form-row">
-              <div class="input">
-                <label for="date" class="bold-small-text">Date Slot</label>
-                <litepie-datepicker
-                  class="small-text"
-                  id="date"
-                  :disable-date="dDate"
-                  v-model="dateValue"
-                  as-single
-                  use-range
-                  :formatter="formatter"
-                  :style="{ fontSize: '12px !important', marginTop: '1rem' }"
-                />
+      <transition name="route">
+        <div class="first-body-section" v-if="isSelected == 1">
+          <div class="card-section">
+            <div class="add-attendees">
+              <div class="bold-content-text">Add attendees</div>
+              <div class="small-text required-attendees">
+                Required attendees
               </div>
-              <div class="input">
-                <label for="duration" class="bold-small-text"
-                  >Durations of meeting</label
+              <div class="selected-attendees">
+                <div
+                  class="selected-attendee"
+                  v-for="attendee in form.selectedAttendees"
+                  :key="attendee.id"
                 >
-                <select name="duration" id="duration">
-                  <option value="">none</option>
-                  <option value="1">1 hour</option>
-                  <option value="2">2 hours</option>
-                  <option value="3">3 hours</option>
-                  <option value="4">4 hours</option>
-                  <option value="5">5 hours</option>
-                  <option value="6">6 hours</option>
-                </select>
+                  <div class="profile-section">
+                    <div class="profile-image">
+                      <img
+                        src="../../assets/decorations/sample_profile.png"
+                        alt="sample profile illustration"
+                      />
+                    </div>
+                    <div class="executive-profile flex-col-center">
+                      <div class="name small-text">
+                        {{ attendee.title }}. {{ attendee.firstname }}
+                        {{ attendee.lastname }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="action-add" @click="isAddAttendees = true">
+                <i class="fa-solid fa-user-plus"></i>
+                <div class="small-text">Add required attendees</div>
               </div>
             </div>
-            <div class="input-form-row">
-              <div class="input">
-                <label for="due" class="bold-small-text">Due Date</label>
-                <litepie-datepicker
+            <div class="add-details">
+              <div class="input-form">
+                <label for="title" class="bold-small-text">Title</label>
+                <input
                   class="small-text"
-                  id="due"
-                  :disable-date="dDate"
-                  as-single
-                  :formatter="formatter"
-                  v-model="dateValue"
-                  :style="{ fontSize: '12px !important', marginTop: '1rem' }"
+                  type="text"
+                  placeholder="Title"
+                  id="title"
+                  name="title"
                 />
               </div>
-              <div class="input"></div>
-            </div>
-            <div class="input-form-row">
-              <div class="input"></div>
-              <BaseButton
-                buttonType="common-button"
-                btnText="Send Poll"
-                textColor="white"
-                textHover="white"
-                color="#7452FF"
-                hoverColor="#23106D"
-              >
-              </BaseButton>
+              <div class="input-form-row">
+                <div class="input">
+                  <label for="date" class="bold-small-text">Date Slot</label>
+                  <litepie-datepicker
+                    class="small-text"
+                    id="date"
+                    :disable-date="dDate"
+                    v-model="dateValue"
+                    as-single
+                    use-range
+                    :formatter="formatter"
+                    :style="{ fontSize: '12px !important', marginTop: '1rem' }"
+                  />
+                </div>
+                <div class="input">
+                  <label for="duration" class="bold-small-text"
+                    >Durations of meeting</label
+                  >
+                  <select name="duration" id="duration">
+                    <option value="">none</option>
+                    <option value="1">1 hour</option>
+                    <option value="2">2 hours</option>
+                    <option value="3">3 hours</option>
+                    <option value="4">4 hours</option>
+                    <option value="5">5 hours</option>
+                    <option value="6">6 hours</option>
+                  </select>
+                </div>
+              </div>
+              <div class="input-form-row">
+                <div class="input">
+                  <label for="due" class="bold-small-text">Due Date</label>
+                  <litepie-datepicker
+                    class="small-text"
+                    id="due"
+                    :disable-date="dDate"
+                    as-single
+                    :formatter="formatter"
+                    v-model="dateValue"
+                    :style="{ fontSize: '12px !important', marginTop: '1rem' }"
+                  />
+                </div>
+                <div class="input"></div>
+              </div>
+              <div class="input-form-row">
+                <div class="input"></div>
+                <BaseButton
+                  buttonType="common-button"
+                  btnText="Send Poll"
+                  textColor="white"
+                  textHover="white"
+                  color="#7452FF"
+                  hoverColor="#23106D"
+                >
+                </BaseButton>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </transition>
     </div>
     <teleport to="#portal-target" v-if="isAddAttendees">
-      <div class="modal" @click="isAddAttendees = false"></div>
+      <div class="modal" @click="onClickCancelAttendees"></div>
       <div class="pop-up">
         <div class="remark-text">Required attendees</div>
         <div class="search-filter">
@@ -240,7 +266,8 @@
                   type="checkbox"
                   :name="executive.id"
                   :id="executive.id"
-                  :value="executive.id"
+                  :value="executive"
+                  v-model="form.selectedAttendees"
                 />
               </div>
             </transition-group>
@@ -257,6 +284,7 @@
             textHover="white"
             color="#7452FF"
             hoverColor="#23106D"
+            @onClick="onClickConfirmAttendees"
           >
           </BaseButton>
         </div>
@@ -290,10 +318,13 @@ export default {
   },
   data() {
     return {
-      isSelected: 2,
+      isSelected: 1,
       isAddAttendees: false,
       executives: [],
       searchInput: "",
+      form: {
+        selectedAttendees: [],
+      },
     };
   },
   computed: {
@@ -313,6 +344,13 @@ export default {
   methods: {
     onClickNav(num) {
       this.isSelected = num;
+    },
+    onClickConfirmAttendees() {
+      this.isAddAttendees = false;
+    },
+    onClickCancelAttendees() {
+      this.isAddAttendees = false;
+      this.form.selectedAttendees = [];
     },
   },
   mounted() {
@@ -548,6 +586,32 @@ export default {
           }
           .required-attendees {
             margin-bottom: 1.4rem;
+          }
+          .selected-attendees {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            margin-bottom: 1rem;
+            .selected-attendee {
+              margin-bottom: 1rem;
+              .profile-section {
+                display: flex;
+                width: 100%;
+                .profile-image {
+                  border-radius: 1rem;
+                  width: 3.5rem;
+                  height: 3.5rem;
+                  background-color: $fadedViolet;
+                  margin-right: 0.5rem;
+                  text-align: center;
+                  padding: 0.2rem;
+                  img {
+                    width: 100%;
+                    height: 100%;
+                  }
+                }
+              }
+            }
           }
           .action-add {
             cursor: pointer;
