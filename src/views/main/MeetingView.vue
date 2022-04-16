@@ -129,7 +129,74 @@
               <div class="small-text">Add required attendees</div>
             </div>
           </div>
-          <div class="add-details"></div>
+          <div class="add-details">
+            <div class="input-form">
+              <label for="title" class="bold-small-text">Title</label>
+              <input
+                class="small-text"
+                type="text"
+                placeholder="Title"
+                id="title"
+                name="title"
+              />
+            </div>
+            <div class="input-form-row">
+              <div class="input">
+                <label for="date" class="bold-small-text">Date Slot</label>
+                <litepie-datepicker
+                  class="small-text"
+                  id="date"
+                  :disable-date="dDate"
+                  v-model="dateValue"
+                  as-single
+                  use-range
+                  :formatter="formatter"
+                  :style="{ fontSize: '12px !important', marginTop: '1rem' }"
+                />
+              </div>
+              <div class="input">
+                <label for="duration" class="bold-small-text"
+                  >Durations of meeting</label
+                >
+                <select name="duration" id="duration">
+                  <option value="">none</option>
+                  <option value="1">1 hour</option>
+                  <option value="2">2 hours</option>
+                  <option value="3">3 hours</option>
+                  <option value="4">4 hours</option>
+                  <option value="5">5 hours</option>
+                  <option value="6">6 hours</option>
+                </select>
+              </div>
+            </div>
+            <div class="input-form-row">
+              <div class="input">
+                <label for="due" class="bold-small-text">Due Date</label>
+                <litepie-datepicker
+                  class="small-text"
+                  id="due"
+                  :disable-date="dDate"
+                  as-single
+                  :formatter="formatter"
+                  v-model="dateValue"
+                  :style="{ fontSize: '12px !important', marginTop: '1rem' }"
+                />
+              </div>
+              <div class="input"></div>
+            </div>
+            <div class="input-form-row">
+              <div class="input"></div>
+              <BaseButton
+                buttonType="common-button"
+                btnText="Send Poll"
+                textColor="white"
+                textHover="white"
+                color="#7452FF"
+                hoverColor="#23106D"
+              >
+              </BaseButton>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -141,6 +208,7 @@
           <div class="input-icon">
             <i class="icon fa-solid fa-magnifying-glass"></i>
             <input
+              class="small-text"
               type="text"
               placeholder="Search by name"
               v-model="searchInput"
@@ -198,10 +266,28 @@
 </template>
 
 <script>
+import LitepieDatepicker from "litepie-datepicker";
 import BaseButton from "../../components/UI/BaseButton.vue";
 import BaseHeader from "../../components/UI/BaseHeader.vue";
+import { ref } from "vue";
 export default {
-  components: { BaseButton, BaseHeader },
+  components: { BaseButton, BaseHeader, LitepieDatepicker },
+  setup() {
+    const dateValue = ref([]);
+    const dDate = (date) => {
+      return date < new Date() || date > new Date(2023, 0, 8);
+    };
+    const formatter = ref({
+      date: "DD MMM YYYY",
+      month: "MMM",
+    });
+
+    return {
+      dateValue,
+      dDate,
+      formatter,
+    };
+  },
   data() {
     return {
       isSelected: 2,
@@ -478,7 +564,49 @@ export default {
         .add-details {
           width: 100%;
           height: 100%;
-          background-color: $primaryViolet;
+          display: flex;
+          flex-direction: column;
+          row-gap: 2rem;
+          .input-form-row {
+            width: 100%;
+            display: flex;
+            column-gap: 2.4rem;
+            .input {
+              width: 100%;
+            }
+          }
+          .input-form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+          }
+          select,
+          input[type="text"] {
+            margin-top: 1rem;
+            padding: 1rem 1.4rem;
+            width: 100%;
+            height: 4rem;
+            border-radius: 0.5rem;
+            border: none;
+            background-color: $primaryGrey;
+            font-family: "Poppins", sans-serif;
+          }
+          input[type="text"]:focus {
+            outline: none;
+            border: 0.1rem solid $primaryViolet;
+          }
+          select::placeholder,
+          input::placeholder {
+            font-size: 1.4rem;
+            color: $darkGrey;
+          }
+          select {
+            font-size: 1.4rem;
+          }
+          select:focus {
+            outline: none;
+            border: 0.1rem solid $primaryViolet;
+          }
         }
       }
     }
