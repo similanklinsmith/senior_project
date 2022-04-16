@@ -19,6 +19,7 @@ export default {
     hoverColor: String,
     buttonType: String,
     height: String,
+    width: String,
   },
   data() {
     return {
@@ -28,6 +29,7 @@ export default {
         "--textcolor": this.textColor,
         "--textHover": this.textHover,
         "--height": this.height,
+        "--width": this.width,
       },
     };
   },
@@ -42,6 +44,7 @@ export default {
 <style lang="scss" scoped>
 @import "../../assets/colors/webColors.scss";
 .common-button {
+  width: var(--width) !important;
   height: var(--height);
   cursor: pointer;
   display: flex;
@@ -73,6 +76,7 @@ export default {
   }
 }
 .outlined-button {
+  width: var(--width) !important;
   height: var(--height);
   cursor: pointer;
   display: flex;
@@ -106,6 +110,7 @@ export default {
   }
 }
 .navigator-button {
+  width: var(--width) !important;
   height: var(--height);
   cursor: pointer;
   display: flex;
@@ -137,6 +142,36 @@ export default {
     .icon {
       color: var(--textHover);
     }
+  }
+}
+.texted-button {
+  width: var(--width) !important;
+  height: var(--height);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 1.4rem 2rem;
+  border-radius: 1rem;
+  transition: 0.2s all ease-in-out;
+  .button-text {
+    color: var(--textcolor);
+    transition: 0.2s all ease-in-out;
+    margin-right: 0.5rem;
+  }
+  .icon {
+    color: var(--textcolor);
+    transition: 0.2s all ease-in-out;
+    font-size: 1.2rem;
+  }
+}
+.texted-button:hover {
+  .button-text {
+    color: var(--textHover);
+  }
+  .icon {
+    color: var(--textHover);
   }
 }
 </style>
