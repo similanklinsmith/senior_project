@@ -22,6 +22,7 @@
             <div class="input-icon">
               <i class="icon fa-solid fa-magnifying-glass"></i>
               <input
+                class="small-text"
                 type="text"
                 placeholder="Search by name"
                 v-model="searchInput"
@@ -180,6 +181,7 @@
                 <div class="input-form">
                   <label for="name" class="bold-small-text">Name</label>
                   <input
+                    class="small-text"
                     type="text"
                     placeholder="Name"
                     id="name"
@@ -192,6 +194,7 @@
                 <div class="input-form">
                   <label for="surname" class="bold-small-text">Surname</label>
                   <input
+                    class="small-text"
                     type="text"
                     placeholder="Surname"
                     id="surname"
@@ -216,6 +219,7 @@
                 <div class="input-form">
                   <label for="email" class="bold-small-text">Email</label>
                   <input
+                    class="small-text"
                     type="text"
                     placeholder="Email"
                     id="email"
@@ -228,6 +232,7 @@
                     >Phone number</label
                   >
                   <input
+                    class="small-text"
                     type="text"
                     placeholder="e.g. 000-000-0000"
                     id="phone-number"
@@ -242,6 +247,7 @@
                     >Report to</label
                   >
                   <input
+                    class="small-text"
                     type="text"
                     placeholder="report to"
                     id="secretary"
@@ -307,7 +313,7 @@
           textColor="#F33C3C"
           textHover="white"
           color="#F33C3C"
-          hoverColor="#F33C3C"
+          hoverColor="#d93333"
           @onClick="isShowPopup = false"
         >
         </BaseButton>

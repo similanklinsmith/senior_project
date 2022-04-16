@@ -4,7 +4,7 @@
     <div class="search-input">
       <div class="input-icon">
         <i class="icon fa-solid fa-magnifying-glass"></i>
-        <input type="text" placeholder="Search anything... " />
+        <input class="small-text" type="text" placeholder="Search anything... " />
       </div>
     </div>
     <div class="last-section">
@@ -139,9 +139,10 @@ ul {
   }
   .last-section {
     display: flex;
+    margin-left: 3rem;
   }
   .notification {
-    margin-right: 4rem;
+    margin-right: 3rem;
     cursor: pointer;
     position: relative;
     width: 3.5rem;
