@@ -1,5 +1,5 @@
 <template>
-  <div v-if="$route.name != 'NotFound'">
+  <div v-if="$route.name != 'NotFound' && $route.name != 'sign-in'">
     <div class="space-left">
       <div class="modal" v-if="isToggled" @click="isToggled = false"></div>
       <div style="position: relative">

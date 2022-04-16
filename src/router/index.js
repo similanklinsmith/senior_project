@@ -1,10 +1,16 @@
 import { createRouter, createWebHistory } from "vue-router";
+const SignIn = () => import("../views/main/SignInView.vue");
 const Home = () => import("../views/main/HomeView.vue");
 const Executive = () => import("../views/main/ExecutiveView.vue");
 const Meeting = () => import("../views/main/MeetingView.vue");
 const NotFound = () => import("../views/exception/NotFoundView.vue");
 
 const routes = [
+  {
+    path: "/sign-in",
+    name: "sign-in",
+    component: SignIn,
+  },
   {
     path: "/",
     name: "home",
