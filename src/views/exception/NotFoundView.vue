@@ -43,7 +43,10 @@ export default {
 @import "../../assets/colors/webColors.scss";
 .notfound-screen {
   width: 100%;
-  height: 100%;
+  height: 100vh;
+  background-color: $white;
+  display: flex;
+  flex-direction: column;
   .header {
     padding: 4.8rem 7.2rem;
     .logo-text {
@@ -61,7 +64,6 @@ export default {
     }
   }
   .body {
-    margin-top: 14rem;
     width: 100%;
     height: 100%;
     display: flex;
