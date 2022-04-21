@@ -30,7 +30,51 @@
         </BaseButton>
       </div>
     </div>
-    <div class="body"></div>
+    <div class="body">
+      <div class="first-section">first</div>
+      <div class="second-section">
+        <div class="input-form">
+          <label for="email" class="bold-small-text">Email</label>
+          <input
+            class="small-text"
+            type="text"
+            placeholder="Email"
+            id="email"
+            name="email"
+          />
+        </div>
+        <div class="input-form">
+          <label for="password" class="bold-small-text">Password</label>
+          <input
+            class="small-text"
+            type="password"
+            placeholder="Password"
+            id="password"
+            name="password"
+          />
+        </div>
+        <div class="forget-password bold-small-text">Forget password?</div>
+        <BaseButton
+          buttonType="common-button"
+          btnText="Sign in"
+          textColor="white"
+          textHover="white"
+          color="#7452FF"
+          hoverColor="#23106D"
+        >
+        </BaseButton>
+        <div class="or thin-content-text">or continue with</div>
+        <BaseButton
+          buttonType="outlined-button"
+          btnText="Sign up"
+          textColor="#7452FF"
+          textHover="white"
+          color="#7452FF"
+          hoverColor="#23106D"
+        >
+        </BaseButton>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -80,9 +124,59 @@ export default {
   .body {
     width: 100%;
     height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    padding: 0 7.2rem;
+    .first-section {
+    }
+    .second-section {
+      display: flex;
+      flex-direction: column;
+      row-gap: 2.5rem;
+      padding: 4.8rem 2rem;
+      width: 70%;
+      .input-form {
+        display: flex;
+        flex-direction: column;
+        input[type="text"],
+        input[type="password"] {
+          margin-top: 1rem;
+          padding: 1rem 1.4rem;
+          height: 4rem;
+          border-radius: 0.5rem;
+          border: none;
+          background-color: $primaryGrey;
+          font-family: "Poppins", sans-serif;
+        }
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+          outline: none;
+          border: 0.1rem solid $primaryViolet;
+        }
+        input::placeholder {
+          font-size: 1.4rem;
+          color: $darkGrey;
+        }
+      }
+      .forget-password {
+        text-align: right;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+      }
+      .forget-password:hover {
+        color: $primaryViolet;
+      }
+      .or {
+        color: $darkGrey;
+        width: 100%;
+        text-align: center;
+      }
+      .or::before,
+      .or::after {
+        letter-spacing: -10%;
+        content: "______________";
+      }
+    }
   }
 }
 </style>
