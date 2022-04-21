@@ -170,6 +170,7 @@ export default {
         color: $darkGrey;
         width: 100%;
         text-align: center;
+        font-family: "Lato", sans-serif;
       }
       .or::before,
       .or::after {

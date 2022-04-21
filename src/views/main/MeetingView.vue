@@ -198,7 +198,6 @@
                 <div class="input">
                   <label for="due" class="bold-small-text">Due Date</label>
                   <litepie-datepicker
-                    class="small-text"
                     id="due"
                     :disable-date="dDate"
                     as-single
@@ -209,8 +208,8 @@
                 </div>
                 <div class="input"></div>
               </div>
-              <div class="input-form-row">
-                <div class="input"></div>
+              <div class="input-form-button">
+                <div></div>
                 <BaseButton
                   buttonType="common-button"
                   btnText="Send Poll"
@@ -276,7 +275,7 @@
             <div class="remark-text not-found">Not Found</div>
           </transition>
         </div>
-        <div class="button-action flex-col-center">
+        <div class="button-action">
           <BaseButton
             buttonType="common-button"
             btnText="Confirm"
@@ -631,6 +630,11 @@ export default {
           display: flex;
           flex-direction: column;
           row-gap: 2rem;
+          .input-form-button {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+          }
           .input-form-row {
             width: 100%;
             display: flex;

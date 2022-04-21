@@ -85,6 +85,8 @@
                   textHover="white"
                   color="#7452FF"
                   hoverColor="#23106D"
+                  height="100%"
+                  width="100%"
                 >
                   <template v-slot:after-icon>
                     <i class="icon fa-solid fa-user-plus"></i>
@@ -98,10 +100,12 @@
                   textHover="white"
                   color="#7452FF"
                   hoverColor="#23106D"
+                  height="100%"
+                  width="100%"
                 >
                   <template v-slot:after-icon>
                     <div class="badge">
-                      <div class="bold-smallest-text">3</div>
+                      <div>3</div>
                     </div>
                   </template>
                 </BaseButton>
@@ -143,12 +147,14 @@ export default {
 @import "../../assets/colors/webColors.scss";
 .home {
   .badge {
-    padding: 0.6rem 0.8rem;
+    padding: 0.3rem 0.5rem;
     background-color: $error;
     border-radius: 50%;
     display: inline-block;
     color: $white;
     position: relative;
+    font-size: 1.2rem;
+    font-weight: 600;
   }
   .body {
     padding: 3rem;
