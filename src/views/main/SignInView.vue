@@ -31,38 +31,61 @@
       </div>
     </div>
     <div class="body">
-      <div class="first-section">first</div>
+      <div class="first-section">
+        <lottie-player
+          src="https://assets3.lottiefiles.com/packages/lf20_7z8wtyb0.json"
+          background="transparent"
+          speed="1"
+          style="width: 500px; height: 500px"
+          loop
+          autoplay
+        ></lottie-player>
+      </div>
       <div class="second-section">
-        <div class="input-form">
-          <label for="email" class="bold-small-text">Email</label>
-          <input
-            class="small-text"
-            type="text"
-            placeholder="Email"
-            id="email"
-            name="email"
-          />
-        </div>
-        <div class="input-form">
-          <label for="password" class="bold-small-text">Password</label>
-          <input
-            class="small-text"
-            type="password"
-            placeholder="Password"
-            id="password"
-            name="password"
-          />
-        </div>
-        <div class="forget-password bold-small-text">Forget password?</div>
-        <BaseButton
-          buttonType="common-button"
-          btnText="Sign in"
-          textColor="white"
-          textHover="white"
-          color="#7452FF"
-          hoverColor="#23106D"
-        >
-        </BaseButton>
+        <form @submit.prevent="handleSignIn" class="sign-in-form">
+          <div class="input-form">
+            <label for="email" class="bold-small-text"
+              >Email<span class="required"
+                >* {{ errors.email }}
+              </span></label
+            >
+            <input
+              class="small-text"
+              type="text"
+              placeholder="Email"
+              id="email"
+              name="email"
+              v-model="form.email"
+            />
+          </div>
+          <div class="input-form">
+            <label for="password" class="bold-small-text"
+              >Password<span class="required"
+                >* {{ errors.password }}</span
+              ></label
+            >
+            <input
+              class="small-text"
+              type="password"
+              placeholder="Password"
+              id="password"
+              name="password"
+              v-model="form.password"
+            />
+          </div>
+          <div class="forget-password bold-small-text">Forget password?</div>
+          <BaseButton
+            buttonType="common-button"
+            btnText="Sign in"
+            textColor="white"
+            textHover="white"
+            color="#7452FF"
+            hoverColor="#23106D"
+            type="submit"
+          >
+          </BaseButton>
+        </form>
+
         <div class="or thin-content-text">or continue with</div>
         <BaseButton
           buttonType="outlined-button"
@@ -86,13 +109,48 @@ export default {
   data() {
     return {
       isSignIn: true,
+      form: {
+        email: "",
+        password: "",
+      },
+      errors: {},
     };
+  },
+  methods: {
+    handleSignIn() {
+      this.emailIsValid
+        ? delete this.errors.email
+        : (this.errors.email = "Please inform e-mail correctly");
+      this.passwordIsValid
+        ? delete this.errors.password
+        : (this.errors.password = "Please inform password correctly");
+      if (Object.keys(this.errors).length == 0) {
+        this.$router.push("/");
+      }
+    },
+  },
+  computed: {
+    emailIsValid() {
+      return (
+        !!this.form.email &&
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/.test(
+          this.form.email
+        )
+      );
+    },
+    passwordIsValid() {
+      return !!this.form.password;
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
 @import "../../assets/colors/webColors.scss";
+.required {
+  color: $error;
+  margin-left: 0.2rem;
+}
 .sign-in-screen {
   width: 100%;
   height: 100vh;
@@ -125,16 +183,23 @@ export default {
     width: 100%;
     height: 100%;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1.25fr 0.75fr;
     padding: 0 7.2rem;
     .first-section {
+      display: flex;
+      justify-content: center;
     }
     .second-section {
       display: flex;
       flex-direction: column;
       row-gap: 2.5rem;
       padding: 4.8rem 2rem;
-      width: 70%;
+      width: 90%;
+      .sign-in-form {
+        display: flex;
+        flex-direction: column;
+        row-gap: 2.5rem;
+      }
       .input-form {
         display: flex;
         flex-direction: column;
