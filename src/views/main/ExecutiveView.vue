@@ -305,6 +305,7 @@
           textHover="white"
           color="#F33C3C"
           hoverColor="#d93333"
+          width="100%"
         >
         </BaseButton>
         <BaseButton
@@ -314,6 +315,7 @@
           textHover="white"
           color="#F33C3C"
           hoverColor="#d93333"
+          width="100%"
           @onClick="isShowPopup = false"
         >
         </BaseButton>
