@@ -1,11 +1,11 @@
 <template>
-  <div :class="buttonType" :style="style" @click="btnAction">
+  <button :class="buttonType" :style="style" @click="btnAction" :type="type">
     <div class="content-text button-text">
       <div class="content-text icon"><slot name="before-icon"></slot></div>
       {{ btnText }}
     </div>
     <div class="content-text icon"><slot name="after-icon"></slot></div>
-  </div>
+  </button>
 </template>
 
 <script>
@@ -20,6 +20,7 @@ export default {
     buttonType: String,
     height: String,
     width: String,
+    type: String
   },
   data() {
     return {
@@ -45,7 +46,7 @@ export default {
 @import "../../assets/colors/webColors.scss";
 .common-button {
   width: var(--width) !important;
-  height: var(--height);
+  height: var(--height) !important;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -77,7 +78,7 @@ export default {
 }
 .outlined-button {
   width: var(--width) !important;
-  height: var(--height);
+  height: var(--height) !important;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -111,7 +112,7 @@ export default {
 }
 .navigator-button {
   width: var(--width) !important;
-  height: var(--height);
+  height: var(--height) !important;
   cursor: pointer;
   display: flex;
   align-items: center;
