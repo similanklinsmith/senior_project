@@ -26,6 +26,7 @@
                 textColor="#18181A"
                 textHover="white"
                 color="white"
+                width="100%"
                 hoverColor="#7452FF"
               >
                 <template v-slot:after-icon>

@@ -283,6 +283,7 @@
             textHover="white"
             color="#7452FF"
             hoverColor="#23106D"
+            width="100%"
             @onClick="onClickConfirmAttendees"
           >
           </BaseButton>

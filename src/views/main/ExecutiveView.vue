@@ -560,6 +560,7 @@ export default {
         background-color: $white;
         padding: 5.4rem 6.4rem;
         grid-template-columns: 0.65fr 1.35fr;
+        column-gap: 2.4rem;
         position: relative;
         .icon-dropdown {
           position: absolute;
@@ -652,6 +653,7 @@ export default {
           .executive-profile {
             display: flex;
             flex-direction: column;
+            row-gap: 0.6rem;
             .name {
               color: $darkViolet;
             }
