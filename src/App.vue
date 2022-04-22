@@ -1,27 +1,34 @@
 <template>
-  <div v-if="$route.name != 'NotFound' && $route.name != 'sign-in'">
-    <div class="space-left">
-      <div class="modal" v-if="isToggled" @click="isToggled = false"></div>
-      <div style="position: relative">
-        <HeaderComp id="header" :headerText="getHeaderText" />
+  <div id="app">
+    <SplashView></SplashView>
+    <div v-if="$route.name != 'NotFound' && $route.name != 'sign-in'">
+      <div class="space-left">
+        <div class="modal" v-if="isToggled" @click="isToggled = false"></div>
+        <div style="position: relative">
+          <HeaderComp id="header" :headerText="getHeaderText" />
+        </div>
+        <SideNav
+          :isToggled="isToggled"
+          @toggleSidebar="isToggled = !isToggled"
+        />
       </div>
-      <SideNav :isToggled="isToggled" @toggleSidebar="isToggled = !isToggled" />
     </div>
-  </div>
-  <div v-else>
-    <router-view v-slot="{ Component }">
-      <transition name="route">
-        <component :is="Component" :key="$route.path"></component>
-      </transition>
-    </router-view>
+    <div v-else>
+      <router-view v-slot="{ Component }">
+        <transition name="route">
+          <component :is="Component" :key="$route.path"></component>
+        </transition>
+      </router-view>
+    </div>
   </div>
 </template>
 
 <script>
+import SplashView from "../src/views/splash/SplashView.vue"
 import SideNav from "../src/components/nav/SideNav.vue";
 import HeaderComp from "./components/header/HeaderComp.vue";
 export default {
-  components: { SideNav, HeaderComp },
+  components: { SideNav, HeaderComp, SplashView },
   data() {
     return {
       isToggled: false,
