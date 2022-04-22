@@ -9,6 +9,7 @@ import LitepieDatepicker from 'litepie-datepicker';
 library.add(fas);
 import '@fortawesome/fontawesome-free/css/all.css'
 import '@fortawesome/fontawesome-free/js/all.js'
+import * as LottiePlayer from "@lottiefiles/lottie-player";
 import "../public/general.scss";
 import './index.css'
-createApp(App).component('font-awesome-icon', FontAwesomeIcon).use(store).use(router).use(LitepieDatepicker).mount("#app");
+createApp(App).component('font-awesome-icon', FontAwesomeIcon).use(store).use(router).use(LitepieDatepicker).use(LottiePlayer).mount("#app");
