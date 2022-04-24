@@ -20,7 +20,8 @@ export default {
     buttonType: String,
     height: String,
     width: String,
-    type: String
+    type: String,
+    fontSize: String,
   },
   data() {
     return {
@@ -31,6 +32,7 @@ export default {
         "--textHover": this.textHover,
         "--height": this.height,
         "--width": this.width,
+        "--fontSize": this.fontSize ? this.fontSize : "1.6rem",
       },
     };
   },
@@ -44,6 +46,9 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../assets/colors/webColors.scss";
+.content-text {
+  font-size: var(--fontSize) !important;
+}
 .common-button {
   width: var(--width) !important;
   height: var(--height) !important;
@@ -146,17 +151,17 @@ export default {
   }
 }
 .texted-button {
-  width: var(--width) !important;
+  /* width: var(--width) !important; */
   height: var(--height);
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  padding: 1.4rem 2rem;
-  border-radius: 1rem;
+  width: fit-content;
+  margin: 1.8rem 0rem;
   transition: 0.2s all ease-in-out;
   .button-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    column-gap: 0.6rem;
     color: var(--textcolor);
     transition: 0.2s all ease-in-out;
     margin-right: 0.5rem;
