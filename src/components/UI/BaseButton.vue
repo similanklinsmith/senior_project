@@ -47,7 +47,11 @@ export default {
 <style lang="scss" scoped>
 @import "../../assets/colors/webColors.scss";
 .content-text {
+  display: flex;
   font-size: var(--fontSize) !important;
+  align-items: center;
+  justify-content: center;
+  /* column-gap: 0.8rem; */
 }
 .common-button {
   width: var(--width) !important;
@@ -65,6 +69,9 @@ export default {
     color: var(--textcolor);
     transition: 0.2s all ease-in-out;
     margin-right: 0.5rem;
+    .icon {
+      margin-right: 0.5rem;
+    }
   }
   .icon {
     color: var(--textcolor);
@@ -98,6 +105,9 @@ export default {
     color: var(--textcolor);
     transition: 0.2s all ease-in-out;
     margin-right: 0.5rem;
+    .icon {
+      margin-right: 0.5rem;
+    }
   }
   .icon {
     color: var(--textcolor);
@@ -135,6 +145,9 @@ export default {
     align-items: center;
     .icon {
       margin-right: 0.5rem;
+    }
+    .icon {
+      margin-right: 0.5rem;
       color: var(--textcolor);
       transition: 0.2s all ease-in-out;
       font-size: 1.2rem;
@@ -165,6 +178,9 @@ export default {
     color: var(--textcolor);
     transition: 0.2s all ease-in-out;
     margin-right: 0.5rem;
+    .icon {
+      margin-right: 0.5rem;
+    }
   }
   .icon {
     color: var(--textcolor);
