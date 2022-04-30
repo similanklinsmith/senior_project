@@ -128,8 +128,8 @@
 </template>
 
 <script>
-import CreateMeetingView from "../main/CreateMeetingView.vue";
-import BeConfirmedView from "../main/BeConfirmedView.vue";
+import CreateMeetingView from "./meeting/CreateMeetingView.vue";
+import BeConfirmedView from "./meeting/BeConfirmedView.vue";
 import BaseButton from "../../components/UI/BaseButton.vue";
 import BaseHeader from "../../components/UI/BaseHeader.vue";
 export default {
@@ -143,9 +143,12 @@ export default {
   methods: {
     onClickNav(num) {
       this.isSelected = num;
+      localStorage.setItem("index",num)
     }
   },
-  mounted() {},
+  mounted() {
+    this.isSelected = localStorage.getItem("index")
+  },
 };
 </script>
 
