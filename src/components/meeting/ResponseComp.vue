@@ -150,7 +150,6 @@
           </div>
         </div>
         <div class="confirm-button">
-          <div></div>
           <BaseButton
             buttonType="common-button"
             btnText="Confirm"
@@ -181,7 +180,7 @@ export default {
       isAccept: false,
       isDecline: false,
       timeSlots: [],
-      selectTimeSlots:[],
+      selectTimeSlots: [],
       timeSlot: {
         date: null,
         from: null,
@@ -209,21 +208,28 @@ export default {
     handleAddTimeSlot(date) {
       this.isAddTimeSlot = true;
       this.timeSlot.date = date;
-      if (this.timeSlots.length != 0) {
-        this.selectTimeSlots = this.timeSlots
-      }
+      console.log(this.timeSlots);
+      console.log(this.selectTimeSlots);
+      this.selectTimeSlots = this.timeSlots;
+      // if (this.timeSlots.length != 0) {
+      //   this.selectTimeSlots = this.timeSlots
+      //   console.log(this.timeSlots);
+      // }
     },
     handleCloseTimeSlot() {
-      this.isAddTimeSlot = false;
+      console.log(this.selectTimeSlots);
       this.selectTimeSlots = [];
+      this.isAddTimeSlot = false;
       console.log(this.timeSlots);
     },
     handleConfirm() {
-        console.log(this.selectTimeSlots);
-        this.timeSlots = [...this.selectTimeSlots];
-        this.selectTimeSlots = [];
-        this.isAddTimeSlot = false;
-        console.log(this.timeSlots);
+      // console.log("selected Time Slots: ");
+      //   console.log(this.selectTimeSlots);
+      this.timeSlots = [...this.selectTimeSlots];
+      this.selectTimeSlots = [];
+      this.isAddTimeSlot = false;
+      // console.log("Time Slots: ");
+      // console.log(this.timeSlots);
     },
     selectInbox(id) {
       this.selectedInbox = this.toBeConfirmedList.find((toBeConfirmed) => {
@@ -244,7 +250,7 @@ export default {
           from: this.timeSlot.from,
           to: this.timeSlot.to,
         };
-        this.selectTimeSlots.push(selectedTime)
+        this.selectTimeSlots.push(selectedTime);
         // this.timeSlots.push(selectedTime);
         this.timeSlot.from = "";
         this.timeSlot.to = "";
@@ -300,7 +306,7 @@ export default {
   }
   .confirm-button {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
   }
   .time-slots {
     display: flex;
