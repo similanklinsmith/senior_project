@@ -27,25 +27,45 @@
         </transition-group>
       </div>
     </div>
-    <div class="inbox-detail" v-if="selectedInbox != null">
-      <div class="title remark-text">{{ selectedInbox.title }}</div>
-      <div class="sent-from smallest-text">
-        sent from Katherine Perish at 11:30 AM 04 Apr 2022
+    <transition name="route">
+      <div class="inbox-detail" v-if="selectedInbox != null">
+        <div class="title remark-text">{{ selectedInbox.title }}</div>
+        <div class="sent-from smallest-text">
+          sent from Katherine Perish at 11:30 AM 04 Apr 2022
+        </div>
+        <div class="response">
+          <ResponseComp />
+          <ResponseComp />
+          <ResponseComp />
+          <ResponseComp />
+          <ResponseComp />
+          <ResponseComp />
+        </div>
+        <div class="button">
+          <BaseButton
+            buttonType="common-button"
+            btnText="Confirm response"
+            textColor="white"
+            textHover="white"
+            color="#7452FF"
+            hoverColor="#23106D"
+            width="24rem"
+          >
+          </BaseButton>
+        </div>
       </div>
-      <div class="response">
-      <ResponseComp />
-      </div>
-    </div>
+    </transition>
   </div>
 </template>
 
 <script>
 import InboxComp from "../../../components/meeting/InboxComp.vue";
 import ResponseComp from "../../../components/meeting/ResponseComp.vue";
+import BaseButton from "../../../components/UI/BaseButton.vue";
 
 export default {
   name: "BeConfirmedView",
-  components: { InboxComp, ResponseComp },
+  components: { InboxComp, ResponseComp, BaseButton },
   data() {
     return {
       searchInput: "",
@@ -126,6 +146,29 @@ export default {
   display: flex;
   flex-direction: column;
   row-gap: 1rem;
+  height: 50rem;
+  overflow: scroll;
+  margin: 1rem 0;
+  padding: 0 1rem;
+}
+.response::-webkit-scrollbar {
+  display: block !important;
+  -ms-overflow-style: auto !important;
+  scrollbar-width: auto !important;
+  background-color: transparent;
+  width: 1rem;
+}
+.response::-webkit-scrollbar-track {
+  margin: 1rem;
+  border-radius: 0.5rem;
+}
+.response::-webkit-scrollbar-thumb {
+  background-color: $grey;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease-in-out;
+}
+.response::-webkit-scrollbar-thumb:hover {
+  background-color: $darkGrey;
 }
 .to-be-confirmed-body-section {
   display: grid;
@@ -196,7 +239,7 @@ export default {
   }
   .inbox-detail {
     width: 100%;
-    height: 100%;
+    height: fit-content;
     background-color: $white;
     border-radius: 2.5rem;
     padding: 5rem 4.4rem;
@@ -206,7 +249,10 @@ export default {
     .sent-from {
       color: $darkGrey;
     }
-    
+    .button {
+      display: flex;
+      justify-content: flex-end;
+    }
   }
 }
 </style>

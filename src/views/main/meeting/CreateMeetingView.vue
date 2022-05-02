@@ -1,168 +1,171 @@
 <template>
-<div>
-  <div class="first-body-section">
-    <div class="card-section">
-      <div class="add-attendees">
-        <div class="bold-content-text">Add attendees</div>
-        <div class="small-text required-attendees">Required attendees</div>
-        <div class="selected-attendees">
-          <div
-            class="selected-attendee"
-            v-for="attendee in form.selectedAttendees"
-            :key="attendee.id"
-          >
-            <div class="profile-section">
-              <div class="profile-image">
-                <img
-                  src="../../../assets/decorations/sample_profile.png"
-                  alt="sample profile illustration"
-                />
-              </div>
-              <div class="executive-profile flex-col-center">
-                <div class="name small-text">
-                  {{ attendee.title }}. {{ attendee.firstname }}
-                  {{ attendee.lastname }}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="action-add" @click="isAddAttendees = true">
-          <i class="fa-solid fa-user-plus"></i>
-          <div class="small-text">Add required attendees</div>
-        </div>
-      </div>
-      <div class="add-details">
-        <div class="input-form">
-          <label for="title" class="bold-small-text">Title</label>
-          <input
-            class="small-text"
-            type="text"
-            placeholder="Title"
-            id="title"
-            name="title"
-          />
-        </div>
-        <div class="input-form-row">
-          <div class="input">
-            <label for="date" class="bold-small-text">Date Slot</label>
-            <litepie-datepicker
-              class="small-text"
-              id="date"
-              :disable-date="dDate"
-              v-model="dateValue"
-              as-single
-              use-range
-              :formatter="formatter"
-              :style="{ fontSize: '12px !important', marginTop: '1rem' }"
-            />
-          </div>
-          <div class="input">
-            <label for="duration" class="bold-small-text"
-              >Durations of meeting</label
-            >
-            <select name="duration" id="duration">
-              <option value="">none</option>
-              <option value="1">1 hour</option>
-              <option value="2">2 hours</option>
-              <option value="3">3 hours</option>
-              <option value="4">4 hours</option>
-              <option value="5">5 hours</option>
-              <option value="6">6 hours</option>
-            </select>
-          </div>
-        </div>
-        <div class="input-form-row">
-          <div class="input">
-            <label for="due" class="bold-small-text">Due Date</label>
-            <litepie-datepicker
-              id="due"
-              :disable-date="dDate"
-              as-single
-              :formatter="formatter"
-              v-model="dateValue"
-              :style="{ fontSize: '12px !important', marginTop: '1rem' }"
-            />
-          </div>
-          <div class="input"></div>
-        </div>
-        <div class="input-form-button">
-          <div></div>
-          <BaseButton
-            buttonType="common-button"
-            btnText="Send Poll"
-            textColor="white"
-            textHover="white"
-            color="#7452FF"
-            hoverColor="#23106D"
-          >
-          </BaseButton>
-        </div>
-      </div>
-    </div>
-  </div>
-  <teleport to="#portal-target" v-if="isAddAttendees">
-    <div class="modal" @click="onClickCancelAttendees"></div>
-    <div class="pop-up">
-      <div class="remark-text">Required attendees</div>
-      <div class="search-filter">
-        <div class="input-icon">
-          <i class="icon fa-solid fa-magnifying-glass"></i>
-          <input
-            class="small-text"
-            type="text"
-            placeholder="Search by name"
-            v-model="searchInput"
-          />
-        </div>
-      </div>
-      <div class="pop-up-content">
-        <div class="list-checkbox content-text" v-if="filterByName.length != 0">
-          <transition-group name="route">
+  <div>
+    <div class="first-body-section">
+      <div class="card-section">
+        <div class="add-attendees">
+          <div class="bold-content-text">Add attendees</div>
+          <div class="small-text required-attendees">Required attendees</div>
+          <div class="selected-attendees">
             <div
-              class="executive-checkbox"
-              v-for="executive in filterByName"
-              :key="executive.id"
+              class="selected-attendee"
+              v-for="attendee in form.selectedAttendees"
+              :key="attendee.id"
             >
-              <label :for="executive.id">
+              <div class="profile-section">
                 <div class="profile-image">
                   <img
                     src="../../../assets/decorations/sample_profile.png"
                     alt="sample profile illustration"
                   />
                 </div>
-                {{ executive.title }}. {{ executive.firstname }}
-                {{ executive.lastname }}</label
-              >
-              <input
-                type="checkbox"
-                :name="executive.id"
-                :id="executive.id"
-                :value="executive"
-                v-model="form.selectedAttendees"
+                <div class="executive-profile flex-col-center">
+                  <div class="name small-text">
+                    {{ attendee.title }}. {{ attendee.firstname }}
+                    {{ attendee.lastname }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="action-add" @click="isAddAttendees = true">
+            <i class="fa-solid fa-user-plus"></i>
+            <div class="small-text">Add required attendees</div>
+          </div>
+        </div>
+        <div class="add-details">
+          <div class="input-form">
+            <label for="title" class="bold-small-text">Title</label>
+            <input
+              class="small-text"
+              type="text"
+              placeholder="Title"
+              id="title"
+              name="title"
+            />
+          </div>
+          <div class="input-form-row">
+            <div class="input">
+              <label for="date" class="bold-small-text">Date Slot</label>
+              <litepie-datepicker
+                class="small-text"
+                id="date"
+                :disable-date="dDate"
+                v-model="dateValue"
+                as-single
+                use-range
+                :formatter="formatter"
+                :style="{ fontSize: '12px !important', marginTop: '1rem' }"
               />
             </div>
-          </transition-group>
+            <div class="input">
+              <label for="duration" class="bold-small-text"
+                >Durations of meeting</label
+              >
+              <select name="duration" id="duration">
+                <option value="">none</option>
+                <option value="1">1 hour</option>
+                <option value="2">2 hours</option>
+                <option value="3">3 hours</option>
+                <option value="4">4 hours</option>
+                <option value="5">5 hours</option>
+                <option value="6">6 hours</option>
+              </select>
+            </div>
+          </div>
+          <div class="input-form-row">
+            <div class="input">
+              <label for="due" class="bold-small-text">Due Date</label>
+              <litepie-datepicker
+                id="due"
+                :disable-date="dDate"
+                as-single
+                :formatter="formatter"
+                v-model="dateValue"
+                :style="{ fontSize: '12px !important', marginTop: '1rem' }"
+              />
+            </div>
+            <div class="input"></div>
+          </div>
+          <div class="input-form-button">
+            <div></div>
+            <BaseButton
+              buttonType="common-button"
+              btnText="Send Poll"
+              textColor="white"
+              textHover="white"
+              color="#7452FF"
+              hoverColor="#23106D"
+            >
+            </BaseButton>
+          </div>
         </div>
-        <transition v-else name="route">
-          <div class="remark-text not-found">Not Found</div>
-        </transition>
-      </div>
-      <div class="button-action">
-        <BaseButton
-          buttonType="common-button"
-          btnText="Confirm"
-          textColor="white"
-          textHover="white"
-          color="#7452FF"
-          hoverColor="#23106D"
-          width="100%"
-          @onClick="onClickConfirmAttendees"
-        >
-        </BaseButton>
       </div>
     </div>
-  </teleport>
+    <teleport to="#portal-target" v-if="isAddAttendees">
+      <div class="modal" @click="onClickCancelAttendees"></div>
+      <div class="pop-up">
+        <div class="remark-text">Required attendees</div>
+        <div class="search-filter">
+          <div class="input-icon">
+            <i class="icon fa-solid fa-magnifying-glass"></i>
+            <input
+              class="small-text"
+              type="text"
+              placeholder="Search by name"
+              v-model="searchInput"
+            />
+          </div>
+        </div>
+        <div class="pop-up-content">
+          <div
+            class="list-checkbox content-text"
+            v-if="filterByName.length != 0"
+          >
+            <transition-group name="route">
+              <div
+                class="executive-checkbox"
+                v-for="executive in filterByName"
+                :key="executive.id"
+              >
+                <label :for="executive.id">
+                  <div class="profile-image">
+                    <img
+                      src="../../../assets/decorations/sample_profile.png"
+                      alt="sample profile illustration"
+                    />
+                  </div>
+                  {{ executive.title }}. {{ executive.firstname }}
+                  {{ executive.lastname }}</label
+                >
+                <input
+                  type="checkbox"
+                  :name="executive.id"
+                  :id="executive.id"
+                  :value="executive"
+                  v-model="form.selectedAttendees"
+                />
+              </div>
+            </transition-group>
+          </div>
+          <transition v-else name="route">
+            <div class="remark-text not-found">Not Found</div>
+          </transition>
+        </div>
+        <div class="button-action">
+          <BaseButton
+            buttonType="common-button"
+            btnText="Confirm"
+            textColor="white"
+            textHover="white"
+            color="#7452FF"
+            hoverColor="#23106D"
+            width="100%"
+            @onClick="onClickConfirmAttendees"
+          >
+          </BaseButton>
+        </div>
+      </div>
+    </teleport>
   </div>
 </template>
 
@@ -197,6 +200,7 @@ export default {
       form: {
         selectedAttendees: [],
       },
+      tempAttendees: [],
     };
   },
   computed: {
@@ -216,10 +220,16 @@ export default {
   methods: {
     onClickConfirmAttendees() {
       this.isAddAttendees = false;
+      this.form.selectedAttendees = [
+        ...this.tempAttendees,
+        ...this.form.selectedAttendees,
+      ];
+      console.log(this.form.selectedAttendees);
     },
     onClickCancelAttendees() {
       this.isAddAttendees = false;
-      this.form.selectedAttendees = [];
+      this.tempAttendees = [];
+      this.form.selectedAttendees = [...this.tempAttendees,...this.form.selectedAttendees]
     },
   },
   mounted() {
