@@ -285,10 +285,6 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../assets/colors/webColors.scss";
-.required {
-  color: $error;
-  margin-left: 0.2rem;
-}
 .modal {
   width: 100%;
   height: 100vh;
