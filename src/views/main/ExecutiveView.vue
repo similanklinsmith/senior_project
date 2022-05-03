@@ -329,6 +329,7 @@ import BaseButton from "../../components/UI/BaseButton.vue";
 import BaseHeader from "../../components/UI/BaseHeader.vue";
 import BasePopup from "../../components/UI/BasePopup.vue";
 import ExecutiveComp from "../../components/meeting/ExecutiveComp.vue";
+import { mapGetters, mapActions } from "vuex";
 export default {
   components: { BaseButton, BaseHeader, ExecutiveComp, BasePopup },
   name: "ExecutiveView",
@@ -355,7 +356,14 @@ export default {
       },
     };
   },
+  // eslint-disable-next-line
+  computed: mapGetters(["getExecutives"]),
+  // eslint-disable-next-line
   computed: {
+    getExecutivesList() {
+      console.log(this.$store.getters.getExecutives);
+      return this.$store.getters.getExecutives;
+    },
     filterByName() {
       return this.executives.filter((executive) => {
         return (
@@ -370,6 +378,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions(["getExecutives"]),
     selectExecutive(id) {
       this.selectedExecutive = this.executives.find((executive) => {
         this.selectedId = id;
@@ -419,6 +428,9 @@ export default {
         this.previewImage = e.target.result;
       };
     },
+  },
+  created() {
+    this.getExecutives();
   },
   mounted() {
     window.onscroll = () => {
