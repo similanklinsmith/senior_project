@@ -132,34 +132,40 @@ html {
 .route-leave-active {
   transition: 0.3s all ease-in-out;
 }
+
 @keyframes floating {
-	0% {
-		transform: translateY(0%);	
-	}
-	50% {
-		transform: translateY(8%);	
-	}	
-	100% {
-		transform: translateY(0%);
-	}			
+  0% {
+    transform: translateY(0%);
+  }
+
+  50% {
+    transform: translateY(8%);
+  }
+
+  100% {
+    transform: translateY(0%);
+  }
 }
 
 @-webkit-keyframes floating {
-	0% {
-		-webkit-transform: translateY(0%);	
-	}
-	50% {
-		-webkit-transform: translateY(8%);	
-	}	
-	100% {
-		-webkit-transform: translateY(0%);
-	}			
+  0% {
+    -webkit-transform: translateY(0%);
+  }
+
+  50% {
+    -webkit-transform: translateY(8%);
+  }
+
+  100% {
+    -webkit-transform: translateY(0%);
+  }
 }
 
 @keyframes appears {
   0% {
     opacity: 0;
   }
+
   100% {
     opacity: 1;
   }
@@ -169,4 +175,47 @@ html {
   html {
     font-size: 8px !important;
   }
+}
+
+.vuecal--violet-theme {
+  font-size: 1.2rem;
+  padding: 1rem;
+  border-color: $primaryViolet !important;
+
+  .vuecal__title button {
+    font-weight: 500;
+    font-size: 1.8rem;
+    color: $darkViolet;
+  }
+
+  .vuecal__menu,
+  .vuecal__cell-events-count {
+    margin-top: 0.4rem;
+    background-color: $yellow;
+    font-size: 0.8rem;
+    color: #fff;
+  }
+  .vuecal__event {
+    background-color: $fadedViolet;
+    padding: 1.2rem 1rem;
+    line-height: 1.6rem;
+    color: $darkViolet;
+    font-weight: 500;
+    border-radius: 1rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .vuecal__title-bar {
+    background-color: transparent;
+    color: $primaryViolet;
+  }
+}
+
+.vuecal--date-picker:not(.vuecal--day-view) .vuecal__cell--current .vuecal__cell-content,
+.vuecal--date-picker:not(.vuecal--day-view) .vuecal__cell--today .vuecal__cell-content {
+  border-color: $primaryViolet !important;
+}
+
+.vuecal--date-picker:not(.vuecal--day-view) .vuecal__cell--selected .vuecal__cell-content {
+  background-color: $primaryViolet !important;
 }
