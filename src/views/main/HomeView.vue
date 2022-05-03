@@ -28,6 +28,7 @@
                 color="white"
                 width="100%"
                 hoverColor="#7452FF"
+                @onClick="navToCreateMeeting"
               >
                 <template v-slot:after-icon>
                   <i class="icon fa-solid fa-plus"></i>
@@ -114,9 +115,20 @@
             </div>
           </div>
         </div>
-        <div class="executives-card">
+        <div class="calendar-card">
           <div class="remark-text">Calendar</div>
-          <div class="card"></div>
+          <div class="card">
+            <vue-cal
+              class="vuecal--date-picker vuecal--violet-theme"
+              hide-view-selector
+              :time="false"
+              active-view="month"
+              :disable-views="['week']"
+              :events="events"
+              :selected-date="selectedDate"
+            >
+            </vue-cal>
+          </div>
         </div>
       </div>
       <div class="second-body-section">
@@ -139,9 +151,45 @@
 import BaseButton from "../../components/UI/BaseButton.vue";
 import BaseHeader from "../../components/UI/BaseHeader.vue";
 import AttendeeGroup from "../../components/meeting/AttendeeGroup.vue";
+import VueCal from "vue-cal";
+import "vue-cal/dist/vuecal.css";
 export default {
-  components: { BaseButton, BaseHeader, AttendeeGroup },
+  components: { BaseButton, BaseHeader, AttendeeGroup, VueCal },
   name: "HomeView",
+  data() {
+    return {
+      selectedDate:"",
+      events: [
+        {
+          start: "2022-05-03 10:35",
+          end: "2022-05-03 11:30",
+          title: "Doctor appointment",
+          content: "Free Time 10:35 - 11:30",
+        },
+        {
+          start: "2022-05-03 10:35",
+          end: "2022-05-03 11:30",
+          title: "Doctor appointment",
+          content: "Free Time 10:35 - 11:30",
+        },
+        {
+          start: "2022-05-22 10:00",
+          end: "2022-05-22 15:00",
+          title: "Doctor appointment",
+          content: "Free Time 10:35 - 11:30",
+        },
+      ],
+    };
+  },
+  methods: {
+    navToCreateMeeting() {
+      localStorage.setItem("index", 1);
+      this.$router.push({ path: "/meetings-management" });
+    },
+  },
+  mounted() {
+    this.selectedDate = new Date().toISOString().slice(0, 10);
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -167,7 +215,8 @@ export default {
         color: $darkViolet;
       }
       .executives-card,
-      .create-meeting-card {
+      .create-meeting-card,
+      .calendar-card {
         height: 50rem;
         width: 100%;
         position: relative;
@@ -281,6 +330,17 @@ export default {
               }
             }
           }
+        }
+      }
+      .calendar-card {
+        .card {
+          overflow: hidden;
+          margin-top: 3.6rem;
+          position: relative;
+          height: 38rem;
+          width: 100%;
+          background-color: $white;
+          border-radius: 2.5rem;
         }
       }
     }
