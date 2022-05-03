@@ -52,7 +52,19 @@
                     </div>
                   </div>
                 </div>
-                <div class="calendar"></div>
+                <div class="calendar">
+                  <vue-cal
+                    selected-date="2018-11-19"
+                    :time-from="7 * 60"
+                    :time-step="30"
+                    active-view="day"
+                    :events="events"
+                    :split-days="splitDays"
+                    :sticky-split-labels="stickySplitLabels"
+                    hide-view-selector
+                  >
+                  </vue-cal>
+                </div>
               </div>
               <div class="second-col">
                 <form action="">
@@ -146,18 +158,17 @@
                     File: {{ dropzoneFile.name }}
                   </div>
                   <div class="button">
-                                     <BaseButton
-                    buttonType="common-button"
-                    btnText="Create meeting"
-                    textColor="white"
-                    textHover="white"
-                    color="#7452FF"
-                    hoverColor="#23106D"
-                    width="fit-content"
-                  >
-                  </BaseButton>
+                    <BaseButton
+                      buttonType="common-button"
+                      btnText="Create meeting"
+                      textColor="white"
+                      textHover="white"
+                      color="#7452FF"
+                      hoverColor="#23106D"
+                      width="fit-content"
+                    >
+                    </BaseButton>
                   </div>
- 
                 </form>
               </div>
             </div>
@@ -173,10 +184,12 @@ import InboxComp from "../../../components/meeting/InboxComp.vue";
 import ResultComp from "../../../components/meeting/ResultComp.vue";
 import BaseDropZone from "../../../components/UI/BaseDropZone.vue";
 import BaseButton from "../../../components/UI/BaseButton.vue";
+import VueCal from "vue-cal";
+import "vue-cal/dist/vuecal.css";
 import { ref } from "vue";
 export default {
   name: "ConfirmedView",
-  components: { InboxComp, ResultComp, BaseDropZone, BaseButton },
+  components: { InboxComp, ResultComp, BaseDropZone, BaseButton, VueCal },
   setup() {
     let dropzoneFile = ref("");
     const drop = (e) => {
@@ -185,7 +198,6 @@ export default {
     const selectedFile = () => {
       dropzoneFile.value = document.querySelector(".dropzoneFile").files[0];
     };
-    console.log(dropzoneFile);
     return { dropzoneFile, drop, selectedFile };
   },
   data() {
@@ -196,6 +208,40 @@ export default {
       selectedId: null,
       response: null,
       isShowSchedule: false,
+      stickySplitLabels: false,
+      splitDays: [
+        { id: 1, class: "mom", label: "Similan, K." },
+        { id: 2, class: "dad", label: "Noparat, P." },
+        { id: 3, class: "kid1", label: "John, S." },
+        { id: 4, class: "kid2", label: "Alexanda, Q." },
+        { id: 5, class: "kid3", label: "Michaele, A." },
+      ],
+      events: [
+        {
+          start: "2018-11-19 10:35",
+          end: "2018-11-19 11:30",
+          title: "Doctor appointment",
+          content: "Free Time 10:35 - 11:30",
+          class: "health",
+          split: 1, // Has to match the id of the split you have set (or integers if none).
+        },
+        {
+          start: "2018-11-19 18:30",
+          end: "2018-11-19 19:15",
+          title: "Dentist appointment",
+          content: '<i class="v-icon material-icons">local_hospital</i>',
+          class: "health",
+          split: 2,
+        },
+        {
+          start: "2018-11-20 18:30",
+          end: "2018-11-20 20:30",
+          title: "Crossfit",
+          content: '<i class="v-icon material-icons">fitness_center</i>',
+          class: "sport",
+          split: 1,
+        },
+      ],
     };
   },
   computed: {
@@ -508,7 +554,8 @@ export default {
     }
     .calendar {
       width: 100%;
-      height: 100%;
+      height: 60rem;
+      overflow: scroll;
       background-color: $white;
       border-radius: 2rem;
     }
