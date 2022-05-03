@@ -10,6 +10,7 @@
         color="#7452FF"
         hoverColor="#23106D"
         width="fit-content"
+        @onClick="onClickShowSchedule"
       >
       </BaseButton>
     </div>
@@ -274,15 +275,20 @@ export default {
       this.isShowAttendees = false;
       this.showAttendeeList = [];
     },
+    onClickShowSchedule() {
+      this.$emit('showSchedule');
+    }
   },
-  mounted() {
-    console.log(this.response);
-  },
+  mounted() {},
 };
 </script>
 
 <style lang="scss" scoped>
 @import "../../assets/colors/webColors.scss";
+.required {
+  color: $error;
+  margin-left: 0.2rem;
+}
 .modal {
   width: 100%;
   height: 100vh;
