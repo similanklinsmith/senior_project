@@ -27,25 +27,167 @@
         </transition-group>
       </div>
     </div>
-    <div class="inbox-detail" v-if="selectedInbox != null">
-      <div class="title remark-text">{{ selectedInbox.title }}</div>
-      <div class="sent-from smallest-text">
-        created poll at 11:30 AM 04 Apr 2022
+    <transition name="route">
+      <div class="inbox-detail" v-if="selectedInbox != null">
+        <div class="title remark-text">{{ selectedInbox.title }}</div>
+        <div class="sent-from smallest-text">
+          created poll at 11:30 AM 04 Apr 2022
+        </div>
+        <div class="result">
+          <ResultComp
+            v-for="res in response.responses"
+            :key="res.id"
+            :response="res"
+            @showSchedule="onClickShowSchedule"
+          />
+          <teleport to="#portal-target" v-if="isShowSchedule">
+            <div class="modal" @click="onClickCloseSchedule"></div>
+            <div class="container">
+              <div class="first-col">
+                <div class="suggested-time">
+                  <div class="bold-content-text">Suggested time</div>
+                  <div class="time-slot">
+                    <div class="slot">
+                      <div class="bold-content-text">10:00AM.-17:00PM.</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="calendar"></div>
+              </div>
+              <div class="second-col">
+                <form action="">
+                  <div class="input-form">
+                    <label for="title" class="bold-small-text"
+                      >Title<span class="required">*</span></label
+                    >
+                    <input
+                      class="small-text"
+                      type="text"
+                      placeholder="Title"
+                      id="title"
+                      name="title"
+                    />
+                  </div>
+                  <div class="input-form">
+                    <label for="description" class="bold-small-text"
+                      >Description<span class="required">*</span></label
+                    >
+                    <textarea
+                      class="small-text"
+                      type="text"
+                      placeholder="Description"
+                      id="description"
+                      name="description"
+                    />
+                  </div>
+                  <div class="row-input">
+                    <div class="input-form">
+                      <label for="date" class="bold-small-text">Date</label>
+                      <input
+                        class="small-text"
+                        type="date"
+                        placeholder="date"
+                        id="date"
+                        name="date"
+                        readonly
+                      />
+                    </div>
+                    <div class="input-form">
+                      <label for="from" class="bold-small-text"
+                        >From<span class="required">*</span></label
+                      >
+                      <input
+                        class="small-text"
+                        type="time"
+                        placeholder="HH:MM"
+                        id="from"
+                        name="from"
+                      />
+                    </div>
+                    <div class="input-form">
+                      <label for="to" class="bold-small-text"
+                        >To<span class="required">*</span></label
+                      >
+                      <input
+                        class="small-text"
+                        type="time"
+                        placeholder="HH:MM"
+                        id="to"
+                        name="to"
+                      />
+                    </div>
+                  </div>
+                  <div class="input-form">
+                    <label for="location" class="bold-small-text"
+                      >Location<span class="required">*</span></label
+                    >
+                    <input
+                      class="small-text"
+                      type="text"
+                      placeholder="Location"
+                      id="location"
+                      name="location"
+                    />
+                  </div>
+                  <div class="input-form">
+                    <label for="link" class="bold-small-text"
+                      >Meeting Link<span class="required">*</span></label
+                    >
+                    <input
+                      class="small-text"
+                      type="text"
+                      placeholder="www.example-link.com"
+                      id="link"
+                      name="link"
+                    />
+                  </div>
+                  <BaseDropZone @drop.prevent="drop" @change="selectedFile" />
+                  <div class="file-info bold-small-text">
+                    File: {{ dropzoneFile.name }}
+                  </div>
+                  <div class="button">
+                                     <BaseButton
+                    buttonType="common-button"
+                    btnText="Create meeting"
+                    textColor="white"
+                    textHover="white"
+                    color="#7452FF"
+                    hoverColor="#23106D"
+                    width="fit-content"
+                  >
+                  </BaseButton>
+                  </div>
+ 
+                </form>
+              </div>
+            </div>
+          </teleport>
+        </div>
       </div>
-      <div class="result">
-        <ResultComp v-for="res in response.responses" :key="res.id" :response="res"/>
-      </div>
-    </div>
+    </transition>
   </div>
 </template>
 
 <script>
 import InboxComp from "../../../components/meeting/InboxComp.vue";
 import ResultComp from "../../../components/meeting/ResultComp.vue";
-
+import BaseDropZone from "../../../components/UI/BaseDropZone.vue";
+import BaseButton from "../../../components/UI/BaseButton.vue";
+import { ref } from "vue";
 export default {
   name: "ConfirmedView",
-  components: { InboxComp, ResultComp },
+  components: { InboxComp, ResultComp, BaseDropZone, BaseButton },
+  setup() {
+    let dropzoneFile = ref("");
+    const drop = (e) => {
+      dropzoneFile.value = e.dataTransfer.files[0];
+    };
+    const selectedFile = () => {
+      dropzoneFile.value = document.querySelector(".dropzoneFile").files[0];
+    };
+    console.log(dropzoneFile);
+    return { dropzoneFile, drop, selectedFile };
+  },
   data() {
     return {
       searchInput: "",
@@ -53,6 +195,7 @@ export default {
       selectedInbox: null,
       selectedId: null,
       response: null,
+      isShowSchedule: false,
     };
   },
   computed: {
@@ -70,6 +213,12 @@ export default {
         this.selectedId = id;
         return toBeConfirmed.id == id;
       });
+    },
+    onClickShowSchedule() {
+      this.isShowSchedule = true;
+    },
+    onClickCloseSchedule() {
+      this.isShowSchedule = false;
     },
   },
   mounted() {
@@ -304,6 +453,126 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../../assets/colors/webColors.scss";
+.required {
+  color: $error;
+  margin-left: 0.2rem;
+}
+.modal {
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  background-color: rgba(24, 24, 26, 0.4);
+  z-index: 11;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.container {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  position: fixed;
+  z-index: 12;
+  width: 95%;
+  height: 90%;
+  display: grid;
+  grid-template-columns: 1.25fr 0.75fr;
+  column-gap: 2rem;
+  animation-name: appears;
+  animation-duration: 0.5s;
+  animation-iteration-count: 1;
+  .first-col {
+    display: flex;
+    flex-direction: column;
+    row-gap: 2rem;
+    .suggested-time {
+      width: 100%;
+      height: 7.4rem;
+      background-color: $white;
+      border-radius: 2rem;
+      display: flex;
+      padding: 1rem 3.6rem;
+      align-items: center;
+      column-gap: 2rem;
+      .time-slot {
+        display: flex;
+        column-gap: 1.6rem;
+        .slot {
+          width: fit-content;
+          background-color: $primaryViolet;
+          padding: 1rem 2rem;
+          color: $white;
+        }
+      }
+    }
+    .calendar {
+      width: 100%;
+      height: 100%;
+      background-color: $white;
+      border-radius: 2rem;
+    }
+  }
+  .second-col {
+    width: 100%;
+    height: 100%;
+    background-color: $white;
+    border-radius: 2.5rem;
+    padding: 3.6rem 3.2rem;
+    overflow: scroll;
+    .file-info {
+      margin: 1rem 0rem;
+    }
+    .button {
+      display: flex;
+      justify-content: flex-end;
+      width: 100%;
+    }
+    .row-input {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      width: 100%;
+      .input-form {
+        margin: 0rem;
+      }
+    }
+    .input-form {
+      display: flex;
+      flex-direction: column;
+      margin: 1.6rem 0rem;
+      input {
+        margin-top: 1rem;
+        padding: 1rem 1.4rem;
+        height: 4rem;
+        border-radius: 0.5rem;
+        border: none;
+        background-color: $primaryGrey;
+        font-family: "Poppins", sans-serif;
+      }
+      textarea {
+        margin-top: 1rem;
+        padding: 1rem 1.4rem;
+        height: 12rem;
+        border-radius: 0.5rem;
+        border: none;
+        background-color: $primaryGrey;
+        font-family: "Poppins", sans-serif;
+        resize: none;
+      }
+      input:focus,
+      textarea:focus {
+        outline: none;
+        border: 0.1rem solid $primaryViolet;
+      }
+      input::placeholder,
+      textarea::placeholder {
+        font-size: 1.4rem;
+        color: $darkGrey;
+      }
+    }
+  }
+}
 .result {
   display: flex;
   flex-direction: column;
