@@ -276,7 +276,7 @@ export default {
       this.showAttendeeList = [];
     },
     onClickShowSchedule() {
-      this.$emit('showSchedule');
+      this.$emit('showSchedule', this.response.dateTime);
     }
   },
   mounted() {},

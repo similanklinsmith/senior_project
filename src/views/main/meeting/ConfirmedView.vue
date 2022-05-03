@@ -54,7 +54,8 @@
                 </div>
                 <div class="calendar">
                   <vue-cal
-                    selected-date="2018-11-19"
+                    class="vuecal--violet-theme vuecal--disabled-button"
+                    :selected-date="selectedDate"
                     :time-from="7 * 60"
                     :time-step="30"
                     active-view="day"
@@ -202,6 +203,7 @@ export default {
   },
   data() {
     return {
+      selectedDate:"",
       searchInput: "",
       toBeConfirmedList: [],
       selectedInbox: null,
@@ -218,24 +220,24 @@ export default {
       ],
       events: [
         {
-          start: "2018-11-19 10:35",
-          end: "2018-11-19 11:30",
+          start: "2022-04-06 10:35",
+          end: "2022-04-06 11:30",
           title: "Doctor appointment",
           content: "Free Time 10:35 - 11:30",
           class: "health",
           split: 1, // Has to match the id of the split you have set (or integers if none).
         },
         {
-          start: "2018-11-19 18:30",
-          end: "2018-11-19 19:15",
+          start: "2022-04-06 18:30",
+          end: "2022-04-06 19:15",
           title: "Dentist appointment",
           content: '<i class="v-icon material-icons">local_hospital</i>',
           class: "health",
           split: 2,
         },
         {
-          start: "2018-11-20 18:30",
-          end: "2018-11-20 20:30",
+          start: "2022-04-06 18:30",
+          end: "2022-04-06 20:30",
           title: "Crossfit",
           content: '<i class="v-icon material-icons">fitness_center</i>',
           class: "sport",
@@ -260,8 +262,9 @@ export default {
         return toBeConfirmed.id == id;
       });
     },
-    onClickShowSchedule() {
+    onClickShowSchedule(date) {
       this.isShowSchedule = true;
+      this.selectedDate = date;
     },
     onClickCloseSchedule() {
       this.isShowSchedule = false;

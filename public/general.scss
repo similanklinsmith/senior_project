@@ -177,6 +177,12 @@ html {
   }
 }
 
+.vuecal--disabled-button{
+  .vuecal__arrow {
+    display: none;
+  }
+}
+
 .vuecal--violet-theme {
   font-size: 1.2rem;
   padding: 1rem;
@@ -201,7 +207,6 @@ html {
     line-height: 1.6rem;
     color: $darkViolet;
     font-weight: 500;
-    border-radius: 1rem;
     margin-bottom: 0.6rem;
   }
 
