@@ -181,6 +181,12 @@ html {
   .vuecal__arrow {
     display: none;
   }
+  .vuecal__event {
+    border-bottom: 1px solid $primaryViolet;
+    border-top: 1px solid $primaryViolet;
+    margin-bottom: 0 !important;
+  }
+
 }
 
 .vuecal--violet-theme {
