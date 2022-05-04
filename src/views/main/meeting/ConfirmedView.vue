@@ -505,6 +505,7 @@ export default {
 .required {
   color: $error;
   margin-left: 0.2rem;
+  font-size: 1.4rem !important;
 }
 .modal {
   width: 100%;

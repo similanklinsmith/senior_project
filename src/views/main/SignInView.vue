@@ -150,6 +150,7 @@ export default {
 .required {
   color: $error;
   margin-left: 0.2rem;
+  font-size: 1.4rem !important;
 }
 .sign-in-screen {
   width: 100%;
