@@ -88,9 +88,9 @@
               </div>
               <div class="executive-profile">
                 <div class="name remark-text">
-                  {{ selectedExecutive.title }}.
-                  {{ selectedExecutive.firstname }}
-                  {{ selectedExecutive.lastname }}
+                  {{ selectedExecutive.title_code }}.
+                  {{ selectedExecutive.first_name }}
+                  {{ selectedExecutive.last_name }}
                 </div>
                 <div class="position thin-content-text">
                   {{ selectedExecutive.position }}
@@ -118,7 +118,7 @@
                   </div>
                 </div>
                 <div class="content-text" id="phone-value">
-                  {{ selectedExecutive.tel }}
+                  {{ formatPhoneNumber(selectedExecutive.phone_number) }}
                 </div>
               </div>
               <div class="secretary">
@@ -139,7 +139,10 @@
           name="route"
           v-if="isAddExecutive == true || executives.length == 0"
         >
-          <div class="add-executive-card">
+          <form
+            @submit.prevent="handleChangeExecutive"
+            class="add-executive-card"
+          >
             <label class="upload-profile" for="upload">
               <input
                 @change="uploadImage"
@@ -167,19 +170,27 @@
             <div class="information">
               <div class="input">
                 <div class="input-form">
-                  <label for="title" class="bold-small-text">Title</label>
-                  <select name="title" id="title">
+                  <label for="title" class="bold-small-text"
+                    >Title<span class="required"
+                      >* {{ errors.title }}</span
+                    ></label
+                  >
+                  <select name="title" id="title" v-model="form.title">
                     <option value="">none</option>
                     <option value="Mr">Mr</option>
                     <option value="Mrs">Mrs</option>
                     <option value="Ms">Ms</option>
                     <option value="Dr">Dr</option>
                     <option value="Professor">Professor</option>
-                    <option value="othes">others</option>
+                    <option value="others">others</option>
                   </select>
                 </div>
                 <div class="input-form">
-                  <label for="name" class="bold-small-text">Name</label>
+                  <label for="name" class="bold-small-text"
+                    >Name<span class="required"
+                      >* {{ errors.firstname }}</span
+                    ></label
+                  >
                   <input
                     class="small-text"
                     type="text"
@@ -192,7 +203,11 @@
               </div>
               <div class="input">
                 <div class="input-form">
-                  <label for="surname" class="bold-small-text">Surname</label>
+                  <label for="surname" class="bold-small-text"
+                    >Surname<span class="required"
+                      >* {{ errors.lastname }}</span
+                    ></label
+                  >
                   <input
                     class="small-text"
                     type="text"
@@ -203,21 +218,29 @@
                   />
                 </div>
                 <div class="input-form">
-                  <label for="position" class="bold-small-text">Position</label>
-                  <select name="position" id="position">
+                  <label for="position" class="bold-small-text"
+                    >Position<span class="required"
+                      >* {{ errors.position }}</span
+                    ></label
+                  >
+                  <select name="position" id="position" v-model="form.position">
                     <option value="">none</option>
                     <option value="Mr">Mr</option>
                     <option value="Mrs">Mrs</option>
                     <option value="Ms">Ms</option>
                     <option value="Dr">Dr</option>
                     <option value="Professor">Professor</option>
-                    <option value="othes">others</option>
+                    <option value="others">others</option>
                   </select>
                 </div>
               </div>
               <div class="input">
                 <div class="input-form">
-                  <label for="email" class="bold-small-text">Email</label>
+                  <label for="email" class="bold-small-text"
+                    >Email<span class="required"
+                      >* {{ errors.email }}</span
+                    ></label
+                  >
                   <input
                     class="small-text"
                     type="text"
@@ -229,11 +252,13 @@
                 </div>
                 <div class="input-form">
                   <label for="phone-number" class="bold-small-text"
-                    >Phone number</label
+                    >Phone number<span class="required"
+                      >* {{ errors.tel }}</span
+                    ></label
                   >
                   <input
                     class="small-text"
-                    type="text"
+                    type="tel"
                     placeholder="e.g. 000-000-0000"
                     id="phone-number"
                     name="phone-number"
@@ -277,11 +302,12 @@
                   textHover="white"
                   color="#7452FF"
                   hoverColor="#23106D"
+                  type="submit"
                 >
                 </BaseButton>
               </div>
             </div>
-          </div>
+          </form>
         </transition>
       </div>
     </div>
@@ -293,7 +319,7 @@
     >
       <template v-slot:popupContent>
         This executive(<span :style="{ color: '#C4C4C4 !important' }">{{
-          selectedExecutive.firstname
+          selectedExecutive.first_name
         }}</span
         >) will be deleted immediately after confirming!
       </template>
@@ -333,6 +359,7 @@ import { mapGetters, mapActions } from "vuex";
 export default {
   components: { BaseButton, BaseHeader, ExecutiveComp, BasePopup },
   name: "ExecutiveView",
+  props: ["isAdd"],
   data() {
     return {
       isAddExecutive: false,
@@ -348,12 +375,13 @@ export default {
         title: "",
         firstname: "",
         lastname: "",
-        position: null,
+        position: "",
         email: "",
         tel: "",
         reportTo: "",
         imageProfile: "",
       },
+      errors: {},
     };
   },
   // eslint-disable-next-line
@@ -367,19 +395,51 @@ export default {
     filterByName() {
       return this.executives.filter((executive) => {
         return (
-          executive.firstname
+          executive.first_name
             .toLowerCase()
             .includes(this.searchInput.toLowerCase()) ||
-          executive.lastname
+          executive.last_name
             .toLowerCase()
             .includes(this.searchInput.toLowerCase())
         );
       });
     },
+    titleIsValid() {
+      return !!this.form.title;
+    },
+    firstnameIsValid() {
+      return !!this.form.firstname;
+    },
+    lastnameIsValid() {
+      return !!this.form.lastname;
+    },
+    positionIsValid() {
+      return !!this.form.position;
+    },
+    emailIsValid() {
+      return !!this.form.email;
+    },
+    telIsValid() {
+      return !!this.form.tel;
+    },
+    telPatternIsValid() {
+      return !!(this.form.tel.length == 10);
+    },
   },
   methods: {
     ...mapActions(["getExecutives"]),
+    formatPhoneNumber(str) {
+      let cleaned = ("" + str).replace(/\D/g, "");
+      let match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+
+      if (match) {
+        return match[1] + "-" + match[2] + "-" + match[3];
+      }
+
+      return null;
+    },
     selectExecutive(id) {
+      this.cancelEdit();
       this.selectedExecutive = this.executives.find((executive) => {
         this.selectedId = id;
         return executive.id == id;
@@ -406,16 +466,17 @@ export default {
       this.form.tel = "";
       this.form.reportTo = "";
       // this.form.imageProfile = "";
+      this.errors = {};
     },
     editExecutive(id) {
       this.isAddExecutive = true;
       this.editId = id;
       // this.form.title = this.selectedExecutive.title;
-      this.form.firstname = this.selectedExecutive.firstname;
-      this.form.lastname = this.selectedExecutive.lastname;
+      this.form.firstname = this.selectedExecutive.first_name;
+      this.form.lastname = this.selectedExecutive.last_name;
       this.form.email = this.selectedExecutive.email;
       // this.form.position = this.selectedExecutive.position;
-      this.form.tel = this.selectedExecutive.tel;
+      this.form.tel = this.selectedExecutive.phone_number;
       this.form.reportTo = this.selectedExecutive.reportTo;
       // this.form.imageProfile = this.selectedExecutive.imageProfile;
     },
@@ -428,6 +489,36 @@ export default {
         this.previewImage = e.target.result;
       };
     },
+    handleChangeExecutive() {
+      this.titleIsValid
+        ? delete this.errors.title
+        : (this.errors.title = "Please select title");
+      this.firstnameIsValid
+        ? delete this.errors.firstname
+        : (this.errors.firstname = "Please inform firstname");
+      this.lastnameIsValid
+        ? delete this.errors.lastname
+        : (this.errors.lastname = "Please inform lastname");
+      this.positionIsValid
+        ? delete this.errors.position
+        : (this.errors.position = "Please select position");
+      this.emailIsValid
+        ? delete this.errors.email
+        : (this.errors.email = "Please inform email");
+      if (this.telIsValid) {
+        delete this.errors.tel;
+        if (this.telPatternIsValid) {
+          delete this.errors.tel;
+        } else {
+          this.errors.tel = "Phone number is not valid";
+        }
+      } else {
+        this.errors.tel = "Please inform phone number";
+      }
+      if (Object.keys(this.errors).length == 0) {
+        alert("add success");
+      }
+    },
   },
   created() {
     this.getExecutives();
@@ -436,41 +527,42 @@ export default {
     window.onscroll = () => {
       this.isShowDropdown = false;
     };
+    this.isAddExecutive = this.isAdd ? true : this.isAddExecutive;
     this.executives = [
       {
         id: 1,
-        title: "Mr",
-        firstname: "Similan",
-        lastname: "Klinsmith",
+        title_code: "Mr",
+        first_name: "Similan",
+        last_name: "Klinsmith",
         position: "Chief Executive",
         email: "similan@mail.kmutt.ac.th",
-        tel: "081-000-0000",
+        phone_number: "0810000000",
         reportTo: "Alexander Macedonia",
-        imageProfile: "",
+        img_profile: "",
       },
       {
         id: 2,
-        title: "Ms",
-        firstname: "Praepanwa",
-        lastname: "Tedprasit",
+        title_code: "Ms",
+        first_name: "Praepanwa",
+        last_name: "Tedprasit",
         position: "Chief Executive",
         email: "praepanwa@mail.kmutt.ac.th",
-        tel: "081-000-0000",
+        phone_number: "0810000000",
         reportTo: "Alexander Macedonia",
-        imageProfile: "",
+        img_profile: "",
       },
       {
         id: 3,
-        title: "Ms",
-        firstname: "Noparat",
-        lastname: "Prasongdee",
+        title_code: "Ms",
+        first_name: "Noparat",
+        last_name: "Prasongdee",
         position: "Chief Executive",
         email: "noparat@mail.kmutt.ac.th",
-        tel: "081-000-0000",
+        phone_number: "0810000000",
         reportTo: "Alexander Macedonia",
-        imageProfile: "",
+        img_profile: "",
       },
-    ].sort((a, b) => (a.firstname > b.firstname ? 1 : -1));
+    ].sort((a, b) => (a.first_name > b.first_name ? 1 : -1));
     if (this.executives.length > 0) {
       this.selectedExecutive = this.executives[0];
       this.selectedId = this.executives[0].id;
@@ -481,6 +573,11 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../assets/colors/webColors.scss";
+.required {
+  color: $error;
+  margin-left: 0.2rem;
+  font-size: 1.4rem !important;
+}
 .executive-screen {
   .body {
     padding: 3rem;
@@ -778,7 +875,8 @@ export default {
               display: flex;
               flex-direction: column;
               select,
-              input[type="text"] {
+              input[type="text"],
+              input[type="tel"] {
                 margin-top: 1rem;
                 padding: 1rem 1.4rem;
                 width: 100%;
@@ -788,7 +886,8 @@ export default {
                 background-color: $primaryGrey;
                 font-family: "Poppins", sans-serif;
               }
-              input[type="text"]:focus {
+              input[type="text"]:focus,
+              input[type="tel"]:focus {
                 outline: none;
                 border: 0.1rem solid $primaryViolet;
               }
@@ -806,8 +905,8 @@ export default {
             }
           }
           .form-button {
-            width: 80%;
-            margin-left: 20%;
+            width: 100%;
+            justify-content: flex-end;
             display: flex;
             gap: 1.5rem;
           }
