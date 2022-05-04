@@ -89,6 +89,7 @@
                   hoverColor="#23106D"
                   height="100%"
                   width="100%"
+                  @onClick="navToAddExecutive"
                 >
                   <template v-slot:after-icon>
                     <i class="icon fa-solid fa-user-plus"></i>
@@ -104,6 +105,7 @@
                   hoverColor="#23106D"
                   height="100%"
                   width="100%"
+                  @onClick="navToShowExecutive"
                 >
                   <template v-slot:after-icon>
                     <div class="badge">
@@ -185,6 +187,12 @@ export default {
     navToCreateMeeting() {
       localStorage.setItem("index", 1);
       this.$router.push({ path: "/meetings-management" });
+    },
+    navToAddExecutive() {
+      this.$router.push({ name: 'executive', params: { isAdd: true }});
+    },
+    navToShowExecutive() {
+      this.$router.push({ name: 'executive'}) ;
     },
   },
   mounted() {
