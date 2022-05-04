@@ -1,6 +1,6 @@
 import { createStore } from "vuex";
 import axios from "axios";
-const BASE_URL = "http://localhost:9000";
+const BASE_URL = process.env.VUE_APP_API_PATH;
 export default createStore({
   state: {
     executiveURL: `${BASE_URL}/executives`,
@@ -12,7 +12,7 @@ export default createStore({
     },
   },
   mutations: {
-    SET_EXECUTIVES(state, executives) {
+    GET_EXECUTIVES(state, executives) {
       state.executives = executives;
     },
   },
@@ -20,9 +20,10 @@ export default createStore({
     async getExecutives(context) {
       try {
         const data = await axios.get(this.state.executiveURL);
-        context.commit("SET_EXECUTIVES", data.data);
+        console.log(data);
+        context.commit("GET_EXECUTIVES", data.data);
       } catch (error) {
-        alert(error);
+        // alert(error);
         console.log(error);
       }
     },
