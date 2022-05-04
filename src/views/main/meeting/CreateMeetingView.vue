@@ -3,7 +3,9 @@
     <div class="first-body-section">
       <div class="card-section">
         <div class="add-attendees">
-          <div class="bold-content-text">Add attendees</div>
+          <div class="bold-content-text">
+            Add attendees<span class="required">* {{ errors.attendees }}</span>
+          </div>
           <div class="small-text required-attendees">Required attendees</div>
           <div class="selected-attendees">
             <div
@@ -20,8 +22,8 @@
                 </div>
                 <div class="executive-profile flex-col-center">
                   <div class="name small-text">
-                    {{ attendee.title }}. {{ attendee.firstname }}
-                    {{ attendee.lastname }}
+                    {{ attendee.title_code }}. {{ attendee.first_name }}
+                    {{ attendee.last_name }}
                   </div>
                 </div>
               </div>
@@ -32,25 +34,32 @@
             <div class="small-text">Add required attendees</div>
           </div>
         </div>
-        <div class="add-details">
+        <form @submit.prevent="handleSendPoll" class="add-details">
           <div class="input-form">
-            <label for="title" class="bold-small-text">Title</label>
+            <label for="title" class="bold-small-text"
+              >Title<span class="required">* {{ errors.title }}</span></label
+            >
             <input
               class="small-text"
               type="text"
               placeholder="Title"
               id="title"
               name="title"
+              v-model="form.title"
             />
           </div>
           <div class="input-form-row">
             <div class="input">
-              <label for="date" class="bold-small-text">Date Slot</label>
+              <label for="date" class="bold-small-text"
+                >Date Slot<span class="required"
+                  >* {{ errors.dateSlot }}</span
+                ></label
+              >
               <litepie-datepicker
                 class="small-text"
                 id="date"
                 :disable-date="dDate"
-                v-model="dateValue"
+                v-model="form.dateSlot"
                 as-single
                 use-range
                 :formatter="formatter"
@@ -59,9 +68,11 @@
             </div>
             <div class="input">
               <label for="duration" class="bold-small-text"
-                >Durations of meeting</label
+                >Durations of meeting<span class="required"
+                  >* {{ errors.duration }}</span
+                ></label
               >
-              <select name="duration" id="duration">
+              <select name="duration" id="duration" v-model="form.duration">
                 <option value="">none</option>
                 <option value="1">1 hour</option>
                 <option value="2">2 hours</option>
@@ -74,13 +85,17 @@
           </div>
           <div class="input-form-row">
             <div class="input">
-              <label for="due" class="bold-small-text">Due Date</label>
+              <label for="due" class="bold-small-text"
+                >Due Date<span class="required"
+                  >* {{ errors.dueDate }}</span
+                ></label
+              >
               <litepie-datepicker
                 id="due"
                 :disable-date="dDate"
                 as-single
                 :formatter="formatter"
-                v-model="dateValue"
+                v-model="form.dueDate"
                 :style="{ fontSize: '12px !important', marginTop: '1rem' }"
               />
             </div>
@@ -95,10 +110,11 @@
               textHover="white"
               color="#7452FF"
               hoverColor="#23106D"
+              type="submit"
             >
             </BaseButton>
           </div>
-        </div>
+        </form>
       </div>
     </div>
     <teleport to="#portal-target" v-if="isAddAttendees">
@@ -134,8 +150,8 @@
                       alt="sample profile illustration"
                     />
                   </div>
-                  {{ executive.title }}. {{ executive.firstname }}
-                  {{ executive.lastname }}</label
+                  {{ executive.title_code }}. {{ executive.first_name }}
+                  {{ executive.last_name }}</label
                 >
                 <input
                   type="checkbox"
@@ -181,7 +197,7 @@ export default {
       return date < new Date() || date > new Date(2023, 0, 8);
     };
     const formatter = ref({
-      date: "DD MMM YYYY",
+      date: "YYYY-MM-DD",
       month: "MMM",
     });
 
@@ -196,25 +212,45 @@ export default {
       isSelected: 4,
       isAddAttendees: false,
       executives: [],
+      tempAttendees: [],
       searchInput: "",
       form: {
         selectedAttendees: [],
+        title: "",
+        dateSlot: "",
+        duration: "",
+        dueDate: "",
       },
-      tempAttendees: [],
+      errors: {},
     };
   },
   computed: {
     filterByName() {
       return this.executives.filter((executive) => {
         return (
-          executive.firstname
+          executive.first_name
             .toLowerCase()
             .includes(this.searchInput.toLowerCase()) ||
-          executive.lastname
+          executive.last_name
             .toLowerCase()
             .includes(this.searchInput.toLowerCase())
         );
       });
+    },
+    attendeesIsValid() {
+      return !!(this.form.selectedAttendees.length != 0);
+    },
+    titleIsValid() {
+      return !!this.form.title;
+    },
+    dateSlotIsValid() {
+      return !!this.form.dateSlot;
+    },
+    durationIsValid() {
+      return !!this.form.duration;
+    },
+    dueDateIsValid() {
+      return !!this.form.dueDate;
     },
   },
   methods: {
@@ -229,51 +265,79 @@ export default {
     onClickCancelAttendees() {
       this.isAddAttendees = false;
       this.tempAttendees = [];
-      this.form.selectedAttendees = [...this.tempAttendees,...this.form.selectedAttendees]
+      this.form.selectedAttendees = [
+        ...this.tempAttendees,
+        ...this.form.selectedAttendees,
+      ];
     },
+    handleSendPoll() {
+       this.titleIsValid
+        ? delete this.errors.title
+        : (this.errors.title = "Please inform title");
+      this.attendeesIsValid
+        ? delete this.errors.attendees
+        : (this.errors.attendees = "Please select attendees");
+      this.dateSlotIsValid
+        ? delete this.errors.dateSlot
+        : (this.errors.dateSlot = "Please select date slot");
+      this.dueDateIsValid
+        ? delete this.errors.dueDate
+        : (this.errors.dueDate = "Please select due date");
+      this.durationIsValid
+        ? delete this.errors.duration
+        : (this.errors.duration = "Please select durations");
+      if (Object.keys(this.errors).length == 0) {
+        alert("add success");
+      }
+    }
   },
   mounted() {
     this.executives = [
       {
         id: 1,
-        title: "Mr",
-        firstname: "Similan",
-        lastname: "Klinsmith",
+        title_code: "Mr",
+        first_name: "Similan",
+        last_name: "Klinsmith",
         position: "Chief Executive",
         email: "similan@mail.kmutt.ac.th",
-        tel: "081-000-0000",
+        phone_number: "0810000000",
         reportTo: "Alexander Macedonia",
-        imageProfile: "",
+        img_profile: "",
       },
       {
         id: 2,
-        title: "Ms",
-        firstname: "Praepanwa",
-        lastname: "Tedprasit",
+        title_code: "Ms",
+        first_name: "Praepanwa",
+        last_name: "Tedprasit",
         position: "Chief Executive",
         email: "praepanwa@mail.kmutt.ac.th",
-        tel: "081-000-0000",
+        phone_number: "0810000000",
         reportTo: "Alexander Macedonia",
-        imageProfile: "",
+        img_profile: "",
       },
       {
         id: 3,
-        title: "Ms",
-        firstname: "Noparat",
-        lastname: "Prasongdee",
+        title_code: "Ms",
+        first_name: "Noparat",
+        last_name: "Prasongdee",
         position: "Chief Executive",
         email: "noparat@mail.kmutt.ac.th",
-        tel: "081-000-0000",
+        phone_number: "0810000000",
         reportTo: "Alexander Macedonia",
-        imageProfile: "",
+        img_profile: "",
       },
-    ].sort((a, b) => (a.firstname > b.firstname ? 1 : -1));
+    ].sort((a, b) => (a.first_name > b.first_name ? 1 : -1));
   },
 };
 </script>
 
 <style lang="scss" scoped>
 @import "../../../assets/colors/webColors.scss";
+.required {
+  color: $error;
+  margin-left: 0.2rem;
+  font-size: 1.4rem !important;
+}
 .modal {
   width: 100%;
   height: 100vh;
