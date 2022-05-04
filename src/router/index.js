@@ -19,6 +19,7 @@ const routes = [
   {
     path: "/executives-management",
     name: "executive",
+    props: true,
     component: Executive,
   },
   {
