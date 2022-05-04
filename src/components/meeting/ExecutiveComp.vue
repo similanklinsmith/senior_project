@@ -13,8 +13,8 @@
       </div>
       <div class="executive-profile">
         <div class="name common-text">
-          {{ executive.title }}. {{ executive.firstname }}
-          {{ executive.lastname }}
+          {{ executive.title_code }}. {{ executive.first_name }}
+          {{ executive.last_name }}
         </div>
         <div class="position thin-content-text">{{ executive.position }}</div>
       </div>
