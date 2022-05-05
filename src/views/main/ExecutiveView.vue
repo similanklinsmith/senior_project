@@ -37,7 +37,7 @@
                 : { overflow: 'hidden' }
             "
           >
-            <transition-group name="route">
+            <transition-group name="route" v-if="!getterLoadingStatus">
               <ExecutiveComp
                 v-for="(executive, index) in filterByName"
                 :key="index"
@@ -52,12 +52,16 @@
                 Not found
               </div>
             </transition-group>
+            <div
+              v-if="getterLoadingStatus"
+              class="remark-text not-found loading"
+            >Loading...</div>
           </div>
         </div>
         <transition-group name="route">
           <div
             class="executive-card grid"
-            v-if="executives.length > 0 && isAddExecutive == false"
+            v-if="getExecutivesList.length > 0 && isAddExecutive == false"
           >
             <div @click="toggleDropDown" class="icon-dropdown">
               <i class="fa-solid fa-ellipsis-vertical"></i>
@@ -88,12 +92,12 @@
               </div>
               <div class="executive-profile">
                 <div class="name remark-text">
-                  {{ selectedExecutive.title_code }}.
-                  {{ selectedExecutive.first_name }}
-                  {{ selectedExecutive.last_name }}
+                  {{ selectedExecutive?.title_code }}.
+                  {{ selectedExecutive?.first_name }}
+                  {{ selectedExecutive?.last_name }}
                 </div>
                 <div class="position thin-content-text">
-                  {{ selectedExecutive.position }}
+                  {{ selectedExecutive?.position }}
                 </div>
               </div>
             </div>
@@ -107,7 +111,7 @@
                   </div>
                 </div>
                 <div class="content-text" id="email-value">
-                  {{ selectedExecutive.email }}
+                  {{ selectedExecutive?.email }}
                 </div>
               </div>
               <div class="phone">
@@ -118,7 +122,7 @@
                   </div>
                 </div>
                 <div class="content-text" id="phone-value">
-                  {{ formatPhoneNumber(selectedExecutive.phone_number) }}
+                  {{ formatPhoneNumber(selectedExecutive?.phone_number) }}
                 </div>
               </div>
               <div class="secretary">
@@ -129,7 +133,7 @@
                   </div>
                 </div>
                 <div class="content-text" id="secretary-value">
-                  {{ selectedExecutive.reportTo }}
+                  {{ selectedExecutive?.reportTo }}
                 </div>
               </div>
             </div>
@@ -137,7 +141,7 @@
         </transition-group>
         <transition
           name="route"
-          v-if="isAddExecutive == true || executives.length == 0"
+          v-if="isAddExecutive == true || getExecutivesList.length == 0"
         >
           <form
             @submit.prevent="handleChangeExecutive"
@@ -284,7 +288,7 @@
               </div>
               <div class="form-button">
                 <BaseButton
-                  v-if="executives.length != 0"
+                  v-if="getExecutivesList.length != 0"
                   buttonType="outlined-button"
                   btnText="Cancel"
                   textColor="#F33C3C"
@@ -302,6 +306,7 @@
                   textHover="white"
                   color="#7452FF"
                   hoverColor="#23106D"
+                  width="25rem"
                   type="submit"
                 >
                 </BaseButton>
@@ -367,7 +372,7 @@ export default {
       searchInput: "",
       selectedExecutive: null,
       selectedId: null,
-      executives: [],
+      // executives: [],
       isShowDropdown: false,
       editId: "",
       previewImage: "",
@@ -384,16 +389,16 @@ export default {
       errors: {},
     };
   },
-  // eslint-disable-next-line
-  computed: mapGetters(["getExecutives"]),
-  // eslint-disable-next-line
+  // // eslint-disable-next-line
+  // computed: mapGetters(["getExecutives"]),
+  // // eslint-disable-next-line
   computed: {
+    ...mapGetters(["getterExecutives", "getterLoadingStatus"]),
     getExecutivesList() {
-      console.log(this.$store.getters.getExecutives);
-      return this.$store.getters.getExecutives;
+      return this.$store.getters.getterExecutives;
     },
     filterByName() {
-      return this.executives.filter((executive) => {
+      return this.getExecutivesList.filter((executive) => {
         return (
           executive.first_name
             .toLowerCase()
@@ -440,7 +445,7 @@ export default {
     },
     selectExecutive(id) {
       this.cancelEdit();
-      this.selectedExecutive = this.executives.find((executive) => {
+      this.selectedExecutive = this.getExecutivesList.find((executive) => {
         this.selectedId = id;
         return executive.id == id;
       });
@@ -523,50 +528,60 @@ export default {
   created() {
     this.getExecutives();
   },
+  watch: {
+    getExecutivesList: function () {
+      if (this.getExecutivesList.length > 0) {
+        this.selectedExecutive = this.getExecutivesList[0];
+        this.selectedId = this.getExecutivesList[0].id;
+      }
+    },
+  },
   mounted() {
     window.onscroll = () => {
       this.isShowDropdown = false;
     };
     this.isAddExecutive = this.isAdd ? true : this.isAddExecutive;
-    this.executives = [
-      {
-        id: 1,
-        title_code: "Mr",
-        first_name: "Similan",
-        last_name: "Klinsmith",
-        position: "Chief Executive",
-        email: "similan@mail.kmutt.ac.th",
-        phone_number: "0810000000",
-        reportTo: "Alexander Macedonia",
-        img_profile: "",
-      },
-      {
-        id: 2,
-        title_code: "Ms",
-        first_name: "Praepanwa",
-        last_name: "Tedprasit",
-        position: "Chief Executive",
-        email: "praepanwa@mail.kmutt.ac.th",
-        phone_number: "0810000000",
-        reportTo: "Alexander Macedonia",
-        img_profile: "",
-      },
-      {
-        id: 3,
-        title_code: "Ms",
-        first_name: "Noparat",
-        last_name: "Prasongdee",
-        position: "Chief Executive",
-        email: "noparat@mail.kmutt.ac.th",
-        phone_number: "0810000000",
-        reportTo: "Alexander Macedonia",
-        img_profile: "",
-      },
-    ].sort((a, b) => (a.first_name > b.first_name ? 1 : -1));
-    if (this.executives.length > 0) {
-      this.selectedExecutive = this.executives[0];
-      this.selectedId = this.executives[0].id;
-    }
+    // this.executives = [
+    //   {
+    //     id: 1,
+    //     title_code: "Mr",
+    //     first_name: "Similan",
+    //     last_name: "Klinsmith",
+    //     position: "Chief Executive",
+    //     email: "similan@mail.kmutt.ac.th",
+    //     phone_number: "0810000000",
+    //     reportTo: "Alexander Macedonia",
+    //     img_profile: "",
+    //   },
+    //   {
+    //     id: 2,
+    //     title_code: "Ms",
+    //     first_name: "Praepanwa",
+    //     last_name: "Tedprasit",
+    //     position: "Chief Executive",
+    //     email: "praepanwa@mail.kmutt.ac.th",
+    //     phone_number: "0810000000",
+    //     reportTo: "Alexander Macedonia",
+    //     img_profile: "",
+    //   },
+    //   {
+    //     id: 3,
+    //     title_code: "Ms",
+    //     first_name: "Noparat",
+    //     last_name: "Prasongdee",
+    //     position: "Chief Executive",
+    //     email: "noparat@mail.kmutt.ac.th",
+    //     phone_number: "0810000000",
+    //     reportTo: "Alexander Macedonia",
+    //     img_profile: "",
+    //   },
+    // ].sort((a, b) => (a.first_name > b.first_name ? 1 : -1));
+    // if (this.getterExecutives.length > 0) {
+    //   this.selectedExecutive = this.getterExecutives[0];
+    //   this.selectedId = this.getterExecutives[0].id;
+    //   console.log(this.selectedExecutive);
+    //   console.log(this.selectedId);
+    // }
   },
 };
 </script>
@@ -652,6 +667,7 @@ export default {
           height: 64rem;
           border-radius: 1.5rem;
           background-color: $white;
+          overflow: hidden;
           .not-found {
             padding: 1.8rem;
             width: 100%;
@@ -661,6 +677,14 @@ export default {
             height: 80%;
             text-align: center;
             color: $darkGrey;
+          }
+          .loading {
+            animation-name: floating;
+            -webkit-animation-name: floating;
+            animation-duration: 3s;
+            -webkit-animation-duration: 3s;
+            animation-iteration-count: infinite;
+            -webkit-animation-iteration-count: infinite;
           }
         }
       }
