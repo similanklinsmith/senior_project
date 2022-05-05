@@ -74,9 +74,11 @@ export default {
     flex-direction: column;
     justify-content: space-around;
     text-align: left;
+    row-gap: 0.6rem;
     .name {
       color: $darkViolet;
       transition: 0.3s all ease-in-out;
+      line-height: 1.2;
     }
     .position {
       color: $highlightViolet;
