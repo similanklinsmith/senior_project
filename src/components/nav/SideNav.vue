@@ -16,7 +16,7 @@
         <i class="icon fa-solid fa-house"></i>
         <div class="button-text bold-small-text">home</div>
       </router-link>
-      <router-link to="/about" class="button">
+      <router-link to="/calendar" class="button">
         <i class="icon fa-solid fa-calendar"></i>
         <div class="button-text bold-small-text">calendar</div>
       </router-link>
