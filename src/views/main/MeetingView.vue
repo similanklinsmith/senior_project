@@ -121,6 +121,7 @@
       </div>
       <transition-group name="route">
         <CreateMeetingView v-if="isSelected == 1" />
+        <InboxView v-if="isSelected == 2" />
         <BeConfirmedView v-if="isSelected == 4" />
         <ConfirmedView v-if="isSelected == 5" />
       </transition-group>
@@ -132,10 +133,11 @@
 import CreateMeetingView from "./meeting/CreateMeetingView.vue";
 import BeConfirmedView from "./meeting/BeConfirmedView.vue";
 import ConfirmedView from "./meeting/ConfirmedView.vue";
+import InboxView from "./meeting/InboxView.vue";
 import BaseButton from "../../components/UI/BaseButton.vue";
 import BaseHeader from "../../components/UI/BaseHeader.vue";
 export default {
-  components: { BaseButton, BaseHeader, CreateMeetingView, BeConfirmedView, ConfirmedView },
+  components: { BaseButton, BaseHeader, CreateMeetingView, BeConfirmedView, ConfirmedView, InboxView },
   data() {
     return {
       isSelected: 1,
