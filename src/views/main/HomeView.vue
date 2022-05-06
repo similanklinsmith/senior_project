@@ -42,43 +42,40 @@
           <div class="card">
             <div class="card-content">
               <div class="remark-text">Your Executives</div>
-              <div class="executives">
-                <div class="executive">
-                  <div class="profile-section">
-                    <div class="profile-image">
-                      <img
-                        src="../../assets/decorations/sample_profile.png"
-                        alt="sample profile illustration"
-                      />
+              <div class="executives" v-if="getExecutivesList.length != 0">
+                <div
+                  v-for="(executive, index) in getExecutivesList"
+                  :key="executive.id"
+                >
+                  <div class="executive">
+                    <div class="profile-section">
+                      <div class="profile-image">
+                        <img
+                          src="../../assets/decorations/sample_profile.png"
+                          alt="sample profile illustration"
+                        />
+                      </div>
+                      <div class="executive-profile">
+                        <div class="name common-text">
+                          {{ executive.title_code }}.
+                          {{ executive.first_name }} {{ executive.last_name }}
+                        </div>
+                        <div class="position thin-content-text">
+                          {{ executive.position }}
+                        </div>
+                      </div>
                     </div>
-                    <div class="executive-profile">
-                      <div class="name common-text">Name Surname</div>
-                      <div class="position thin-content-text">position</div>
-                    </div>
-                  </div>
-                  <div class="arrow-button">
-                    <i class="icon fa-solid fa-chevron-right"></i>
-                  </div>
-                </div>
-                <div class="line" />
-                <div class="executive">
-                  <div class="profile-section">
-                    <div class="profile-image">
-                      <img
-                        src="../../assets/decorations/sample_profile.png"
-                        alt="sample profile illustration"
-                      />
-                    </div>
-                    <div class="executive-profile">
-                      <div class="name common-text">Name Surname</div>
-                      <div class="position thin-content-text">position</div>
+                    <div class="arrow-button">
+                      <i class="icon fa-solid fa-chevron-right"></i>
                     </div>
                   </div>
-                  <div class="arrow-button">
-                    <i class="icon fa-solid fa-chevron-right"></i>
-                  </div>
+                  <div
+                    v-if="index != getExecutivesList.length - 1"
+                    class="line"
+                  />
                 </div>
               </div>
+              <div v-else class="no-executive bold-small-text">There is not executive</div>
               <div style="display: flex; gap: 1.2rem; margin-top: 1.2rem">
                 <BaseButton
                   buttonType="common-button"
@@ -155,12 +152,13 @@ import BaseHeader from "../../components/UI/BaseHeader.vue";
 import AttendeeGroup from "../../components/meeting/AttendeeGroup.vue";
 import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
+import { mapGetters, mapActions } from "vuex";
 export default {
   components: { BaseButton, BaseHeader, AttendeeGroup, VueCal },
   name: "HomeView",
   data() {
     return {
-      selectedDate:"",
+      selectedDate: "",
       events: [
         {
           start: "2022-05-03 10:35",
@@ -183,21 +181,31 @@ export default {
       ],
     };
   },
+  computed: {
+    ...mapGetters(["getterMyExecutives", "getterLoadingStatus"]),
+    getExecutivesList() {
+      return this.$store.getters.getterMyExecutives.slice(0, 2);
+    },
+  },
   methods: {
+    ...mapActions(["getMyExecutives"]),
     navToCreateMeeting() {
       localStorage.setItem("index", 1);
       this.$router.push({ path: "/meetings-management" });
     },
     navToAddExecutive() {
-      this.$router.push({ name: 'executive', params: { isAdd: true }});
+      this.$router.push({ name: "executive", params: { isAdd: true } });
     },
     navToShowExecutive() {
-      this.$router.push({ name: 'executive'}) ;
+      this.$router.push({ name: "executive" });
     },
+  },
+  created() {
+    this.getMyExecutives(1);
   },
   mounted() {
     this.selectedDate = new Date().toISOString().slice(0, 10);
-  }
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -268,6 +276,14 @@ export default {
           .card-content {
             text-align: center;
             padding: 3.6rem;
+            .no-executive {
+              display: flex;
+              flex-direction: column;
+              height: 20rem;
+              align-items: center;
+              justify-content: center;
+              color: $darkGrey;
+            }
             .executives {
               display: flex;
               flex-direction: column;
@@ -301,9 +317,11 @@ export default {
                     flex-direction: column;
                     justify-content: space-around;
                     text-align: left;
+                    row-gap: 0.6rem;
                     .name {
                       color: $darkViolet;
                       transition: 0.3s all ease-in-out;
+                      line-height: 1.2;
                     }
                     .position {
                       color: $highlightViolet;

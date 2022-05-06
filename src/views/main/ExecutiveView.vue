@@ -32,7 +32,7 @@
           <div
             class="list-executive-card"
             :style="
-              filterByName.length >= 4
+              filterByName.length >= 6
                 ? { overflowY: 'scroll' }
                 : { overflow: 'hidden' }
             "
@@ -393,9 +393,9 @@ export default {
   // computed: mapGetters(["getExecutives"]),
   // // eslint-disable-next-line
   computed: {
-    ...mapGetters(["getterExecutives", "getterLoadingStatus"]),
+    ...mapGetters(["getterMyExecutives", "getterLoadingStatus"]),
     getExecutivesList() {
-      return this.$store.getters.getterExecutives;
+      return this.$store.getters.getterMyExecutives;
     },
     filterByName() {
       return this.getExecutivesList.filter((executive) => {
@@ -432,7 +432,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["getExecutives"]),
+    ...mapActions(["getMyExecutives"]),
     formatPhoneNumber(str) {
       let cleaned = ("" + str).replace(/\D/g, "");
       let match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
@@ -526,7 +526,7 @@ export default {
     },
   },
   created() {
-    this.getExecutives();
+    this.getMyExecutives(1);
   },
   watch: {
     getExecutivesList: function () {
