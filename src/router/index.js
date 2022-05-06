@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 const SignIn = () => import("../views/main/SignInView.vue");
 const Home = () => import("../views/main/HomeView.vue");
+const Calendar = () => import("../views/main/CalendarView.vue");
 const Executive = () => import("../views/main/ExecutiveView.vue");
 const Meeting = () => import("../views/main/MeetingView.vue");
 const NotFound = () => import("../views/exception/NotFoundView.vue");
@@ -15,6 +16,11 @@ const routes = [
     path: "/",
     name: "home",
     component: Home,
+  },
+  {
+    path: "/calendar",
+    name: "calendar",
+    component: Calendar,
   },
   {
     path: "/executives-management",
