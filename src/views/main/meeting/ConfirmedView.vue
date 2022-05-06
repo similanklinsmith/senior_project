@@ -47,8 +47,10 @@
                 <div class="suggested-time">
                   <div class="bold-content-text">Suggested time</div>
                   <div class="time-slot">
-                    <div class="slot">
-                      <div class="bold-content-text">10:00AM.-17:00PM.</div>
+                    <div class="slot" v-for="slot in bestTimeSlot" :key="slot">
+                      <div class="bold-smallest-text">
+                        {{ slot.id }} ({{ slot.eventCount }})
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -203,7 +205,7 @@ export default {
   },
   data() {
     return {
-      selectedDate:"",
+      selectedDate: "",
       searchInput: "",
       toBeConfirmedList: [],
       selectedInbox: null,
@@ -211,6 +213,63 @@ export default {
       response: null,
       isShowSchedule: false,
       stickySplitLabels: false,
+      bestTimeSlot: [],
+      eventsArray: [
+        {
+          id: 1,
+          start: this.getDateObj("2022-04-06 10:30"),
+          end: this.getDateObj("2022-04-06 11:30"),
+          title: "10:30 - 11:30",
+          content: "Free Time 10:35 - 11:30",
+          class: "health",
+          split: 1, // Has to match the id of the split you have set (or integers if none).
+        },
+        {
+          id: 5,
+          start: this.getDateObj("2022-04-06 14:35"),
+          end: this.getDateObj("2022-04-06 16:30"),
+          title: "14:35 - 16:30",
+          content: "Free Time 14:35 - 16:30",
+          class: "health",
+          split: 5, // Has to match the id of the split you have set (or integers if none).
+        },
+        {
+          id: 3,
+          start: this.getDateObj("2022-04-06 10:35"),
+          end: this.getDateObj("2022-04-06 11:30"),
+          title: "10:35 - 11:30",
+          content: "Free Time 10:35 - 11:30",
+          class: "health",
+          split: 4, // Has to match the id of the split you have set (or integers if none).
+        },
+        {
+          id: 4,
+          start: this.getDateObj("2022-04-06 10:35"),
+          end: this.getDateObj("2022-04-06 11:30"),
+          title: "10:35 - 11:30",
+          content: "Free Time 10:35 - 11:30",
+          class: "health",
+          split: 3, // Has to match the id of the split you have set (or integers if none).
+        },
+        {
+          id: 5,
+          start: this.getDateObj("2022-04-06 11:00"),
+          end: this.getDateObj("2022-04-06 13:15"),
+          title: "11:00 - 13:15",
+          content: '<i class="v-icon material-icons">local_hospital</i>',
+          class: "health",
+          split: 2,
+        },
+        {
+          id: 6,
+          start: this.getDateObj("2022-04-06 18:30"),
+          end: this.getDateObj("2022-04-06 20:30"),
+          title: "18:30 - 20:30",
+          content: '<i class="v-icon material-icons">fitness_center</i>',
+          class: "sport",
+          split: 1,
+        },
+      ],
       splitDays: [
         { id: 1, class: "mom", label: "Similan, K." },
         { id: 2, class: "dad", label: "Noparat, P." },
@@ -220,16 +279,40 @@ export default {
       ],
       events: [
         {
+          start: "2022-04-06 10:30",
+          end: "2022-04-06 11:30",
+          title: "Doctor appointment",
+          content: "Free Time 10:30 - 11:30",
+          class: "health",
+          split: 1, // Has to match the id of the split you have set (or integers if none).
+        },
+        {
+          start: "2022-04-06 14:35",
+          end: "2022-04-06 16:30",
+          title: "Doctor appointment",
+          content: "Free Time 14:35 - 16:30",
+          class: "health",
+          split: 5, // Has to match the id of the split you have set (or integers if none).
+        },
+        {
           start: "2022-04-06 10:35",
           end: "2022-04-06 11:30",
           title: "Doctor appointment",
           content: "Free Time 10:35 - 11:30",
           class: "health",
-          split: 1, // Has to match the id of the split you have set (or integers if none).
+          split: 4, // Has to match the id of the split you have set (or integers if none).
         },
         {
-          start: "2022-04-06 18:30",
-          end: "2022-04-06 19:15",
+          start: "2022-04-06 10:35",
+          end: "2022-04-06 11:30",
+          title: "Doctor appointment",
+          content: "Free Time 10:35 - 11:30",
+          class: "health",
+          split: 3, // Has to match the id of the split you have set (or integers if none).
+        },
+        {
+          start: "2022-04-06 11:00",
+          end: "2022-04-06 13:15",
           title: "Dentist appointment",
           content: '<i class="v-icon material-icons">local_hospital</i>',
           class: "health",
@@ -265,9 +348,52 @@ export default {
     onClickShowSchedule(date) {
       this.isShowSchedule = true;
       this.selectedDate = date;
+      this.getOverlaps(this.eventsArray);
     },
     onClickCloseSchedule() {
       this.isShowSchedule = false;
+    },
+    getDateObj(s) {
+      var bits = s.split(/[- :]/);
+      var date = new Date(bits[0], bits[1] - 1, bits[2]);
+      date.setHours(bits[3], bits[4], 0);
+      return date;
+    },
+    getOverlaps(events) {
+      events.sort(function (a, b) {
+        return a.start - b.start;
+      });
+      var results = [];
+      for (var i = 0, l = events.length; i < l; i++) {
+        var oEvent = events[i];
+        var nOverlaps = 0;
+        for (var j = 0; j < l; j++) {
+          var oCompareEvent = events[j];
+          if (
+            (oCompareEvent.start <= oEvent.end &&
+              oCompareEvent.end > oEvent.start) ||
+            (oCompareEvent.end <= oEvent.start &&
+              oCompareEvent.start > oEvent.end)
+          ) {
+            nOverlaps++;
+          }
+        }
+        if (nOverlaps > 1) {
+          results.push({
+            id: oEvent.title,
+            eventCount: nOverlaps,
+            toString: function () {
+              return "[id:" + this.title + ", events:" + this.eventCount + "]";
+            },
+          });
+        }
+      }
+      const keys = ["id"];
+      const filteredData = results.filter(
+        (value, index, self) =>
+          self.findIndex((v) => keys.every((k) => v[k] === value[k])) === index
+      );
+      this.bestTimeSlot = filteredData;
     },
   },
   mounted() {
@@ -544,7 +670,7 @@ export default {
       display: flex;
       padding: 1rem 3.6rem;
       align-items: center;
-      column-gap: 2rem;
+      column-gap: 1rem;
       .time-slot {
         display: flex;
         column-gap: 1.6rem;
@@ -553,6 +679,7 @@ export default {
           background-color: $primaryViolet;
           padding: 1rem 2rem;
           color: $white;
+          border-radius: 1rem;
         }
       }
     }
