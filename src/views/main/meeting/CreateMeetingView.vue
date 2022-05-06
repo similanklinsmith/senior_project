@@ -133,9 +133,12 @@
           </div>
         </div>
         <div class="pop-up-content">
+          <div v-if="getterLoadingStatus" class="remark-text not-found loading">
+            Loading...
+          </div>
           <div
             class="list-checkbox content-text"
-            v-if="filterByName.length != 0"
+            v-else-if="filterByName.length != 0"
           >
             <transition-group name="route">
               <div
@@ -188,6 +191,7 @@
 <script>
 import LitepieDatepicker from "litepie-datepicker";
 import BaseButton from "../../../components/UI/BaseButton.vue";
+import { mapGetters, mapActions } from "vuex";
 import { ref } from "vue";
 export default {
   components: { BaseButton, LitepieDatepicker },
@@ -225,8 +229,12 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(["getterExecutives", "getterLoadingStatus"]),
+    getExecutivesList() {
+      return this.$store.getters.getterExecutives;
+    },
     filterByName() {
-      return this.executives.filter((executive) => {
+      return this.getExecutivesList.filter((executive) => {
         return (
           executive.first_name
             .toLowerCase()
@@ -254,6 +262,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions(["getExecutives"]),
     onClickConfirmAttendees() {
       this.isAddAttendees = false;
       this.form.selectedAttendees = [
@@ -271,7 +280,7 @@ export default {
       ];
     },
     handleSendPoll() {
-       this.titleIsValid
+      this.titleIsValid
         ? delete this.errors.title
         : (this.errors.title = "Please inform title");
       this.attendeesIsValid
@@ -289,7 +298,10 @@ export default {
       if (Object.keys(this.errors).length == 0) {
         alert("add success");
       }
-    }
+    },
+  },
+  created() {
+    this.getExecutives();
   },
   mounted() {
     this.executives = [
@@ -430,6 +442,14 @@ export default {
       justify-content: center;
       color: $darkGrey;
       height: 100%;
+    }
+    .loading {
+      animation-name: floating;
+      -webkit-animation-name: floating;
+      animation-duration: 3s;
+      -webkit-animation-duration: 3s;
+      animation-iteration-count: infinite;
+      -webkit-animation-iteration-count: infinite;
     }
     .list-checkbox {
       width: 100%;
