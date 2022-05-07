@@ -16,22 +16,54 @@ const routes = [
     path: "/",
     name: "home",
     component: Home,
+    beforeEnter: (to, from, next) => {
+      const loggedIn = localStorage.getItem("user");
+      if (loggedIn) {
+        next();
+      } else {
+        next("/sign-in");
+      }
+    },
   },
   {
     path: "/calendar",
     name: "calendar",
     component: Calendar,
+    beforeEnter: (to, from, next) => {
+      const loggedIn = localStorage.getItem("user");
+      if (loggedIn) {
+        next();
+      } else {
+        next("/sign-in");
+      }
+    },
   },
   {
     path: "/executives-management",
     name: "executive",
     props: true,
     component: Executive,
+    beforeEnter: (to, from, next) => {
+      const loggedIn = localStorage.getItem("user");
+      if (loggedIn) {
+        next();
+      } else {
+        next("/sign-in");
+      }
+    },
   },
   {
     path: "/meetings-management",
     name: "meeting",
     component: Meeting,
+    beforeEnter: (to, from, next) => {
+      const loggedIn = localStorage.getItem("user");
+      if (loggedIn) {
+        next();
+      } else {
+        next("/sign-in");
+      }
+    },
   },
   {
     path: "/about",
