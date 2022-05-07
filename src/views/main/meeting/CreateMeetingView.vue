@@ -118,72 +118,79 @@
       </div>
     </div>
     <teleport to="#portal-target" v-if="isAddAttendees">
-      <div class="modal" @click="onClickCancelAttendees"></div>
-      <div class="pop-up">
-        <div class="remark-text">Required attendees</div>
-        <div class="search-filter">
-          <div class="input-icon">
-            <i class="icon fa-solid fa-magnifying-glass"></i>
-            <input
-              class="small-text"
-              type="text"
-              placeholder="Search by name"
-              v-model="searchInput"
-            />
+      <transition name="route" appear>
+        <div class="modal" @click="onClickCancelAttendees"></div>
+      </transition>
+      <transition name="route" appear>
+        <div class="pop-up">
+          <div class="remark-text">Required attendees</div>
+          <div class="search-filter">
+            <div class="input-icon">
+              <i class="icon fa-solid fa-magnifying-glass"></i>
+              <input
+                class="small-text"
+                type="text"
+                placeholder="Search by name"
+                v-model="searchInput"
+              />
+            </div>
           </div>
-        </div>
-        <div class="pop-up-content">
-          <div v-if="getterLoadingStatus" class="remark-text not-found loading">
-            Loading...
-          </div>
-          <div
-            class="list-checkbox content-text"
-            v-else-if="filterByName.length != 0"
-          >
-            <transition-group name="route">
-              <div
-                class="executive-checkbox"
-                v-for="executive in filterByName"
-                :key="executive.id"
-              >
-                <label :for="executive.id">
-                  <div class="profile-image">
-                    <img
-                      src="../../../assets/decorations/sample_profile.png"
-                      alt="sample profile illustration"
-                    />
-                  </div>
-                  {{ executive.title_code }}. {{ executive.first_name }}
-                  {{ executive.last_name }}</label
+          <div class="pop-up-content">
+            <div
+              v-if="getterLoadingStatus"
+              class="remark-text not-found loading"
+            >
+              Loading...
+            </div>
+            <div
+              class="list-checkbox content-text"
+              v-else-if="filterByName.length != 0"
+            >
+              <transition-group name="route">
+                <div
+                  class="executive-checkbox"
+                  v-for="executive in filterByName"
+                  :key="executive.id"
                 >
-                <input
-                  type="checkbox"
-                  :name="executive.id"
-                  :id="executive.id"
-                  :value="executive"
-                  v-model="form.selectedAttendees"
-                />
-              </div>
-            </transition-group>
+                  <label :for="executive.id">
+                    <div class="profile-image">
+                      <img
+                        src="../../../assets/decorations/sample_profile.png"
+                        alt="sample profile illustration"
+                      />
+                    </div>
+                    {{ executive.title_code }}. {{ executive.first_name }}
+                    {{ executive.last_name }}</label
+                  >
+                  <input
+                    type="checkbox"
+                    :name="executive.id"
+                    :id="executive.id"
+                    :value="executive"
+                    v-model="form.selectedAttendees"
+                  />
+                </div>
+              </transition-group>
+            </div>
+            <transition v-else name="route">
+              <div class="remark-text not-found">Not Found</div>
+            </transition>
           </div>
-          <transition v-else name="route">
-            <div class="remark-text not-found">Not Found</div>
-          </transition>
+          <div class="button-action">
+            <BaseButton
+              buttonType="common-button"
+              btnText="Confirm"
+              textColor="white"
+              textHover="white"
+              color="#7452FF"
+              hoverColor="#23106D"
+              width="100%"
+              @onClick="onClickConfirmAttendees"
+            >
+            </BaseButton>
+          </div>
         </div>
-        <div class="button-action">
-          <BaseButton
-            buttonType="common-button"
-            btnText="Confirm"
-            textColor="white"
-            textHover="white"
-            color="#7452FF"
-            hoverColor="#23106D"
-            width="100%"
-            @onClick="onClickConfirmAttendees"
-          >
-          </BaseButton>
-        </div>
-      </div>
+      </transition>
     </teleport>
   </div>
 </template>
@@ -528,6 +535,11 @@ export default {
           .profile-section {
             display: flex;
             width: 100%;
+            column-gap: 0.8rem;
+            .executive-profile {
+              width: 6rem;
+              flex-wrap: wrap !important;
+            }
             .profile-image {
               border-radius: 1rem;
               width: 3.5rem;
