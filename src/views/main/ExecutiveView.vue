@@ -55,7 +55,9 @@
             <div
               v-if="getterLoadingStatus"
               class="remark-text not-found loading"
-            >Loading...</div>
+            >
+              Loading...
+            </div>
           </div>
         </div>
         <transition-group name="route">
@@ -133,7 +135,7 @@
                   </div>
                 </div>
                 <div class="content-text" id="secretary-value">
-                  {{ selectedExecutive?.reportTo }}
+                  {{ secretary }}
                 </div>
               </div>
             </div>
@@ -181,12 +183,13 @@
                   >
                   <select name="title" id="title" v-model="form.title">
                     <option value="">none</option>
-                    <option value="Mr">Mr</option>
-                    <option value="Mrs">Mrs</option>
-                    <option value="Ms">Ms</option>
-                    <option value="Dr">Dr</option>
-                    <option value="Professor">Professor</option>
-                    <option value="others">others</option>
+                    <option
+                      v-for="title in getterExecutiveTitles"
+                      :key="title"
+                      :value="title"
+                    >
+                      {{ title }}
+                    </option>
                   </select>
                 </div>
                 <div class="input-form">
@@ -229,12 +232,13 @@
                   >
                   <select name="position" id="position" v-model="form.position">
                     <option value="">none</option>
-                    <option value="Mr">Mr</option>
-                    <option value="Mrs">Mrs</option>
-                    <option value="Ms">Ms</option>
-                    <option value="Dr">Dr</option>
-                    <option value="Professor">Professor</option>
-                    <option value="others">others</option>
+                    <option
+                      v-for="position in getterExecutivePositions"
+                      :key="position"
+                      :value="position"
+                    >
+                      {{ position }}
+                    </option>
                   </select>
                 </div>
               </div>
@@ -281,7 +285,8 @@
                     placeholder="report to"
                     id="secretary"
                     name="secretary"
-                    v-model="form.reportTo"
+                    :value="secretary"
+                    readonly
                   />
                 </div>
                 <div :style="{ width: '100%' }"></div>
@@ -360,6 +365,7 @@ import BaseButton from "../../components/UI/BaseButton.vue";
 import BaseHeader from "../../components/UI/BaseHeader.vue";
 import BasePopup from "../../components/UI/BasePopup.vue";
 import ExecutiveComp from "../../components/meeting/ExecutiveComp.vue";
+import jwtDecrypt from "../../helpers/jwtHelper";
 import { mapGetters, mapActions } from "vuex";
 export default {
   components: { BaseButton, BaseHeader, ExecutiveComp, BasePopup },
@@ -367,12 +373,12 @@ export default {
   props: ["isAdd"],
   data() {
     return {
+      secretary: "",
       isAddExecutive: false,
       isShowPopup: false,
       searchInput: "",
       selectedExecutive: null,
       selectedId: null,
-      // executives: [],
       isShowDropdown: false,
       editId: "",
       previewImage: "",
@@ -383,17 +389,19 @@ export default {
         position: "",
         email: "",
         tel: "",
-        reportTo: "",
+        // reportTo: "",
         imageProfile: "",
       },
       errors: {},
     };
   },
-  // // eslint-disable-next-line
-  // computed: mapGetters(["getExecutives"]),
-  // // eslint-disable-next-line
   computed: {
-    ...mapGetters(["getterMyExecutives", "getterLoadingStatus"]),
+    ...mapGetters([
+      "getterMyExecutives",
+      "getterLoadingStatus",
+      "getterExecutiveTitles",
+      "getterExecutivePositions",
+    ]),
     getExecutivesList() {
       return this.$store.getters.getterMyExecutives;
     },
@@ -432,7 +440,11 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["getMyExecutives"]),
+    ...mapActions([
+      "getMyExecutives",
+      "getExecutiveTitle",
+      "getExecutivePostion",
+    ]),
     formatPhoneNumber(str) {
       let cleaned = ("" + str).replace(/\D/g, "");
       let match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
@@ -463,27 +475,27 @@ export default {
     cancelEdit() {
       this.isAddExecutive = false;
       this.editId = "";
-      // this.form.title = "";
+      this.form.title = "";
       this.form.firstname = "";
       this.form.lastname = "";
       this.form.email = "";
-      // this.form.position = "";
+      this.form.position = "";
       this.form.tel = "";
-      this.form.reportTo = "";
-      // this.form.imageProfile = "";
+      // this.form.reportTo = "";
+      this.form.imageProfile = "";
       this.errors = {};
     },
     editExecutive(id) {
       this.isAddExecutive = true;
       this.editId = id;
-      // this.form.title = this.selectedExecutive.title;
+      this.form.title = this.selectedExecutive.title_code;
       this.form.firstname = this.selectedExecutive.first_name;
       this.form.lastname = this.selectedExecutive.last_name;
       this.form.email = this.selectedExecutive.email;
-      // this.form.position = this.selectedExecutive.position;
+      this.form.position = this.selectedExecutive.position;
       this.form.tel = this.selectedExecutive.phone_number;
-      this.form.reportTo = this.selectedExecutive.reportTo;
-      // this.form.imageProfile = this.selectedExecutive.imageProfile;
+      // this.form.reportTo = this.selectedExecutive.reportTo;
+      this.form.imageProfile = this.selectedExecutive.imageProfile;
     },
     uploadImage(e) {
       const image = e.target.files[0];
@@ -521,12 +533,15 @@ export default {
         this.errors.tel = "Please inform phone number";
       }
       if (Object.keys(this.errors).length == 0) {
+        console.log(this.form);
         alert("add success");
       }
     },
   },
   created() {
-    this.getMyExecutives(1);
+    this.getMyExecutives();
+    this.getExecutiveTitle();
+    this.getExecutivePostion();
   },
   watch: {
     getExecutivesList: function () {
@@ -537,51 +552,17 @@ export default {
     },
   },
   mounted() {
+    if (localStorage.getItem("user")) {
+      this.secretary = `${
+        jwtDecrypt(localStorage.getItem("user")).title_code
+      }. ${jwtDecrypt(localStorage.getItem("user")).first_name} ${
+        jwtDecrypt(localStorage.getItem("user")).last_name
+      } (${jwtDecrypt(localStorage.getItem("user")).email})`;
+    }
     window.onscroll = () => {
       this.isShowDropdown = false;
     };
     this.isAddExecutive = this.isAdd ? true : this.isAddExecutive;
-    // this.executives = [
-    //   {
-    //     id: 1,
-    //     title_code: "Mr",
-    //     first_name: "Similan",
-    //     last_name: "Klinsmith",
-    //     position: "Chief Executive",
-    //     email: "similan@mail.kmutt.ac.th",
-    //     phone_number: "0810000000",
-    //     reportTo: "Alexander Macedonia",
-    //     img_profile: "",
-    //   },
-    //   {
-    //     id: 2,
-    //     title_code: "Ms",
-    //     first_name: "Praepanwa",
-    //     last_name: "Tedprasit",
-    //     position: "Chief Executive",
-    //     email: "praepanwa@mail.kmutt.ac.th",
-    //     phone_number: "0810000000",
-    //     reportTo: "Alexander Macedonia",
-    //     img_profile: "",
-    //   },
-    //   {
-    //     id: 3,
-    //     title_code: "Ms",
-    //     first_name: "Noparat",
-    //     last_name: "Prasongdee",
-    //     position: "Chief Executive",
-    //     email: "noparat@mail.kmutt.ac.th",
-    //     phone_number: "0810000000",
-    //     reportTo: "Alexander Macedonia",
-    //     img_profile: "",
-    //   },
-    // ].sort((a, b) => (a.first_name > b.first_name ? 1 : -1));
-    // if (this.getterExecutives.length > 0) {
-    //   this.selectedExecutive = this.getterExecutives[0];
-    //   this.selectedId = this.getterExecutives[0].id;
-    //   console.log(this.selectedExecutive);
-    //   console.log(this.selectedId);
-    // }
   },
 };
 </script>
