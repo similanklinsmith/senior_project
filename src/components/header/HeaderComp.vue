@@ -4,7 +4,11 @@
     <div class="search-input">
       <div class="input-icon">
         <i class="icon fa-solid fa-magnifying-glass"></i>
-        <input class="small-text" type="text" placeholder="Search anything... " />
+        <input
+          class="small-text"
+          type="text"
+          placeholder="Search anything... "
+        />
       </div>
     </div>
     <div class="last-section">
@@ -14,7 +18,7 @@
       </div>
       <div class="profile" @click="toggleProfileDropdown">
         <div class="image-profile"></div>
-        <div class="thin-content-text">Alexander Macedonia</div>
+        <div class="thin-content-text">{{ user }}</div>
         <i class="icon fa-solid fa-caret-down"></i>
         <div
           class="dropdown__content"
@@ -28,7 +32,9 @@
             <li><div class="line" /></li>
             <li>
               <i class="icon fa-solid fa-arrow-right-from-bracket"></i>
-              <div class="thin-content-text">Sign out</div>
+              <div class="thin-content-text" @click="handleSignOut">
+                Sign out
+              </div>
             </li>
           </ul>
         </div>
@@ -38,11 +44,13 @@
 </template>
 
 <script>
+import jwtDecrypt from "../../helpers/jwtHelper";
 export default {
   name: "HeaderComp",
-  props:["headerText"],
+  props: ["headerText"],
   data() {
     return {
+      user: "",
       isShowProfile: false,
     };
   },
@@ -50,11 +58,19 @@ export default {
     toggleProfileDropdown() {
       this.isShowProfile = !this.isShowProfile;
     },
+    handleSignOut() {
+      this.$emit("signOut");
+    },
   },
   mounted() {
     window.onscroll = () => {
       this.isShowProfile = false;
     };
+    if (localStorage.getItem("user")) {
+      this.user = `${jwtDecrypt(localStorage.getItem("user")).title_code}. ${
+        jwtDecrypt(localStorage.getItem("user")).first_name
+      } ${jwtDecrypt(localStorage.getItem("user")).last_name}`;
+    }
   },
 };
 </script>
