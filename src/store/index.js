@@ -1,8 +1,14 @@
 import { createStore } from "vuex";
 import axios from "axios";
 const BASE_URL = process.env.VUE_APP_API_PATH;
+import { auth } from "./auth.module";
+import authHeader from "../services/auth-header";
 export default createStore({
   state: {
+    executiveTitle: [],
+    executivePosition: [],
+    executiveTitleURL: `${BASE_URL}/executive-title`,
+    executivePositionURL: `${BASE_URL}/executive-role`,
     executiveURL: `${BASE_URL}/executives`,
     myExecutiveURL: `${BASE_URL}/executive`,
     executives: [],
@@ -12,6 +18,12 @@ export default createStore({
   mutations: {
     GET_LOADING_STATUS(state, loadingStatus) {
       state.loadingStatus = loadingStatus;
+    },
+    GET_EXECUTIVES_TITLES(state, titles) {
+      state.executiveTitle = titles;
+    },
+    GET_EXECUTIVES_POSITIONS(state, positions) {
+      state.executivePosition = positions;
     },
     GET_EXECUTIVES(state, executives) {
       state.executives = executives;
@@ -32,6 +44,22 @@ export default createStore({
     },
   },
   actions: {
+    async getExecutiveTitle(context) {
+      try {
+        const data = await axios.get(this.state.executiveTitleURL);
+        context.commit("GET_EXECUTIVES_TITLES", data.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async getExecutivePostion(context) {
+      try {
+        const data = await axios.get(this.state.executivePositionURL);
+        context.commit("GET_EXECUTIVES_POSITIONS", data.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    },
     async getExecutives(context) {
       context.commit("GET_LOADING_STATUS", true);
       try {
@@ -48,11 +76,13 @@ export default createStore({
         console.log(error);
       }
     },
-    async getMyExecutives(context, id) {
+    async getMyExecutives(context) {
       // GET Executives by Secretary ID
       context.commit("GET_LOADING_STATUS", true);
       try {
-        const data = await axios.get(this.state.myExecutiveURL+"/"+id);
+        const data = await axios.get(this.state.myExecutiveURL + "/", {
+          headers: authHeader(),
+        });
         context.commit(
           "GET_MY_EXECUTIVES",
           data.data.data.sort((a, b) => (a.first_name > b.first_name ? 1 : -1))
@@ -73,7 +103,9 @@ export default createStore({
       const formData = new FormData();
       formData.append("newExecutive", blob);
       try {
-        const response = await axios.post(this.state.executiveURL,{ body: formData });
+        const response = await axios.post(this.state.executiveURL, {
+          body: formData,
+        });
         if (response.status == 400) {
           console.log("need to login");
         }
@@ -84,7 +116,9 @@ export default createStore({
     },
     async deleteExecutive(context, id) {
       try {
-        const response = await axios.delete(this.state.myExecutiveURL+"/"+id);
+        const response = await axios.delete(
+          this.state.myExecutiveURL + "/" + id
+        );
         if (response.status == 400) {
           console.log("need to login");
         }
@@ -98,6 +132,12 @@ export default createStore({
     getterLoadingStatus(state) {
       return state.loadingStatus;
     },
+    getterExecutiveTitles(state) {
+      return state.executiveTitle;
+    },
+    getterExecutivePositions(state) {
+      return state.executivePosition;
+    },
     getterExecutives(state) {
       return state.executives;
     },
@@ -105,5 +145,5 @@ export default createStore({
       return state.myExecutives;
     },
   },
-  modules: {},
+  modules: { auth },
 });
