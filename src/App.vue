@@ -5,7 +5,11 @@
       <div class="space-left">
         <div class="modal" v-if="isToggled" @click="isToggled = false"></div>
         <div style="position: relative">
-          <HeaderComp id="header" :headerText="getHeaderText" />
+          <HeaderComp
+            id="header"
+            :headerText="getHeaderText"
+            @signOut="handleSignOut"
+          />
         </div>
         <SideNav
           :isToggled="isToggled"
@@ -15,7 +19,7 @@
     </div>
     <div v-else>
       <router-view v-slot="{ Component }">
-        <transition name="route">
+        <transition name="route" appear>
           <component :is="Component" :key="$route.path"></component>
         </transition>
       </router-view>
@@ -24,7 +28,7 @@
 </template>
 
 <script>
-import SplashView from "../src/views/splash/SplashView.vue"
+import SplashView from "../src/views/splash/SplashView.vue";
 import SideNav from "../src/components/nav/SideNav.vue";
 import HeaderComp from "./components/header/HeaderComp.vue";
 export default {
@@ -48,14 +52,24 @@ export default {
       }
     },
   },
+  methods: {
+    handleSignOut() {
+      this.$store.dispatch("auth/logout").then(() => {
+        this.$router.replace("/sign-in");
+        // this.$router.go();
+      });
+    },
+  },
   mounted() {
-    window.addEventListener("scroll", () => {
-      if (window.scrollY > document.getElementById("header").offsetTop) {
-        document.getElementById("header").classList.add("fixed");
-      } else {
-        document.getElementById("header").classList.remove("fixed");
-      }
-    });
+    if (this.$route.name != "sign-in") {
+      window.addEventListener("scroll", () => {
+        if (window.scrollY > document.getElementById("header").offsetTop) {
+          document.getElementById("header").classList.add("fixed");
+        } else {
+          document.getElementById("header").classList.remove("fixed");
+        }
+      });
+    }
   },
 };
 </script>
@@ -73,7 +87,6 @@ export default {
   z-index: 9;
 }
 .fixed {
-  width: 100%;
   z-index: 8;
   top: 0%;
   position: fixed !important;
