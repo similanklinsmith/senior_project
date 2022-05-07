@@ -45,9 +45,7 @@
         <form @submit.prevent="handleSignIn" class="sign-in-form">
           <div class="input-form">
             <label for="email" class="bold-small-text"
-              >Email<span class="required"
-                >* {{ errors.email }}
-              </span></label
+              >Email<span class="required">* {{ errors.email }} </span></label
             >
             <input
               class="small-text"
@@ -73,6 +71,7 @@
               v-model="form.password"
             />
           </div>
+          <div class="required"> {{ notFound }}</div>
           <div class="forget-password bold-small-text">Forget password?</div>
           <BaseButton
             buttonType="common-button"
@@ -114,6 +113,7 @@ export default {
         password: "",
       },
       errors: {},
+      notFound: ""
     };
   },
   methods: {
@@ -125,7 +125,25 @@ export default {
         ? delete this.errors.password
         : (this.errors.password = "Please inform password correctly");
       if (Object.keys(this.errors).length == 0) {
-        this.$router.push("/");
+        let user = {
+          email: this.form.email,
+          password: this.form.password,
+        };
+        console.log(user);
+        this.loading = true;
+        this.$store.dispatch("auth/login", user).then(
+          () => {
+            this.notFound = "";
+            this.$router.push("/");
+          },
+          (err) => {
+            this.form.password = "";
+            console.log(err.response.status);
+            if (err.response.status == 404) {
+              this.notFound = "Email or Password is invalid";
+            }
+          }
+        );
       }
     },
   },
