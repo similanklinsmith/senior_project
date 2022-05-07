@@ -7,128 +7,136 @@
     </BaseHeader>
     <div class="body">
       <div class="first-body-section grid">
-        <div class="create-meeting-card">
-          <div class="remark-text">Start meetings</div>
-          <div class="card">
-            <div class="image">
-              <img
-                src="../../assets/decorations/create_meetings.png"
-                alt="create meeting illustration"
-              />
-            </div>
-            <div class="card-content">
-              <div class="remark-text">
-                Let’s create meeting schedule right now!
+        <transition name="slide" appear>
+          <div class="create-meeting-card">
+            <div class="remark-text">Start meetings</div>
+            <div class="card">
+              <div class="image">
+                <img
+                  src="../../assets/decorations/create_meetings.png"
+                  alt="create meeting illustration"
+                />
               </div>
-              <BaseButton
-                buttonType="common-button"
-                btnText="Create meeting"
-                textColor="#18181A"
-                textHover="white"
-                color="white"
-                width="100%"
-                hoverColor="#7452FF"
-                @onClick="navToCreateMeeting"
-              >
-                <template v-slot:after-icon>
-                  <i class="icon fa-solid fa-plus"></i>
-                </template>
-              </BaseButton>
-            </div>
-          </div>
-        </div>
-        <div class="executives-card">
-          <div class="remark-text">Executives</div>
-          <div class="card">
-            <div class="card-content">
-              <div class="remark-text">Your Executives</div>
-              <div class="executives" v-if="getExecutivesList.length != 0">
-                <div
-                  v-for="(executive, index) in getExecutivesList"
-                  :key="executive.id"
-                >
-                  <div class="executive">
-                    <div class="profile-section">
-                      <div class="profile-image">
-                        <img
-                          src="../../assets/decorations/sample_profile.png"
-                          alt="sample profile illustration"
-                        />
-                      </div>
-                      <div class="executive-profile">
-                        <div class="name common-text">
-                          {{ executive.title_code }}.
-                          {{ executive.first_name }} {{ executive.last_name }}
-                        </div>
-                        <div class="position thin-content-text">
-                          {{ executive.position }}
-                        </div>
-                      </div>
-                    </div>
-                    <div class="arrow-button">
-                      <i class="icon fa-solid fa-chevron-right"></i>
-                    </div>
-                  </div>
-                  <div
-                    v-if="index != getExecutivesList.length - 1"
-                    class="line"
-                  />
+              <div class="card-content">
+                <div class="remark-text">
+                  Let’s create meeting schedule right now!
                 </div>
-              </div>
-              <div v-else class="no-executive bold-small-text">There is not executive</div>
-              <div style="display: flex; gap: 1.2rem; margin-top: 1.2rem">
                 <BaseButton
                   buttonType="common-button"
-                  btnText="Add executive"
-                  textColor="white"
+                  btnText="Create meeting"
+                  textColor="#18181A"
                   textHover="white"
-                  color="#7452FF"
-                  hoverColor="#23106D"
-                  height="100%"
+                  color="white"
                   width="100%"
-                  @onClick="navToAddExecutive"
+                  hoverColor="#7452FF"
+                  @onClick="navToCreateMeeting"
                 >
                   <template v-slot:after-icon>
-                    <i class="icon fa-solid fa-user-plus"></i>
-                  </template>
-                  ></BaseButton
-                >
-                <BaseButton
-                  buttonType="outlined-button"
-                  btnText="Show all"
-                  textColor="#7452FF"
-                  textHover="white"
-                  color="#7452FF"
-                  hoverColor="#23106D"
-                  height="100%"
-                  width="100%"
-                  @onClick="navToShowExecutive"
-                >
-                  <template v-slot:after-icon>
-                    <div class="badge">
-                      <div>3</div>
-                    </div>
+                    <i class="icon fa-solid fa-plus"></i>
                   </template>
                 </BaseButton>
               </div>
             </div>
           </div>
-        </div>
-        <div class="calendar-card">
-          <div class="remark-text">Calendar</div>
-          <div class="card">
-            <vue-cal
-              class="vuecal--date-picker vuecal--violet-theme"
-              hide-view-selector
-              :time="false"
-              active-view="month"
-              :disable-views="['week']"
-              :events="events"
-              :selected-date="selectedDate"
-            >
-            </vue-cal>
+        </transition>
+        <transition name="slide" appear>
+          <div class="executives-card">
+            <div class="remark-text">Executives</div>
+            <div class="card">
+              <div class="card-content">
+                <div class="remark-text">Your Executives</div>
+                <div class="executives" v-if="getExecutivesList.length != 0">
+                  <div
+                    v-for="(executive, index) in getExecutivesList.slice(0, 2)"
+                    :key="executive.id"
+                  >
+                    <div class="executive">
+                      <div class="profile-section">
+                        <div class="profile-image">
+                          <img
+                            src="../../assets/decorations/sample_profile.png"
+                            alt="sample profile illustration"
+                          />
+                        </div>
+                        <div class="executive-profile">
+                          <div class="name common-text">
+                            {{ executive.title_code }}.
+                            {{ executive.first_name }} {{ executive.last_name }}
+                          </div>
+                          <div class="position thin-content-text">
+                            {{ executive.position }}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="arrow-button">
+                        <i class="icon fa-solid fa-chevron-right"></i>
+                      </div>
+                    </div>
+                    <div
+                      v-if="index != getExecutivesList.length - 1"
+                      class="line"
+                    />
+                  </div>
+                </div>
+                <div v-else class="no-executive bold-small-text">
+                  There is not executive
+                </div>
+                <div style="display: flex; gap: 1.2rem; margin-top: 1.2rem">
+                  <BaseButton
+                    buttonType="common-button"
+                    btnText="Add executive"
+                    textColor="white"
+                    textHover="white"
+                    color="#7452FF"
+                    hoverColor="#23106D"
+                    height="100%"
+                    width="100%"
+                    @onClick="navToAddExecutive"
+                  >
+                    <template v-slot:after-icon>
+                      <i class="icon fa-solid fa-user-plus"></i>
+                    </template>
+                    ></BaseButton
+                  >
+                  <BaseButton
+                    buttonType="outlined-button"
+                    btnText="Show all"
+                    textColor="#7452FF"
+                    textHover="white"
+                    color="#7452FF"
+                    hoverColor="#23106D"
+                    height="100%"
+                    width="100%"
+                    @onClick="navToShowExecutive"
+                  >
+                    <template v-slot:after-icon>
+                      <div class="badge">
+                        <div>{{ getExecutivesList.length }}</div>
+                      </div>
+                    </template>
+                  </BaseButton>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
+        </transition>
+        <transition name="slide" appear>
+          <div class="calendar-card">
+            <div class="remark-text">Calendar</div>
+            <div class="card">
+              <vue-cal
+                class="vuecal--date-picker vuecal--violet-theme"
+                hide-view-selector
+                :time="false"
+                active-view="month"
+                :disable-views="['week']"
+                :events="events"
+                :selected-date="selectedDate"
+              >
+              </vue-cal>
+            </div>
+          </div>
+        </transition>
       </div>
       <div class="second-body-section">
         <div class="title-section">
@@ -184,7 +192,7 @@ export default {
   computed: {
     ...mapGetters(["getterMyExecutives", "getterLoadingStatus"]),
     getExecutivesList() {
-      return this.$store.getters.getterMyExecutives.slice(0, 2);
+      return this.$store.getters.getterMyExecutives;
     },
   },
   methods: {
