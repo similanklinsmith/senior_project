@@ -34,6 +34,14 @@ export default createStore({
     ADD_EXECUTIVES(state, executives) {
       state.myExecutives.push(executives);
     },
+    UPDATE_MY_EXECUTIVE(state, updateExecutive) {
+      const index = state.myExecutives.findIndex(
+        (executive) => executive.id === updateExecutive.id
+      );
+      if (index !== -1) {
+        state.myExecutives.splice(index, 1, updateExecutive);
+      }
+    },
     DELETE_MY_EXECUTIVE(state, id) {
       const index = state.myExecutives.findIndex(
         (executive) => executive.id == id
@@ -48,6 +56,7 @@ export default createStore({
       try {
         const data = await axios.get(this.state.executiveTitleURL);
         context.commit("GET_EXECUTIVES_TITLES", data.data.data);
+        console.log(data.status);
       } catch (error) {
         console.log(error);
       }
@@ -56,6 +65,7 @@ export default createStore({
       try {
         const data = await axios.get(this.state.executivePositionURL);
         context.commit("GET_EXECUTIVES_POSITIONS", data.data.data);
+        console.log(data.status);
       } catch (error) {
         console.log(error);
       }
@@ -68,10 +78,9 @@ export default createStore({
           "GET_EXECUTIVES",
           data.data.data.sort((a, b) => (a.first_name > b.first_name ? 1 : -1))
         );
-        // console.log(data.data);
+        console.log(data.status);
         context.commit("GET_LOADING_STATUS", false);
       } catch (error) {
-        // alert(error);
         context.commit("GET_LOADING_STATUS", false);
         console.log(error);
       }
@@ -87,38 +96,67 @@ export default createStore({
           "GET_MY_EXECUTIVES",
           data.data.data.sort((a, b) => (a.first_name > b.first_name ? 1 : -1))
         );
-        // console.log(data.data);
+        console.log(data.status);
         context.commit("GET_LOADING_STATUS", false);
       } catch (error) {
-        // alert(error);
         context.commit("GET_LOADING_STATUS", false);
         console.log(error);
       }
     },
     async addExecutive(context, payload) {
-      const jsonExecutive = JSON.stringify(payload.newExecutive);
-      const blob = new Blob([jsonExecutive], {
-        type: "application/json",
-      });
-      const formData = new FormData();
-      formData.append("newExecutive", blob);
+      // const jsonExecutive = JSON.stringify(payload.newExecutive);
+      // const blob = new Blob([jsonExecutive], {
+      //   type: "application/json",
+      // });
+      // const formData = new FormData();
+      // formData.append("newExecutive", blob);
       try {
-        const response = await axios.post(this.state.executiveURL, {
-          body: formData,
-        });
+        const response = await axios.post(
+          this.state.myExecutiveURL,
+          payload.newExecutive,
+          {
+            headers: authHeader(),
+          },
+        );
+        console.log(response.status);
         if (response.status == 400) {
           console.log("need to login");
         }
-        context.commit("ADD_EXECUTIVES", response.data);
+        context.commit("ADD_EXECUTIVES", response.data.data);
       } catch (error) {
+        console.log(error);
+      }
+    },
+    async editExecutive(context, payload) {
+      context.commit("GET_LOADING_STATUS", true);
+      try {
+        const response = await axios.put(
+          this.state.myExecutiveURL+"/"+payload.id,
+          payload.editExecutive,
+          {
+            headers: authHeader(),
+          },
+        );
+        console.log(response.status);
+        if (response.status == 400) {
+          console.log("need to login");
+        }
+        context.commit("UPDATE_MY_EXECUTIVE", response.data.data);
+        context.commit("GET_LOADING_STATUS", false);
+      } catch (error) {
+        context.commit("GET_LOADING_STATUS", false);
         console.log(error);
       }
     },
     async deleteExecutive(context, id) {
       try {
         const response = await axios.delete(
-          this.state.myExecutiveURL + "/" + id
+          this.state.myExecutiveURL + "/" + id,
+          {
+            headers: authHeader(),
+          },
         );
+        console.log(response.status);
         if (response.status == 400) {
           console.log("need to login");
         }
