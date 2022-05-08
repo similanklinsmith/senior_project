@@ -8,7 +8,7 @@
     <div class="body">
       <div class="meeting-nav">
         <BaseButton
-          btnText="Create meeting +"
+          btnText="Create poll meeting +"
           height="5rem"
           textHover="white"
           color="#7452FF"
