@@ -11,7 +11,7 @@
         textHover="white"
         color="#DBD2FF"
         hoverColor="#23106D"
-        @onClick="isAddExecutive = true"
+        @onClick="handleAdd"
       >
       </BaseButton>
     </BaseHeader>
@@ -62,7 +62,7 @@
         </div>
         <transition-group name="route">
           <div
-            class="executive-card grid"
+            class="container"
             v-if="getExecutivesList.length > 0 && isAddExecutive == false"
           >
             <div @click="toggleDropDown" class="icon-dropdown">
@@ -85,57 +85,60 @@
                 </li>
               </ul>
             </div>
-            <div class="left-side">
-              <div class="profile-image">
-                <img
-                  src="../../assets/decorations/sample_profile.png"
-                  alt="sample profile illustration"
-                />
-              </div>
-              <div class="executive-profile">
-                <div class="name remark-text">
-                  {{ selectedExecutive?.title_code }}.
-                  {{ selectedExecutive?.first_name }}
-                  {{ selectedExecutive?.last_name }}
+            <div v-if="isLoading" class="remark-text loading">Loading...</div>
+            <div class="executive-card grid" v-if="isLoading == false">
+              <div class="left-side">
+                <div class="profile-image">
+                  <img
+                    src="../../assets/decorations/sample_profile.png"
+                    alt="sample profile illustration"
+                  />
                 </div>
-                <div class="position thin-content-text">
-                  {{ selectedExecutive?.position }}
-                </div>
-              </div>
-            </div>
-            <div class="right-side">
-              <div class="content-text title">Official Information</div>
-              <div class="email">
-                <div class="label bold-content-text">
-                  Email
-                  <div @click="copyLink('email-value')">
-                    <i class="icon fa-regular fa-copy"></i>
+                <div class="executive-profile">
+                  <div class="name remark-text">
+                    {{ selectedExecutive?.title_code }}.
+                    {{ selectedExecutive?.first_name }}
+                    {{ selectedExecutive?.last_name }}
+                  </div>
+                  <div class="position thin-content-text">
+                    {{ selectedExecutive?.position }}
                   </div>
                 </div>
-                <div class="content-text" id="email-value">
-                  {{ selectedExecutive?.email }}
-                </div>
               </div>
-              <div class="phone">
-                <div class="label bold-content-text">
-                  Phone number
-                  <div @click="copyLink('phone-value')">
-                    <i class="icon fa-regular fa-copy"></i>
+              <div class="right-side">
+                <div class="content-text title">Official Information</div>
+                <div class="email">
+                  <div class="label bold-content-text">
+                    Email
+                    <div @click="copyLink('email-value')">
+                      <i class="icon fa-regular fa-copy"></i>
+                    </div>
+                  </div>
+                  <div class="content-text" id="email-value">
+                    {{ selectedExecutive?.email }}
                   </div>
                 </div>
-                <div class="content-text" id="phone-value">
-                  {{ formatPhoneNumber(selectedExecutive?.phone_number) }}
-                </div>
-              </div>
-              <div class="secretary">
-                <div class="label bold-content-text">
-                  Report to
-                  <div @click="copyLink('secretary-value')">
-                    <i class="icon fa-regular fa-copy"></i>
+                <div class="phone">
+                  <div class="label bold-content-text">
+                    Phone number
+                    <div @click="copyLink('phone-value')">
+                      <i class="icon fa-regular fa-copy"></i>
+                    </div>
+                  </div>
+                  <div class="content-text" id="phone-value">
+                    {{ formatPhoneNumber(selectedExecutive?.phone_number) }}
                   </div>
                 </div>
-                <div class="content-text" id="secretary-value">
-                  {{ secretary }}
+                <div class="secretary">
+                  <div class="label bold-content-text">
+                    Report to
+                    <div @click="copyLink('secretary-value')">
+                      <i class="icon fa-regular fa-copy"></i>
+                    </div>
+                  </div>
+                  <div class="content-text" id="secretary-value">
+                    {{ secretary }}
+                  </div>
                 </div>
               </div>
             </div>
@@ -246,7 +249,7 @@
                 <div class="input-form">
                   <label for="email" class="bold-small-text"
                     >Email<span class="required"
-                      >* {{ errors.email }}</span
+                      >* {{ errors.email }}  {{ errors.uniqueEmail }}</span
                     ></label
                   >
                   <input
@@ -261,13 +264,13 @@
                 <div class="input-form">
                   <label for="phone-number" class="bold-small-text"
                     >Phone number<span class="required"
-                      >* {{ errors.tel }}</span
+                      >* {{ errors.tel }} {{ errors.uniqueTel }}</span
                     ></label
                   >
                   <input
                     class="small-text"
                     type="tel"
-                    placeholder="e.g. 000-000-0000"
+                    placeholder="e.g. 0810000000"
                     id="phone-number"
                     name="phone-number"
                     v-model="form.tel"
@@ -313,6 +316,19 @@
                   hoverColor="#23106D"
                   width="25rem"
                   type="submit"
+                  v-if="!editId"
+                >
+                </BaseButton>
+                <BaseButton
+                  buttonType="common-button"
+                  btnText="Edit executive"
+                  textColor="white"
+                  textHover="white"
+                  color="#7452FF"
+                  hoverColor="#23106D"
+                  width="25rem"
+                  type="submit"
+                  v-else
                 >
                 </BaseButton>
               </div>
@@ -342,6 +358,7 @@
           color="#F33C3C"
           hoverColor="#d93333"
           width="100%"
+          @onClick="deleteExecutive(selectedId)"
         >
         </BaseButton>
         <BaseButton
@@ -370,9 +387,10 @@ import { mapGetters, mapActions } from "vuex";
 export default {
   components: { BaseButton, BaseHeader, ExecutiveComp, BasePopup },
   name: "ExecutiveView",
-  props: ["isAdd"],
+  props: ["isAdd", "showIndex"],
   data() {
     return {
+      isLoading: false,
       secretary: "",
       isAddExecutive: false,
       isShowPopup: false,
@@ -389,14 +407,14 @@ export default {
         position: "",
         email: "",
         tel: "",
-        // reportTo: "",
-        imageProfile: "",
+        imageProfile: null,
       },
       errors: {},
     };
   },
   computed: {
     ...mapGetters([
+      "getterExecutives",
       "getterMyExecutives",
       "getterLoadingStatus",
       "getterExecutiveTitles",
@@ -436,11 +454,28 @@ export default {
       return !!this.form.tel;
     },
     telPatternIsValid() {
-      return !!(this.form.tel.length == 10);
+      return !!(this.form.tel.length == 10) && !!(this.form.tel.match(/^[0-9]+$/));
+    },
+    checkUniqueEmail() {
+      for (let index = 0; index < this.getterExecutives.length; index++) {
+        if (this.getterExecutives[index].email == this.form.email) {
+          return true;
+        }
+      }
+      return false;
+    },
+    checkUniqueTel() {
+      for (let index = 0; index < this.getterExecutives.length; index++) {
+        if (this.getterExecutives[index].phone_number == this.form.tel) {
+          return true;
+        }
+      }
+      return false;
     },
   },
   methods: {
     ...mapActions([
+      "getExecutives",
       "getMyExecutives",
       "getExecutiveTitle",
       "getExecutivePostion",
@@ -452,7 +487,6 @@ export default {
       if (match) {
         return match[1] + "-" + match[2] + "-" + match[3];
       }
-
       return null;
     },
     selectExecutive(id) {
@@ -472,6 +506,19 @@ export default {
     togglePopup() {
       this.isShowPopup = true;
     },
+    handleAdd() {
+      this.searchInput = "";
+      this.isAddExecutive = true;
+      this.editId = "";
+      this.form.title = "";
+      this.form.firstname = "";
+      this.form.lastname = "";
+      this.form.email = "";
+      this.form.position = "";
+      this.form.tel = "";
+      this.form.imageProfile = "";
+      this.errors = {};
+    },
     cancelEdit() {
       this.isAddExecutive = false;
       this.editId = "";
@@ -481,11 +528,11 @@ export default {
       this.form.email = "";
       this.form.position = "";
       this.form.tel = "";
-      // this.form.reportTo = "";
       this.form.imageProfile = "";
       this.errors = {};
     },
     editExecutive(id) {
+      this.searchInput = "";
       this.isAddExecutive = true;
       this.editId = id;
       this.form.title = this.selectedExecutive.title_code;
@@ -494,7 +541,6 @@ export default {
       this.form.email = this.selectedExecutive.email;
       this.form.position = this.selectedExecutive.position;
       this.form.tel = this.selectedExecutive.phone_number;
-      // this.form.reportTo = this.selectedExecutive.reportTo;
       this.form.imageProfile = this.selectedExecutive.imageProfile;
     },
     uploadImage(e) {
@@ -532,13 +578,56 @@ export default {
       } else {
         this.errors.tel = "Please inform phone number";
       }
+      this.checkUniqueEmail == false
+        ? delete this.errors.uniqueEmail
+        : (this.errors.uniqueEmail = "This email has already registered");
+      this.checkUniqueTel == false
+        ? delete this.errors.uniqueTel
+        : (this.errors.uniqueTel = "This phone number has already registered");
       if (Object.keys(this.errors).length == 0) {
-        console.log(this.form);
-        alert("add success");
+        const newExecutive = {
+          title_code: this.form.title,
+          first_name: this.form.firstname,
+          last_name: this.form.lastname,
+          position: this.form.position,
+          phone_number: this.form.tel,
+          img_profile: this.form.imageProfile,
+          email: this.form.email,
+        };
+        this.editId
+          ? (this.$store.dispatch("editExecutive", {
+              editExecutive: newExecutive,
+              id: this.editId,
+              // image: this.form.imageProfile,
+            }),
+            (this.isLoading = true),
+            setTimeout(
+              () => (
+                (this.selectedExecutive = this.getExecutivesList[0]),
+                (this.selectedId = this.editId),
+                (this.isLoading = false)
+              ),
+              1000
+            ))
+          : this.$store.dispatch("addExecutive", {
+              newExecutive: newExecutive,
+              // image: this.form.imageProfile,
+            });
+        this.cancelEdit();
+        // location.reload()
       }
+    },
+    deleteExecutive(id) {
+      this.$store.dispatch("deleteExecutive", id);
+      this.isShowPopup = false;
+      this.getExecutivesList.length != 0
+        ? ((this.selectedExecutive = this.getExecutivesList[0]),
+          (this.selectedId = this.getExecutivesList[0].id))
+        : (this.isAddExecutive = true);
     },
   },
   created() {
+    this.getExecutives();
     this.getMyExecutives();
     this.getExecutiveTitle();
     this.getExecutivePostion();
@@ -546,8 +635,11 @@ export default {
   watch: {
     getExecutivesList: function () {
       if (this.getExecutivesList.length > 0) {
-        this.selectedExecutive = this.getExecutivesList[0];
-        this.selectedId = this.getExecutivesList[0].id;
+        this.showIndex
+          ? ((this.selectedExecutive = this.getExecutivesList[this.showIndex]),
+            (this.selectedId = this.getExecutivesList[this.showIndex].id))
+          : ((this.selectedExecutive = this.getExecutivesList[0]),
+            (this.selectedId = this.getExecutivesList[0].id));
       }
     },
   },
@@ -669,21 +761,33 @@ export default {
           }
         }
       }
-      .executive-card {
+      .container {
         width: 100%;
         height: 100%;
         border-radius: 2.5rem;
         background-color: $white;
         padding: 5.4rem 6.4rem;
-        grid-template-columns: 0.65fr 1.35fr;
-        column-gap: 2.4rem;
         position: relative;
+        .loading {
+          color: $darkGrey;
+          height: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          animation-name: floating;
+          -webkit-animation-name: floating;
+          animation-duration: 3s;
+          -webkit-animation-duration: 3s;
+          animation-iteration-count: infinite;
+          -webkit-animation-iteration-count: infinite;
+        }
         .icon-dropdown {
           position: absolute;
           top: 5.4rem;
           right: 6.4rem;
           font-size: 2.2rem;
           color: $darkViolet;
+          z-index: 10;
           cursor: pointer;
           transition: 0.2s all ease-in-out;
         }
@@ -697,7 +801,7 @@ export default {
           text-align: center;
           justify-content: center;
           align-items: center;
-          margin-top: 6rem;
+          margin-top: 1rem;
           position: absolute;
           opacity: 0;
           background-color: $white;
@@ -749,6 +853,11 @@ export default {
             }
           }
         }
+      }
+      .executive-card {
+        grid-template-columns: 0.65fr 1.35fr;
+        column-gap: 2.4rem;
+        position: relative;
         .left-side {
           display: flex;
           flex-direction: column;
