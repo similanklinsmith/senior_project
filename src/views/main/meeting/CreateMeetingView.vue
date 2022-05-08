@@ -276,7 +276,6 @@ export default {
         ...this.tempAttendees,
         ...this.form.selectedAttendees,
       ];
-      console.log(this.form.selectedAttendees);
     },
     onClickCancelAttendees() {
       this.isAddAttendees = false;
@@ -537,7 +536,7 @@ export default {
             width: 100%;
             column-gap: 0.8rem;
             .executive-profile {
-              width: 6rem;
+              width: 12rem;
               flex-wrap: wrap !important;
             }
             .profile-image {
