@@ -47,10 +47,10 @@
                 <div class="remark-text">Your Executives</div>
                 <div class="executives" v-if="getExecutivesList.length != 0">
                   <div
-                    v-for="(executive, index) in getExecutivesList.slice(0, 2)"
+                    v-for="(executive, index) in getExecutivesList"
                     :key="executive.id"
                   >
-                    <div class="executive">
+                    <div class="executive" @click="navToShowExecutiveDetail(index)">
                       <div class="profile-section">
                         <div class="profile-image">
                           <img
@@ -192,7 +192,7 @@ export default {
   computed: {
     ...mapGetters(["getterMyExecutives", "getterLoadingStatus"]),
     getExecutivesList() {
-      return this.$store.getters.getterMyExecutives;
+      return this.$store.getters.getterMyExecutives.slice(0, 2);
     },
   },
   methods: {
@@ -207,6 +207,9 @@ export default {
     navToShowExecutive() {
       this.$router.push({ name: "executive" });
     },
+    navToShowExecutiveDetail(index) {
+      this.$router.push({ name: "executive", params: { showIndex: index } });
+    }
   },
   created() {
     this.getMyExecutives(1);
