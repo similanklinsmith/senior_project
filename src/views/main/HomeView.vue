@@ -55,7 +55,20 @@
                       @click="navToShowExecutiveDetail(index)"
                     >
                       <div class="profile-section">
-                        <div class="profile-image">
+                        <div
+                          class="real-profile-image"
+                          v-if="executive.img_profile != 'default_profile.png'"
+                        >
+                          <img
+                            :src="urlImage + '/' + executive.img_profile"
+                            alt="sample profile illustration"
+                            @error="
+                              $event.target.src =
+                                'http://www.grand-cordel.com/wp-content/uploads/2015/08/import_placeholder.png'
+                            "
+                          />
+                        </div>
+                        <div class="profile-image" v-else>
                           <img
                             src="../../assets/decorations/sample_profile.png"
                             alt="sample profile illustration"
@@ -63,11 +76,18 @@
                         </div>
                         <div class="executive-profile">
                           <div class="name common-text">
-                            {{ executive.title_code }}.
+                            {{ formatTitle(executive.title_code) }}
                             {{ executive.first_name }} {{ executive.last_name }}
                           </div>
                           <div class="position thin-content-text">
-                            {{ executive.position }}
+                            {{
+                              formatPosition(executive.position).length > 30
+                                ? formatPosition(executive.position).slice(
+                                    0,
+                                    31
+                                  ) + "..."
+                                : formatPosition(executive.position)
+                            }}
                           </div>
                         </div>
                       </div>
@@ -169,6 +189,7 @@ export default {
   name: "HomeView",
   data() {
     return {
+      urlImage: this.$store.state.imageURL,
       selectedDate: "",
       events: [
         {
@@ -193,13 +214,22 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getterMyExecutives", "getterLoadingStatus"]),
+    ...mapGetters([
+      "getterMyExecutives",
+      "getterLoadingStatus",
+      "getterExecutiveTitles",
+      "getterExecutivePositions",
+    ]),
     getExecutivesList() {
       return this.$store.getters.getterMyExecutives.slice(0, 2);
     },
   },
   methods: {
-    ...mapActions(["getMyExecutives"]),
+    ...mapActions([
+      "getMyExecutives",
+      "getExecutiveTitle",
+      "getExecutivePosition",
+    ]),
     navToCreateMeeting() {
       localStorage.setItem("index", 1);
       this.$router.push({ path: "/meetings-management" });
@@ -213,9 +243,17 @@ export default {
     navToShowExecutiveDetail(index) {
       this.$router.push({ name: "executive", params: { showIndex: index } });
     },
+    formatTitle(str) {
+      return this.getterExecutiveTitles[str];
+    },
+    formatPosition(str) {
+      return this.getterExecutivePositions[str];
+    },
   },
   created() {
-    this.getMyExecutives(1);
+    this.getMyExecutives();
+    this.getExecutiveTitle();
+    this.getExecutivePosition();
   },
   mounted() {
     this.selectedDate = new Date().toISOString().slice(0, 10);
@@ -315,6 +353,18 @@ export default {
                 .profile-section {
                   display: flex;
                   width: 100%;
+                  .real-profile-image {
+                    border-radius: 1rem;
+                    width: 5rem;
+                    height: 5rem;
+                    overflow: hidden;
+                    margin-right: 1rem;
+                    img {
+                      width: 100%;
+                      height: 100%;
+                      object-fit: cover;
+                    }
+                  }
                   .profile-image {
                     display: flex;
                     align-items: center;

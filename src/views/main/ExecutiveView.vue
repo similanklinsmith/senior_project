@@ -100,6 +100,10 @@
                   <img
                     :src="urlImage + '/' + selectedExecutive.img_profile"
                     alt="sample profile illustration"
+                    @error="
+                      $event.target.src =
+                        'http://www.grand-cordel.com/wp-content/uploads/2015/08/import_placeholder.png'
+                    "
                   />
                 </div>
                 <div class="profile-image" v-else>
@@ -191,7 +195,11 @@
                   <img :src="previewImage" alt="" v-if="previewImage" />
                 </div>
               </label>
-              <div class="delete-button" @click="deleteImage" v-if="previewImage" >
+              <div
+                class="delete-button"
+                @click="deleteImage"
+                v-if="previewImage"
+              >
                 <i class="icon fa-solid fa-xmark"></i>
               </div>
             </div>

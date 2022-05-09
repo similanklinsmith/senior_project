@@ -14,7 +14,20 @@
               :key="attendee.id"
             >
               <div class="profile-section">
-                <div class="profile-image">
+                <div
+                  class="real-profile-image"
+                  v-if="attendee.img_profile != 'default_profile.png'"
+                >
+                  <img
+                    :src="urlImage + '/' + attendee.img_profile"
+                    alt="sample profile illustration"
+                    @error="
+                      $event.target.src =
+                        'http://www.grand-cordel.com/wp-content/uploads/2015/08/import_placeholder.png'
+                    "
+                  />
+                </div>
+                <div class="profile-image" v-else>
                   <img
                     src="../../../assets/decorations/sample_profile.png"
                     alt="sample profile illustration"
@@ -22,7 +35,8 @@
                 </div>
                 <div class="executive-profile flex-col-center">
                   <div class="name small-text">
-                    {{ attendee.title_code }}. {{ attendee.first_name }}
+                    {{ formatTitle(attendee.title_code) }}
+                    {{ attendee.first_name }}
                     {{ attendee.last_name }}
                   </div>
                 </div>
@@ -159,8 +173,8 @@
                         alt="sample profile illustration"
                       />
                     </div>
-                    {{ executive.title_code }}. {{ executive.first_name }}
-                    {{ executive.last_name }}</label
+                    {{ formatTitle(executive.title_code) }}
+                    {{ executive.first_name }} {{ executive.last_name }}</label
                   >
                   <input
                     type="checkbox"
@@ -220,9 +234,9 @@ export default {
   },
   data() {
     return {
+      urlImage: this.$store.state.imageURL,
       isSelected: 4,
       isAddAttendees: false,
-      executives: [],
       tempAttendees: [],
       searchInput: "",
       form: {
@@ -236,7 +250,11 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getterExecutives", "getterLoadingStatus"]),
+    ...mapGetters([
+      "getterExecutives",
+      "getterLoadingStatus",
+      "getterExecutiveTitles",
+    ]),
     getExecutivesList() {
       return this.$store.getters.getterExecutives;
     },
@@ -269,7 +287,10 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["getExecutives"]),
+    ...mapActions(["getExecutives", "getExecutiveTitle"]),
+    formatTitle(str) {
+      return this.getterExecutiveTitles[str];
+    },
     onClickConfirmAttendees() {
       this.isAddAttendees = false;
       this.form.selectedAttendees = [
@@ -308,43 +329,7 @@ export default {
   },
   created() {
     this.getExecutives();
-  },
-  mounted() {
-    this.executives = [
-      {
-        id: 1,
-        title_code: "Mr",
-        first_name: "Similan",
-        last_name: "Klinsmith",
-        position: "Chief Executive",
-        email: "similan@mail.kmutt.ac.th",
-        phone_number: "0810000000",
-        reportTo: "Alexander Macedonia",
-        img_profile: "",
-      },
-      {
-        id: 2,
-        title_code: "Ms",
-        first_name: "Praepanwa",
-        last_name: "Tedprasit",
-        position: "Chief Executive",
-        email: "praepanwa@mail.kmutt.ac.th",
-        phone_number: "0810000000",
-        reportTo: "Alexander Macedonia",
-        img_profile: "",
-      },
-      {
-        id: 3,
-        title_code: "Ms",
-        first_name: "Noparat",
-        last_name: "Prasongdee",
-        position: "Chief Executive",
-        email: "noparat@mail.kmutt.ac.th",
-        phone_number: "0810000000",
-        reportTo: "Alexander Macedonia",
-        img_profile: "",
-      },
-    ].sort((a, b) => (a.first_name > b.first_name ? 1 : -1));
+    this.getExecutiveTitle();
   },
 };
 </script>
@@ -536,8 +521,21 @@ export default {
             width: 100%;
             column-gap: 0.8rem;
             .executive-profile {
-              width: 12rem;
+              width: 15rem;
               flex-wrap: wrap !important;
+              align-items: flex-start !important;
+            }
+            .real-profile-image {
+              border-radius: 1rem;
+               width: 3.5rem;
+              height: 3.5rem;
+              background-color: $fadedViolet;
+              overflow: hidden;
+              img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+              }
             }
             .profile-image {
               border-radius: 1rem;

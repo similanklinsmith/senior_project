@@ -12,7 +12,14 @@
         />
       </div>
       <div class="real-profile-image" v-else>
-        <img :src="urlImage + '/' + image" alt="sample profile illustration" />
+        <img
+          :src="urlImage + '/' + image"
+          alt="sample profile illustration"
+          @error="
+            $event.target.src =
+              'http://www.grand-cordel.com/wp-content/uploads/2015/08/import_placeholder.png'
+          "
+        />
       </div>
       <div class="executive-profile">
         <div class="name common-text">
