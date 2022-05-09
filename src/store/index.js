@@ -3,12 +3,13 @@ import axios from "axios";
 const BASE_URL = process.env.VUE_APP_API_PATH;
 import { auth } from "./auth.module";
 import authHeader from "../services/auth-header";
+import router from "../router";
 export default createStore({
   state: {
     executiveTitle: [],
     executivePosition: [],
-    executiveTitleURL: `${BASE_URL}/executive-title`,
-    executivePositionURL: `${BASE_URL}/executive-role`,
+    executiveTitleURL: `${BASE_URL}/executive-title-fulltitle`,
+    executivePositionURL: `${BASE_URL}/executive-role-fullname`,
     executiveURL: `${BASE_URL}/executives`,
     myExecutiveURL: `${BASE_URL}/executive`,
     executives: [],
@@ -56,16 +57,14 @@ export default createStore({
       try {
         const data = await axios.get(this.state.executiveTitleURL);
         context.commit("GET_EXECUTIVES_TITLES", data.data.data);
-        console.log(data.status);
       } catch (error) {
         console.log(error);
       }
     },
-    async getExecutivePostion(context) {
+    async getExecutivePosition(context) {
       try {
         const data = await axios.get(this.state.executivePositionURL);
         context.commit("GET_EXECUTIVES_POSITIONS", data.data.data);
-        console.log(data.status);
       } catch (error) {
         console.log(error);
       }
@@ -78,7 +77,6 @@ export default createStore({
           "GET_EXECUTIVES",
           data.data.data.sort((a, b) => (a.first_name > b.first_name ? 1 : -1))
         );
-        console.log(data.status);
         context.commit("GET_LOADING_STATUS", false);
       } catch (error) {
         context.commit("GET_LOADING_STATUS", false);
@@ -96,11 +94,13 @@ export default createStore({
           "GET_MY_EXECUTIVES",
           data.data.data.sort((a, b) => (a.first_name > b.first_name ? 1 : -1))
         );
-        console.log(data.status);
         context.commit("GET_LOADING_STATUS", false);
       } catch (error) {
         context.commit("GET_LOADING_STATUS", false);
-        console.log(error);
+        console.log(error.response.status);
+        if (error.response.status == 400) {
+          router.replace("/sign-in");
+        }
       }
     },
     async addExecutive(context, payload) {
@@ -118,13 +118,12 @@ export default createStore({
             headers: authHeader(),
           },
         );
-        console.log(response.status);
-        if (response.status == 400) {
-          console.log("need to login");
-        }
         context.commit("ADD_EXECUTIVES", response.data.data);
       } catch (error) {
-        console.log(error);
+        console.log(error.response.status);
+        if (error.response.status == 400) {
+          router.replace("/sign-in");
+        }
       }
     },
     async editExecutive(context, payload) {
