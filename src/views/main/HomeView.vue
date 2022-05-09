@@ -50,7 +50,10 @@
                     v-for="(executive, index) in getExecutivesList"
                     :key="executive.id"
                   >
-                    <div class="executive" @click="navToShowExecutiveDetail(index)">
+                    <div
+                      class="executive"
+                      @click="navToShowExecutiveDetail(index)"
+                    >
                       <div class="profile-section">
                         <div class="profile-image">
                           <img
@@ -209,7 +212,7 @@ export default {
     },
     navToShowExecutiveDetail(index) {
       this.$router.push({ name: "executive", params: { showIndex: index } });
-    }
+    },
   },
   created() {
     this.getMyExecutives(1);
@@ -313,6 +316,9 @@ export default {
                   display: flex;
                   width: 100%;
                   .profile-image {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
                     border-radius: 1rem;
                     width: 5rem;
                     height: 5rem;
