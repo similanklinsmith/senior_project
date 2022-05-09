@@ -42,7 +42,11 @@
                 v-for="(executive, index) in filterByName"
                 :key="index"
                 @selectExecutive="selectExecutive"
-                :executive="executive"
+                :id="executive.id"
+                :title="formatTitle(executive.title_code)"
+                :firstname="executive.first_name"
+                :lastname="executive.last_name"
+                :position="formatPosition(executive.position)"
                 :selectedId="selectedId"
               />
               <div
@@ -96,12 +100,12 @@
                 </div>
                 <div class="executive-profile">
                   <div class="name remark-text">
-                    {{ selectedExecutive?.title_code }}.
+                    {{ formatTitle(selectedExecutive?.title_code) }}
                     {{ selectedExecutive?.first_name }}
                     {{ selectedExecutive?.last_name }}
                   </div>
                   <div class="position thin-content-text">
-                    {{ selectedExecutive?.position }}
+                    {{ formatPosition(selectedExecutive?.position) }}
                   </div>
                 </div>
               </div>
@@ -187,9 +191,9 @@
                   <select name="title" id="title" v-model="form.title">
                     <option value="">none</option>
                     <option
-                      v-for="title in getterExecutiveTitles"
+                      v-for="(title, index) in getterExecutiveTitles"
                       :key="title"
-                      :value="title"
+                      :value="index"
                     >
                       {{ title }}
                     </option>
@@ -236,9 +240,9 @@
                   <select name="position" id="position" v-model="form.position">
                     <option value="">none</option>
                     <option
-                      v-for="position in getterExecutivePositions"
+                      v-for="(position, index) in getterExecutivePositions"
                       :key="position"
-                      :value="position"
+                      :value="index"
                     >
                       {{ position }}
                     </option>
@@ -249,7 +253,7 @@
                 <div class="input-form">
                   <label for="email" class="bold-small-text"
                     >Email<span class="required"
-                      >* {{ errors.email }}  {{ errors.uniqueEmail }}</span
+                      >* {{ errors.email }} {{ errors.uniqueEmail }}</span
                     ></label
                   >
                   <input
@@ -454,11 +458,16 @@ export default {
       return !!this.form.tel;
     },
     telPatternIsValid() {
-      return !!(this.form.tel.length == 10) && !!(this.form.tel.match(/^[0-9]+$/));
+      return (
+        !!(this.form.tel.length == 10) && !!this.form.tel.match(/^[0-9]+$/)
+      );
     },
     checkUniqueEmail() {
       for (let index = 0; index < this.getterExecutives.length; index++) {
-        if (this.getterExecutives[index].email == this.form.email) {
+        if (
+          this.getterExecutives[index].email == this.form.email &&
+          this.getterExecutives[index].id != this.editId
+        ) {
           return true;
         }
       }
@@ -466,7 +475,10 @@ export default {
     },
     checkUniqueTel() {
       for (let index = 0; index < this.getterExecutives.length; index++) {
-        if (this.getterExecutives[index].phone_number == this.form.tel) {
+        if (
+          this.getterExecutives[index].phone_number == this.form.tel &&
+          this.getterExecutives[index].id != this.editId
+        ) {
           return true;
         }
       }
@@ -478,7 +490,7 @@ export default {
       "getExecutives",
       "getMyExecutives",
       "getExecutiveTitle",
-      "getExecutivePostion",
+      "getExecutivePosition",
     ]),
     formatPhoneNumber(str) {
       let cleaned = ("" + str).replace(/\D/g, "");
@@ -488,6 +500,12 @@ export default {
         return match[1] + "-" + match[2] + "-" + match[3];
       }
       return null;
+    },
+    formatTitle(str) {
+      return this.getterExecutiveTitles[str];
+    },
+    formatPosition(str) {
+      return this.getterExecutivePositions[str];
     },
     selectExecutive(id) {
       this.cancelEdit();
@@ -601,19 +619,25 @@ export default {
               // image: this.form.imageProfile,
             }),
             (this.isLoading = true),
+            /* eslint-disable */
             setTimeout(
               () => (
-                (this.selectedExecutive = this.getExecutivesList[0]),
+                (this.selectedExecutive = this.getExecutivesList.find(
+                  (executive) => {
+                    return executive.id == this.editId;
+                  }
+                )),
                 (this.selectedId = this.editId),
                 (this.isLoading = false)
               ),
               1000
-            ))
+            ),
+            (this.isAddExecutive = false))
           : this.$store.dispatch("addExecutive", {
               newExecutive: newExecutive,
               // image: this.form.imageProfile,
-            });
-        this.cancelEdit();
+            }, (this.cancelEdit()));
+        // this.cancelEdit();
         // location.reload()
       }
     },
@@ -630,7 +654,7 @@ export default {
     this.getExecutives();
     this.getMyExecutives();
     this.getExecutiveTitle();
-    this.getExecutivePostion();
+    this.getExecutivePosition();
   },
   watch: {
     getExecutivesList: function () {

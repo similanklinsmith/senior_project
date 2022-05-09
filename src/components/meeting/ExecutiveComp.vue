@@ -1,8 +1,8 @@
 <template>
   <div
     class="executive flex-col-center"
-    @click="selectExecutive(executive.id)"
-    :style="selectedId == executive.id ? { backgroundColor: '#DBD2FF' } : {}"
+    @click="selectExecutive(id)"
+    :style="selectedId == id ? { backgroundColor: '#DBD2FF' } : {}"
   >
     <div class="profile-section">
       <div class="profile-image">
@@ -13,10 +13,16 @@
       </div>
       <div class="executive-profile">
         <div class="name common-text">
-          {{ executive.title_code }}. {{ executive.first_name }}
-          {{ executive.last_name }}
+          {{ title }} {{ firstname }}
+          {{ lastname }}
         </div>
-        <div class="position thin-content-text">{{ executive.position }}</div>
+        <div class="position thin-content-text">
+          {{
+            (position).length > 30
+              ? (position).slice(0, 31) + "..."
+              : (position)
+          }}
+        </div>
       </div>
     </div>
   </div>
@@ -24,15 +30,16 @@
 
 <script>
 export default {
-  props: ["executive", "selectedId"],
-  data() {
-    return {
-      // isSelected: false,
-    };
-  },
+  props: [
+    "selectedId",
+    "id",
+    "title",
+    "firstname",
+    "lastname",
+    "position",
+  ],
   methods: {
     selectExecutive(id) {
-      // this.isSelected = !this.isSelected;
       this.$emit("selectExecutive", id);
     },
   },
@@ -48,9 +55,6 @@ export default {
   cursor: pointer;
   width: 100%;
   transition: 0.2s all ease-in-out;
-  /* margin: 1rem 0; */
-  /* background-color: $fadedViolet; */
-  /* border-radius: 1rem; */
   .profile-section {
     display: flex;
     width: 100%;
