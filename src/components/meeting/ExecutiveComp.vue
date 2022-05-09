@@ -5,11 +5,14 @@
     :style="selectedId == id ? { backgroundColor: '#DBD2FF' } : {}"
   >
     <div class="profile-section">
-      <div class="profile-image">
+      <div class="profile-image" v-if="image == 'default_profile.png'">
         <img
           src="../../assets/decorations/sample_profile.png"
           alt="sample profile illustration"
         />
+      </div>
+      <div class="real-profile-image" v-else>
+        <img :src="urlImage + '/' + image" alt="sample profile illustration" />
       </div>
       <div class="executive-profile">
         <div class="name common-text">
@@ -17,11 +20,7 @@
           {{ lastname }}
         </div>
         <div class="position thin-content-text">
-          {{
-            (position).length > 30
-              ? (position).slice(0, 31) + "..."
-              : (position)
-          }}
+          {{ position.length > 30 ? position.slice(0, 31) + "..." : position }}
         </div>
       </div>
     </div>
@@ -37,7 +36,13 @@ export default {
     "firstname",
     "lastname",
     "position",
+    "image",
   ],
+  data() {
+    return {
+      urlImage: this.$store.state.imageURL,
+    };
+  },
   methods: {
     selectExecutive(id) {
       this.$emit("selectExecutive", id);
@@ -59,6 +64,20 @@ export default {
     display: flex;
     width: 100%;
     padding: 1.8rem;
+    .real-profile-image {
+      border-radius: 1rem;
+      width: 5.2rem;
+      height: 5.2rem;
+      background-color: $fadedViolet;
+      margin-right: 2.4rem;
+      text-align: center;
+      overflow: hidden;
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
     .profile-image {
       border-radius: 1rem;
       width: 5.2rem;

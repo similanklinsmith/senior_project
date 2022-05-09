@@ -47,6 +47,7 @@
                 :firstname="executive.first_name"
                 :lastname="executive.last_name"
                 :position="formatPosition(executive.position)"
+                :image="executive.img_profile"
                 :selectedId="selectedId"
               />
               <div
@@ -92,7 +93,16 @@
             <div v-if="isLoading" class="remark-text loading">Loading...</div>
             <div class="executive-card grid" v-if="isLoading == false">
               <div class="left-side">
-                <div class="profile-image">
+                <div
+                  class="real-profile-image"
+                  v-if="selectedExecutive.img_profile != 'default_profile.png'"
+                >
+                  <img
+                    :src="urlImage + '/' + selectedExecutive.img_profile"
+                    alt="sample profile illustration"
+                  />
+                </div>
+                <div class="profile-image" v-else>
                   <img
                     src="../../assets/decorations/sample_profile.png"
                     alt="sample profile illustration"
@@ -156,30 +166,36 @@
             @submit.prevent="handleChangeExecutive"
             class="add-executive-card"
           >
-            <label class="upload-profile" for="upload">
-              <input
-                @change="uploadImage"
-                type="file"
-                accept="image/*"
-                id="upload"
-                name="upload"
-              />
-              <div class="upload-button">
-                <i class="icon fa-solid fa-arrow-up-from-bracket"></i>
-              </div>
-              <div
-                :class="`${
-                  previewImage == '' ? 'profile-image' : 'preview-img'
-                }`"
-              >
-                <img
-                  v-if="previewImage == ''"
-                  src="../../assets/decorations/sample_profile.png"
-                  alt="sample profile illustration"
+            <div class="image-profile-upload">
+              <label class="upload-profile" for="upload">
+                <input
+                  @change="uploadImage"
+                  type="file"
+                  accept="image/*"
+                  id="upload"
+                  name="upload"
                 />
-                <img :src="previewImage" alt="" v-else />
+                <div class="upload-button">
+                  <i class="icon fa-solid fa-arrow-up-from-bracket"></i>
+                </div>
+                <div
+                  :class="`${
+                    previewImage == '' ? 'profile-image' : 'preview-img'
+                  }`"
+                >
+                  <img
+                    v-if="previewImage == ''"
+                    src="../../assets/decorations/sample_profile.png"
+                    alt="sample profile illustration"
+                  />
+                  <img :src="previewImage" alt="" v-if="previewImage" />
+                </div>
+              </label>
+              <div class="delete-button" @click="deleteImage" v-if="previewImage" >
+                <i class="icon fa-solid fa-xmark"></i>
               </div>
-            </label>
+            </div>
+
             <div class="information">
               <div class="input">
                 <div class="input-form">
@@ -394,6 +410,7 @@ export default {
   props: ["isAdd", "showIndex"],
   data() {
     return {
+      urlImage: this.$store.state.imageURL,
       isLoading: false,
       secretary: "",
       isAddExecutive: false,
@@ -524,6 +541,10 @@ export default {
     togglePopup() {
       this.isShowPopup = true;
     },
+    deleteImage() {
+      this.previewImage = "";
+      this.form.imageProfile = "";
+    },
     handleAdd() {
       this.searchInput = "";
       this.isAddExecutive = true;
@@ -535,6 +556,7 @@ export default {
       this.form.position = "";
       this.form.tel = "";
       this.form.imageProfile = "";
+      this.previewImage = "";
       this.errors = {};
     },
     cancelEdit() {
@@ -547,12 +569,14 @@ export default {
       this.form.position = "";
       this.form.tel = "";
       this.form.imageProfile = "";
+      this.previewImage = "";
       this.errors = {};
     },
     editExecutive(id) {
       this.searchInput = "";
       this.isAddExecutive = true;
       this.editId = id;
+      this.previewImage = "";
       this.form.title = this.selectedExecutive.title_code;
       this.form.firstname = this.selectedExecutive.first_name;
       this.form.lastname = this.selectedExecutive.last_name;
@@ -609,14 +633,12 @@ export default {
           last_name: this.form.lastname,
           position: this.form.position,
           phone_number: this.form.tel,
-          img_profile: this.form.imageProfile,
           email: this.form.email,
         };
         this.editId
           ? (this.$store.dispatch("editExecutive", {
               editExecutive: newExecutive,
               id: this.editId,
-              // image: this.form.imageProfile,
             }),
             (this.isLoading = true),
             /* eslint-disable */
@@ -633,21 +655,38 @@ export default {
               1000
             ),
             (this.isAddExecutive = false))
-          : this.$store.dispatch("addExecutive", {
-              newExecutive: newExecutive,
-              // image: this.form.imageProfile,
-            }, (this.cancelEdit()));
-        // this.cancelEdit();
-        // location.reload()
+          : (this.$store.dispatch(
+              "addExecutive",
+              {
+                newExecutive: newExecutive,
+                img_profile: this.form.imageProfile
+                  ? this.form.imageProfile
+                  : null,
+              },
+              this.cancelEdit(),
+              (this.isLoading = true)
+            ),
+            setTimeout(
+              () => (
+                (this.selectedExecutive = this.getExecutivesList[0]),
+                (this.selectedId = this.getExecutivesList[0].id),
+                (this.isLoading = false)
+              ),
+              1000
+            ));
       }
     },
     deleteExecutive(id) {
       this.$store.dispatch("deleteExecutive", id);
       this.isShowPopup = false;
-      this.getExecutivesList.length != 0
-        ? ((this.selectedExecutive = this.getExecutivesList[0]),
-          (this.selectedId = this.getExecutivesList[0].id))
-        : (this.isAddExecutive = true);
+      setTimeout(
+        () =>
+          this.getExecutivesList.length != 0
+            ? ((this.selectedExecutive = this.getExecutivesList[0]),
+              (this.selectedId = this.getExecutivesList[0].id))
+            : (this.isAddExecutive = true),
+        1000
+      );
     },
   },
   created() {
@@ -888,6 +927,18 @@ export default {
           align-items: center;
           text-align: center;
           row-gap: 1.2rem;
+          .real-profile-image {
+            border-radius: 2rem;
+            width: 14rem;
+            height: 14rem;
+            background-color: $fadedViolet;
+            overflow: hidden;
+            img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+            }
+          }
           .profile-image {
             border-radius: 2rem;
             width: 14rem;
@@ -955,6 +1006,28 @@ export default {
         grid-template-rows: 1fr 1.5fr;
         justify-items: center;
         align-items: center;
+        .image-profile-upload {
+          position: relative;
+          .delete-button {
+            cursor: pointer;
+            top: 0%;
+            right: 0%;
+            transform: translateX(1rem) translateY(-1rem);
+            position: absolute;
+            background-color: $error;
+            border-radius: 1rem;
+            padding: 1rem 1.2rem;
+            transition: 0.2s all ease-in-out;
+            &:hover {
+              background-color: $errorHover;
+            }
+            .icon {
+              font-size: 1.4rem;
+              color: $white;
+            }
+          }
+        }
+
         .upload-profile {
           cursor: pointer;
           width: fit-content;
