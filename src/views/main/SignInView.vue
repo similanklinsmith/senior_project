@@ -138,7 +138,7 @@ export default {
           (err) => {
             this.form.password = "";
             console.log(err.response.status);
-            if (err.response.status == 404) {
+            if (err.response.status == 403 || err.response.status == 404) {
               this.notFound = "Email or Password is invalid";
             }
           }
