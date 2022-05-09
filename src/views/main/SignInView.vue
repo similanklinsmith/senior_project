@@ -129,7 +129,6 @@ export default {
           email: this.form.email,
           password: this.form.password,
         };
-        console.log(user);
         this.loading = true;
         this.$store.dispatch("auth/login", user).then(
           () => {
