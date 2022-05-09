@@ -56,11 +56,12 @@ export default {
     handleSignOut() {
       this.$store.dispatch("auth/logout").then(() => {
         this.$router.replace("/sign-in");
-        // this.$router.go();
       });
     },
   },
   mounted() {
+    // let htmlElement = document.documentElement;
+    // htmlElement.setAttribute("theme", "light");
     if (this.$route.name != "sign-in") {
       window.addEventListener("scroll", () => {
         if (window.scrollY > document.getElementById("header").offsetTop) {
