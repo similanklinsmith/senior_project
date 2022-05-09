@@ -6,12 +6,13 @@ import authHeader from "../services/auth-header";
 import router from "../router";
 export default createStore({
   state: {
-    executiveTitle: [],
-    executivePosition: [],
+    imageURL: `${BASE_URL}/image`,
     executiveTitleURL: `${BASE_URL}/executive-title-fulltitle`,
     executivePositionURL: `${BASE_URL}/executive-role-fullname`,
     executiveURL: `${BASE_URL}/executives`,
     myExecutiveURL: `${BASE_URL}/executive`,
+    executiveTitle: [],
+    executivePosition: [],
     executives: [],
     myExecutives: [],
     loadingStatus: false,
@@ -104,37 +105,44 @@ export default createStore({
       }
     },
     async addExecutive(context, payload) {
-      // const jsonExecutive = JSON.stringify(payload.newExecutive);
-      // const blob = new Blob([jsonExecutive], {
-      //   type: "application/json",
-      // });
-      // const formData = new FormData();
-      // formData.append("newExecutive", blob);
       try {
-        const response = await axios.post(
-          this.state.myExecutiveURL,
-          payload.newExecutive,
-          {
-            headers: authHeader(),
-          },
-        );
-        context.commit("ADD_EXECUTIVES", response.data.data);
+        const formData = new FormData();
+        formData.append("files", payload.img_profile);
+        const imageResponse =
+          payload.img_profile == null
+            ? null
+            : await axios.post(this.state.imageURL, formData);
+        try {
+          const newExecutive = payload.newExecutive;
+          newExecutive["img_profile"] =
+            imageResponse == null ? null : imageResponse.data.image_name;
+          const response = await axios.post(
+            this.state.myExecutiveURL,
+            newExecutive,
+            {
+              headers: authHeader(),
+            }
+          );
+          context.commit("ADD_EXECUTIVES", response.data.data);
+        } catch (error) {
+          console.log(error.response.status);
+          if (error.response.status == 403) {
+            router.replace("/sign-in");
+          }
+        }
       } catch (error) {
         console.log(error.response.status);
-        if (error.response.status == 400) {
-          router.replace("/sign-in");
-        }
       }
     },
     async editExecutive(context, payload) {
       context.commit("GET_LOADING_STATUS", true);
       try {
         const response = await axios.put(
-          this.state.myExecutiveURL+"/"+payload.id,
+          this.state.myExecutiveURL + "/" + payload.id,
           payload.editExecutive,
           {
             headers: authHeader(),
-          },
+          }
         );
         console.log(response.status);
         if (response.status == 400) {
@@ -153,7 +161,7 @@ export default createStore({
           this.state.myExecutiveURL + "/" + id,
           {
             headers: authHeader(),
-          },
+          }
         );
         console.log(response.status);
         if (response.status == 400) {
