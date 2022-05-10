@@ -95,10 +95,10 @@
               <div class="left-side">
                 <div
                   class="real-profile-image"
-                  v-if="selectedExecutive.img_profile != 'default_profile.png'"
+                  v-if="selectedExecutive?.img_profile != 'default_profile.png'"
                 >
                   <img
-                    :src="urlImage + '/' + selectedExecutive.img_profile"
+                    :src="urlImage + '/' + selectedExecutive?.img_profile"
                     alt="sample profile illustration"
                     @error="
                       $event.target.src =

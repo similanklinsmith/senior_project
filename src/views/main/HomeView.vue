@@ -81,7 +81,7 @@
                           </div>
                           <div class="position thin-content-text">
                             {{
-                              formatPosition(executive.position).length > 30
+                              formatPosition(executive.position)?.length > 30
                                 ? formatPosition(executive.position).slice(
                                     0,
                                     31
