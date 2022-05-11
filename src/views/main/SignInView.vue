@@ -17,7 +17,7 @@
           @onClick="isSignIn = true"
         >
         </BaseButton>
-        <BaseButton
+        <!-- <BaseButton
           btnText="Sign up"
           width="14rem"
           textColor="#7452FF"
@@ -27,7 +27,7 @@
           :class="isSignIn ? 'texted-button' : 'outlined-button'"
           @onClick="isSignIn = false"
         >
-        </BaseButton>
+        </BaseButton> -->
       </div>
     </div>
     <div class="body">
@@ -71,7 +71,7 @@
               v-model="form.password"
             />
           </div>
-          <div class="required"> {{ notFound }}</div>
+          <div class="required">{{ notFound }}</div>
           <div class="forget-password bold-small-text">Forget password?</div>
           <BaseButton
             buttonType="common-button"
@@ -88,12 +88,15 @@
         <div class="or thin-content-text">or continue with</div>
         <BaseButton
           buttonType="outlined-button"
-          btnText="Sign up"
+          btnText="Sign in with Google"
           textColor="#7452FF"
           textHover="white"
           color="#7452FF"
           hoverColor="#23106D"
         >
+          <template v-slot:before-icon>
+            <i class="fa-brands fa-google"></i>
+          </template>
         </BaseButton>
       </div>
     </div>
@@ -113,7 +116,7 @@ export default {
         password: "",
       },
       errors: {},
-      notFound: ""
+      notFound: "",
     };
   },
   methods: {
