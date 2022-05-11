@@ -126,33 +126,55 @@ export default createStore({
           context.commit("ADD_EXECUTIVES", response.data.data);
         } catch (error) {
           console.log(error.response.status);
-          if (error.response.status == 403) {
+          if (error.response.status == 403 || error.response.status == 400) {
             router.replace("/sign-in");
           }
         }
       } catch (error) {
         console.log(error.response.status);
+        if (error.response.status == 403 || error.response.status == 400) {
+          router.replace("/sign-in");
+        }
       }
     },
     async editExecutive(context, payload) {
       context.commit("GET_LOADING_STATUS", true);
       try {
-        const response = await axios.put(
-          this.state.myExecutiveURL + "/" + payload.id,
-          payload.editExecutive,
-          {
-            headers: authHeader(),
+        const formData = new FormData();
+        formData.append("files", payload.img_profile);
+        const imageResponse =
+          payload.img_profile == null
+            ? null
+            : await axios.post(this.state.imageURL, formData);
+        try {
+          const editExecutive = payload.editExecutive;
+          editExecutive["img_profile"] =
+            imageResponse == null ? null : imageResponse.data.image_name;
+          const response = await axios.put(
+            this.state.myExecutiveURL + "/" + payload.id,
+            editExecutive,
+            {
+              headers: authHeader(),
+            }
+          );
+          console.log(response.status);
+          if (response.status == 400) {
+            console.log("need to login");
           }
-        );
-        console.log(response.status);
-        if (response.status == 400) {
-          console.log("need to login");
+          context.commit("UPDATE_MY_EXECUTIVE", response.data.data);
+          context.commit("GET_LOADING_STATUS", false);
+        } catch (error) {
+          context.commit("GET_LOADING_STATUS", false);
+          console.log(error.response.status);
+          if (error.response.status == 403 || error.response.status == 400) {
+            router.replace("/sign-in");
+          }
         }
-        context.commit("UPDATE_MY_EXECUTIVE", response.data.data);
-        context.commit("GET_LOADING_STATUS", false);
       } catch (error) {
-        context.commit("GET_LOADING_STATUS", false);
-        console.log(error);
+        console.log(error.response.status);
+        if (error.response.status == 403 || error.response.status == 400) {
+          router.replace("/sign-in");
+        }
       }
     },
     async deleteExecutive(context, id) {
@@ -169,7 +191,10 @@ export default createStore({
         }
         context.commit("DELETE_MY_EXECUTIVE", id);
       } catch (error) {
-        console.log(error);
+        console.log(error.response.status);
+        if (error.response.status == 403 || error.response.status == 400) {
+          router.replace("/sign-in");
+        }
       }
     },
   },

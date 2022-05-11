@@ -183,6 +183,7 @@
                   <i class="icon fa-solid fa-arrow-up-from-bracket"></i>
                 </div>
                 <div
+                  v-if="editId == ''"
                   :class="`${
                     previewImage == '' ? 'profile-image' : 'preview-img'
                   }`"
@@ -194,11 +195,35 @@
                   />
                   <img :src="previewImage" alt="" v-if="previewImage" />
                 </div>
+                <div
+                  v-else
+                  :class="`${
+                    previewImage == '' && form.imageProfile == ''
+                      ? 'profile-image'
+                      : 'preview-img'
+                  }`"
+                >
+                  <img
+                    v-if="previewImage == '' && realImage == ''"
+                    src="../../assets/decorations/sample_profile.png"
+                    alt="sample profile illustration"
+                  />
+                  <img
+                    :src="previewImage"
+                    alt=""
+                    v-if="previewImage && realImage == ''"
+                  />
+                  <img
+                    :src="urlImage + '/' + realImage"
+                    alt=""
+                    v-if="realImage"
+                  />
+                </div>
               </label>
               <div
                 class="delete-button"
                 @click="deleteImage"
-                v-if="previewImage"
+                v-if="form.imageProfile"
               >
                 <i class="icon fa-solid fa-xmark"></i>
               </div>
@@ -429,6 +454,7 @@ export default {
       isShowDropdown: false,
       editId: "",
       previewImage: "",
+      realImage: "",
       form: {
         title: "",
         firstname: "",
@@ -550,6 +576,7 @@ export default {
       this.isShowPopup = true;
     },
     deleteImage() {
+      this.realImage = "";
       this.previewImage = "";
       this.form.imageProfile = "";
     },
@@ -591,16 +618,26 @@ export default {
       this.form.email = this.selectedExecutive.email;
       this.form.position = this.selectedExecutive.position;
       this.form.tel = this.selectedExecutive.phone_number;
-      this.form.imageProfile = this.selectedExecutive.imageProfile;
+      this.form.imageProfile =
+        this.selectedExecutive.img_profile == "default_profile.png"
+          ? null
+          : this.selectedExecutive.img_profile;
+      this.realImage = this.selectedExecutive.img_profile;
+      console.log(this.form);
     },
     uploadImage(e) {
-      const image = e.target.files[0];
-      this.form.imageProfile = e.target.files[0];
-      const reader = new FileReader();
-      reader.readAsDataURL(image);
-      reader.onload = (e) => {
-        this.previewImage = e.target.result;
-      };
+      if (e.target.files.length != 0) {
+        this.previewImage = "";
+        this.realImage = "";
+        const image = e.target.files[0];
+        this.form.imageProfile = e.target.files[0];
+        const reader = new FileReader();
+        reader.readAsDataURL(image);
+        reader.onload = (e) => {
+          this.previewImage = e.target.result;
+        };
+        e.target.value = "";
+      }
     },
     handleChangeExecutive() {
       this.titleIsValid
@@ -647,6 +684,9 @@ export default {
           ? (this.$store.dispatch("editExecutive", {
               editExecutive: newExecutive,
               id: this.editId,
+              img_profile: this.form.imageProfile
+                ? this.form.imageProfile
+                : null,
             }),
             (this.isLoading = true),
             /* eslint-disable */
@@ -685,6 +725,7 @@ export default {
       }
     },
     deleteExecutive(id) {
+      this.isShowDropdown = false;
       this.$store.dispatch("deleteExecutive", id);
       this.isShowPopup = false;
       setTimeout(
@@ -966,6 +1007,7 @@ export default {
               color: $darkViolet;
             }
             .position {
+              line-height: 1.4;
               color: $highlightViolet;
             }
           }
