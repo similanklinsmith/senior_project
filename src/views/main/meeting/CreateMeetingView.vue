@@ -167,7 +167,26 @@
                   :key="executive.id"
                 >
                   <label :for="executive.id">
-                    <div class="profile-image">
+                    <!-- <div class="profile-image">
+                      <img
+                        src="../../../assets/decorations/sample_profile.png"
+                        alt="sample profile illustration"
+                      />
+                    </div> -->
+                    <div
+                      class="real-profile-image"
+                      v-if="executive.img_profile != 'default_profile.png'"
+                    >
+                      <img
+                        :src="urlImage + '/' + executive.img_profile"
+                        alt="sample profile illustration"
+                        @error="
+                          $event.target.src =
+                            'http://www.grand-cordel.com/wp-content/uploads/2015/08/import_placeholder.png'
+                        "
+                      />
+                    </div>
+                    <div class="profile-image" v-else>
                       <img
                         src="../../../assets/decorations/sample_profile.png"
                         alt="sample profile illustration"
@@ -467,6 +486,18 @@ export default {
         input[type="checkbox"]:checked {
           background-color: $yellow;
         }
+        .real-profile-image {
+          border-radius: 1rem;
+          width: 5rem;
+          height: 5rem;
+          background-color: $fadedViolet;
+          overflow: hidden;
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+        }
         .profile-image {
           border-radius: 1rem;
           width: 5rem;
@@ -527,7 +558,7 @@ export default {
             }
             .real-profile-image {
               border-radius: 1rem;
-               width: 3.5rem;
+              width: 3.5rem;
               height: 3.5rem;
               background-color: $fadedViolet;
               overflow: hidden;

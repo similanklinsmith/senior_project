@@ -99,7 +99,7 @@
                 >
                   <img
                     :src="urlImage + '/' + selectedExecutive?.img_profile"
-                    alt="sample profile illustration"
+                    alt="profile of user"
                     @error="
                       $event.target.src =
                         'http://www.grand-cordel.com/wp-content/uploads/2015/08/import_placeholder.png'
@@ -210,13 +210,12 @@
                   />
                   <img
                     :src="previewImage"
-                    alt=""
+                    alt="preview profile of user"
                     v-if="previewImage && realImage == ''"
                   />
-                  <img
-                    :src="urlImage + '/' + realImage"
-                    alt=""
-                    v-if="realImage"
+                  <img :src="urlImage + '/' + realImage" alt="profile of user" v-if="realImage"
+                  @error=" $event.target.src =
+                  'http://www.grand-cordel.com/wp-content/uploads/2015/08/import_placeholder.png'"
                   />
                 </div>
               </label>
