@@ -188,12 +188,6 @@ html {
   }
 }
 
-@media (max-width: 80em) {
-  html {
-    font-size: 8px !important;
-  }
-}
-
 .vuecal--disabled-button{
   .vuecal__arrow {
     display: none;
@@ -246,4 +240,10 @@ html {
 
 .vuecal--date-picker:not(.vuecal--day-view) .vuecal__cell--selected .vuecal__cell-content {
   background-color: $primaryViolet !important;
+}
+
+@media (max-width: 90em) {
+  html {
+    font-size: 8px !important;
+  }
 }
