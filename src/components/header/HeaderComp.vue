@@ -111,7 +111,7 @@ ul {
   background-color: $white;
   align-items: center;
   grid-template-columns: 0.75fr 1.5fr 1fr;
-  padding: 3rem 5.5rem;
+  padding: 3rem 5.5rem 3rem 18rem;
   .remark-text {
     color: $darkViolet;
   }

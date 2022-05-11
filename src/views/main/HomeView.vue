@@ -163,7 +163,7 @@
       </div>
       <div class="second-body-section">
         <div class="title-section">
-          <div class="remark-text">Calendar</div>
+          <div class="remark-text">Incoming meetings</div>
           <div class="common-text">
             See all meetings<i class="icon fa-solid fa-chevron-right"></i>
           </div>
@@ -464,6 +464,63 @@ export default {
       .incoming-meetings {
         display: flex;
         flex-direction: column;
+      }
+    }
+  }
+}
+@media (max-width: 70em) {
+  .home {
+    .body {
+      .first-body-section {
+        column-gap: 2rem;
+        .create-meeting-card {
+          .card {
+            .card-content {
+              padding: 0 1.2rem 4.4rem 1.2rem;
+            }
+          }
+        }
+        .executives-card {
+          .card {
+            .card-content {
+              padding: 2.4rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+@media (max-width: 63.5em) {
+  .home {
+    .body {
+      .first-body-section {
+        grid-template-columns: repeat(5, 1fr);
+            column-gap: 3rem;
+        .create-meeting-card {
+                    grid-column: span 2;
+          .card {
+            .card-content {
+              padding: 0 3.2rem 5.4rem 3.2rem;
+            }
+          }
+        }
+        .executives-card {
+          grid-column: span 3;
+          .card {
+            .card-content {
+              padding: 2.4rem;
+            }
+          }
+        }
+        .calendar-card {
+          margin-bottom: 3.6rem;
+          order: 1;
+          grid-column: span 5;
+          .card {
+            height: 45rem;
+          }
+        }
       }
     }
   }

@@ -163,4 +163,17 @@ export default {
     }
   }
 }
+@media (max-width: 63.5em) {
+  .meeting {
+  padding: 1.4rem 2.2rem;
+  margin-bottom: 1.8rem;
+}
+  .meeting-card {
+    .meeting-detail {
+      .additional-detail {
+        column-gap: 1.5rem;
+      }
+    }
+  }
+}
 </style>
