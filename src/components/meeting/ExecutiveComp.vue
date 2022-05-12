@@ -26,7 +26,7 @@
           {{ title }} {{ firstname }}
           {{ lastname }}
         </div>
-        <div class="position thin-content-text">
+        <div class="position thin-content-text" v-if="position">
           {{ position.length > 30 ? position.slice(0, 31) + "..." : position }}
         </div>
       </div>
