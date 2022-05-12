@@ -62,7 +62,7 @@ export default {
   mounted() {
     // let htmlElement = document.documentElement;
     // htmlElement.setAttribute("theme", "light");
-    if (this.$route.name != "sign-in") {
+    if (window.location.pathname != "/sign-in") {
       window.addEventListener("scroll", () => {
         if (window.scrollY > document.getElementById("header").offsetTop) {
           document.getElementById("header").classList.add("fixed");
