@@ -26,10 +26,10 @@ jobs:
           echo "Create ENV HERE" >> .env
 
       - name: Build Docker image
-        run: docker build . --tag ghcr.io/momento-appointment-scheduling-system/front-end
+        run: docker build . --tag ghcr.io/mai126/front-end:latest
 
       - name: Push Docker image to Github Container registry
-        run: docker push ghcr.io/momento-appointment-scheduling-system/front-end
+        run: docker push ghcr.io/mai126/front-end:latest
 
   deploy:
     needs: build
@@ -42,9 +42,9 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           username: ${{ secrets.SSH_USERNAME }}
           script: |
-            docker ps
+            docker ps -a
             docker rm -f frontend
-            docker ghcr.io/momento-appointment-scheduling-system/front-end
+            docker ghcr.io/mai126/front-end:latest
             docker images
             docker-compose up -d
             docker image prune -f
