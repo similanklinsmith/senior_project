@@ -225,6 +225,7 @@ ul {
       position: absolute;
       opacity: 0;
       width: 100%;
+      min-width: 20rem;
       background-color: $white;
       overflow: hidden;
       padding: 2.8rem;

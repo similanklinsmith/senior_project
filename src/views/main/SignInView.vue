@@ -17,26 +17,15 @@
           @onClick="isSignIn = true"
         >
         </BaseButton>
-        <!-- <BaseButton
-          btnText="Sign up"
-          width="14rem"
-          textColor="#7452FF"
-          textHover="#DBD2FF"
-          color="#7452FF"
-          hoverColor="#23106D"
-          :class="isSignIn ? 'texted-button' : 'outlined-button'"
-          @onClick="isSignIn = false"
-        >
-        </BaseButton> -->
       </div>
     </div>
     <div class="body">
       <div class="first-section">
         <lottie-player
+          class="lottie"
           src="https://assets3.lottiefiles.com/packages/lf20_7z8wtyb0.json"
           background="transparent"
           speed="1"
-          style="width: 500px; height: 500px"
           loop
           autoplay
         ></lottie-player>
@@ -209,6 +198,10 @@ export default {
     .first-section {
       display: flex;
       justify-content: center;
+      .lottie {
+        width: 60rem;
+        height: 60rem;
+      }
     }
     .second-section {
       display: flex;
@@ -262,6 +255,40 @@ export default {
       .or::after {
         letter-spacing: -10%;
         content: "______________";
+      }
+    }
+  }
+}
+@media (max-width: 70em) {
+  .sign-in-screen {
+    .body {
+      grid-template-columns: 1.1fr 0.9fr;
+      .first-section {
+        .lottie {
+          width: 45rem;
+          height: 45rem;
+        }
+      }
+      .second-section {
+        .or::before,
+        .or::after {
+          letter-spacing: -10%;
+          content: "______";
+        }
+      }
+    }
+  }
+}
+@media (max-width: 63.5em) {
+  .sign-in-screen {
+    .body {
+      grid-template-columns: 0.9fr 1.1fr;
+      .first-section {
+        width: 80%;
+      }
+      .second-section {
+        width: 100%;
+        padding: 4.8rem 0rem;
       }
     }
   }
