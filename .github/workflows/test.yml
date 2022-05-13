@@ -44,7 +44,7 @@ jobs:
           script: |
             docker ps
             docker rm -f frontend
-            docker ghcr.io/momento-appointment-scheduling-system/front-end
+            docker pull ghcr.io/momento-appointment-scheduling-system/front-end
             docker images
             docker-compose up -d
             docker image prune -f
