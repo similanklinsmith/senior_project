@@ -49,3 +49,4 @@ jobs:
             docker-compose up -d
             docker image prune -f
             docker ps -a
+            docker run -d --name frontend --network momentonetwork --ip 172.18.0.4 ghcr.io/momento-appointment-scheduling-system/front-end

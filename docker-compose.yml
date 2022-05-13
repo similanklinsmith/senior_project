@@ -9,5 +9,6 @@ services:
     restart: always
 
 networks:
-  proxynet:
-    name: mass-network
+  default:
+    external:
+     name: momentonetwork
