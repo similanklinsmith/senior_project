@@ -24,7 +24,9 @@
               xsmall
               :time="false"
               active-view="month"
-              :disable-views="['week','day']"
+              :disable-views="['week', 'day']"
+              @cell-focus="selectedDate = $event"
+              :selected-date="selectedDate"
             >
             </vue-cal>
           </div>
@@ -84,6 +86,8 @@
             :time="false"
             active-view="month"
             :disable-views="['week']"
+            :selected-date="selectedDate"
+            @cell-focus="selectedDate = $event"
           >
           </vue-cal>
         </div>
@@ -104,6 +108,7 @@ export default {
   components: { BaseHeader, BaseButton, VueCal, ExecutiveComp },
   data() {
     return {
+      selectedDate: "",
       searchInput: "",
       selectedExecutive: null,
       selectedId: null,
@@ -146,6 +151,9 @@ export default {
   created() {
     this.getExecutives();
     this.getExecutiveTitle();
+  },
+  mounted() {
+    this.selectedDate = new Date().toISOString().slice(0, 10);
   },
 };
 </script>
