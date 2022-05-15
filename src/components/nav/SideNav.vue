@@ -48,6 +48,7 @@
 export default {
   name: "SideNav",
   props: ["isToggled"],
+  emits: ['toggleSidebar'],
   methods: {
     toggleSidebar() {
       this.$emit("toggleSidebar");
