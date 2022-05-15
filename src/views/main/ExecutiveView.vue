@@ -12,6 +12,7 @@
         color="#DBD2FF"
         hoverColor="#23106D"
         @onClick="handleAdd"
+        width="22rem"
       >
       </BaseButton>
     </BaseHeader>
@@ -213,9 +214,14 @@
                     alt="preview profile of user"
                     v-if="previewImage && realImage == ''"
                   />
-                  <img :src="urlImage + '/' + realImage" alt="profile of user" v-if="realImage"
-                  @error=" $event.target.src =
-                  'http://www.grand-cordel.com/wp-content/uploads/2015/08/import_placeholder.png'"
+                  <img
+                    :src="urlImage + '/' + realImage"
+                    alt="profile of user"
+                    v-if="realImage"
+                    @error="
+                      $event.target.src =
+                        'http://www.grand-cordel.com/wp-content/uploads/2015/08/import_placeholder.png'
+                    "
                   />
                 </div>
               </label>
@@ -1170,6 +1176,21 @@ export default {
             display: flex;
             gap: 1.5rem;
           }
+        }
+      }
+    }
+  }
+}
+@media (max-width: 63.5em) {
+  .executive-screen {
+    .body {
+      .first-body-section {
+        column-gap: 2rem;
+        .container {
+          padding: 3.4rem 4.4rem;
+        }
+        .executive-card {
+          grid-template-columns: 0.75fr 1.25fr;
         }
       }
     }

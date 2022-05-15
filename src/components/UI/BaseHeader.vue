@@ -50,4 +50,15 @@ export default {
     }
   }
 }
+@media (max-width: 33em) {
+.header {
+  .header-section {
+    .text {
+      .thin-content-text {
+        line-height: 1.4;
+      }
+    }
+  }
+}
+}
 </style>

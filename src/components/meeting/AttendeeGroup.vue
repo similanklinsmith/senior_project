@@ -165,14 +165,26 @@ export default {
 }
 @media (max-width: 63.5em) {
   .meeting {
-  padding: 1.4rem 2.2rem;
-  margin-bottom: 1.8rem;
-}
+    padding: 1.4rem 2.2rem;
+    margin-bottom: 1.8rem;
+  }
   .meeting-card {
     .meeting-detail {
       .additional-detail {
         column-gap: 1.5rem;
       }
+    }
+  }
+}
+
+@media (max-width: 33em) {
+  .meeting-card {
+    width: 85%;
+    .line {
+      margin: 0 2rem;
+      height: auto;
+      width: 0.1rem;
+      background-color: $grey;
     }
   }
 }

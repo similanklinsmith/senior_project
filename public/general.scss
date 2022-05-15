@@ -253,3 +253,9 @@ html {
     font-size: 6px !important;
   }
 }
+
+@media (max-width: 33em) {
+  html {
+    font-size: 5px !important;
+  }
+}
