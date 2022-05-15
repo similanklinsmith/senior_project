@@ -1,5 +1,5 @@
 <template>
-  <div class="to-be-confirmed-body-section">
+  <div class="inbox-body-section">
     <div class="inbox">
       <div class="search-filter">
         <div class="input-icon">
@@ -17,7 +17,10 @@
           <InboxComp
             v-for="inbox in filterByTitle"
             :key="inbox.id"
-            :inbox="inbox"
+            :id="inbox.id"
+            :title="inbox.title"
+            :content="inbox.content"
+            :time="inbox.time"
             :selectedId="selectedId"
             @selectInbox="selectInbox"
           />
@@ -170,7 +173,7 @@ export default {
 .response::-webkit-scrollbar-thumb:hover {
   background-color: $darkGrey;
 }
-.to-be-confirmed-body-section {
+.inbox-body-section {
   display: grid;
   grid-template-columns: 0.35fr 0.65fr;
   column-gap: 2.2rem;

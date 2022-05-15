@@ -1,8 +1,8 @@
 <template>
   <div
     class="inbox-component"
-    @click="selectInbox(inbox.id)"
-    :style="selectedId == inbox.id ? { backgroundColor: '#DBD2FF' } : {}"
+    @click="selectInbox(id)"
+    :style="selectedId == id ? { backgroundColor: '#DBD2FF' } : {}"
   >
     <div class="flex-col-center">
       <div class="profile-image">
@@ -16,24 +16,17 @@
     <div class="inbox-information">
       <div
         class="title-inbox"
-        :style="selectedId == inbox.id ? { color: '#7452FF' } : {}"
+        :style="selectedId == id ? { color: '#7452FF' } : {}"
       >
         <div class="title bold-small-text">
-          {{
-            inbox.title.length > 20
-              ? inbox.title.substring(0, 20) + "..."
-              : inbox.title
-          }}
+          {{ title.length > 20 ? title.substring(0, 20) + "..." : title }}
         </div>
-        <div class="time bold-small-text">{{ inbox.time }}</div>
+        <div class="time bold-small-text">{{ formatDateTime(time) }}</div>
       </div>
-      <div class="content-inbox small-text">
-        {{
-          inbox.content.length > 50
-            ? inbox.content.substring(0, 50) + "..."
-            : inbox.content
-        }}
+      <div class="content-inbox small-text" v-if="content">
+        {{ content.length > 50 ? content.substring(0, 50) + "..." : content }}
       </div>
+      <div class="content-inbox small-text" v-else>Poll appointments</div>
     </div>
   </div>
 </template>
@@ -41,10 +34,28 @@
 <script>
 export default {
   name: "InboxComp",
-  props: ["inbox", "selectedId"],
+  props: ["selectedId", "title", "content", "id", "time"],
   methods: {
     selectInbox(id) {
       this.$emit("selectInbox", id);
+    },
+    formatDateTime(dateTime) {
+      var currentdate = new Date();
+      var now = `${currentdate.getFullYear()}-${(
+        "0" +
+        (currentdate.getMonth() + 1)
+      ).slice(-2)}-${("0" + currentdate.getDate()).slice(-2)}`;
+      if (
+        new Date(now).toDateString() ==
+        new Date(dateTime.split("T")[0]).toDateString()
+      ) {
+        var date = new Date(dateTime);
+        let hours = date.getHours();
+        let ampm = hours >= 12 ? "PM" : "AM";
+        return dateTime.split("T")[1].split(".")[0].slice(0, 5)+" "+ampm;
+      } else {
+        return dateTime.split("T")[0];
+      }
     },
   },
 };

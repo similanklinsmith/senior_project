@@ -17,7 +17,10 @@
           <InboxComp
             v-for="inbox in filterByTitle"
             :key="inbox.id"
-            :inbox="inbox"
+            :id="inbox.id"
+            :title="inbox.title"
+            :content="inbox.content"
+            :time="inbox.time"
             :selectedId="selectedId"
             @selectInbox="selectInbox"
           />
