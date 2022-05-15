@@ -6,6 +6,7 @@ import authHeader from "../services/auth-header";
 import router from "../router";
 export default createStore({
   state: {
+    // executives
     imageURL: `${BASE_URL}/image`,
     executiveTitleURL: `${BASE_URL}/executive-title-fulltitle`,
     executivePositionURL: `${BASE_URL}/executive-role-fullname`,
@@ -15,11 +16,21 @@ export default createStore({
     executivePosition: [],
     executives: [],
     myExecutives: [],
+
+    // appointment polls
+    addPollURL: `${BASE_URL}/poll`,
+    myPollsURL: `${BASE_URL}/polls`,
+    myPolls: [],
+
     loadingStatus: false,
+    responseStatus: false,
   },
   mutations: {
     GET_LOADING_STATUS(state, loadingStatus) {
       state.loadingStatus = loadingStatus;
+    },
+    GET_RESPONSE_STATUS(state, responseStatus) {
+      state.responseStatus = responseStatus;
     },
     GET_EXECUTIVES_TITLES(state, titles) {
       state.executiveTitle = titles;
@@ -51,6 +62,13 @@ export default createStore({
       if (index !== -1) {
         state.myExecutives.splice(index, 1);
       }
+    },
+
+    GET_MY_POLLS(state, polls) {
+      state.myPolls = polls;
+    },
+    ADD_POLLS(state, polls) {
+      state.myPolls.push(polls);
     },
   },
   actions: {
@@ -99,7 +117,7 @@ export default createStore({
       } catch (error) {
         context.commit("GET_LOADING_STATUS", false);
         console.log(error.response.status);
-        if (error.response.status == 400) {
+        if (error.response.status == 400 || error.response.status == 403) {
           router.replace("/sign-in");
         }
       }
@@ -197,10 +215,53 @@ export default createStore({
         }
       }
     },
+
+    async getMyPolls(context) {
+      context.commit("GET_LOADING_STATUS", true);
+      try {
+        const data = await axios.get(this.state.myPollsURL, {
+          headers: authHeader(),
+        });
+        context.commit(
+          "GET_MY_POLLS",
+          data.data.data.sort((a, b) => {
+            return new Date(b.create_at) - new Date(a.create_at);
+          })
+        );
+        context.commit("GET_LOADING_STATUS", false);
+      } catch (error) {
+        context.commit("GET_LOADING_STATUS", false);
+        console.log(error.response.status);
+        if (error.response.status == 400 || error.response.status == 403) {
+          router.replace("/sign-in");
+        }
+      }
+    },
+    async addPollAppointment(context, payload) {
+      console.log(payload);
+      try {
+        const newPoll = payload;
+        const response = await axios.post(this.state.addPollURL, newPoll, {
+          headers: authHeader(),
+        });
+        context.commit("ADD_POLLS", response.data.data);
+        context.commit("GET_RESPONSE_STATUS", true);
+        setTimeout(() => context.commit("GET_RESPONSE_STATUS", false), 3000);
+      } catch (error) {
+        console.log(error.response.status);
+        if (error.response.status == 403 || error.response.status == 400) {
+          router.replace("/sign-in");
+        }
+        context.commit("GET_RESPONSE_STATUS", false);
+      }
+    },
   },
   getters: {
     getterLoadingStatus(state) {
       return state.loadingStatus;
+    },
+    getterResponseStatus(state) {
+      return state.responseStatus;
     },
     getterExecutiveTitles(state) {
       return state.executiveTitle;
@@ -213,6 +274,10 @@ export default createStore({
     },
     getterMyExecutives(state) {
       return state.myExecutives;
+    },
+
+    getterMyPolls(state) {
+      return state.myPolls;
     },
   },
   modules: { auth },

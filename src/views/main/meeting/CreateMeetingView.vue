@@ -167,12 +167,6 @@
                   :key="executive.id"
                 >
                   <label :for="executive.id">
-                    <!-- <div class="profile-image">
-                      <img
-                        src="../../../assets/decorations/sample_profile.png"
-                        alt="sample profile illustration"
-                      />
-                    </div> -->
                     <div
                       class="real-profile-image"
                       v-if="executive.img_profile != 'default_profile.png'"
@@ -225,16 +219,20 @@
         </div>
       </transition>
     </teleport>
+    <div v-if="getterResponseStatus" id="noti">
+      <BaseAlert> Poll is succesfully created </BaseAlert>
+    </div>
   </div>
 </template>
 
 <script>
 import LitepieDatepicker from "litepie-datepicker";
 import BaseButton from "../../../components/UI/BaseButton.vue";
+import BaseAlert from "../../../components/UI/BaseAlert.vue";
 import { mapGetters, mapActions } from "vuex";
 import { ref } from "vue";
 export default {
-  components: { BaseButton, LitepieDatepicker },
+  components: { BaseButton, LitepieDatepicker, BaseAlert },
   setup() {
     const dateValue = ref([]);
     const dDate = (date) => {
@@ -244,7 +242,6 @@ export default {
       date: "YYYY-MM-DD",
       month: "MMM",
     });
-
     return {
       dateValue,
       dDate,
@@ -254,7 +251,6 @@ export default {
   data() {
     return {
       urlImage: this.$store.state.imageURL,
-      isSelected: 4,
       isAddAttendees: false,
       tempAttendees: [],
       searchInput: "",
@@ -270,6 +266,7 @@ export default {
   },
   computed: {
     ...mapGetters([
+      "getterResponseStatus",
       "getterExecutives",
       "getterLoadingStatus",
       "getterExecutiveTitles",
@@ -342,7 +339,38 @@ export default {
         ? delete this.errors.duration
         : (this.errors.duration = "Please select durations");
       if (Object.keys(this.errors).length == 0) {
-        alert("add success");
+        let dateSlots = this.form.dateSlot.split(" ~ ");
+        let attendees_id = this.form.selectedAttendees.map((attendee) => {
+          return attendee.id.toString();
+        });
+        var currentdate = new Date();
+        var createTime = `${currentdate.getFullYear()}-${(
+          "0" +
+          (currentdate.getMonth() + 1)
+        ).slice(-2)}-${("0" + currentdate.getDate()).slice(
+          -2
+        )} ${currentdate.getHours()}:${
+          ("0" + currentdate.getMinutes()).slice(-2)
+        }:${currentdate.getSeconds()}`;
+        const newPoll = {
+          // id is temporary add
+          id: Math.floor(Math.random() * 100) + 1,
+          start_date: dateSlots[0],
+          end_date: dateSlots[1],
+          // title is not correct writing
+          tittle: this.form.title,
+          due_date_time: this.form.dueDate,
+          duration_of_time: this.form.duration,
+          create_at: createTime,
+          executive_id: attendees_id,
+        };
+        console.log(newPoll);
+        this.$store.dispatch("addPollAppointment", newPoll);
+        this.form.title = "";
+        this.form.dateSlot = "";
+        this.form.duration = "";
+        this.form.dueDate = "";
+        this.form.selectedAttendees = [];
       }
     },
   },
