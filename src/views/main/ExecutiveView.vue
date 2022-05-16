@@ -398,7 +398,6 @@
     <BasePopup
       v-if="isShowPopup"
       @closeModal="isShowPopup = false"
-      :selectedExecutive="selectedExecutive"
       :image="require(`@/assets/decorations/delete_executive.png`)"
     >
       <template v-slot:popupContent>
