@@ -19,7 +19,7 @@ export default createStore({
 
     // appointment polls
     addPollURL: `${BASE_URL}/poll`,
-    myPollsURL: `${BASE_URL}/polls`,
+    myPollsURL: `${BASE_URL}/yourPolls`,
     myPolls: [],
 
     loadingStatus: false,
@@ -69,6 +69,14 @@ export default createStore({
     },
     ADD_POLLS(state, polls) {
       state.myPolls.push(polls);
+    },
+    DELETE_MY_POLL(state, id) {
+      const index = state.myPolls.findIndex(
+        (poll) => poll.id == id
+      );
+      if (index !== -1) {
+        state.myPolls.splice(index, 1);
+      }
     },
   },
   actions: {
@@ -253,6 +261,26 @@ export default createStore({
           router.replace("/sign-in");
         }
         context.commit("GET_RESPONSE_STATUS", false);
+      }
+    },
+    async deletePollAppointment(context, id) {
+      try {
+        const response = await axios.delete(
+          this.state.addPollURL + "/" + id,
+          {
+            headers: authHeader(),
+          }
+        );
+        console.log(response.status);
+        if (response.status == 400) {
+          console.log("need to login");
+        }
+        context.commit("DELETE_MY_POLL", id);
+      } catch (error) {
+        console.log(error.response);
+        if (error.response.status == 403 || error.response.status == 400) {
+          router.replace("/sign-in");
+        }
       }
     },
   },
