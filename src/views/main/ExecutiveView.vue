@@ -431,6 +431,9 @@
         </BaseButton>
       </template>
     </BasePopup>
+    <BaseAlert v-if="getterFailed" :status="`failed`">
+      Your actions are not executed properly
+    </BaseAlert>
   </div>
 </template>
 
@@ -438,11 +441,12 @@
 import BaseButton from "../../components/UI/BaseButton.vue";
 import BaseHeader from "../../components/UI/BaseHeader.vue";
 import BasePopup from "../../components/UI/BasePopup.vue";
+import BaseAlert from "../../components/UI/BaseAlert.vue";
 import ExecutiveComp from "../../components/meeting/ExecutiveComp.vue";
 import jwtDecrypt from "../../helpers/jwtHelper";
 import { mapGetters, mapActions } from "vuex";
 export default {
-  components: { BaseButton, BaseHeader, ExecutiveComp, BasePopup },
+  components: { BaseButton, BaseHeader, ExecutiveComp, BasePopup, BaseAlert },
   name: "ExecutiveView",
   props: ["isAdd", "showIndex"],
   data() {
@@ -473,6 +477,7 @@ export default {
   },
   computed: {
     ...mapGetters([
+      "getterFailed",
       "getterExecutives",
       "getterMyExecutives",
       "getterLoadingStatus",
