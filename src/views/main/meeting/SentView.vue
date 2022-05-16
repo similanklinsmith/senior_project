@@ -33,15 +33,16 @@
       <div class="inbox-detail" v-if="selectedInbox != null">
         <div class="title remark-text">{{ selectedInbox.tittle }}</div>
         <div class="sent-from smallest-text">
-          sent from Katherine Perish at {{selectedInbox.create_at}}
+          sent from Katherine Perish at
+          {{ formatDateTime(selectedInbox.create_at) }}
         </div>
         <div class="content">
           <div class="attendees">
             <div class="bold-small-text">Attendees:</div>
             <div class="small-text attendee-list">
               Mr. Similan Klinsmith, Ms. Noparat Prasongdee
+              <span class="see-more">see more</span>
             </div>
-            <div class="see-more bold-small-text">see more</div>
           </div>
           <div class="time-slots">
             <div class="bold-small-text faded">Timeslots</div>
@@ -71,9 +72,7 @@
             <div class="small-text">
               {{ selectedInbox.due_date_time.split("T")[0] }}
               <div class="remaining-day">
-                &#40;{{
-                  calculateRemainingDay(selectedInbox.due_date_time)
-                }}
+                &#40;{{ calculateRemainingDay(selectedInbox.due_date_time) }}
                 days remaining&#41;
               </div>
             </div>
@@ -123,24 +122,6 @@ export default {
           .includes(this.searchInput.toLowerCase());
       });
     },
-    formatDateTime(dateTime) {
-      var currentdate = new Date();
-      var now = `${currentdate.getFullYear()}-${(
-        "0" +
-        (currentdate.getMonth() + 1)
-      ).slice(-2)}-${("0" + currentdate.getDate()).slice(-2)}`;
-      if (
-        new Date(now).toDateString() ==
-        new Date(dateTime.split("T")[0]).toDateString()
-      ) {
-        var date = new Date(dateTime);
-        let hours = date.getHours();
-        let ampm = hours >= 12 ? "PM" : "AM";
-        return dateTime.split("T")[1].split(".")[0].slice(0, 5) + " " + ampm;
-      } else {
-        return dateTime.split("T")[0];
-      }
-    },
   },
   methods: {
     ...mapActions(["getMyPolls"]),
@@ -156,6 +137,10 @@ export default {
           (new Date(Date.now()) - new Date(date)) / (24 * 60 * 60 * 1000)
         )
       );
+    },
+    formatDateTime(dateTime) {
+      var createDate = new Date(dateTime);
+      return createDate.toLocaleString();
     },
   },
   created() {
@@ -284,14 +269,14 @@ export default {
         column-gap: 0.5rem;
         .attendee-list {
           color: $primaryViolet;
-        }
-        .see-more {
-          color: $primaryViolet;
-          text-decoration: underline;
-          cursor: pointer;
-          transition: 0.2s all ease-in-out;
-          &:hover {
-            color: $darkViolet;
+          .see-more {
+            text-decoration: underline;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s all ease-in-out;
+            &:hover {
+              color: $darkViolet;
+            }
           }
         }
       }
