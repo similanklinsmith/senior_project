@@ -406,42 +406,42 @@ export default {
         title: "Discover what’s happened this week",
         content:
           "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-        time: "11:30 AM",
+        time: "2022-05-15T07:40:32.000Z",
       },
       {
         id: 2,
         title: "Let's have meeting",
         content:
           "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-        time: "11:30 AM",
+        time: "2022-05-15T07:40:32.000Z",
       },
       {
         id: 3,
         title: "Whatcha doin today everyone?",
         content:
           "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-        time: "11:30 AM",
+        time: "2022-05-15T07:40:32.000Z",
       },
       {
         id: 4,
         title: "Discover what’s happened this week",
         content:
           "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-        time: "11:30 AM",
+        time: "2022-05-15T07:40:32.000Z",
       },
       {
         id: 5,
         title: "Discover what’s happened this week",
         content:
           "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-        time: "11:30 AM",
+        time: "2022-05-15T07:40:32.000Z",
       },
       {
         id: 6,
         title: "Discover what’s happened this week",
         content:
           "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-        time: "11:30 AM",
+        time: "2022-05-15T07:40:32.000Z",
       },
     ];
     this.response = {
