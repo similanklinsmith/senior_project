@@ -52,9 +52,9 @@ export default {
         var date = new Date(dateTime);
         let hours = date.getHours();
         let ampm = hours >= 12 ? "PM" : "AM";
-        return dateTime.split("T")[1].split(".")[0].slice(0, 5)+" "+ampm;
+        return date.getHours()+":"+date.getMinutes()+" "+ampm;
       } else {
-        return dateTime.split("T")[0];
+        return new Date(dateTime).toLocaleDateString()
       }
     },
   },
