@@ -2,10 +2,38 @@
   <transition name="slide" appear>
     <div class="notifications">
       <div class="notification">
-        <div class="noti-tab"></div>
-        <i class="fas fa-check-circle icon"></i>
+        <div
+          class="noti-tab"
+          :style="
+            status == 'success'
+              ? { backgroundColor: '#39CF5A' }
+              : { backgroundColor: '#F33C3C' }
+          "
+        ></div>
+        <i
+          v-if="status == 'success'"
+          class="fas fa-check-circle icon"
+          :style="
+            status == 'success' ? { color: '#39CF5A' } : { color: '#F33C3C' }
+          "
+        ></i>
+        <i
+          v-if="status == 'failed'"
+          class="fa-solid fa-circle-xmark icon"
+          :style="
+            status == 'success' ? { color: '#39CF5A' } : { color: '#F33C3C' }
+          "
+        ></i>
         <div class="noti-text">
-          <div class="noti-header">Success</div>
+          <div
+            class="noti-header"
+            :style="
+              status == 'success' ? { color: '#39CF5A' } : { color: '#F33C3C' }
+            "
+          >
+            <span v-if="status == 'success'">Success</span
+            ><span v-if="status == 'failed'">Failed</span>
+          </div>
           <div class="noti-description">
             <slot></slot>
           </div>
@@ -18,6 +46,7 @@
 <script>
 export default {
   name: "BaseAlert",
+  props: ["status"],
 };
 </script>
 
@@ -31,7 +60,6 @@ export default {
   margin: 0 1.4rem 1.4rem 0;
   height: fit-content;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
-  animation: appears-from-bottom 0.75s 1 ease;
 }
 .notification {
   display: flex;
@@ -42,13 +70,11 @@ export default {
 .notification .icon {
   margin-left: 2rem;
   font-size: 2.4rem;
-  color: $valid;
 }
 .noti-tab {
   position: absolute;
   width: 0.6rem;
   height: 100%;
-  background-color: $valid;
 }
 .noti-text {
   margin-left: 1rem;
@@ -61,7 +87,6 @@ export default {
 }
 .noti-header {
   font-weight: 700;
-  color: $valid;
   font-size: 1.4rem;
 }
 </style>
