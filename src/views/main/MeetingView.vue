@@ -139,7 +139,15 @@ import SentView from "./meeting/SentView.vue";
 import BaseButton from "../../components/UI/BaseButton.vue";
 import BaseHeader from "../../components/UI/BaseHeader.vue";
 export default {
-  components: { BaseButton, BaseHeader, CreateMeetingView, BeConfirmedView, ConfirmedView, InboxView, SentView },
+  components: {
+    BaseButton,
+    BaseHeader,
+    CreateMeetingView,
+    BeConfirmedView,
+    ConfirmedView,
+    InboxView,
+    SentView,
+  },
   data() {
     return {
       isSelected: 1,
@@ -149,11 +157,11 @@ export default {
   methods: {
     onClickNav(num) {
       this.isSelected = num;
-      localStorage.setItem("index",num)
-    }
+      localStorage.setItem("index", num);
+    },
   },
   mounted() {
-    this.isSelected = localStorage.getItem("index")
+    this.isSelected = localStorage.getItem("index");
   },
 };
 </script>
@@ -297,6 +305,21 @@ export default {
             border: 0.1rem solid $primaryViolet;
           }
         }
+      }
+    }
+  }
+}
+@media (max-width: 63.5em) {
+  .meeting-screen {
+    .body {
+      .meeting-nav {
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        background-color: $white;
+        padding: 3rem 1rem;
+        row-gap: 1.6rem;
       }
     }
   }
