@@ -219,9 +219,8 @@
         </div>
       </transition>
     </teleport>
-    <div v-if="getterResponseStatus" id="noti">
-      <BaseAlert> Poll is succesfully created </BaseAlert>
-    </div>
+      <BaseAlert v-if="getterSuccess" :status="`success`"> Poll is succesfully created </BaseAlert>
+      <BaseAlert v-if="getterFailed" :status="`failed`"> Poll is failed create </BaseAlert>
   </div>
 </template>
 
@@ -266,7 +265,8 @@ export default {
   },
   computed: {
     ...mapGetters([
-      "getterResponseStatus",
+      "getterSuccess",
+      "getterFailed",
       "getterExecutives",
       "getterLoadingStatus",
       "getterExecutiveTitles",
@@ -364,7 +364,6 @@ export default {
           create_at: createTime,
           executive_id: attendees_id,
         };
-        console.log(newPoll);
         this.$store.dispatch("addPollAppointment", newPoll);
         this.form.title = "";
         this.form.dateSlot = "";
