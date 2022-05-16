@@ -20,6 +20,7 @@ export default {
     buttonType: String,
     height: String,
     width: String,
+    minWidth: String,
     type: String,
     fontSize: String,
   },
@@ -32,6 +33,7 @@ export default {
         "--textHover": this.textHover,
         "--height": this.height,
         "--width": this.width,
+        "--minwidth": this.minWidth,
         "--fontSize": this.fontSize ? this.fontSize : "1.6rem",
       },
     };
@@ -54,6 +56,7 @@ export default {
   /* column-gap: 0.8rem; */
 }
 .common-button {
+  min-width: var(--minwidth) !important;
   width: var(--width) !important;
   height: var(--height) !important;
   cursor: pointer;
@@ -89,6 +92,7 @@ export default {
   }
 }
 .outlined-button {
+  min-width: var(--minwidth) !important;
   width: var(--width) !important;
   height: var(--height) !important;
   cursor: pointer;
@@ -126,6 +130,7 @@ export default {
   }
 }
 .navigator-button {
+  min-width: var(--minwidth) !important;
   width: var(--width) !important;
   height: var(--height) !important;
   cursor: pointer;
