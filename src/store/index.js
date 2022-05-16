@@ -23,14 +23,18 @@ export default createStore({
     myPolls: [],
 
     loadingStatus: false,
-    responseStatus: false,
+    success: false,
+    failed: false,
   },
   mutations: {
     GET_LOADING_STATUS(state, loadingStatus) {
       state.loadingStatus = loadingStatus;
     },
-    GET_RESPONSE_STATUS(state, responseStatus) {
-      state.responseStatus = responseStatus;
+    GET_SUCCESS(state, success) {
+      state.success = success;
+    },
+    GET_FAILED(state, failed) {
+      state.failed = failed;
     },
     GET_EXECUTIVES_TITLES(state, titles) {
       state.executiveTitle = titles;
@@ -71,9 +75,7 @@ export default createStore({
       state.myPolls.push(polls);
     },
     DELETE_MY_POLL(state, id) {
-      const index = state.myPolls.findIndex(
-        (poll) => poll.id == id
-      );
+      const index = state.myPolls.findIndex((poll) => poll.id == id);
       if (index !== -1) {
         state.myPolls.splice(index, 1);
       }
@@ -153,14 +155,28 @@ export default createStore({
         } catch (error) {
           console.log(error.response.status);
           if (error.response.status == 403 || error.response.status == 400) {
-            router.replace("/sign-in");
+            context.commit("GET_FAILED", true);
+            setTimeout(
+              () => (
+                context.commit("GET_FAILED", false), router.replace("/sign-in")
+              ),
+              3000
+            );
           }
+          setTimeout(() => context.commit("GET_FAILED", false), 3000);
         }
       } catch (error) {
         console.log(error.response.status);
         if (error.response.status == 403 || error.response.status == 400) {
-          router.replace("/sign-in");
+          context.commit("GET_FAILED", true);
+          setTimeout(
+            () => (
+              context.commit("GET_FAILED", false), router.replace("/sign-in")
+            ),
+            2500
+          );
         }
+        setTimeout(() => context.commit("GET_FAILED", false), 2500);
       }
     },
     async editExecutive(context, payload) {
@@ -199,8 +215,15 @@ export default createStore({
       } catch (error) {
         console.log(error.response.status);
         if (error.response.status == 403 || error.response.status == 400) {
-          router.replace("/sign-in");
+          context.commit("GET_FAILED", true);
+          setTimeout(
+            () => (
+              context.commit("GET_FAILED", false), router.replace("/sign-in")
+            ),
+            2500
+          );
         }
+        setTimeout(() => context.commit("GET_FAILED", false), 2500);
       }
     },
     async deleteExecutive(context, id) {
@@ -219,8 +242,15 @@ export default createStore({
       } catch (error) {
         console.log(error.response.status);
         if (error.response.status == 403 || error.response.status == 400) {
-          router.replace("/sign-in");
+          context.commit("GET_FAILED", true);
+          setTimeout(
+            () => (
+              context.commit("GET_FAILED", false), router.replace("/sign-in")
+            ),
+            2500
+          );
         }
+        setTimeout(() => context.commit("GET_FAILED", false), 2500);
       }
     },
 
@@ -246,31 +276,33 @@ export default createStore({
       }
     },
     async addPollAppointment(context, payload) {
-      console.log(payload);
       try {
         const newPoll = payload;
         const response = await axios.post(this.state.addPollURL, newPoll, {
           headers: authHeader(),
         });
         context.commit("ADD_POLLS", response.data.data);
-        context.commit("GET_RESPONSE_STATUS", true);
-        setTimeout(() => context.commit("GET_RESPONSE_STATUS", false), 3000);
+        context.commit("GET_SUCCESS", true);
+        setTimeout(() => context.commit("GET_SUCCESS", false), 3000);
       } catch (error) {
         console.log(error.response.status);
         if (error.response.status == 403 || error.response.status == 400) {
-          router.replace("/sign-in");
+          context.commit("GET_FAILED", true);
+          setTimeout(
+            () => (
+              context.commit("GET_FAILED", false), router.replace("/sign-in")
+            ),
+            2500
+          );
         }
-        context.commit("GET_RESPONSE_STATUS", false);
+        setTimeout(() => context.commit("GET_FAILED", false), 2500);
       }
     },
     async deletePollAppointment(context, id) {
       try {
-        const response = await axios.delete(
-          this.state.addPollURL + "/" + id,
-          {
-            headers: authHeader(),
-          }
-        );
+        const response = await axios.delete(this.state.addPollURL + "/" + id, {
+          headers: authHeader(),
+        });
         console.log(response.status);
         if (response.status == 400) {
           console.log("need to login");
@@ -288,8 +320,11 @@ export default createStore({
     getterLoadingStatus(state) {
       return state.loadingStatus;
     },
-    getterResponseStatus(state) {
-      return state.responseStatus;
+    getterSuccess(state) {
+      return state.success;
+    },
+    getterFailed(state) {
+      return state.failed;
     },
     getterExecutiveTitles(state) {
       return state.executiveTitle;
