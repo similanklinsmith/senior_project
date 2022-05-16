@@ -39,10 +39,22 @@
         <div class="content">
           <div class="attendees">
             <div class="bold-small-text">Attendees:</div>
-            <div class="small-text attendee-list">
-              Mr. Similan Klinsmith, Ms. Noparat Prasongdee
-              <span class="see-more">see more</span>
+            <div
+              class="small-text attendee-list"
+              v-for="attendee in selectedInbox.attendees.slice(0, slice)"
+              :key="attendee"
+            >
+              {{ formatAttendee(attendee) }},
             </div>
+            <span
+              class="see-more bold-small-text"
+              v-if="selectedInbox.attendees.length > 2"
+              @click="showAllAttendee"
+              ><div v-if="!isShowMore">
+                show more &#40;{{ selectedInbox.attendees.length - 2 }}&#41;
+              </div>
+              <div v-else>show less</div></span
+            >
           </div>
           <div class="time-slots">
             <div class="bold-small-text faded">Timeslots</div>
@@ -87,27 +99,68 @@
             color="#F33C3C"
             hoverColor="#d93333"
             width="fit-content"
+            @click="isShowPopup = true"
           >
           </BaseButton>
         </div>
       </div>
     </transition>
+    <BasePopup
+      v-if="isShowPopup"
+      @closeModal="isShowPopup = false"
+      :image="require(`@/assets/decorations/delete_executive.png`)"
+    >
+      <template v-slot:popupContent>
+        This Poll(<span :style="{ color: '#C4C4C4 !important' }">{{
+          selectedInbox.tittle
+        }}</span
+        >) will be deleted immediately after confirming!
+      </template>
+      <template v-slot:buttons>
+        <BaseButton
+          buttonType="common-button"
+          btnText="Confirm delete"
+          textColor="white"
+          textHover="white"
+          color="#F33C3C"
+          hoverColor="#d93333"
+          width="100%"
+          @onClick="deletePollAppointment(selectedId)"
+        >
+        </BaseButton>
+        <BaseButton
+          buttonType="outlined-button"
+          btnText="Cancel"
+          textColor="#F33C3C"
+          textHover="white"
+          color="#F33C3C"
+          hoverColor="#d93333"
+          width="100%"
+          @onClick="isShowPopup = false"
+        >
+        </BaseButton>
+      </template>
+    </BasePopup>
   </div>
 </template>
 
 <script>
 import InboxComp from "../../../components/meeting/InboxComp.vue";
 import BaseButton from "../../../components/UI/BaseButton.vue";
+import BasePopup from "../../../components/UI/BasePopup.vue";
 import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "InboxView",
-  components: { InboxComp, BaseButton },
+  components: { InboxComp, BaseButton, BasePopup },
   data() {
     return {
       searchInput: "",
       selectedInbox: null,
       selectedId: null,
+      slice: 2,
+      isShowMore: false,
+      isShowPopup: false,
     };
   },
   computed: {
@@ -141,6 +194,25 @@ export default {
     formatDateTime(dateTime) {
       var createDate = new Date(dateTime);
       return createDate.toLocaleString();
+    },
+    formatAttendee(attendee) {
+      return `${attendee.Executive.title_code} ${attendee.Executive.first_name} ${attendee.Executive.last_name}`;
+    },
+    showAllAttendee(attendees) {
+      this.isShowMore = !this.isShowMore;
+      this.isShowMore ? (this.slice = attendees.length) : (this.slice = 2);
+    },
+    deletePollAppointment(id) {
+      console.log(id);
+      this.$store.dispatch("deletePollAppointment", id);
+      this.isShowPopup = false;
+      setTimeout(
+        () => (
+          (this.selectedInbox = this.getPollsList[0]),
+          (this.selectedId = this.getPollsList[0].id)
+        ),
+        1000
+      );
     },
   },
   created() {
@@ -267,16 +339,19 @@ export default {
       .attendees {
         display: flex;
         column-gap: 0.5rem;
+        width: 100%;
+        flex-wrap: wrap;
+        row-gap: 0.8rem;
         .attendee-list {
           color: $primaryViolet;
-          .see-more {
-            text-decoration: underline;
-            font-weight: 500;
-            cursor: pointer;
-            transition: 0.2s all ease-in-out;
-            &:hover {
-              color: $darkViolet;
-            }
+        }
+        .see-more {
+          color: $primaryViolet;
+          text-decoration: underline;
+          cursor: pointer;
+          transition: 0.2s all ease-in-out;
+          &:hover {
+            color: $darkViolet;
           }
         }
       }
