@@ -23,10 +23,13 @@
             <div class="input-icon">
               <i class="icon fa-solid fa-magnifying-glass"></i>
               <input
+                id="search-input"
                 class="small-text"
                 type="text"
                 placeholder="Search by name"
                 v-model="searchInput"
+                @focus="onFocus"
+                @blur="onBlur"
               />
             </div>
           </div>
@@ -552,6 +555,12 @@ export default {
       "getExecutiveTitle",
       "getExecutivePosition",
     ]),
+    onFocus() {
+      document.getElementById("search-input").placeholder = "Type to find...";
+    },
+    onBlur() {
+      document.getElementById("search-input").placeholder = "Search by name";
+    },
     formatPhoneNumber(str) {
       let cleaned = ("" + str).replace(/\D/g, "");
       let match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
@@ -632,7 +641,6 @@ export default {
           ? null
           : this.selectedExecutive.img_profile;
       this.realImage = this.selectedExecutive.img_profile;
-      console.log(this.form);
     },
     uploadImage(e) {
       if (e.target.files.length != 0) {
