@@ -23,7 +23,9 @@ jobs:
           
       - name: Create ENV File
         run: |
-          echo "Create ENV HERE" >> .env
+          touch .env
+          echo VUE_APP_API_PATH=${{ secrets.BACKEND_URL }} >> .env
+          ls -a
 
       - name: Build Docker image
         run: docker build . --tag ghcr.io/momento-appointment-scheduling-system/front-end
