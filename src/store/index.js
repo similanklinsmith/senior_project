@@ -104,7 +104,7 @@ export default createStore({
         const data = await axios.get(this.state.executiveURL);
         context.commit(
           "GET_EXECUTIVES",
-          data.data.data.sort((a, b) => (a.first_name > b.first_name ? 1 : -1))
+          data.data.data.sort((a, b) => (a.first_name.toLowerCase() > b.first_name.toLowerCase() ? 1 : -1))
         );
         context.commit("GET_LOADING_STATUS", false);
       } catch (error) {
@@ -121,7 +121,7 @@ export default createStore({
         });
         context.commit(
           "GET_MY_EXECUTIVES",
-          data.data.data.sort((a, b) => (a.first_name > b.first_name ? 1 : -1))
+          data.data.data.sort((a, b) => (a.first_name.toLowerCase() > b.first_name.toLowerCase() ? 1 : -1))
         );
         context.commit("GET_LOADING_STATUS", false);
       } catch (error) {
