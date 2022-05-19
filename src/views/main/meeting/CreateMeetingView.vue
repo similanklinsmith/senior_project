@@ -77,7 +77,7 @@
                 as-single
                 use-range
                 :formatter="formatter"
-                :style="{ fontSize: '12px !important', marginTop: '1rem' }"
+                :style="{ fontSize: '1.5rem !important', marginTop: '1rem' }"
               />
             </div>
             <div class="input">
@@ -97,7 +97,7 @@
               </select>
             </div>
           </div>
-          <div class="input-form-row">
+          <div class="input-form-row" v-if="form.dateSlot">
             <div class="input">
               <label for="due" class="bold-small-text"
                 >Due Date<span class="required"
@@ -106,11 +106,11 @@
               >
               <litepie-datepicker
                 id="due"
-                :disable-date="dDate"
+                :disable-date="disableDate"
                 as-single
                 :formatter="formatter"
                 v-model="form.dueDate"
-                :style="{ fontSize: '12px !important', marginTop: '1rem' }"
+                :style="{ fontSize: '1.5rem !important', marginTop: '1rem' }"
               />
             </div>
             <div class="input"></div>
@@ -219,8 +219,12 @@
         </div>
       </transition>
     </teleport>
-      <BaseAlert v-if="getterSuccess" :status="`success`"> Poll is succesfully created </BaseAlert>
-      <BaseAlert v-if="getterFailed" :status="`failed`"> Poll is failed create </BaseAlert>
+    <BaseAlert v-if="getterSuccess" :status="`success`">
+      Poll is succesfully created
+    </BaseAlert>
+    <BaseAlert v-if="getterFailed" :status="`failed`">
+      Poll is failed create
+    </BaseAlert>
   </div>
 </template>
 
@@ -304,6 +308,11 @@ export default {
   },
   methods: {
     ...mapActions(["getExecutives", "getExecutiveTitle"]),
+    disableDate(date) {
+      return (
+        date < new Date() || date > new Date(this.form.dateSlot.split(" ~ ")[0])
+      );
+    },
     formatTitle(str) {
       return this.getterExecutiveTitles[str];
     },
@@ -349,9 +358,9 @@ export default {
           (currentdate.getMonth() + 1)
         ).slice(-2)}-${("0" + currentdate.getDate()).slice(
           -2
-        )} ${currentdate.getHours()}:${
-          ("0" + currentdate.getMinutes()).slice(-2)
-        }:${currentdate.getSeconds()}`;
+        )} ${currentdate.getHours()}:${("0" + currentdate.getMinutes()).slice(
+          -2
+        )}:${currentdate.getSeconds()}`;
         const newPoll = {
           start_date: dateSlots[0],
           end_date: dateSlots[1],
