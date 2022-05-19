@@ -104,7 +104,9 @@ export default createStore({
         const data = await axios.get(this.state.executiveURL);
         context.commit(
           "GET_EXECUTIVES",
-          data.data.data.sort((a, b) => (a.first_name.toLowerCase() > b.first_name.toLowerCase() ? 1 : -1))
+          data.data.data.sort((a, b) =>
+            a.first_name.toLowerCase() > b.first_name.toLowerCase() ? 1 : -1
+          )
         );
         context.commit("GET_LOADING_STATUS", false);
       } catch (error) {
@@ -121,7 +123,9 @@ export default createStore({
         });
         context.commit(
           "GET_MY_EXECUTIVES",
-          data.data.data.sort((a, b) => (a.first_name.toLowerCase() > b.first_name.toLowerCase() ? 1 : -1))
+          data.data.data.sort((a, b) =>
+            a.first_name.toLowerCase() > b.first_name.toLowerCase() ? 1 : -1
+          )
         );
         context.commit("GET_LOADING_STATUS", false);
       } catch (error) {
@@ -129,6 +133,7 @@ export default createStore({
         console.log(error.response.status);
         if (error.response.status == 400 || error.response.status == 403) {
           router.replace("/sign-in");
+          this.dispatch("auth/logout");
         }
       }
     },
@@ -158,7 +163,9 @@ export default createStore({
             context.commit("GET_FAILED", true);
             setTimeout(
               () => (
-                context.commit("GET_FAILED", false), router.replace("/sign-in")
+                context.commit("GET_FAILED", false),
+                router.replace("/sign-in"),
+                this.dispatch("auth/logout")
               ),
               3000
             );
@@ -171,7 +178,9 @@ export default createStore({
           context.commit("GET_FAILED", true);
           setTimeout(
             () => (
-              context.commit("GET_FAILED", false), router.replace("/sign-in")
+              context.commit("GET_FAILED", false),
+              router.replace("/sign-in"),
+              this.dispatch("auth/logout")
             ),
             2500
           );
@@ -210,6 +219,7 @@ export default createStore({
           console.log(error.response.status);
           if (error.response.status == 403 || error.response.status == 400) {
             router.replace("/sign-in");
+            this.dispatch("auth/logout");
           }
         }
       } catch (error) {
@@ -218,7 +228,9 @@ export default createStore({
           context.commit("GET_FAILED", true);
           setTimeout(
             () => (
-              context.commit("GET_FAILED", false), router.replace("/sign-in")
+              context.commit("GET_FAILED", false),
+              router.replace("/sign-in"),
+              this.dispatch("auth/logout")
             ),
             2500
           );
@@ -245,7 +257,9 @@ export default createStore({
           context.commit("GET_FAILED", true);
           setTimeout(
             () => (
-              context.commit("GET_FAILED", false), router.replace("/sign-in")
+              context.commit("GET_FAILED", false),
+              router.replace("/sign-in"),
+              this.dispatch("auth/logout")
             ),
             2500
           );
@@ -271,6 +285,7 @@ export default createStore({
         context.commit("GET_LOADING_STATUS", false);
         console.log(error.response.status);
         if (error.response.status == 400 || error.response.status == 403) {
+          this.dispatch("auth/logout");
           router.replace("/sign-in");
         }
       }
@@ -290,7 +305,9 @@ export default createStore({
           context.commit("GET_FAILED", true);
           setTimeout(
             () => (
-              context.commit("GET_FAILED", false), router.replace("/sign-in")
+              context.commit("GET_FAILED", false),
+              router.replace("/sign-in"),
+              this.dispatch("auth/logout")
             ),
             2500
           );
@@ -312,6 +329,7 @@ export default createStore({
         console.log(error.response);
         if (error.response.status == 403 || error.response.status == 400) {
           router.replace("/sign-in");
+          this.dispatch("auth/logout");
         }
       }
     },
