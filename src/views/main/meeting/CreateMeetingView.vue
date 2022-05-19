@@ -353,12 +353,9 @@ export default {
           ("0" + currentdate.getMinutes()).slice(-2)
         }:${currentdate.getSeconds()}`;
         const newPoll = {
-          // id is temporary add
-          id: Math.floor(Math.random() * 100) + 1,
           start_date: dateSlots[0],
           end_date: dateSlots[1],
-          // title is not correct writing
-          tittle: this.form.title,
+          title: this.form.title,
           due_date_time: this.form.dueDate,
           duration_of_time: this.form.duration,
           create_at: createTime,
