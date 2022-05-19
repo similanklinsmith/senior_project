@@ -268,7 +268,8 @@
                     placeholder="Name"
                     id="name"
                     name="name"
-                    v-model="form.firstname"
+                    @keydown.space.prevent
+                    v-model.trim="form.firstname"
                   />
                 </div>
               </div>
@@ -285,7 +286,8 @@
                     placeholder="Surname"
                     id="surname"
                     name="surname"
-                    v-model="form.lastname"
+                    @keydown.space.prevent
+                    v-model.trim="form.lastname"
                   />
                 </div>
                 <div class="input-form">
@@ -319,7 +321,8 @@
                     placeholder="Email"
                     id="email"
                     name="email"
-                    v-model="form.email"
+                    @keydown.space.prevent
+                    v-model.trim="form.email"
                   />
                 </div>
                 <div class="input-form">
@@ -334,7 +337,8 @@
                     placeholder="e.g. 0810000000"
                     id="phone-number"
                     name="phone-number"
-                    v-model="form.tel"
+                    @keydown.space.prevent
+                    v-model.trim="form.tel"
                   />
                 </div>
               </div>
@@ -691,8 +695,8 @@ export default {
       if (Object.keys(this.errors).length == 0) {
         const newExecutive = {
           title_code: this.form.title,
-          first_name: this.form.firstname,
-          last_name: this.form.lastname,
+          first_name: this.form.firstname.replace(/(?:^|\s|-)\S/g, x => x.toUpperCase()),
+          last_name: this.form.lastname.replace(/(?:^|\s|-)\S/g, x => x.toUpperCase()),
           position: this.form.position,
           phone_number: this.form.tel,
           email: this.form.email,
