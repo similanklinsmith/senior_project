@@ -197,7 +197,7 @@
                     src="../../assets/decorations/sample_profile.png"
                     alt="sample profile illustration"
                   />
-                  <img :src="previewImage" alt="" v-if="previewImage" />
+                  <img :src="previewImage" alt="preview profile" v-if="previewImage" />
                 </div>
                 <div
                   v-else
@@ -695,8 +695,12 @@ export default {
       if (Object.keys(this.errors).length == 0) {
         const newExecutive = {
           title_code: this.form.title,
-          first_name: this.form.firstname.replace(/(?:^|\s|-)\S/g, x => x.toUpperCase()),
-          last_name: this.form.lastname.replace(/(?:^|\s|-)\S/g, x => x.toUpperCase()),
+          first_name: this.form.firstname.replace(/(?:^|\s|-)\S/g, (x) =>
+            x.toUpperCase()
+          ),
+          last_name: this.form.lastname.replace(/(?:^|\s|-)\S/g, (x) =>
+            x.toUpperCase()
+          ),
           position: this.form.position,
           phone_number: this.form.tel,
           email: this.form.email,
@@ -1207,6 +1211,24 @@ export default {
         }
         .executive-card {
           grid-template-columns: 0.75fr 1.25fr;
+        }
+      }
+    }
+  }
+}
+@media (max-width: 40em) {
+  .executive-screen {
+    .body {
+      .first-body-section {
+        .filter-executive {
+          .list-executive-card {
+            height: 72rem;
+          }
+        }
+        .executive-card {
+          display: flex;
+          flex-direction: column;
+          row-gap: 4rem;
         }
       }
     }

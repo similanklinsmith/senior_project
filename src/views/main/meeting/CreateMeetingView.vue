@@ -562,6 +562,7 @@ export default {
     border-radius: 2.5rem;
     display: grid;
     grid-template-columns: 0.5fr 1.5fr;
+    column-gap: 2rem;
     .add-attendees {
       width: 100%;
       height: 100%;

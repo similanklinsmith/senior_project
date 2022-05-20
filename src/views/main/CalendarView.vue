@@ -36,9 +36,12 @@
               <div class="input-icon">
                 <i class="icon fa-solid fa-magnifying-glass"></i>
                 <input
+                  id="search-input"
                   class="small-text"
                   type="text"
                   placeholder="Search by name"
+                  @focus="onFocus"
+                  @blur="onBlur"
                   v-model="searchInput"
                 />
               </div>
@@ -138,6 +141,12 @@ export default {
   },
   methods: {
     ...mapActions(["getExecutives", "getExecutiveTitle"]),
+    onFocus() {
+      document.getElementById("search-input").placeholder = "Type to find...";
+    },
+    onBlur() {
+      document.getElementById("search-input").placeholder = "Search by name";
+    },
     formatTitle(str) {
       return this.getterExecutiveTitles[str];
     },
@@ -243,7 +252,7 @@ export default {
           }
           .list-executive-card {
             width: 100%;
-            height: 100%;
+            height: 60rem;
             border-radius: 1.5rem;
             background-color: $white;
             overflow: hidden;

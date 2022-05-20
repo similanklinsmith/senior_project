@@ -104,7 +104,7 @@
                 <div v-else class="no-executive bold-small-text">
                   There is not executive
                 </div>
-                <div style="display: flex; gap: 1.2rem; margin-top: 1.2rem">
+                <div style="display: flex; gap: 1.2rem;">
                   <BaseButton
                     buttonType="common-button"
                     btnText="Add executive"
@@ -302,6 +302,7 @@ export default {
           .image {
             transform: translateY(-3.6rem);
             img {
+              height: auto;
               width: 17.5rem;
             }
           }
@@ -326,8 +327,12 @@ export default {
           background-color: $white;
           border-radius: 2.5rem;
           .card-content {
+            height: 100%;
             text-align: center;
             padding: 3.6rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
             .no-executive {
               display: flex;
               flex-direction: column;

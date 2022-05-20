@@ -21,6 +21,13 @@
     </div>
     <div class="body">
       <div class="first-section">
+        <div class="display-text">
+          <div class="big-header-text first">Let’s make</div>
+          <div class="big-header-text second">
+            your life <span class="violet">easier</span
+            ><span class="yellow">.</span>
+          </div>
+        </div>
         <lottie-player
           class="lottie"
           src="https://assets3.lottiefiles.com/packages/lf20_7z8wtyb0.json"
@@ -191,13 +198,34 @@ export default {
   }
   .body {
     width: 100%;
-    height: 100%;
+    height: fit-content;
     display: grid;
     grid-template-columns: 1.25fr 0.75fr;
     padding: 0 7.2rem;
     .first-section {
       display: flex;
       justify-content: center;
+      .display-text {
+        display: flex;
+        flex-direction: column;
+        row-gap: 1.6rem;
+        & {
+          transform: translateY(3rem);
+          position: absolute;
+          z-index: 1;
+        }
+        .first {
+          transform: translateX(-10rem);
+        }
+        .second {
+          .violet {
+            color: $primaryViolet;
+          }
+          .yellow {
+            color: $yellow;
+          }
+        }
+      }
       .lottie {
         width: 60rem;
         height: 60rem;
@@ -282,12 +310,41 @@ export default {
 @media (max-width: 63.5em) {
   .sign-in-screen {
     .body {
-      grid-template-columns: 0.9fr 1.1fr;
+      grid-template-columns: 1fr 1fr;
       .first-section {
-        width: 80%;
+        .lottie {
+          width: 40rem;
+          height: 40rem;
+          margin-top: 5rem;
+        }
+        .display-text {
+          .first {
+            transform: translateX(-5rem);
+          }
+        }
       }
       .second-section {
         width: 100%;
+        padding: 4.8rem 0rem;
+      }
+    }
+  }
+}
+@media (max-width: 48rem) {
+  .sign-in-screen {
+    .body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      .first-section {
+        width: 100%;
+        .lottie {
+          margin-top: 2rem;
+        }
+      }
+      .second-section {
+        width: 70%;
         padding: 4.8rem 0rem;
       }
     }

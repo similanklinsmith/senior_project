@@ -264,4 +264,10 @@ ul {
     transform: translate3d(0.1rem, 0, 0);
   }
 }
+
+@media (max-width: 40em) {
+  .container {
+    grid-template-columns: 0.75fr 1.25fr 1.25fr;
+  }
+}
 </style>

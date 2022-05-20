@@ -71,12 +71,12 @@ export default {
     display: flex;
     width: 100%;
     padding: 1.8rem;
+    column-gap: 2.4rem;
     .real-profile-image {
       border-radius: 1rem;
-      width: 5.2rem;
-      height: 5.2rem;
+      max-width: 5.2rem;
+      max-height: 5.2rem;
       background-color: $fadedViolet;
-      margin-right: 2.4rem;
       text-align: center;
       overflow: hidden;
       img {
@@ -87,10 +87,9 @@ export default {
     }
     .profile-image {
       border-radius: 1rem;
-      width: 5.2rem;
-      height: 5.2rem;
+      max-width: 5.2rem;
+      max-height: 5.2rem;
       background-color: $fadedViolet;
-      margin-right: 2.4rem;
       text-align: center;
       padding: 0.4rem;
       img {
@@ -113,6 +112,16 @@ export default {
     }
     .position {
       color: $highlightViolet;
+    }
+  }
+}
+@media (max-width: 40em) {
+  .executive {
+    .profile-section {
+      display: flex;
+      width: 100%;
+      padding: 1.8rem;
+      column-gap: 1.2rem;
     }
   }
 }

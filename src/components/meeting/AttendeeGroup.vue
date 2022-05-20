@@ -16,10 +16,12 @@
         <div class="bold-content-text">Meeting/Conference name</div>
         <div class="additional-detail">
           <div class="small-text">
-            <i class="icon fa-regular fa-file"></i>attached link
+            <i class="icon fa-regular fa-file"></i
+            ><span class="attached-file">attached file</span>
           </div>
           <div class="small-text">
-            <i class="icon fa-regular fa-file"></i>attached link
+            <i class="icon fa-solid fa-link"></i
+            ><span class="attached-link">attached link</span>
           </div>
           <div class="attendees">
             <i class="icon fa-regular fa-user"></i>
@@ -99,6 +101,7 @@ export default {
   .time {
     margin-left: 1.5rem;
     row-gap: 1.6rem;
+    align-items: start !important;
     .common-text {
       color: $darkViolet;
     }
@@ -169,22 +172,40 @@ export default {
     margin-bottom: 1.8rem;
   }
   .meeting-card {
+    .time {
+      margin-left: 0rem;
+    }
+    .line {
+      margin: 0 3rem;
+    }
     .meeting-detail {
       .additional-detail {
         column-gap: 1.5rem;
+        .icon {
+          margin-right: 0.6rem;
+        }
       }
     }
   }
 }
 
-@media (max-width: 33em) {
+@media (max-width: 48em) {
   .meeting-card {
     width: 85%;
     .line {
       margin: 0 2rem;
-      height: auto;
-      width: 0.1rem;
-      background-color: $grey;
+    }
+  }
+}
+@media (max-width: 40rem) {
+  .meeting-card {
+    .meeting-detail {
+      .additional-detail {
+        .attached-file,
+        .attached-link {
+          display: none;
+        }
+      }
     }
   }
 }
