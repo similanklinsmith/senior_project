@@ -12,28 +12,28 @@
         />
         <img v-else src="../../assets/images/logo.png" alt="logo image" />
       </div>
-      <router-link to="/" class="button">
+      <router-link to="/" class="button" aria-label="home">
         <i class="icon fa-solid fa-house"></i>
         <div class="button-text bold-small-text">home</div>
       </router-link>
-      <router-link to="/calendar" class="button">
+      <router-link to="/calendar" class="button" aria-label="calendar">
         <i class="icon fa-solid fa-calendar"></i>
         <div class="button-text bold-small-text">calendar</div>
       </router-link>
-      <router-link to="/executives-management" class="button">
+      <router-link to="/executives-management" class="button" aria-label="executives">
         <i class="icon fa-solid fa-user-group"></i>
         <div class="button-text bold-small-text">executives</div>
       </router-link>
-      <router-link to="/meetings-management" class="button">
+      <router-link to="/meetings-management" class="button" aria-label="meetings">
         <i class="icon fa-solid fa-check-to-slot"></i>
         <div class="button-text bold-small-text">meetings</div>
       </router-link>
-      <router-link to="/about" class="button">
+      <router-link to="/about" class="button" aria-label="setting">
         <i class="icon fa-solid fa-gear"></i>
         <div class="button-text bold-small-text">setting</div>
       </router-link>
       <div class="asset-image" v-if="isToggled">
-        <img src="../../assets/decorations/bad_mood.png" alt="" />
+        <img src="../../assets/decorations/bad_mood.png" alt="illustration decoration" />
       </div>
     </div>
   </div>
