@@ -181,14 +181,14 @@ export default {
         .card {
           overflow: hidden;
           position: relative;
-          height: 50rem;
+          height: 32rem;
           width: 100%;
           background-color: $white;
           border-radius: 2.5rem;
         }
         .filter-executive {
           width: 100%;
-          height: 100%;
+          height: 54rem;
           display: flex;
           flex-direction: column;
           row-gap: 1rem;
@@ -252,7 +252,7 @@ export default {
           }
           .list-executive-card {
             width: 100%;
-            height: 60rem;
+            height: 100%;
             border-radius: 1.5rem;
             background-color: $white;
             overflow: hidden;

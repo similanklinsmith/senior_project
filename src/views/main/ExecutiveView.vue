@@ -197,7 +197,11 @@
                     src="../../assets/decorations/sample_profile.png"
                     alt="sample profile illustration"
                   />
-                  <img :src="previewImage" alt="preview profile" v-if="previewImage" />
+                  <img
+                    :src="previewImage"
+                    alt="preview profile"
+                    v-if="previewImage"
+                  />
                 </div>
                 <div
                   v-else
