@@ -2,15 +2,15 @@
   <div id="app">
     <SplashView></SplashView>
     <div v-if="$route.name != 'NotFound' && $route.name != 'sign-in'">
-        <div class="modal" v-if="isToggled" @click="isToggled = false"></div>
-        <div style="position: relative">
-          <HeaderComp
-            id="header"
-            :headerText="getHeaderText"
-            @signOut="handleSignOut"
-          />
-        </div>
-              <div class="space-left">
+      <div class="modal" v-if="isToggled" @click="isToggled = false"></div>
+      <div style="position: relative">
+        <HeaderComp
+          id="header"
+          :headerText="getHeaderText"
+          @signOut="handleSignOut"
+        />
+      </div>
+      <div class="space-left">
         <SideNav
           :isToggled="isToggled"
           @toggleSidebar="isToggled = !isToggled"
