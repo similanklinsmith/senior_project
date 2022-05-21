@@ -250,7 +250,7 @@ export default {
               .toLowerCase()
               .includes(this.searchInput.toLowerCase()) &&
             new Date(toBeConfirmed.create_at).toLocaleDateString() ==
-              this.filterDate
+              new Date(this.filterDate).toLocaleDateString()
           );
         } else {
           return toBeConfirmed.title
