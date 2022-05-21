@@ -28,7 +28,7 @@
         <i class="icon fa-solid fa-check-to-slot"></i>
         <div class="button-text bold-small-text">meetings</div>
       </router-link>
-      <router-link to="/about" class="button" aria-label="setting">
+      <router-link to="/setting" class="button" aria-label="setting">
         <i class="icon fa-solid fa-gear"></i>
         <div class="button-text bold-small-text">setting</div>
       </router-link>
