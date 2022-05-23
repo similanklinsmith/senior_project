@@ -198,11 +198,22 @@ html {
 
 @keyframes appears {
   0% {
-    opacity: 0
+    opacity: 0;
+    transform: translate(-50%, 0%);
   }
-
   100% {
-    opacity: 1
+    opacity: 1;
+  }
+}
+@keyframes press {
+  0% {
+    transform: scale(1) translateX(-5rem) translateY(-5rem);
+  }
+  50% {
+    transform: scale(0.92) translateX(-5rem) translateY(-5rem);
+  }
+  to {
+    transform: scale(1) translateX(-5rem) translateY(-5rem);
   }
 }
 
