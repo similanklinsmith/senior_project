@@ -5,6 +5,7 @@
       :contentText="`This screen has features to show, add, edit, and delete your executives`"
     >
       <BaseButton
+        class="laptop"
         buttonType="common-button"
         btnText="Add executive +"
         textColor="#23106D"
@@ -18,7 +19,7 @@
     </BaseHeader>
     <div class="body">
       <div class="first-body-section grid">
-        <div class="filter-executive">
+        <div class="filter-executive laptop">
           <div class="search-filter">
             <div class="input-icon">
               <i class="icon fa-solid fa-magnifying-glass"></i>
@@ -383,7 +384,6 @@
                   textHover="white"
                   color="#7452FF"
                   hoverColor="#23106D"
-                  width="25rem"
                   type="submit"
                   v-if="!editId"
                 >
@@ -395,7 +395,6 @@
                   textHover="white"
                   color="#7452FF"
                   hoverColor="#23106D"
-                  width="25rem"
                   type="submit"
                   v-else
                 >
@@ -445,6 +444,25 @@
     <BaseAlert v-if="getterFailed" :status="`failed`">
       Your actions are not executed properly
     </BaseAlert>
+    <BaseExecutivesPopup
+      :executives="getExecutivesList"
+      :selectedId="selectedId"
+      v-if="isSearchMobile"
+      @onClickCloseSearch="isSearchMobile = false"
+      @onClickSelectExecutive="selectExecutive"
+    />
+    <div class="mobile-button-actions">
+      <div class="mobile-button" @click="handleAdd" v-if="!isAddExecutive">
+        <i class="fa-solid fa-user-plus"></i>
+      </div>
+      <div
+        class="mobile-button-search"
+        v-if="!isAddExecutive"
+        @click="isSearchMobile = true"
+      >
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -452,16 +470,25 @@
 import BaseButton from "../../components/UI/BaseButton.vue";
 import BaseHeader from "../../components/UI/BaseHeader.vue";
 import BasePopup from "../../components/UI/BasePopup.vue";
+import BaseExecutivesPopup from "../../components/UI/BaseExecutivesPopup.vue";
 import BaseAlert from "../../components/UI/BaseAlert.vue";
 import ExecutiveComp from "../../components/meeting/ExecutiveComp.vue";
 import jwtDecrypt from "../../helpers/jwtHelper";
 import { mapGetters, mapActions } from "vuex";
 export default {
-  components: { BaseButton, BaseHeader, ExecutiveComp, BasePopup, BaseAlert },
+  components: {
+    BaseButton,
+    BaseHeader,
+    ExecutiveComp,
+    BasePopup,
+    BaseAlert,
+    BaseExecutivesPopup,
+  },
   name: "ExecutiveView",
   props: ["isAdd", "showIndex"],
   data() {
     return {
+      isSearchMobile: false,
       urlImage: this.$store.state.imageURL,
       isLoading: false,
       secretary: "",
@@ -585,6 +612,7 @@ export default {
       return this.getterExecutivePositions[str];
     },
     selectExecutive(id) {
+      this.isSearchMobile = false;
       this.cancelEdit();
       this.selectedExecutive = this.getExecutivesList.find((executive) => {
         this.selectedId = id;
@@ -802,6 +830,42 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../assets/colors/webColors.scss";
+.mobile-button-actions {
+  display: none;
+  right: 0%;
+  bottom: 0%;
+}
+.mobile-button {
+  justify-content: center;
+  align-items: center;
+  color: $white;
+  font-size: 2rem;
+  width: 6.4rem;
+  height: 6.4rem;
+  border-radius: 1rem;
+  background-color: $primaryViolet;
+  box-shadow: 1.8rem 1.8rem 1.3rem 0 #ababab4d;
+  transform: translateX(-5rem) translateY(-5rem);
+}
+.mobile-button-search {
+  justify-content: center;
+  align-items: center;
+  color: $white;
+  font-size: 2rem;
+  width: 6.4rem;
+  height: 6.4rem;
+  border-radius: 1rem;
+  background-color: $darkViolet;
+  box-shadow: 1.8rem 1.8rem 1.3rem 0 #ababab4d;
+  transform: translateX(-5rem) translateY(-5rem);
+}
+.mobile-button:active,
+.mobile-button-search:active {
+  animation: press 0.2s 1 linear;
+}
+.search-mobile-button {
+  display: none;
+}
 .required {
   color: $error;
   margin-left: 0.2rem;
@@ -1233,6 +1297,74 @@ export default {
           display: flex;
           flex-direction: column;
           row-gap: 4rem;
+        }
+      }
+    }
+  }
+}
+@media (max-width: 26.75em) {
+  input, select {
+    height: 4.8rem !important;
+  }
+  .search-mobile-button {
+    display: block;
+  }
+  .mobile-button-actions {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    row-gap: 2rem;
+  }
+  .mobile-button,
+  .mobile-button-search {
+    display: flex;
+  }
+  .laptop {
+    display: none;
+  }
+  .executive-screen {
+    .body {
+      .first-body-section {
+        grid-template-columns: 1fr;
+        .add-executive-card {
+          display: flex;
+          flex-direction: column;
+          row-gap: 6rem;
+          .upload-profile {
+            .profile-image,
+            .preview-img {
+              width: 16rem;
+              height: 16rem;
+            }
+          }
+          .information {
+            .input {
+              flex-direction: column;
+              row-gap: 3rem;
+            }
+            .form-button {
+              flex-direction: column-reverse;
+            }
+          }
+        }
+        .laptop {
+          display: none;
+        }
+        .container {
+          padding: 7.2rem 5.2rem;
+        }
+        .executive-card {
+          row-gap: 6rem;
+          .right-side {
+            row-gap: 4.8rem;
+          }
+          .left-side {
+            .real-profile-image,
+            .profile-image {
+              width: 16rem;
+              height: 16rem;
+            }
+          }
         }
       }
     }
