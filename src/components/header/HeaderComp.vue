@@ -270,4 +270,22 @@ ul {
     grid-template-columns: 0.75fr 1.25fr 1.25fr;
   }
 }
+/* @media (max-width: 26.75em) {
+  .container {
+    padding: 3rem 5.5rem;
+    grid-template-columns: 1fr 1fr;
+    .remark-text {
+      text-align: right;
+    }
+    .search-input,
+    .last-section {
+      display: none;
+    }
+    .burger-bar {
+      display: block;
+      font-size: 2.4rem;
+      color: $darkViolet;
+    }
+  }
+} */
 </style>

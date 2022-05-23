@@ -51,14 +51,23 @@ export default {
   }
 }
 @media (max-width: 33em) {
-.header {
-  .header-section {
-    .text {
-      .thin-content-text {
-        line-height: 1.4;
+  .header {
+    .header-section {
+      .text {
+        .thin-content-text {
+          line-height: 1.4;
+        }
       }
     }
   }
 }
+@media (max-width: 26.75em) {
+  .header {
+    height: 20rem;
+    .header-section {
+      padding: 3rem 4rem;
+      grid-template-columns: 1fr;
+    }
+  }
 }
 </style>

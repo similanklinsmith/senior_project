@@ -6,6 +6,13 @@
     >
     </BaseHeader>
     <div class="body">
+      <div class="mention">
+        <div class="welcome">
+          <div class="say-hi">Hi, <span>{{ user }}</span></div>
+          <div class="num-mention">You have 2 meetings today</div>
+        </div>
+        <div class="profile-image"></div>
+      </div>
       <div class="first-body-section grid">
         <transition name="slide" appear>
           <div class="create-meeting-card">
@@ -22,6 +29,7 @@
                   Let’s create meeting schedule right now!
                 </div>
                 <BaseButton
+                  class="mobile-button"
                   buttonType="common-button"
                   btnText="Create meeting"
                   textColor="#18181A"
@@ -104,7 +112,7 @@
                 <div v-else class="no-executive bold-small-text">
                   There is not executive
                 </div>
-                <div style="display: flex; gap: 1.2rem;">
+                <div class="executive-buttons">
                   <BaseButton
                     buttonType="common-button"
                     btnText="Add executive"
@@ -172,6 +180,22 @@
           <AttendeeGroup></AttendeeGroup>
           <AttendeeGroup></AttendeeGroup>
         </div>
+        <div class="mobile-see remark-text">
+          <BaseButton
+            buttonType="common-button"
+            btnText="See all meetings"
+            textColor="#7452FF"
+            textHover="white"
+            color="#DBD2FF"
+            hoverColor="#7452FF"
+            height="100%"
+            width="100%"
+          >
+            <template v-slot:after-icon>
+              <i class="icon fa-solid fa-chevron-right"></i>
+            </template>
+          </BaseButton>
+        </div>
       </div>
     </div>
   </div>
@@ -183,12 +207,14 @@ import BaseHeader from "../../components/UI/BaseHeader.vue";
 import AttendeeGroup from "../../components/meeting/AttendeeGroup.vue";
 import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
+import jwtDecrypt from "../../helpers/jwtHelper";
 import { mapGetters, mapActions } from "vuex";
 export default {
   components: { BaseButton, BaseHeader, AttendeeGroup, VueCal },
   name: "HomeView",
   data() {
     return {
+      user: "",
       urlImage: this.$store.state.imageURL,
       selectedDate: "",
       events: [
@@ -257,6 +283,11 @@ export default {
   },
   mounted() {
     this.selectedDate = new Date().toISOString().slice(0, 10);
+    if (localStorage.getItem("user")) {
+      this.user = `${jwtDecrypt(localStorage.getItem("user")).title_code}. ${
+        jwtDecrypt(localStorage.getItem("user")).first_name
+      }`;
+    }
   },
 };
 </script>
@@ -275,6 +306,29 @@ export default {
   }
   .body {
     padding: 3rem;
+    .mention {
+      display: none;
+      color: $darkViolet;
+      .profile-image {
+        width: 6.4rem;
+        height: 6.4rem;
+        background-color: $fadedViolet;
+        border-radius: 0.5rem;
+      }
+      .welcome {
+        display: flex;
+        flex-direction: column;
+        row-gap: 1.6rem;
+        .say-hi {
+          font-size: 2.8rem;
+          font-weight: 600;
+          color: $primaryViolet;
+        }
+        .num-mention {
+          font-size: 2rem;
+        }
+      }
+    }
     .first-body-section {
       margin-bottom: 2rem;
       grid-template-columns: 0.65fr 1.25fr 1.15fr;
@@ -318,6 +372,10 @@ export default {
       .executives-card {
         .remark-text {
           text-align: left;
+        }
+        .executive-buttons {
+          display: flex;
+          gap: 1.2rem;
         }
         .card {
           margin-top: 3.6rem;
@@ -445,6 +503,9 @@ export default {
     .second-body-section {
       display: flex;
       flex-direction: column;
+      .mobile-see {
+        display: none;
+      }
       .title-section {
         margin-bottom: 3rem;
         display: flex;
@@ -501,9 +562,9 @@ export default {
     .body {
       .first-body-section {
         grid-template-columns: repeat(5, 1fr);
-            column-gap: 3rem;
+        column-gap: 3rem;
         .create-meeting-card {
-                    grid-column: span 2;
+          grid-column: span 2;
           .card {
             .card-content {
               padding: 0 3.2rem 5.4rem 3.2rem;
@@ -525,6 +586,78 @@ export default {
           .card {
             height: 45rem;
           }
+        }
+      }
+    }
+  }
+}
+@media (max-width: 26.75em) {
+  .home {
+    .body {
+      .mention {
+        display: flex;
+        margin-bottom: 6.4rem;
+        background-color: $white;
+        border-radius: 1rem;
+        padding: 3.6rem 3.2rem;
+        justify-content: space-between;
+      }
+      .first-body-section {
+        display: flex;
+        overflow-x: scroll;
+        column-gap: 3rem;
+        .create-meeting-card {
+          min-width: 90%;
+          .card {
+            display: grid;
+            grid-template-rows: repeat(2, 1fr);
+            width: 100%;
+            height: 45rem;
+            .image {
+              display: flex;
+              justify-content: center;
+              img {
+                width: 26rem;
+              }
+            }
+            .card-content {
+              padding: 0 8rem 5.4rem 8rem;
+            }
+          }
+        }
+        .executives-card {
+          min-width: 90%;
+          .executive-buttons {
+            display: grid;
+            grid-template-rows: 1fr;
+          }
+          .card {
+            height: 45rem;
+            .card-content {
+              padding: 4.4rem;
+            }
+          }
+        }
+        .calendar-card {
+          min-width: 90%;
+          .card {
+            height: 45rem;
+          }
+        }
+      }
+      .second-body-section {
+        .title-section {
+          .common-text {
+            display: none;
+          }
+        }
+        .mobile-see {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          row-gap: 1rem;
+          color: $primaryViolet;
         }
       }
     }

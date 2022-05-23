@@ -1,5 +1,35 @@
 <template>
   <div class="meeting">
+    <div class="mobile-meeting-card">
+      <div class="first-section">
+        <div class="remark-text">Meeting/Conference name</div>
+        <div class="date-time">
+          <div class="time">
+            <i class="icon fa-regular fa-clock"></i>10:30 - 12:30
+          </div>
+          <div class="date">
+            <i class="icon fa-regular fa-calendar"></i>Mon 21 March, 2022
+          </div>
+        </div>
+        <div class="attendees">
+          <div
+            class="attendee"
+            v-for="(attendee, index) in 5"
+            :key="index"
+          ></div>
+        </div>
+      </div>
+      <div class="second-section">
+        <div class="location common-text">
+          <i class="icon fa-solid fa-location-dot"></i
+          ><span>Microsoft Teams</span>
+        </div>
+        <div class="attachments">
+          <div class="file"><i class="icon fa-regular fa-file"></i></div>
+          <div class="link"><i class="icon fa-solid fa-link"></i></div>
+        </div>
+      </div>
+    </div>
     <div class="meeting-card">
       <div class="display-day flex-col-center">
         <div class="month content-text">March</div>
@@ -69,6 +99,10 @@ export default {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
+  position: relative;
+}
+.mobile-meeting-card {
+  display: none;
 }
 .btnAction {
   cursor: pointer;
@@ -206,6 +240,100 @@ export default {
           display: none;
         }
       }
+    }
+  }
+}
+@media (max-width: 26.75em) {
+  .mobile-meeting-card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    .first-section {
+      padding: 4rem 4.8rem;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+      row-gap: 2.4rem;
+      border-bottom: 1px solid $darkGrey;
+      .date-time {
+        display: flex;
+        column-gap: 3.2rem;
+        color: $primaryViolet;
+        .date,
+        .time {
+          font-size: 2rem;
+          .icon {
+            margin-right: 1rem;
+          }
+        }
+      }
+      .attendees {
+        display: flex;
+        column-gap: 2rem;
+        .attendee {
+          width: 6.4rem;
+          height: 6.4rem;
+          border-radius: 0.5rem;
+          background-color: $fadedViolet;
+        }
+      }
+    }
+    .second-section {
+      padding: 3.6rem 4.8rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .location {
+        color: $primaryViolet;
+        .icon {
+          margin-right: 1rem;
+          font-size: 2rem;
+        }
+        span {
+          color: $highlightViolet;
+        }
+      }
+      .attachments {
+        display: flex;
+        column-gap: 4rem;
+        .file,
+        .link {
+          font-size: 2rem;
+          background-color: $yellow;
+          padding: 2rem;
+          border-radius: 50%;
+          position: relative;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          .icon {
+            position: absolute;
+            color: $white;
+          }
+        }
+      }
+    }
+  }
+  .meeting {
+    padding: 0;
+    overflow: hidden;
+    margin-bottom: 2.8rem;
+  }
+  .meeting-card {
+    display: none;
+  }
+  .btnAction {
+    display: none;
+  }
+}
+@media (max-width: 21.75em) {
+  .mobile-meeting-card {
+    .first-section {
+      padding: 4rem 3.6rem;
+    }
+    .second-section {
+      padding: 3.6rem 3.6rem;
     }
   }
 }

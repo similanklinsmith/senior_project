@@ -330,13 +330,14 @@ export default {
     }
   }
 }
-@media (max-width: 48rem) {
+@media (max-width: 48em) {
   .sign-in-screen {
     .body {
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
+      row-gap: 4.8rem;
       .first-section {
         width: 100%;
         .lottie {
@@ -345,6 +346,16 @@ export default {
       }
       .second-section {
         width: 70%;
+        padding: 4.8rem 0rem;
+      }
+    }
+  }
+}
+@media (max-width: 26.75em) {
+  .sign-in-screen {
+    .body {
+      .second-section {
+        width: 100%;
         padding: 4.8rem 0rem;
       }
     }

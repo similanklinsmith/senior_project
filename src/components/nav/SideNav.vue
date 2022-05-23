@@ -20,11 +20,19 @@
         <i class="icon fa-solid fa-calendar"></i>
         <div class="button-text bold-small-text">calendar</div>
       </router-link>
-      <router-link to="/executives-management" class="button" aria-label="executives">
+      <router-link
+        to="/executives-management"
+        class="button"
+        aria-label="executives"
+      >
         <i class="icon fa-solid fa-user-group"></i>
         <div class="button-text bold-small-text">executives</div>
       </router-link>
-      <router-link to="/meetings-management" class="button" aria-label="meetings">
+      <router-link
+        to="/meetings-management"
+        class="button"
+        aria-label="meetings"
+      >
         <i class="icon fa-solid fa-check-to-slot"></i>
         <div class="button-text bold-small-text">meetings</div>
       </router-link>
@@ -33,7 +41,10 @@
         <div class="button-text bold-small-text">setting</div>
       </router-link>
       <div class="asset-image" v-if="isToggled">
-        <img src="../../assets/decorations/bad_mood.png" alt="illustration decoration" />
+        <img
+          src="../../assets/decorations/bad_mood.png"
+          alt="illustration decoration"
+        />
       </div>
     </div>
   </div>
@@ -48,7 +59,7 @@
 export default {
   name: "SideNav",
   props: ["isToggled"],
-  emits: ['toggleSidebar'],
+  emits: ["toggleSidebar"],
   methods: {
     toggleSidebar() {
       this.$emit("toggleSidebar");
@@ -153,6 +164,12 @@ export default {
   .icon {
     font-size: 1.4rem;
     color: $darkViolet;
+  }
+}
+
+@media (max-width: 26.75em) {
+  .full-sidebar {
+    display: none;
   }
 }
 </style>
