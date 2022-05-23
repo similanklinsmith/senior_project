@@ -407,7 +407,7 @@
     </div>
     <BasePopup
       v-if="isShowPopup"
-      @closeModal="isShowPopup = false"
+      @closeModal="isShowPopup = false, isShowDropdown = false"
       :image="require(`@/assets/decorations/delete_executive.png`)"
     >
       <template v-slot:popupContent>
@@ -436,7 +436,7 @@
           color="#F33C3C"
           hoverColor="#d93333"
           width="100%"
-          @onClick="isShowPopup = false"
+          @onClick="isShowPopup = false, isShowDropdown = false"
         >
         </BaseButton>
       </template>
@@ -615,6 +615,7 @@ export default {
       return this.getterExecutivePositions[str];
     },
     selectExecutive(id) {
+      this.isShowDropdown = false;
       this.isSearchMobile = false;
       this.cancelEdit();
       this.selectedExecutive = this.getExecutivesList.find((executive) => {
@@ -665,6 +666,7 @@ export default {
       this.errors = {};
     },
     editExecutive(id) {
+      this.isShowDropdown = false;
       this.searchInput = "";
       this.isAddExecutive = true;
       this.editId = id;
@@ -677,9 +679,12 @@ export default {
       this.form.tel = this.selectedExecutive.phone_number;
       this.form.imageProfile =
         this.selectedExecutive.img_profile == "default_profile.png"
-          ? null
+          ? ""
           : this.selectedExecutive.img_profile;
-      this.realImage = this.selectedExecutive.img_profile;
+      this.realImage =
+        this.selectedExecutive.img_profile == "default_profile.png"
+          ? ""
+          : this.selectedExecutive.img_profile;
     },
     uploadImage(e) {
       if (e.target.files.length != 0) {
@@ -1010,7 +1015,7 @@ export default {
           right: 6.4rem;
           font-size: 2.2rem;
           color: $darkViolet;
-          z-index: 10;
+          z-index: 7;
           cursor: pointer;
           transition: 0.2s all ease-in-out;
         }
