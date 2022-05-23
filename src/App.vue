@@ -176,7 +176,7 @@ export default {
   z-index: 9;
 }
 .fixed {
-  z-index: 12;
+  z-index: 8;
   top: 0%;
   position: fixed !important;
   background-color: rgba(255, 255, 255, 0.75);
