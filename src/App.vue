@@ -176,7 +176,7 @@ export default {
   z-index: 9;
 }
 .fixed {
-  z-index: 8;
+  z-index: 12;
   top: 0%;
   position: fixed !important;
   background-color: rgba(255, 255, 255, 0.75);
@@ -217,6 +217,18 @@ export default {
   }
   .mobile-nav {
     display: flex;
+    .last-section {
+      .notification {
+        width: 5.4rem;
+        height: 5.4rem;
+        .alert-circle {
+          width: 2rem;
+          height: 2rem;
+          font-size: 1.4rem;
+          outline: 0.4rem solid $white;
+        }
+      }
+    }
   }
   .mobile-menu {
     display: flex;

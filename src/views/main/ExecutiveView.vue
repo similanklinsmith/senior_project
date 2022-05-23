@@ -460,6 +460,9 @@
         v-if="!isAddExecutive"
         @click="isSearchMobile = true"
       >
+        <div class="number-of-executive">
+          <div class="bold-small-text">{{ getExecutivesList.length }}</div>
+        </div>
         <i class="fa-solid fa-magnifying-glass"></i>
       </div>
     </div>
@@ -858,6 +861,21 @@ export default {
   background-color: $darkViolet;
   box-shadow: 1.8rem 1.8rem 1.3rem 0 #ababab4d;
   transform: translateX(-5rem) translateY(-5rem);
+  position: relative;
+  .number-of-executive {
+    transform: translateX(1rem) translateY(-1rem);
+    position: absolute;
+    top: 0%;
+    right: 0%;
+    background-color: $error;
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline: 0.4rem solid $white;
+  }
 }
 .mobile-button:active,
 .mobile-button-search:active {
@@ -1303,7 +1321,8 @@ export default {
   }
 }
 @media (max-width: 26.75em) {
-  input, select {
+  input,
+  select {
     height: 4.8rem !important;
   }
   .search-mobile-button {
@@ -1351,6 +1370,7 @@ export default {
           display: none;
         }
         .container {
+          height: 100rem;
           padding: 7.2rem 5.2rem;
         }
         .executive-card {
