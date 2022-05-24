@@ -109,9 +109,9 @@ export default {
 .mobile-nav {
   display: none;
   width: 100%;
-  height: 10rem;
+  height: 12rem;
   background-color: $white;
-  padding: 2.4rem 5.5rem;
+  padding: 3.2rem 4rem;
   justify-content: space-between;
   align-items: center;
   .icon {
