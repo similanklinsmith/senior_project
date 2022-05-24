@@ -1,22 +1,15 @@
 import { createRouter, createWebHistory } from "vue-router";
-const SignIn = () => import("../views/main/SignInView.vue");
-const Home = () => import("../views/main/HomeView.vue");
-const Calendar = () => import("../views/main/CalendarView.vue");
-const Executive = () => import("../views/main/ExecutiveView.vue");
-const Meeting = () => import("../views/main/MeetingView.vue");
-const Setting = () => import("../views/main/SettingView.vue");
-const NotFound = () => import("../views/exception/NotFoundView.vue");
 
 const routes = [
   {
     path: "/sign-in",
     name: "sign-in",
-    component: SignIn,
+    component: () => import("@/views/main/SignInView.vue"),
   },
   {
     path: "/",
     name: "home",
-    component: Home,
+    component: () => import("@/views/main/HomeView.vue"),
     beforeEnter: (to, from, next) => {
       const loggedIn = localStorage.getItem("user");
       if (loggedIn) {
@@ -29,7 +22,7 @@ const routes = [
   {
     path: "/calendar",
     name: "calendar",
-    component: Calendar,
+    component: () => import("@/views/main/CalendarView.vue"),
     beforeEnter: (to, from, next) => {
       const loggedIn = localStorage.getItem("user");
       if (loggedIn) {
@@ -43,7 +36,7 @@ const routes = [
     path: "/executives-management",
     name: "executive",
     props: true,
-    component: Executive,
+    component: () => import("@/views/main/ExecutiveView.vue"),
     beforeEnter: (to, from, next) => {
       const loggedIn = localStorage.getItem("user");
       if (loggedIn) {
@@ -56,7 +49,7 @@ const routes = [
   {
     path: "/meetings-management",
     name: "meeting",
-    component: Meeting,
+    component: () => import("@/views/main/MeetingView.vue"),
     beforeEnter: (to, from, next) => {
       const loggedIn = localStorage.getItem("user");
       if (loggedIn) {
@@ -69,12 +62,12 @@ const routes = [
   {
     path: "/setting",
     name: "setting",
-    component: Setting,
+    component: () => import("@/views/main/SettingView.vue"),
   },
   {
     path: "/:catchall(.*)",
     name: "NotFound",
-    component: NotFound,
+    component: () => import("@/views/exception/NotFoundView.vue"),
   },
 ];
 
