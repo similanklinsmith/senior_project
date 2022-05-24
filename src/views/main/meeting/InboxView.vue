@@ -62,9 +62,9 @@
 </template>
 
 <script>
-import InboxComp from "../../../components/meeting/InboxComp.vue";
-import ResponseComp from "../../../components/meeting/ResponseComp.vue";
-import BaseButton from "../../../components/UI/BaseButton.vue";
+import InboxComp from "@/components/meeting/InboxComp.vue";
+import ResponseComp from "@/components/meeting/ResponseComp.vue";
+import BaseButton from "@/components/UI/BaseButton.vue";
 
 export default {
   name: "InboxView",
@@ -144,7 +144,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../../assets/colors/webColors.scss";
+@import "@/assets/colors/webColors.scss";
 .response {
   display: flex;
   flex-direction: column;

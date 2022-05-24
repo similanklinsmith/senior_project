@@ -206,9 +206,9 @@
 
 <script>
 import LitepieDatepicker from "litepie-datepicker";
-import InboxComp from "../../../components/meeting/InboxComp.vue";
-import BaseButton from "../../../components/UI/BaseButton.vue";
-import BasePopup from "../../../components/UI/BasePopup.vue";
+import InboxComp from "@/components/meeting/InboxComp.vue";
+import BaseButton from "@/components/UI/BaseButton.vue";
+import BasePopup from "@/components/UI/BasePopup.vue";
 import { mapGetters, mapActions } from "vuex";
 import { ref } from "vue";
 
@@ -328,7 +328,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../../assets/colors/webColors.scss";
+@import "@/assets/colors/webColors.scss";
 ul {
   width: 100%;
   list-style: none;

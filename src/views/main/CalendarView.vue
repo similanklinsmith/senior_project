@@ -168,7 +168,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../assets/colors/webColors.scss";
+@import "@/assets/colors/webColors.scss";
 .calendar-screen {
   .body {
     padding: 3rem;

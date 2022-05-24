@@ -9,7 +9,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../assets/colors/webColors.scss";
+@import "@/assets/colors/webColors.scss";
 .setting-screen {
   display: flex;
   flex-direction: column;

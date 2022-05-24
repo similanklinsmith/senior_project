@@ -100,7 +100,7 @@
 </template>
 
 <script>
-import BaseButton from "../../components/UI/BaseButton.vue";
+import BaseButton from "@/components/UI/BaseButton.vue";
 export default {
   components: { BaseButton },
   name: "SignInView",
@@ -162,7 +162,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../assets/colors/webColors.scss";
+@import "@/assets/colors/webColors.scss";
 .required {
   color: $error;
   margin-left: 0.2rem;

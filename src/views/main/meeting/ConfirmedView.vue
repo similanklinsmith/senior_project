@@ -186,10 +186,10 @@
 </template>
 
 <script>
-import InboxComp from "../../../components/meeting/InboxComp.vue";
-import ResultComp from "../../../components/meeting/ResultComp.vue";
-import BaseDropZone from "../../../components/UI/BaseDropZone.vue";
-import BaseButton from "../../../components/UI/BaseButton.vue";
+import InboxComp from "@/components/meeting/InboxComp.vue";
+import ResultComp from "@/components/meeting/ResultComp.vue";
+import BaseDropZone from "@/components/UI/BaseDropZone.vue";
+import BaseButton from "@/components/UI/BaseButton.vue";
 import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
 import { ref } from "vue";
@@ -630,7 +630,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../../assets/colors/webColors.scss";
+@import "@/assets/colors/webColors.scss";
 .required {
   color: $error;
   margin-left: 0.2rem;

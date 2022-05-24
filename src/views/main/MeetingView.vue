@@ -341,8 +341,8 @@ import BeConfirmedView from "./meeting/BeConfirmedView.vue";
 import ConfirmedView from "./meeting/ConfirmedView.vue";
 import InboxView from "./meeting/InboxView.vue";
 import SentView from "./meeting/SentView.vue";
-import BaseButton from "../../components/UI/BaseButton.vue";
-import BaseHeader from "../../components/UI/BaseHeader.vue";
+import BaseButton from "@/components/UI/BaseButton.vue";
+import BaseHeader from "@/components/UI/BaseHeader.vue";
 export default {
   components: {
     BaseButton,
@@ -402,7 +402,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../assets/colors/webColors.scss";
+@import "@/assets/colors/webColors.scss";
 .modal {
   width: 100%;
   height: 100vh;

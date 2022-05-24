@@ -9,7 +9,7 @@
     <div class="body">
       <div class="notfound-content flex-col-center">
         <img
-          src="../../assets/decorations/not_found.png"
+          src="@/assets/decorations/not_found.png"
           alt="not found illustration"
         />
         <div class="big-header-text">Opps!</div>
@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import BaseButton from "../../components/UI/BaseButton.vue";
+import BaseButton from "@/components/UI/BaseButton.vue";
 export default {
   components: { BaseButton },
   name: "NotFound",
@@ -40,7 +40,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../assets/colors/webColors.scss";
+@import "@/assets/colors/webColors.scss";
 .notfound-screen {
   width: 100%;
   height: 100vh;

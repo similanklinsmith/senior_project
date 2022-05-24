@@ -20,7 +20,7 @@
             <div class="card">
               <div class="image">
                 <img
-                  src="../../assets/decorations/create_meetings.png"
+                  src="@/assets/decorations/create_meetings.png"
                   alt="create meeting illustration"
                 />
               </div>
@@ -78,7 +78,7 @@
                         </div>
                         <div class="profile-image" v-else>
                           <img
-                            src="../../assets/decorations/sample_profile.png"
+                            src="@/assets/decorations/sample_profile.png"
                             alt="sample profile illustration"
                           />
                         </div>
@@ -202,12 +202,12 @@
 </template>
 
 <script>
-import BaseButton from "../../components/UI/BaseButton.vue";
-import BaseHeader from "../../components/UI/BaseHeader.vue";
-import AttendeeGroup from "../../components/meeting/AttendeeGroup.vue";
+import BaseButton from "@/components/UI/BaseButton.vue";
+import BaseHeader from "@/components/UI/BaseHeader.vue";
+import AttendeeGroup from "@/components/meeting/AttendeeGroup.vue";
 import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
-import jwtDecrypt from "../../helpers/jwtHelper";
+import jwtDecrypt from "@/helpers/jwtHelper";
 import { mapGetters, mapActions } from "vuex";
 export default {
   components: { BaseButton, BaseHeader, AttendeeGroup, VueCal },
@@ -292,7 +292,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import "../../assets/colors/webColors.scss";
+@import "@/assets/colors/webColors.scss";
 .home {
   .badge {
     padding: 0.3rem 0.5rem;

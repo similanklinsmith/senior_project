@@ -42,7 +42,7 @@
                 </div>
                 <div class="profile-image" v-else>
                   <img
-                    src="../../../assets/decorations/sample_profile.png"
+                    src="@/assets/decorations/sample_profile.png"
                     alt="sample profile illustration"
                   />
                 </div>
@@ -195,7 +195,7 @@
                     </div>
                     <div class="profile-image" v-else>
                       <img
-                        src="../../../assets/decorations/sample_profile.png"
+                        src="@/assets/decorations/sample_profile.png"
                         alt="sample profile illustration"
                       />
                     </div>
@@ -243,8 +243,8 @@
 
 <script>
 import LitepieDatepicker from "litepie-datepicker";
-import BaseButton from "../../../components/UI/BaseButton.vue";
-import BaseAlert from "../../../components/UI/BaseAlert.vue";
+import BaseButton from "@/components/UI/BaseButton.vue";
+import BaseAlert from "@/components/UI/BaseAlert.vue";
 import { mapGetters, mapActions } from "vuex";
 import { ref } from "vue";
 export default {
@@ -398,7 +398,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../../assets/colors/webColors.scss";
+@import "@/assets/colors/webColors.scss";
 .input-mobile-button {
   display: none;
   order: 3;

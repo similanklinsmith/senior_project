@@ -113,7 +113,7 @@
                 </div>
                 <div class="profile-image" v-else>
                   <img
-                    src="../../assets/decorations/sample_profile.png"
+                    src="@/assets/decorations/sample_profile.png"
                     alt="sample profile illustration"
                   />
                 </div>
@@ -195,7 +195,7 @@
                 >
                   <img
                     v-if="previewImage == ''"
-                    src="../../assets/decorations/sample_profile.png"
+                    src="@/assets/decorations/sample_profile.png"
                     alt="sample profile illustration"
                   />
                   <img
@@ -214,7 +214,7 @@
                 >
                   <img
                     v-if="previewImage == '' && realImage == ''"
-                    src="../../assets/decorations/sample_profile.png"
+                    src="@/assets/decorations/sample_profile.png"
                     alt="sample profile illustration"
                   />
                   <img
@@ -470,13 +470,13 @@
 </template>
 
 <script>
-import BaseButton from "../../components/UI/BaseButton.vue";
-import BaseHeader from "../../components/UI/BaseHeader.vue";
-import BasePopup from "../../components/UI/BasePopup.vue";
-import BaseExecutivesPopup from "../../components/UI/BaseExecutivesPopup.vue";
-import BaseAlert from "../../components/UI/BaseAlert.vue";
-import ExecutiveComp from "../../components/meeting/ExecutiveComp.vue";
-import jwtDecrypt from "../../helpers/jwtHelper";
+import BaseButton from "@/components/UI/BaseButton.vue";
+import BaseHeader from "@/components/UI/BaseHeader.vue";
+import BasePopup from "@/components/UI/BasePopup.vue";
+import BaseExecutivesPopup from "@/components/UI/BaseExecutivesPopup.vue";
+import BaseAlert from "@/components/UI/BaseAlert.vue";
+import ExecutiveComp from "@/components/meeting/ExecutiveComp.vue";
+import jwtDecrypt from "@/helpers/jwtHelper";
 import { mapGetters, mapActions } from "vuex";
 export default {
   components: {
@@ -837,7 +837,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../assets/colors/webColors.scss";
+@import "@/assets/colors/webColors.scss";
 .mobile-button-actions {
   display: none;
   right: 0%;
