@@ -90,7 +90,7 @@
                 as-single
                 use-range
                 :formatter="formatter"
-                :style="{ fontSize: '1.5rem !important', marginTop: '1rem' }"
+                :style="{ fontSize: '1.6rem !important', marginTop: '1rem' }"
               />
             </div>
             <div class="input">
@@ -123,7 +123,7 @@
                 as-single
                 :formatter="formatter"
                 v-model="form.dueDate"
-                :style="{ fontSize: '1.5rem !important', marginTop: '1rem' }"
+                :style="{ fontSize: '1.6rem !important', marginTop: '1rem' }"
               />
             </div>
             <div class="input"></div>
