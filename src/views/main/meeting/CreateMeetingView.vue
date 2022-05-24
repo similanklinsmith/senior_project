@@ -2,6 +2,19 @@
   <div>
     <div class="first-body-section">
       <div class="card-section">
+        <div class="input-mobile-button">
+          <BaseButton
+            buttonType="common-button"
+            btnText="Send Poll"
+            textColor="white"
+            textHover="white"
+            color="#7452FF"
+            hoverColor="#23106D"
+            width="100%"
+            @onClick="handleSendPoll"
+          >
+          </BaseButton>
+        </div>
         <div class="add-attendees">
           <div class="bold-content-text">
             Add attendees<span class="required">* {{ errors.attendees }}</span>
@@ -237,7 +250,6 @@ import { ref } from "vue";
 export default {
   components: { BaseButton, LitepieDatepicker, BaseAlert },
   setup() {
-    const dateValue = ref([]);
     const dDate = (date) => {
       return date < new Date() || date > new Date(2023, 0, 8);
     };
@@ -246,7 +258,6 @@ export default {
       month: "MMM",
     });
     return {
-      dateValue,
       dDate,
       formatter,
     };
@@ -388,6 +399,10 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../../assets/colors/webColors.scss";
+.input-mobile-button {
+  display: none;
+  order: 3;
+}
 .required {
   color: $error;
   margin-left: 0.2rem;
@@ -680,6 +695,56 @@ export default {
       select:focus {
         outline: none;
         border: 0.1rem solid $primaryViolet;
+      }
+    }
+  }
+}
+@media (max-width: 26.75em) {
+  input,
+  select {
+    height: 4.8rem !important;
+  }
+  input[type="checkbox"] {
+    height: 2.4rem !important;
+  }
+  .input-mobile-button {
+    display: block;
+    order: 3;
+  }
+  .first-body-section {
+    padding: 0rem;
+    .card-section {
+      display: flex;
+      flex-direction: column;
+      row-gap: 4rem;
+      padding: 8rem 4.4rem;
+      height: fit-content;
+      .add-attendees {
+        order: 2;
+        height: fit-content;
+        .bold-content-text {
+          font-size: 1.6rem;
+        }
+        .selected-attendees {
+          .selected-attendee {
+            .profile-section {
+              .executive-profile {
+                width: fit-content;
+              }
+            }
+          }
+        }
+      }
+      .add-details {
+        height: fit-content;
+        row-gap: 4rem;
+        .input-form-button {
+          display: none;
+        }
+        .input-form-row {
+          flex-direction: column;
+          row-gap: 4rem;
+        }
       }
     }
   }

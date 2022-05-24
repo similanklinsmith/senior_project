@@ -1,130 +1,16 @@
 <template>
-  <div class="meeting-screen">
-    <BaseHeader
-      :headerText="`Create your own meeting`"
-      :contentText="`You can easily create youe own meeting by clicking “Create meeting”`"
-    >
-    </BaseHeader>
-    <div class="body">
-      <div class="meeting-nav">
-        <BaseButton
-          btnText="Create poll meeting +"
-          height="5rem"
-          textHover="white"
-          color="#7452FF"
-          hoverColor="#23106D"
-          @onClick="onClickNav(1)"
-          :class="isSelected == 1 ? 'common-button' : 'outlined-button'"
-          :style="isSelected == 1 ? { color: 'white' } : { color: '#7452FF' }"
-        >
-        </BaseButton>
-        <BaseButton
-          buttonType="navigator-button"
-          height="5rem"
-          btnText="Inbox"
-          textHover="white"
-          hoverColor="#23106D"
-          @onClick="onClickNav(2)"
-          :style="
-            isSelected == 2
-              ? { backgroundColor: '#7452FF', color: 'white' }
-              : { backgroundColor: '#F4F4F4', color: '#23106D' }
-          "
-        >
-          <template v-slot:before-icon>
-            <i class="fa-solid fa-inbox"></i>
-          </template>
-          <template v-slot:after-icon>
-            <div class="badge">
-              <div class="bold-smallest-text">2</div>
-            </div>
-          </template>
-        </BaseButton>
-        <BaseButton
-          buttonType="navigator-button"
-          height="5rem"
-          btnText="Sent"
-          textHover="white"
-          hoverColor="#23106D"
-          @onClick="onClickNav(3)"
-          :style="
-            isSelected == 3
-              ? { backgroundColor: '#7452FF', color: 'white' }
-              : { backgroundColor: '#F4F4F4', color: '#23106D' }
-          "
-        >
-          <template v-slot:before-icon>
-            <i class="fa-solid fa-paper-plane"></i>
-          </template>
-        </BaseButton>
-        <BaseButton
-          buttonType="navigator-button"
-          height="5rem"
-          btnText="To be confirmed"
-          textHover="white"
-          hoverColor="#23106D"
-          @onClick="onClickNav(4)"
-          :style="
-            isSelected == 4
-              ? { backgroundColor: '#7452FF', color: 'white' }
-              : { backgroundColor: '#F4F4F4', color: '#23106D' }
-          "
-        >
-          <template v-slot:before-icon>
-            <i class="fa-solid fa-clipboard-list"></i>
-          </template>
-          <template v-slot:after-icon>
-            <div class="badge">
-              <div class="bold-smallest-text">3</div>
-            </div>
-          </template>
-        </BaseButton>
-        <BaseButton
-          buttonType="navigator-button"
-          height="5rem"
-          btnText="Confirmed"
-          textHover="white"
-          hoverColor="#23106D"
-          @onClick="onClickNav(5)"
-          :style="
-            isSelected == 5
-              ? { backgroundColor: '#7452FF', color: 'white' }
-              : { backgroundColor: '#F4F4F4', color: '#23106D' }
-          "
-        >
-          <template v-slot:before-icon>
-            <i class="fa-solid fa-square-check"></i>
-          </template>
-          <template v-slot:after-icon>
-            <div class="badge">
-              <div class="bold-smallest-text">1</div>
-            </div>
-          </template>
-        </BaseButton>
-        <BaseButton
-          buttonType="navigator-button"
-          height="5rem"
-          btnText="Trash"
-          textHover="white"
-          hoverColor="#23106D"
-          @onClick="onClickNav(6)"
-          :style="
-            isSelected == 6
-              ? { backgroundColor: '#7452FF', color: 'white' }
-              : { backgroundColor: '#F4F4F4', color: '#23106D' }
-          "
-        >
-          <template v-slot:before-icon>
-            <i class="fa-solid fa-trash"></i>
-          </template>
-        </BaseButton>
-      </div>
-      <div class="meeting-nav-horizontal">
-        <div class="slide">
+  <div>
+    <div class="meeting-screen" v-if="!isMobile">
+      <BaseHeader
+        :headerText="`Create your own meeting`"
+        :contentText="`You can easily create youe own meeting by clicking “Create meeting”`"
+      >
+      </BaseHeader>
+      <div class="body">
+        <div class="meeting-nav">
           <BaseButton
             btnText="Create poll meeting +"
             height="5rem"
-            minWidth="23rem"
             textHover="white"
             color="#7452FF"
             hoverColor="#23106D"
@@ -136,7 +22,6 @@
           <BaseButton
             buttonType="navigator-button"
             height="5rem"
-            minWidth="23rem"
             btnText="Inbox"
             textHover="white"
             hoverColor="#23106D"
@@ -159,7 +44,6 @@
           <BaseButton
             buttonType="navigator-button"
             height="5rem"
-            minWidth="23rem"
             btnText="Sent"
             textHover="white"
             hoverColor="#23106D"
@@ -177,7 +61,6 @@
           <BaseButton
             buttonType="navigator-button"
             height="5rem"
-            minWidth="23rem"
             btnText="To be confirmed"
             textHover="white"
             hoverColor="#23106D"
@@ -200,7 +83,6 @@
           <BaseButton
             buttonType="navigator-button"
             height="5rem"
-            minWidth="23rem"
             btnText="Confirmed"
             textHover="white"
             hoverColor="#23106D"
@@ -223,7 +105,6 @@
           <BaseButton
             buttonType="navigator-button"
             height="5rem"
-            minWidth="23rem"
             btnText="Trash"
             textHover="white"
             hoverColor="#23106D"
@@ -239,14 +120,217 @@
             </template>
           </BaseButton>
         </div>
+        <div class="meeting-nav-horizontal">
+          <div class="slide">
+            <BaseButton
+              btnText="Create poll meeting +"
+              height="5rem"
+              minWidth="23rem"
+              textHover="white"
+              color="#7452FF"
+              hoverColor="#23106D"
+              @onClick="onClickNav(1)"
+              :class="isSelected == 1 ? 'common-button' : 'outlined-button'"
+              :style="
+                isSelected == 1 ? { color: 'white' } : { color: '#7452FF' }
+              "
+            >
+            </BaseButton>
+            <BaseButton
+              buttonType="navigator-button"
+              height="5rem"
+              minWidth="23rem"
+              btnText="Inbox"
+              textHover="white"
+              hoverColor="#23106D"
+              @onClick="onClickNav(2)"
+              :style="
+                isSelected == 2
+                  ? { backgroundColor: '#7452FF', color: 'white' }
+                  : { backgroundColor: '#F4F4F4', color: '#23106D' }
+              "
+            >
+              <template v-slot:before-icon>
+                <i class="fa-solid fa-inbox"></i>
+              </template>
+              <template v-slot:after-icon>
+                <div class="badge">
+                  <div class="bold-smallest-text">2</div>
+                </div>
+              </template>
+            </BaseButton>
+            <BaseButton
+              buttonType="navigator-button"
+              height="5rem"
+              minWidth="23rem"
+              btnText="Sent"
+              textHover="white"
+              hoverColor="#23106D"
+              @onClick="onClickNav(3)"
+              :style="
+                isSelected == 3
+                  ? { backgroundColor: '#7452FF', color: 'white' }
+                  : { backgroundColor: '#F4F4F4', color: '#23106D' }
+              "
+            >
+              <template v-slot:before-icon>
+                <i class="fa-solid fa-paper-plane"></i>
+              </template>
+            </BaseButton>
+            <BaseButton
+              buttonType="navigator-button"
+              height="5rem"
+              minWidth="23rem"
+              btnText="To be confirmed"
+              textHover="white"
+              hoverColor="#23106D"
+              @onClick="onClickNav(4)"
+              :style="
+                isSelected == 4
+                  ? { backgroundColor: '#7452FF', color: 'white' }
+                  : { backgroundColor: '#F4F4F4', color: '#23106D' }
+              "
+            >
+              <template v-slot:before-icon>
+                <i class="fa-solid fa-clipboard-list"></i>
+              </template>
+              <template v-slot:after-icon>
+                <div class="badge">
+                  <div class="bold-smallest-text">3</div>
+                </div>
+              </template>
+            </BaseButton>
+            <BaseButton
+              buttonType="navigator-button"
+              height="5rem"
+              minWidth="23rem"
+              btnText="Confirmed"
+              textHover="white"
+              hoverColor="#23106D"
+              @onClick="onClickNav(5)"
+              :style="
+                isSelected == 5
+                  ? { backgroundColor: '#7452FF', color: 'white' }
+                  : { backgroundColor: '#F4F4F4', color: '#23106D' }
+              "
+            >
+              <template v-slot:before-icon>
+                <i class="fa-solid fa-square-check"></i>
+              </template>
+              <template v-slot:after-icon>
+                <div class="badge">
+                  <div class="bold-smallest-text">1</div>
+                </div>
+              </template>
+            </BaseButton>
+            <BaseButton
+              buttonType="navigator-button"
+              height="5rem"
+              minWidth="23rem"
+              btnText="Trash"
+              textHover="white"
+              hoverColor="#23106D"
+              @onClick="onClickNav(6)"
+              :style="
+                isSelected == 6
+                  ? { backgroundColor: '#7452FF', color: 'white' }
+                  : { backgroundColor: '#F4F4F4', color: '#23106D' }
+              "
+            >
+              <template v-slot:before-icon>
+                <i class="fa-solid fa-trash"></i>
+              </template>
+            </BaseButton>
+          </div>
+        </div>
+        <transition-group name="route">
+          <CreateMeetingView v-if="isSelected == 1" />
+          <InboxView v-if="isSelected == 2" />
+          <SentView v-if="isSelected == 3" />
+          <BeConfirmedView v-if="isSelected == 4" />
+          <ConfirmedView v-if="isSelected == 5" />
+        </transition-group>
       </div>
-      <transition-group name="route">
-        <CreateMeetingView v-if="isSelected == 1" />
-        <InboxView v-if="isSelected == 2" />
-        <SentView v-if="isSelected == 3" />
-        <BeConfirmedView v-if="isSelected == 4" />
-        <ConfirmedView v-if="isSelected == 5" />
-      </transition-group>
+    </div>
+    <div class="meeting-screen-mobile" v-else>
+      <div class="compose-button">
+        <teleport to="#portal-target" v-if="isShowComposeButton">
+          <transition name="route" appear>
+            <div class="modal" @click="isShowComposeButton = false"></div>
+          </transition>
+          <transition name="route" appear>
+            <div class="element-container">
+              <span
+                class="float-element"
+                v-if="isSelected != 1"
+                @click="(isSelected = 1), (isShowComposeButton = false)"
+              >
+                <div class="tooltip">Create poll meeting</div>
+                <i class="fa-solid fa-plus"></i>
+              </span>
+              <span
+                class="float-element"
+                v-if="isSelected != 2"
+                @click="(isSelected = 2), (isShowComposeButton = false)"
+              >
+                <div class="tooltip">Inbox</div>
+                <i class="fa-solid fa-inbox"></i>
+              </span>
+              <span
+                class="float-element"
+                v-if="isSelected != 3"
+                @click="(isSelected = 3), (isShowComposeButton = false)"
+              >
+                <div class="tooltip">Sent</div>
+                <i class="fa-solid fa-paper-plane"></i>
+              </span>
+              <span
+                class="float-element"
+                v-if="isSelected != 4"
+                @click="(isSelected = 4), (isShowComposeButton = false)"
+              >
+                <div class="tooltip">To be confirmed</div>
+                <i class="fa-solid fa-clipboard-list"></i>
+              </span>
+              <span
+                class="float-element"
+                v-if="isSelected != 5"
+                @click="(isSelected = 5), (isShowComposeButton = false)"
+              >
+                <div class="tooltip">Confirmed</div>
+                <i class="fa-solid fa-square-check"></i>
+              </span>
+              <span
+                class="float-element"
+                v-if="isSelected != 6"
+                @click="(isSelected = 6), (isShowComposeButton = false)"
+              >
+                <div class="tooltip">Trash</div>
+                <i class="fa-solid fa-trash"></i>
+              </span>
+            </div>
+          </transition>
+        </teleport>
+        <div
+          class="mobile-button"
+          @click="isShowComposeButton = !isShowComposeButton"
+          :style="
+            !isShowComposeButton
+              ? { backgroundColor: '#7452FF' }
+              : { backgroundColor: '#FFFFFF', color: '#7452FF' }
+          "
+        >
+          <span v-if="isShowComposeButton"
+            ><i class="fa-solid fa-xmark"></i></span
+          ><span v-else><i class="fa-solid fa-bars"></i></span>
+        </div>
+      </div>
+      <div class="header remark-text">{{ showHeaderMobile }}</div>
+      <CreateMeetingView v-if="isSelected == 1" />
+      <InboxView v-if="isSelected == 2" />
+      <SentView v-if="isSelected == 3" />
+      <BeConfirmedView v-if="isSelected == 4" />
+      <ConfirmedView v-if="isSelected == 5" />
     </div>
   </div>
 </template>
@@ -272,23 +356,135 @@ export default {
   data() {
     return {
       isSelected: 1,
+      isMobile: false,
+      isShowComposeButton: false,
+      headerMobile: "",
     };
   },
-  computed: {},
+  computed: {
+    showHeaderMobile() {
+      switch (this.isSelected) {
+        case 1:
+          return "Create Meeting";
+        case 2:
+          return "Inbox";
+        case 3:
+          return "Sent";
+        case 4:
+          return "To be confirmed";
+        case 5:
+          return "Confirmed";
+        case 6:
+          return "Trash";
+        default:
+          return "Create Meeting";
+      }
+    },
+  },
   methods: {
+    onResize() {
+      this.isMobile = window.innerWidth < 428;
+    },
     onClickNav(num) {
       this.isSelected = num;
       localStorage.setItem("index", num);
     },
   },
   mounted() {
-    this.isSelected = localStorage.getItem("index");
+    this.isSelected = localStorage.getItem("index")
+      ? localStorage.getItem("index")
+      : 1;
+    this.onResize();
+    window.addEventListener("resize", this.onResize, { passive: true });
   },
 };
 </script>
 
 <style lang="scss" scoped>
 @import "../../assets/colors/webColors.scss";
+.modal {
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  background-color: rgba(24, 24, 26, 0.4);
+  z-index: 11;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.element-container {
+  z-index: 12;
+  right: 0%;
+  bottom: 0%;
+  position: fixed;
+  display: flex;
+  row-gap: 2rem;
+  flex-direction: column;
+  transform: translateX(-5rem) translateY(-15rem);
+  .float-element {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: $white;
+    font-size: 2rem;
+    width: 6.4rem;
+    height: 6.4rem;
+    border-radius: 1rem;
+    box-shadow: 1.8rem 1.8rem 1.3rem 0 rgb(171 171 171 / 30%);
+    background-color: $primaryViolet;
+    position: relative;
+    .tooltip {
+      display: none;
+      font-size: 1.6rem;
+      position: fixed;
+      transform: translateX(-9rem);
+      width: fit-content;
+      padding: 0.4rem 1.2rem;
+      border-radius: 1rem;
+      background-color: rgba(24, 24, 26, 0.75);
+    }
+  }
+  .float-element:active {
+    .tooltip {
+      display: block;
+    }
+  }
+}
+.meeting-screen-mobile {
+  display: flex;
+  flex-direction: column;
+  row-gap: 2rem;
+  padding: 3rem;
+  .compose-button {
+    z-index: 12;
+    right: 0%;
+    bottom: 0%;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    row-gap: 2rem;
+    .mobile-button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #ffffff;
+      font-size: 2rem;
+      width: 6.4rem;
+      height: 6.4rem;
+      border-radius: 1rem;
+      box-shadow: 1.8rem 1.8rem 1.3rem 0 rgb(171 171 171 / 30%);
+      transform: translateX(-5rem) translateY(-5rem);
+      transition: 0.3s all ease-in-out;
+    }
+    .mobile-button:active {
+      animation: press 0.2s 1 linear;
+    }
+  }
+  .header {
+    color: $darkViolet;
+  }
+}
 .meeting-screen {
   .badge {
     padding: 0.6rem 0.8rem;
