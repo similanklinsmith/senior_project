@@ -221,7 +221,7 @@ export default {
     flex-direction: column;
     margin-bottom: 1rem;
     width: 100%;
-    height: 30rem;
+    height: 50rem;
     overflow: scroll;
     .not-found {
       display: flex;

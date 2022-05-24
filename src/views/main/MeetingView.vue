@@ -263,7 +263,7 @@
               <span
                 class="float-element"
                 v-if="isSelected != 1"
-                @click="(isSelected = 1), (isShowComposeButton = false)"
+                @click="onClickNav(1)"
               >
                 <div class="tooltip">Create poll meeting</div>
                 <i class="fa-solid fa-plus"></i>
@@ -271,7 +271,7 @@
               <span
                 class="float-element"
                 v-if="isSelected != 2"
-                @click="(isSelected = 2), (isShowComposeButton = false)"
+                @click="onClickNav(2)"
               >
                 <div class="tooltip">Inbox</div>
                 <i class="fa-solid fa-inbox"></i>
@@ -279,7 +279,7 @@
               <span
                 class="float-element"
                 v-if="isSelected != 3"
-                @click="(isSelected = 3), (isShowComposeButton = false)"
+                @click="onClickNav(3)"
               >
                 <div class="tooltip">Sent</div>
                 <i class="fa-solid fa-paper-plane"></i>
@@ -287,7 +287,7 @@
               <span
                 class="float-element"
                 v-if="isSelected != 4"
-                @click="(isSelected = 4), (isShowComposeButton = false)"
+                @click="onClickNav(4)"
               >
                 <div class="tooltip">To be confirmed</div>
                 <i class="fa-solid fa-clipboard-list"></i>
@@ -295,7 +295,7 @@
               <span
                 class="float-element"
                 v-if="isSelected != 5"
-                @click="(isSelected = 5), (isShowComposeButton = false)"
+                @click="onClickNav(5)"
               >
                 <div class="tooltip">Confirmed</div>
                 <i class="fa-solid fa-square-check"></i>
@@ -303,7 +303,7 @@
               <span
                 class="float-element"
                 v-if="isSelected != 6"
-                @click="(isSelected = 6), (isShowComposeButton = false)"
+                @click="onClickNav(6)"
               >
                 <div class="tooltip">Trash</div>
                 <i class="fa-solid fa-trash"></i>
@@ -386,6 +386,7 @@ export default {
       this.isMobile = window.innerWidth < 428;
     },
     onClickNav(num) {
+      this.isShowComposeButton = false;
       this.isSelected = num;
       localStorage.setItem("index", num);
     },

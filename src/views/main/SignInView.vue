@@ -352,6 +352,9 @@ export default {
   }
 }
 @media (max-width: 26.75em) {
+  input {
+    height: 4.8rem !important;
+  }
   .sign-in-screen {
     .body {
       .second-section {
