@@ -5,14 +5,14 @@
         <div class="profile-image"></div>
         <div class="profile-info">
           <div class="remark-text">{{ user }}</div>
-          <div class="content-text">alexander@gmail.com</div>
+          <div class="content-text">{{ email }}</div>
         </div>
         <div class="next-button">
           <i class="icon fa-solid fa-angle-right"></i>
         </div>
       </div>
       <div>
-        <div class="line"></div>
+        <div class="line" />
       </div>
       <router-link
         to="/"
@@ -97,6 +97,7 @@ export default {
   data() {
     return {
       user: "",
+      email: "",
       isShowProfile: false,
     };
   },
@@ -113,6 +114,7 @@ export default {
       this.user = `${jwtDecrypt(localStorage.getItem("user")).title_code}. ${
         jwtDecrypt(localStorage.getItem("user")).first_name
       } ${jwtDecrypt(localStorage.getItem("user")).last_name}`;
+      this.email = `${jwtDecrypt(localStorage.getItem("user")).email}`
     }
   },
 };

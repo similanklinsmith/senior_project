@@ -41,53 +41,6 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/colors/webColors.scss";
-.notfound-screen {
-  width: 100%;
-  height: 100vh;
-  background-color: $white;
-  display: flex;
-  flex-direction: column;
-  .header {
-    padding: 4.8rem 7.2rem;
-    .logo-text {
-      font-size: 3.6rem;
-      font-weight: 600;
-    }
-    .primaryViolet {
-      color: $primaryViolet;
-    }
-    .yellow {
-      color: $yellow;
-    }
-    .fadedViolet {
-      color: $fadedViolet;
-    }
-  }
-  .body {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    .notfound-content {
-      row-gap: 1.5rem;
-      img {
-        width: 30rem;
-        animation-name: floating;
-        -webkit-animation-name: floating;
-        animation-duration: 3s;
-        -webkit-animation-duration: 3s;
-        animation-iteration-count: infinite;
-        -webkit-animation-iteration-count: infinite;
-      }
-      .big-header-text {
-        color: $error;
-      }
-      .remark-text {
-        text-align: center;
-        width: 28rem;
-      }
-    }
-  }
-}
+.notfound-screen {width: 100%;height: 100vh;background-color: $white;display: flex;flex-direction: column;.header {padding: 4.8rem 7.2rem;.logo-text {font-size: 3.6rem;font-weight: 600;}.primaryViolet {color: $primaryViolet;}.yellow {color: $yellow;}.fadedViolet {color: $fadedViolet;}}.body {width: 100%;height: 100%;display: flex;justify-content: center;align-items: center;.notfound-content {row-gap: 1.5rem;img {width: 30rem;animation-name: floating;-webkit-animation-name: floating;animation-duration: 3s;-webkit-animation-duration: 3s;animation-iteration-count: infinite;-webkit-animation-iteration-count: infinite;}.big-header-text {color: $error;}.remark-text {text-align: center;width: 28rem;}}}}
+@media (max-width: 26.75em) {.notfound-screen {.body {.notfound-content {row-gap: 2.8rem;.remark-text {width: 32rem;}}}}}
 </style>
