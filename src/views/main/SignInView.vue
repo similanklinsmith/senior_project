@@ -174,9 +174,12 @@ export default {
   background-color: $white;
   display: flex;
   flex-direction: column;
+  position: fixed;
+  overflow-y: scroll;
   .header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     padding: 4.8rem 7.2rem;
     .logo-text {
       font-size: 3.6rem;
