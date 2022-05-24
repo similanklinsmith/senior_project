@@ -2,8 +2,8 @@ import { createStore } from "vuex";
 import axios from "axios";
 const BASE_URL = process.env.VUE_APP_API_PATH;
 import { auth } from "./auth.module";
-import authHeader from "../services/auth-header";
-import router from "../router";
+import authHeader from "@/services/auth-header";
+import router from "@/router";
 export default createStore({
   state: {
     // executives
