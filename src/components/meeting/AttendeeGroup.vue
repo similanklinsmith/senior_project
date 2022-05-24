@@ -89,117 +89,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../assets/colors/webColors.scss";
-.meeting {
-  display: flex;
-  width: 100%;
-  padding: 2.4rem 3.2rem;
-  border-radius: 2rem;
-  background-color: $white;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem;
-  position: relative;
-}
-.mobile-meeting-card {
-  display: none;
-}
-.btnAction {
-  cursor: pointer;
-  color: $yellow;
-  transition: 0.2s all ease-in-out;
-  .icon {
-    font-size: 1.8rem;
-    margin-left: 1rem;
-    transition: 0.2s all ease-in-out;
-  }
-}
-.btnAction:hover {
-  color: $primaryViolet;
-  .icon {
-    color: $primaryViolet;
-  }
-}
-.meeting-card {
-  display: flex;
-  width: 80%;
-  .display-day {
-    width: fit-content;
-    padding: 1.8rem;
-    border-radius: 1.5rem;
-    background-color: $primaryViolet;
-    color: $white;
-    row-gap: 0.4rem;
-    margin-right: 1.5rem;
-  }
-  .time {
-    margin-left: 1.5rem;
-    row-gap: 1.6rem;
-    align-items: start !important;
-    .common-text {
-      color: $darkViolet;
-    }
-    .content-text {
-      color: $primaryViolet;
-      .icon {
-        font-size: 1.4rem;
-        margin-right: 1rem;
-      }
-    }
-  }
-  .line {
-    margin: 0 5rem;
-    height: auto;
-    width: 0.1rem;
-    background-color: $grey;
-  }
-  .meeting-detail {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    .bold-content-text {
-      margin-bottom: 2rem;
-    }
-    .additional-detail {
-      display: flex;
-      color: $darkViolet;
-      align-items: center;
-      column-gap: 5rem;
-      .icon {
-        margin-right: 1rem;
-        color: $primaryViolet;
-      }
-      .attendees {
-        display: flex;
-        align-items: center;
-
-        .icon {
-          font-size: 1.4rem;
-          margin-right: 1rem;
-          color: $primaryViolet;
-        }
-        .attendee-img {
-          display: flex;
-          padding-top: 0.2rem;
-          padding-bottom: 0.2rem;
-          padding-left: 0.4rem;
-          border-radius: 5rem;
-          background-color: $fadedViolet;
-          .attendee {
-            width: 2.4rem;
-            height: 2.4rem;
-            border-radius: 50%;
-            background-color: $primaryViolet;
-            margin-right: -0.8rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-          }
-        }
-      }
-    }
-  }
-}
+@import "@/assets/colors/webColors.scss";
+.meeting{display:flex;width:100%;padding:2.4rem 3.2rem;border-radius:2rem;background-color:$white;justify-content:space-between;align-items:center;margin-bottom:2rem;position:relative}
+.mobile-meeting-card {display: none;}
+.btnAction{cursor: pointer;color: $yellow;transition: 0.2s all ease-in-out;.icon {font-size: 1.8rem;margin-left: 1rem;transition: 0.2s all ease-in-out;}}
+.btnAction:hover{color: $primaryViolet;.icon{color: $primaryViolet;}}
+.meeting-card{display: flex;width: 80%;.display-day {width: fit-content;padding: 1.8rem;border-radius: 1.5rem;background-color: $primaryViolet;color: $white;row-gap: 0.4rem;margin-right: 1.5rem;}.time {margin-left: 1.5rem;row-gap: 1.6rem;align-items: start !important;.common-text {color: $darkViolet;}.content-text {color: $primaryViolet;.icon {font-size: 1.4rem;margin-right: 1rem;}}}.line{margin: 0 5rem;height: auto;width: 0.1rem;background-color: $grey;}.meeting-detail{display: flex;flex-direction: column;justify-content: center;.bold-content-text{margin-bottom: 2rem;}.additional-detail{display: flex;color: $darkViolet;align-items: center;column-gap: 5rem;.icon{margin-right: 1rem;color: $primaryViolet;}.attendees{display: flex;align-items: center;.icon{font-size: 1.4rem;margin-right: 1rem;color: $primaryViolet;}.attendee-img{display: flex;padding-top: 0.2rem;padding-bottom: 0.2rem;padding-left: 0.4rem;border-radius: 5rem;background-color: $fadedViolet;.attendee{width: 2.4rem;height: 2.4rem;border-radius: 50%;background-color: $primaryViolet;margin-right: -0.8rem;display: flex;justify-content: center;align-items: center;}}}}}}
 @media (max-width: 63.5em) {
   .meeting {
     padding: 1.4rem 2.2rem;

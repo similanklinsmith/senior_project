@@ -7,10 +7,10 @@
       <div class="logo">
         <img
           v-if="isToggled"
-          src="../../assets/images/logo_text.png"
+          src="@/assets/images/logo_text.png"
           alt="logo text image"
         />
-        <img v-else src="../../assets/images/logo.png" alt="logo image" />
+        <img v-else src="@/assets/images/logo.png" alt="logo image" />
       </div>
       <router-link to="/" class="button" aria-label="home">
         <i class="icon fa-solid fa-house"></i>
@@ -42,7 +42,7 @@
       </router-link>
       <div class="asset-image" v-if="isToggled">
         <img
-          src="../../assets/decorations/bad_mood.png"
+          src="@/assets/decorations/bad_mood.png"
           alt="illustration decoration"
         />
       </div>
@@ -69,7 +69,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../assets/colors/webColors.scss";
+@import "@/assets/colors/webColors.scss";
 .full-sidebar {
   z-index: 10;
   position: fixed;

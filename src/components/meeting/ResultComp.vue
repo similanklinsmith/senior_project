@@ -222,7 +222,7 @@
 </template>
 
 <script>
-import BaseButton from "../../components/UI/BaseButton.vue";
+import BaseButton from "@/components/UI/BaseButton.vue";
 export default {
   name: "ResultComp",
   components: { BaseButton },
@@ -284,7 +284,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../assets/colors/webColors.scss";
+@import "@/assets/colors/webColors.scss";
 .modal {
   width: 100%;
   height: 100vh;

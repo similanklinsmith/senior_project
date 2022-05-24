@@ -30,7 +30,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import "../../assets/colors/webColors.scss";
+@import "@/assets/colors/webColors.scss";
 .dropzone {
   width: 100%;
   height: 12rem;

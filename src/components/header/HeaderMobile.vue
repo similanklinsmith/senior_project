@@ -79,7 +79,7 @@
       </div>
       <div class="asset-image">
         <img
-          src="../../assets/decorations/bad_mood.png"
+          src="@/assets/decorations/bad_mood.png"
           alt="illustration decoration"
         />
       </div>
@@ -88,8 +88,8 @@
 </template>
 
 <script>
-import jwtDecrypt from "../../helpers/jwtHelper";
-import BaseButton from "../../components/UI/BaseButton.vue";
+import jwtDecrypt from "@/helpers/jwtHelper";
+import BaseButton from "@/components/UI/BaseButton.vue";
 export default {
   name: "HeaderMobile",
   components: { BaseButton },
@@ -119,113 +119,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../assets/colors/webColors.scss";
+@import "@/assets/colors/webColors.scss";
 
-.full-mobile-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 3rem;
-  position: fixed;
-  height: 100vh;
-  width: 80%;
-  background-color: $primaryGrey;
-  z-index: 11;
-  padding: 10rem 8rem;
-  top: 0%;
-  transform: translateX(-100%);
-  .line {
-    width: 100%;
-    height: 0.1rem;
-    background-color: $darkGrey;
-    margin-top: 3rem;
-    margin-bottom: 4rem;
-  }
-  &.is-expanded {
-    transform: translateX(0);
-  }
-  .profile {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    .profile-image {
-      min-width: 5rem;
-      min-height: 5rem;
-      border-radius: 0.5rem;
-      background-color: $fadedViolet;
-    }
-    .profile-info {
-      display: flex;
-      flex-direction: column;
-      row-gap: 0.5rem;
-      /* .remark-text {
-        font-size: 2.4rem;
-      } */
-      .content-text {
-        /* font-size: 2rem; */
-        color: $highlightViolet;
-      }
-    }
-    .next-button {
-      font-size: 1.6rem;
-      background-color: $yellow;
-      padding: 1rem 1.5rem;
-      border-radius: 50%;
-      .icon {
-        color: $white;
-      }
-    }
-  }
-}
-a.router-link-exact-active.button {
-  background-color: $primaryViolet;
-}
-a.router-link-exact-active.button:hover {
-  background-color: $darkViolet;
-}
-a.router-link-exact-active .button-text,
-a.router-link-exact-active .icon {
-  color: $white;
-}
-.button {
-  /* height: 7rem; */
-  background-color: $grey;
-  padding: 3rem 0rem;
-  border-radius: 1rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  text-decoration: none !important;
-  transition: 0.2s all ease-in-out;
-}
-.button:hover {
-  background-color: $fadedViolet;
-  border-radius: 0.6rem;
-}
-.button-text {
-  color: $darkViolet;
-  margin-left: 0.5rem;
-}
-.icon {
-  font-size: 1.4rem;
-  color: $darkViolet;
-}
-.sign-out {
-  margin-top: 6rem;
-}
-.asset-image {
-  margin-top: 5rem;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  img {
-    width: 80%;
-  }
-}
-.nav-animation {
-  transition: 0.3s all ease-in-out;
-}
-
+.full-mobile-nav {display: flex;flex-direction: column;gap: 3rem;position: fixed;height: 100vh;width: 80%;background-color: $primaryGrey;z-index: 11;padding: 10rem 8rem;top: 0%;transform: translateX(-100%);.line {width: 100%;height: 0.1rem;background-color: $darkGrey;margin-top: 3rem;margin-bottom: 4rem;}&.is-expanded {transform: translateX(0);}.profile {display: flex;justify-content: space-around;align-items: center;.profile-image {min-width: 5rem;min-height: 5rem;border-radius: 0.5rem;background-color: $fadedViolet;}.profile-info {display: flex;flex-direction: column;row-gap: 0.5rem;.content-text {color: $highlightViolet;}}.next-button {font-size: 1.6rem;background-color: $yellow;padding: 1rem 1.5rem;border-radius: 50%;.icon {color: $white;}}}}
+a.router-link-exact-active.button{background-color:$primaryViolet}a.router-link-exact-active.button:hover{background-color:$darkViolet}a.router-link-exact-active .button-text,a.router-link-exact-active .icon{color:$white}.button{background-color:$grey;padding:3rem 0;border-radius:1rem;display:flex;justify-content:center;align-items:center;cursor:pointer;text-decoration:none!important;transition:.2s all ease-in-out}.button:hover{background-color:$fadedViolet;border-radius:.6rem}.button-text{color:$darkViolet;margin-left:.5rem}.icon{font-size:1.4rem;color:$darkViolet}.sign-out{margin-top:6rem}.asset-image {margin-top: 5rem;width: 100%;display: flex;justify-content: center;img {width: 80%;}}
+.nav-animation {transition: 0.3s all ease-in-out;}
 @media (max-width: 24em) {
   .full-mobile-nav {
     padding: 10rem 4rem;

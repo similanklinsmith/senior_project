@@ -170,7 +170,7 @@
 </template>
 
 <script>
-import BaseButton from "../../components/UI/BaseButton.vue";
+import BaseButton from "@/components/UI/BaseButton.vue";
 export default {
   name: "ResponseComp",
   components: { BaseButton },
@@ -270,7 +270,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../assets/colors/webColors.scss";
+@import "@/assets/colors/webColors.scss";
 .response-container {
   margin: 2.5rem 0;
 }
