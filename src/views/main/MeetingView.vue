@@ -325,10 +325,10 @@
           ><span v-else><i class="fa-solid fa-bars"></i></span>
         </div>
       </div>
-      <div class="header remark-text">{{ showHeaderMobile }}</div>
+      <!-- <div class="header remark-text">{{ showHeaderMobile }}</div> -->
       <CreateMeetingView v-if="isSelected == 1" />
       <InboxView v-if="isSelected == 2" />
-      <SentView v-if="isSelected == 3" />
+      <SentViewMobile v-if="isSelected == 3" />
       <BeConfirmedView v-if="isSelected == 4" />
       <ConfirmedView v-if="isSelected == 5" />
     </div>
@@ -341,6 +341,7 @@ import BeConfirmedView from "./meeting/BeConfirmedView.vue";
 import ConfirmedView from "./meeting/ConfirmedView.vue";
 import InboxView from "./meeting/InboxView.vue";
 import SentView from "./meeting/SentView.vue";
+import SentViewMobile from "./meeting/mobile/SentViewMobile.vue";
 import BaseButton from "@/components/UI/BaseButton.vue";
 import BaseHeader from "@/components/UI/BaseHeader.vue";
 export default {
@@ -352,6 +353,7 @@ export default {
     ConfirmedView,
     InboxView,
     SentView,
+    SentViewMobile
   },
   data() {
     return {
