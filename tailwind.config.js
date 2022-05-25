@@ -5,8 +5,6 @@ module.exports = {
   content: [
     "./index.html",
     "./src/**/*.{vue,js,ts,jsx,tsx}",
-  ],
-  purge: [
     path.resolve(__dirname, './node_modules/litepie-datepicker/**/*.js')
   ],
   darkMode: 'class',
