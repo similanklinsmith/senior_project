@@ -286,11 +286,7 @@ export default {
       });
     },
     calculateRemainingDay(date) {
-      return Math.round(
-        Math.abs(
-          (new Date(Date.now()) - new Date(date)) / (24 * 60 * 60 * 1000)
-        )
-      );
+      return Math.round((new Date(date) - new Date(Date.now())) / (24 * 60 * 60 * 1000)) < 0 ? 0 : Math.round((new Date(date) - new Date(Date.now())) / (24 * 60 * 60 * 1000));
     },
     formatDateTime(dateTime) {
       var createDate = new Date(dateTime);
