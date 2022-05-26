@@ -2,7 +2,7 @@
   <div class="sent-mobile-screen">
     <div class="header">
       <div class="remark-text">Sent</div>
-      <div class="result content-text">&#40;12 results&#41;</div>
+      <div class="result content-text">&#40;{{ (searchInput != "" || withInDate != "") ? filterByTitle.length : getPollsList.length }} results&#41;</div>
     </div>
     <div class="body">
       <div class="filter">
