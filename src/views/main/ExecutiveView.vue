@@ -990,7 +990,7 @@ export default {
         }
       }
       .container {
-        width: 100%;
+        width: 100% !important;
         height: 100%;
         border-radius: 2.5rem;
         background-color: $white;

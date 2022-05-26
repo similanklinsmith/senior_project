@@ -653,7 +653,7 @@ export default {
   transform: translate(-50%, -50%);
   position: fixed;
   z-index: 12;
-  width: 95%;
+  width: 95% !important;
   height: 90%;
   display: grid;
   grid-template-columns: 1.25fr 0.75fr;
