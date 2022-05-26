@@ -61,115 +61,13 @@ export default {
   props: ["isToggled"],
   emits: ["toggleSidebar"],
   methods: {
-    toggleSidebar() {
-      this.$emit("toggleSidebar");
-    },
+    toggleSidebar() {this.$emit("toggleSidebar");},
   },
 };
 </script>
 
 <style lang="scss" scoped>
 @import "@/assets/colors/webColors.scss";
-.full-sidebar {
-  z-index: 10;
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 30rem;
-  background-color: $primaryGrey;
-  display: flex;
-  flex-direction: column;
-  padding: 2.4rem 3.6rem;
-  transition: 0.2s all ease-in-out;
-  &.is-expanded {
-    width: 12.5rem;
-    .button {
-      background-color: $primaryGrey;
-    }
-    .button-text {
-      display: none;
-    }
-    .toggle-button {
-      .icon {
-        transform: rotate(180deg);
-      }
-    }
-  }
-  .toggle-button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 5rem;
-    transform: translateX(1rem);
-    right: 0;
-    position: absolute;
-    height: 3rem;
-    width: 3rem;
-    background-color: $primaryViolet;
-    border-radius: 0.5rem;
-    transition: 0.3s ease-in-out;
-    cursor: pointer;
-    .icon {
-      color: $white;
-      transition: 0.3s ease-in-out;
-    }
-  }
-  .toggle-button:hover {
-    background-color: $darkViolet;
-  }
-  .logo {
-    img {
-      height: 5.5rem;
-    }
-    margin-bottom: 10rem;
-  }
-  .asset-image {
-    img {
-      height: 13rem;
-    }
-    margin-top: 2rem;
-  }
-  a.router-link-exact-active.button {
-    background-color: $primaryViolet;
-  }
-  a.router-link-exact-active.button:hover {
-    background-color: $darkViolet;
-  }
-  a.router-link-exact-active .button-text,
-  a.router-link-exact-active .icon {
-    color: $white;
-  }
-  .button {
-    height: 5rem;
-    background-color: $grey;
-    padding: 1rem 0rem;
-    border-radius: 1rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    margin-bottom: 3rem;
-    text-decoration: none !important;
-    transition: 0.2s all ease-in-out;
-  }
-  .button:hover {
-    background-color: $fadedViolet;
-    border-radius: 0.6rem;
-  }
-  .button-text {
-    color: $darkViolet;
-    margin-left: 0.5rem;
-  }
-  .icon {
-    font-size: 1.4rem;
-    color: $darkViolet;
-  }
-}
-
-@media (max-width: 26.75em) {
-  .full-sidebar {
-    display: none;
-  }
-}
+.full-sidebar {z-index: 10;position: fixed;top: 0;left: 0;height: 100%;width: 30rem;background-color: $primaryGrey;display: flex;flex-direction: column;padding: 2.4rem 3.6rem;transition: 0.2s all ease-in-out;&.is-expanded {width: 12.5rem;.button {background-color: $primaryGrey;}.button-text {display: none;}.toggle-button {.icon {transform: rotate(180deg);}}}.toggle-button {display: flex;justify-content: center;align-items: center;margin-top: 5rem;transform: translateX(1rem);right: 0;position: absolute;height: 3rem;width: 3rem;background-color: $primaryViolet;border-radius: 0.5rem;transition: 0.3s ease-in-out;cursor: pointer;.icon {color: $white;transition: 0.3s ease-in-out;}}.toggle-button:hover {background-color: $darkViolet;}.logo {img {height: 5.5rem;}margin-bottom: 10rem;}.asset-image {img {height: 13rem;}margin-top: 2rem;}a.router-link-exact-active.button {background-color: $primaryViolet;}a.router-link-exact-active.button:hover {background-color: $darkViolet;}a.router-link-exact-active .button-text,a.router-link-exact-active .icon {color: $white;}.button {height: 5rem;background-color: $grey;padding: 1rem 0rem;border-radius: 1rem;display: flex;justify-content: center;align-items: center;cursor: pointer;margin-bottom: 3rem;text-decoration: none !important;transition: 0.2s all ease-in-out;}.button:hover {background-color: $fadedViolet;border-radius: 0.6rem;}.button-text {color: $darkViolet;margin-left: 0.5rem;}.icon {font-size: 1.4rem;color: $darkViolet;}}
+@media (max-width: 26.75em) {.full-sidebar {display: none;}}
 </style>

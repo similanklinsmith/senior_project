@@ -55,22 +55,12 @@ export default {
     };
   },
   methods: {
-    toggleProfileDropdown() {
-      this.isShowProfile = !this.isShowProfile;
-    },
-    handleSignOut() {
-      this.$emit("signOut");
-    },
+    toggleProfileDropdown() {this.isShowProfile = !this.isShowProfile;},
+    handleSignOut() {this.$emit("signOut");},
   },
   mounted() {
-    window.onscroll = () => {
-      this.isShowProfile = false;
-    };
-    if (localStorage.getItem("user")) {
-      this.user = `${jwtDecrypt(localStorage.getItem("user")).title_code}. ${
-        jwtDecrypt(localStorage.getItem("user")).first_name
-      } ${jwtDecrypt(localStorage.getItem("user")).last_name}`;
-    }
+    window.onscroll = () => {this.isShowProfile = false;};
+    if (localStorage.getItem("user")) {this.user = `${jwtDecrypt(localStorage.getItem("user")).title_code}. ${jwtDecrypt(localStorage.getItem("user")).first_name} ${jwtDecrypt(localStorage.getItem("user")).last_name}`;}
   },
 };
 </script>
