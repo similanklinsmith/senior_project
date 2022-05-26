@@ -205,6 +205,7 @@
 </template>
 
 <script>
+import { formatDateTimeDetail } from "@/helpers/formatDateTime";
 import LitepieDatepicker from "litepie-datepicker";
 import InboxComp from "@/components/meeting/InboxComp.vue";
 import BaseButton from "@/components/UI/BaseButton.vue";
@@ -249,8 +250,8 @@ export default {
             toBeConfirmed.title
               .toLowerCase()
               .includes(this.searchInput.toLowerCase()) &&
-            new Date(toBeConfirmed.create_at).toLocaleDateString() ==
-              new Date(this.filterDate).toLocaleDateString()
+              new Date(toBeConfirmed.create_at.split("T")[0]).toLocaleDateString() ==
+                new Date(this.filterDate).toLocaleDateString()
           );
         } else {
           return toBeConfirmed.title
@@ -289,8 +290,7 @@ export default {
       return Math.round((new Date(date) - new Date(Date.now())) / (24 * 60 * 60 * 1000)) < 0 ? 0 : Math.round((new Date(date) - new Date(Date.now())) / (24 * 60 * 60 * 1000));
     },
     formatDateTime(dateTime) {
-      var createDate = new Date(dateTime);
-      return createDate.toDateString() + " " + createDate.toLocaleTimeString();
+      return formatDateTimeDetail(dateTime)
     },
     formatTitle(str) {
       return this.getterExecutiveTitles[str];

@@ -58,17 +58,26 @@
         </div>
       </div>
       <div class="inbox-body">
-        <BaseInifniteScroll :showLoading="loading" @loadMore="loadMore()" :maximum="upto" :length="getPollsList.length">
-        <transition-group name="route" appear>
-          <InboxCompMobile
-            v-for="inbox in filterByTitle"
-            :key="inbox.id"
-            :title="inbox.title"
-            :time="inbox.create_at"
-            :content="'Poll appointments'"
-            :id="inbox.id"
-          />
-        </transition-group>
+        <BaseInifniteScroll
+          :showLoading="loading"
+          @loadMore="loadMore()"
+          :maximum="getPollsList.length"
+          :length="cards.length"
+        >
+          <transition-group name="route" appear>
+            <InboxCompMobile
+              v-for="inbox in filterByTitle"
+              :key="inbox.id"
+              :title="inbox.title"
+              :time="inbox.create_at"
+              :content="'Poll appointments'"
+              :id="inbox.id"
+            />
+            <div
+              class="remark-text not-found"
+              v-if="filterByTitle.length == 0"
+            >Not Found</div>
+          </transition-group>
         </BaseInifniteScroll>
       </div>
     </div>
@@ -102,29 +111,21 @@ export default {
   data() {
     return {
       loading: false,
-      items: [],
-      upto: 6,
-      pages: [],
-      pageArea: "",
-
+      upto: 10,
       searchInput: "",
       selectedInbox: null,
       selectedId: null,
       slice: 2,
-      isShowMore: false,
-      isShowPopup: false,
       isShowDropdown: false,
       withInDate: "",
       filterDate: "",
     };
   },
   static: {
-    limitScrollItems: 6,
+    limitScrollItems: 10,
   },
-
   computed: {
-    ...mapGetters(["getterMyPolls", "getterExecutiveTitles"]),
-
+    ...mapGetters(["getterMyPolls"]),
     cards() {
       const card = this.getterMyPolls.slice(0, this.upto).map((item) => {
         return item;
@@ -142,7 +143,9 @@ export default {
               toBeConfirmed.title
                 .toLowerCase()
                 .includes(this.searchInput.toLowerCase()) &&
-              new Date(toBeConfirmed.create_at).toLocaleDateString() ==
+              new Date(
+                toBeConfirmed.create_at.split("T")[0]
+              ).toLocaleDateString() ==
                 new Date(this.filterDate).toLocaleDateString()
             );
           } else {
@@ -158,7 +161,9 @@ export default {
               toBeConfirmed.title
                 .toLowerCase()
                 .includes(this.searchInput.toLowerCase()) &&
-              new Date(toBeConfirmed.create_at).toLocaleDateString() ==
+              new Date(
+                toBeConfirmed.create_at.split("T")[0]
+              ).toLocaleDateString() ==
                 new Date(this.filterDate).toLocaleDateString()
             );
           } else {
@@ -171,7 +176,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["getMyPolls", "getExecutiveTitle"]),
+    ...mapActions(["getMyPolls"]),
     loadMore() {
       const listItems = document.querySelector("#infinite-list");
       let heightToTop = listItems.scrollTop;
@@ -184,7 +189,6 @@ export default {
           listItems.scrollTo(0, heightToTop);
         }, 1000);
       }
-
       this.loading = true;
       setTimeout(() => {
         this.cards.map((item) => {
@@ -224,22 +228,6 @@ export default {
         )
       );
     },
-    formatDateTime(dateTime) {
-      var createDate = new Date(dateTime);
-      return createDate.toDateString() + " " + createDate.toLocaleTimeString();
-    },
-    formatTitle(str) {
-      return this.getterExecutiveTitles[str];
-    },
-    formatAttendee(attendee) {
-      return `${this.formatTitle(attendee.executive.title_code)} ${
-        attendee.executive.first_name
-      } ${attendee.executive.last_name}`;
-    },
-    showAllAttendee(attendees) {
-      this.isShowMore = !this.isShowMore;
-      this.isShowMore ? (this.slice = attendees.length) : (this.slice = 2);
-    },
     deletePollAppointment(id) {
       this.$store.dispatch("deletePollAppointment", id);
       this.isShowPopup = false;
@@ -254,7 +242,6 @@ export default {
   },
   created() {
     this.getMyPolls();
-    this.getExecutiveTitle();
   },
   mounted() {
     this.cards;
@@ -264,160 +251,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/colors/webColors.scss";
-.inbox-body {
-  height: 100vh;
-  width: 100%;
-}
-.infi-scroll {
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  height: 100%;
-}
-.sent-mobile-screen {
-  .header {
-    display: flex;
-    align-items: center;
-    column-gap: 1rem;
-    width: 100%;
-    padding: 3.6rem 3rem;
-    background-color: $white;
-    border-radius: 1rem;
-    margin-bottom: 3rem;
-    .remark-text {
-      color: $darkViolet;
-    }
-    .content-text {
-      color: $highlightViolet;
-    }
-  }
-  .body {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    row-gap: 2rem;
-    .filter {
-      display: flex;
-      column-gap: 0.5rem;
-      .filter-list {
-        min-width: 4.8rem;
-        min-height: 4.8rem;
-        background-color: $primaryViolet;
-        border-radius: 1rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: 0.3s all ease-in-out;
-        .alert {
-          transform: translateX(0.4rem) translateY(-0.4rem);
-          top: 0%;
-          right: 0%;
-          min-width: 1rem;
-          min-height: 1rem;
-          position: absolute;
-          border-radius: 50%;
-          background-color: $yellow;
-          outline: 0.2rem solid $white;
-        }
-        .icon {
-          font-size: 1.4rem;
-          color: $white;
-        }
-        &:hover {
-          background-color: $darkViolet;
-        }
-      }
-    }
-    .dropdown__content {
-      box-shadow: 0px 0px 5px $fadedViolet;
-      z-index: -1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-top: 4rem;
-      position: absolute;
-      right: 0%;
-      opacity: 0;
-      width: fit-content;
-      background-color: $white;
-      padding: 2.8rem;
-      transition: 0.3s all ease-in-out;
-      border-radius: 1.5rem;
-      cursor: auto;
-      transform: translateX(-2rem);
-      ul {
-        width: 100%;
-        list-style: none;
-        display: flex;
-        flex-direction: column;
-        row-gap: 2.8rem;
-        li {
-          color: $darkViolet;
-          transition: 0.3s all ease-in-out;
-        }
-      }
-      &.is-show {
-        transform: translateY(2rem) translateX(-2rem);
-        opacity: 1;
-        z-index: 1;
-        cursor: pointer;
-      }
-      input[type="text"] {
-        padding: 1rem 1.4rem;
-        width: 100%;
-        height: 4.8rem;
-        border-radius: 0.5rem;
-        border: none;
-        background-color: $primaryGrey;
-        font-family: "Poppins", sans-serif;
-      }
-      input[type="text"]:focus {
-        outline: none;
-        border: 0.1rem solid $primaryViolet;
-      }
-      input::placeholder {
-        font-size: 1.4rem;
-        color: $darkGrey;
-      }
-    }
-    .search-filter {
-      position: relative;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-items: center;
-      .input-icon {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-items: center;
-        input[type="text"] {
-          padding: 1rem 1.4rem;
-          width: 100%;
-          height: 4.8rem;
-          border-radius: 0.5rem;
-          border: none;
-          background-color: $white;
-          font-family: "Poppins", sans-serif;
-        }
-        input[type="text"]:focus {
-          outline: none;
-          border: 0.1rem solid $primaryViolet;
-        }
-        input::placeholder {
-          font-size: 1.4rem;
-          color: $darkGrey;
-        }
-        .icon {
-          position: absolute;
-          right: 0;
-          font-size: 1.4rem;
-          margin-right: 1rem;
-          color: $darkGrey;
-        }
-      }
-    }
-  }
-}
+.inbox-body{height: 100vh;width: 100%;.not-found {padding: 1.8rem;width: 100%;display: flex;align-items: center;justify-content: center;height: 80%;text-align: center;color: $darkGrey;}}
+.infi-scroll {width: 100%;margin-left: auto;margin-right: auto;height: 100%;}
+.sent-mobile-screen {.header {display: flex;align-items: center;column-gap: 1rem;width: 100%;padding: 3.6rem 3rem;background-color: $white;border-radius: 1rem;margin-bottom: 3rem;.remark-text {color: $darkViolet;}.content-text {color: $highlightViolet;}}.body {height: 100%;display: flex;flex-direction: column;row-gap: 2rem;.filter {display: flex;column-gap: 0.5rem;.filter-list {min-width: 4.8rem;min-height: 4.8rem;background-color: $primaryViolet;border-radius: 1rem;display: flex;align-items: center;justify-content: center;cursor: pointer;transition: 0.3s all ease-in-out;position: relative;.alert {transform: translateX(0.4rem) translateY(-0.4rem);top: 0%;right: 0%;min-width: 1.4rem;min-height: 1.4rem;position: absolute;border-radius: 50%;background-color: $yellow;outline: 0.4rem solid $white;}.icon {font-size: 1.4rem;color: $white;}&:hover {background-color: $darkViolet;}}}.dropdown__content {box-shadow: 0px 0px 5px $fadedViolet;z-index: -1;display: flex;flex-direction: column;align-items: center;margin-top: 4rem;position: absolute;right: 0%;opacity: 0;width: fit-content;background-color: $white;padding: 2.8rem;transition: 0.3s all ease-in-out;border-radius: 1.5rem;cursor: auto;transform: translateX(-2rem);ul {width: 100%;list-style: none;display: flex;flex-direction: column;row-gap: 2.8rem;li {color: $darkViolet;transition: 0.3s all ease-in-out;}}&.is-show {transform: translateY(2rem) translateX(-2rem);opacity: 1;z-index: 1;cursor: pointer;}input[type="text"] {padding: 1rem 1.4rem;width: 100%;height: 4.8rem;border-radius: 0.5rem;border: none;background-color: $primaryGrey;font-family: "Poppins", sans-serif;}input[type="text"]:focus {outline: none;border: 0.1rem solid $primaryViolet;}input::placeholder {font-size: 1.4rem;color: $darkGrey;}}.search-filter {position: relative;width: 100%;display: flex;align-items: center;justify-items: center;.input-icon {width: 100%;display: flex;align-items: center;justify-items: center;input[type="text"] {padding: 1rem 1.4rem;width: 100%;height: 4.8rem;border-radius: 0.5rem;border: none;background-color: $white;font-family: "Poppins", sans-serif;}input[type="text"]:focus {outline: none;border: 0.1rem solid $primaryViolet;}input::placeholder {font-size: 1.4rem;color: $darkGrey;}.icon {position: absolute;right: 0;font-size: 1.4rem;margin-right: 1rem;color: $darkGrey;}}}}}
 </style>

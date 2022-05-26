@@ -32,6 +32,7 @@
 </template>
 
 <script>
+import { formatDateTimeInbox } from "@/helpers/formatDateTime";
 export default {
   name: "InboxComp",
   props: ["selectedId", "title", "content", "id", "time"],
@@ -40,22 +41,7 @@ export default {
       this.$emit("selectInbox", id);
     },
     formatDateTime(dateTime) {
-      var currentdate = new Date();
-      var now = `${currentdate.getFullYear()}-${(
-        "0" +
-        (currentdate.getMonth() + 1)
-      ).slice(-2)}-${("0" + currentdate.getDate()).slice(-2)}`;
-      if (
-        new Date(now).toDateString() ==
-        new Date(dateTime.split("T")[0]).toDateString()
-      ) {
-        var date = new Date(dateTime);
-        let hours = date.getHours();
-        let ampm = hours >= 12 ? "PM" : "AM";
-        return date.getHours()+":"+date.getMinutes()+" "+ampm;
-      } else {
-        return new Date(dateTime).toLocaleDateString()
-      }
+      return formatDateTimeInbox(dateTime)
     },
   },
 };
