@@ -505,7 +505,7 @@ export default {
     grid-template-columns: 0.4fr 1.6fr;
     .meeting-nav {
       width: 100%;
-      height: 100vh;
+      height: 100%;
       display: flex;
       flex-direction: column;
       background-color: $white;
