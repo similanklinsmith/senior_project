@@ -1,20 +1,2 @@
-export function formatDateTimeInbox(dateTime) {
-  var currentdate = new Date();
-  var now = `${currentdate.getFullYear()}-${("0" +(currentdate.getMonth() + 1)).slice(-2)}-${("0" + currentdate.getDate()).slice(-2)}`;
-  if (new Date(now).toDateString() == new Date(dateTime.split("T")[0]).toDateString()) {
-    var date = new Date(dateTime);
-    let hours = date.getHours();
-    let minutes = date.getMinutes() < 10 ? `${date.getMinutes()}0` : date.getMinutes();
-    let ampm = hours >= 12 ? "PM" : "AM";
-    return date.getUTCHours() + ":" + minutes + " " + ampm;
-  } else { return new Date(dateTime.split("T")[0]).toLocaleDateString(); }
-}
-
-export function formatDateTimeDetail(dateTime) {
-    var createDate = new Date(dateTime.split("T")[0]);
-    var date = new Date(dateTime);
-    let hours = date.getHours();
-    let minutes = date.getMinutes() < 10 ? `${date.getMinutes()}0` : date.getMinutes();
-    let ampm = hours >= 12 ? "PM" : "AM";
-    return createDate.toDateString() + " " + date.getUTCHours() + ":" + minutes + " " + ampm;
-}
+export function formatDateTimeInbox(t){var e=new Date,n=`${e.getFullYear()}-${("0"+(e.getMonth()+1)).slice(-2)}-${("0"+e.getDate()).slice(-2)}`;if(new Date(n).toDateString()==new Date(t.split("T")[0]).toDateString()){var a=new Date(t);let e=a.getHours(),n=a.getMinutes()<10?`${a.getMinutes()}0`:a.getMinutes(),r=e>=12?"PM":"AM";return a.getUTCHours()+":"+n+" "+r}return new Date(t.split("T")[0]).toLocaleDateString()}
+export function formatDateTimeDetail(t){var e=new Date(t.split("T")[0]),n=new Date(t);let a=n.getHours(),r=n.getMinutes()<10?`${n.getMinutes()}0`:n.getMinutes(),i=a>=12?"PM":"AM";return e.toDateString()+" "+n.getUTCHours()+":"+r+" "+i}
