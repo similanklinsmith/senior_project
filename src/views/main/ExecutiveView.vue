@@ -525,9 +525,7 @@ export default {
       "getterExecutiveTitles",
       "getterExecutivePositions",
     ]),
-    getExecutivesList() {
-      return this.$store.getters.getterMyExecutives;
-    },
+    getExecutivesList() {return this.$store.getters.getterMyExecutives;},
     filterByName() {
       return this.getExecutivesList.filter((executive) => {
         return (
@@ -540,29 +538,13 @@ export default {
         );
       });
     },
-    titleIsValid() {
-      return !!this.form.title;
-    },
-    firstnameIsValid() {
-      return !!this.form.firstname;
-    },
-    lastnameIsValid() {
-      return !!this.form.lastname;
-    },
-    positionIsValid() {
-      return !!this.form.position;
-    },
-    emailIsValid() {
-      return !!this.form.email;
-    },
-    telIsValid() {
-      return !!this.form.tel;
-    },
-    telPatternIsValid() {
-      return (
-        !!(this.form.tel.length == 10) && !!this.form.tel.match(/^[0-9]+$/)
-      );
-    },
+    titleIsValid() {return !!this.form.title;},
+    firstnameIsValid() {return !!this.form.firstname;},
+    lastnameIsValid() {return !!this.form.lastname;},
+    positionIsValid() {return !!this.form.position;},
+    emailIsValid() {return !!this.form.email;},
+    telIsValid() {return !!this.form.tel;},
+    telPatternIsValid() {return (!!this.form.tel.match(/^[0-9]+$/) && !!(this.form.tel.length == 10 || this.form.tel.length == 9));},
     checkUniqueEmail() {
       for (let index = 0; index < this.getterExecutives.length; index++) {
         if (
@@ -593,27 +575,16 @@ export default {
       "getExecutiveTitle",
       "getExecutivePosition",
     ]),
-    onFocus() {
-      document.getElementById("search-input").placeholder = "Type to find...";
-    },
-    onBlur() {
-      document.getElementById("search-input").placeholder = "Search by name";
-    },
+    onFocus() {document.getElementById("search-input").placeholder = "Type to find...";},
+    onBlur() {document.getElementById("search-input").placeholder = "Search by name";},
     formatPhoneNumber(str) {
       let cleaned = ("" + str).replace(/\D/g, "");
-      let match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
-
-      if (match) {
-        return match[1] + "-" + match[2] + "-" + match[3];
-      }
-      return null;
+      let match = cleaned.length == 10 ? cleaned.match(/^(\d{3})(\d{3})(\d{4})$/) : cleaned.match(/^(\d{2})(\d{3})(\d{4})$/);
+      if (match) {return match[1] + "-" + match[2] + "-" + match[3];}
+      return null
     },
-    formatTitle(str) {
-      return this.getterExecutiveTitles[str];
-    },
-    formatPosition(str) {
-      return this.getterExecutivePositions[str];
-    },
+    formatTitle(str) {return this.getterExecutiveTitles[str];},
+    formatPosition(str) {return this.getterExecutivePositions[str];},
     selectExecutive(id) {
       this.isShowDropdown = false;
       this.isSearchMobile = false;
@@ -627,12 +598,8 @@ export default {
       let copyText = document.getElementById(value).innerHTML;
       navigator.clipboard.writeText(copyText);
     },
-    toggleDropDown() {
-      this.isShowDropdown = !this.isShowDropdown;
-    },
-    togglePopup() {
-      this.isShowPopup = true;
-    },
+    toggleDropDown() {this.isShowDropdown = !this.isShowDropdown;},
+    togglePopup() {this.isShowPopup = true;},
     deleteImage() {
       this.realImage = "";
       this.previewImage = "";
