@@ -301,21 +301,12 @@ export default {
         );
       });
     },
-    attendeesIsValid() {
-      return !!(this.form.selectedAttendees.length != 0);
-    },
-    titleIsValid() {
-      return !!this.form.title;
-    },
-    dateSlotIsValid() {
-      return !!this.form.dateSlot;
-    },
-    durationIsValid() {
-      return !!this.form.duration;
-    },
-    dueDateIsValid() {
-      return !!this.form.dueDate;
-    },
+    attendeesIsValid() {return !!(this.form.selectedAttendees.length != 0);},
+    titleIsValid() {return !!this.form.title;},
+    dateSlotIsValid() {return !!this.form.dateSlot;},
+    durationIsValid() {return !!this.form.duration;},
+    dueDateIsValid() {return !!this.form.dueDate;},
+    dueDateLessIsValid() {return (new Date(this.form.dueDate) < new Date (this.form.dateSlot.split(" ~ ")[0]));},
   },
   methods: {
     ...mapActions(["getExecutives", "getExecutiveTitle"]),
@@ -352,9 +343,7 @@ export default {
       this.dateSlotIsValid
         ? delete this.errors.dateSlot
         : (this.errors.dateSlot = "Please select date slot");
-      this.dueDateIsValid
-        ? delete this.errors.dueDate
-        : (this.errors.dueDate = "Please select due date");
+      if(this.dueDateIsValid){delete this.errors.dueDate; if(this.dueDateLessIsValid){delete this.errors.dueDate}else{this.errors.dueDate="Due date cannot be exceeded date slot"}}else{this.errors.dueDate="Please select due date"}
       this.durationIsValid
         ? delete this.errors.duration
         : (this.errors.duration = "Please select durations");
