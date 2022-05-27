@@ -5,6 +5,14 @@ const routes = [
     path: "/sign-in",
     name: "sign-in",
     component: () => import("@/views/main/SignInView.vue"),
+    beforeEnter: (to, from, next) => {
+      const loggedIn = localStorage.getItem("user");
+      if (!loggedIn) {
+        next();
+      }else{
+        next("/");
+      }
+    },
   },
   {
     path: "/",
