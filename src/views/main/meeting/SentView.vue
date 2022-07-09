@@ -27,7 +27,7 @@
           <ul>
             <li>
               <div class="input">
-                <label for="due" class="bold-small-text">Due Date</label>
+                <label for="due" class="bold-small-text">Date within</label>
                 <litepie-datepicker
                   id="due"
                   as-single
@@ -147,8 +147,8 @@
         <div
           class="button"
           v-if="
-            new Date(selectedInbox.due_date_time).toLocaleDateString() >=
-            new Date().toLocaleDateString()
+            new Date(selectedInbox.due_date_time) >=
+            new Date()
           "
         >
           <BaseButton
@@ -304,16 +304,17 @@ export default {
       this.isShowMore = !this.isShowMore;
       this.isShowMore ? (this.slice = attendees.length) : (this.slice = 2);
     },
-    deletePollAppointment(id) {
-      this.$store.dispatch("deletePollAppointment", id);
+    async deletePollAppointment(id) {
+      await this.$store.dispatch("deletePollAppointment", id);
       this.isShowPopup = false;
+      this.getPollsList.length > 0 ?
       setTimeout(
         () => (
           (this.selectedInbox = this.getPollsList[0]),
           (this.selectedId = this.getPollsList[0].id)
         ),
         1000
-      );
+      ) : this.selectedInbox = null, this.selectedId = null;
     },
   },
   created() {
@@ -494,7 +495,7 @@ ul {
       margin: 0.4rem 0;
     }
     .inbox-list {
-      height: 66rem;
+      height: 62.5rem;
       width: 100%;
       background-color: $white;
       border-radius: 2.2rem;
