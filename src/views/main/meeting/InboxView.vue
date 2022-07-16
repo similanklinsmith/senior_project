@@ -5,10 +5,13 @@
         <div class="input-icon">
           <i class="icon fa-solid fa-magnifying-glass"></i>
           <input
+            id="search-input"
             class="small-text"
             type="text"
             placeholder="Search by title"
             v-model="searchInput"
+            @focus="onFocus"
+            @blur="onBlur"
           />
         </div>
       </div>
@@ -34,27 +37,82 @@
       <div class="inbox-detail" v-if="selectedInbox != null">
         <div class="title remark-text">{{ selectedInbox.title }}</div>
         <div class="sent-from smallest-text">
-          sent from Katherine Perish at 11:30 AM 04 Apr 2022
+          sent at 10:00 AM 02/04/2022 by Katherine Perish
         </div>
-        <div class="response">
-          <ResponseComp />
-          <ResponseComp />
-          <ResponseComp />
-          <ResponseComp />
-          <ResponseComp />
-          <ResponseComp />
+        <div class="line" />
+        <div class="main-details">
+          <div class="label-header">
+            <div class="bold-small-text">Date:</div>
+            <div class="bold-small-text">Start at:</div>
+            <div class="bold-small-text">Location:</div>
+            <div class="bold-small-text">Organizer:</div>
+            <div class="bold-small-text">Attendees:</div>
+          </div>
+          <div class="detail">
+            <div class="small-text">Thu April 11 2022 (11/04/2022)</div>
+            <div class="small-text">10:30 AM - 12:30 PM</div>
+            <div class="small-text">Microsoft Teams</div>
+            <div class="small-text">Miss Katherine Perish</div>
+            <div class="small-text">
+              Mr. Similan Klinsmith, Ms. Noparat Prasongdee,
+              <span class="see-more">see more</span>
+            </div>
+          </div>
         </div>
-        <div class="button">
-          <BaseButton
-            buttonType="common-button"
-            btnText="Confirm response"
-            textColor="white"
-            textHover="white"
-            color="#7452FF"
-            hoverColor="#23106D"
-            width="24rem"
-          >
-          </BaseButton>
+        <div class="line" />
+        <div class="meeting-detail small-text">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Facilisis
+          integer senectus magna turpis. Lorem ipsum dolor sit amet, consectetur
+          adipiscing elit. Facilisis integer senectus magna turpis. Lorem ipsum
+          dolor sit amet, consectetur adipiscing elit. Facilisis integer
+          senectus magna turpis. Lorem ipsum dolor sit amet, consectetur
+          adipiscing elit. Facilisis integer senectus magna turpis. Lorem ipsum
+          dolor sit amet, consectetur adipiscing elit. Facilisis integer
+          senectus magna turpis. Lorem ipsum dolor sit amet, consectetur
+          adipiscing elit. Facilisis integer senectus magna turpis. Lorem ipsum
+          dolor sit amet, consectetur adipiscing elit. Facilisis integer
+          senectus magna turpis. Lorem ipsum dolor sit amet, consectetur
+          adipiscing elit. Facilisis integer senectus magna turpis. Lorem ipsum
+          dolor sit amet, consectetur adipiscing elit. Facilisis integer
+          senectus magna turpis. Lorem ipsum dolor sit amet, consectetur
+          adipiscing elit. Facilisis integer senectus magna turpis. Lorem ipsum
+          dolor sit amet, consectetur adipiscing elit. Facilisis integer
+          senectus magna turpis. Lorem ipsum dolor sit amet, consectetur
+          adipiscing elit. Facilisis integer senectus magna turpis.
+        </div>
+        <div class="meeting-link">
+          <div class="meeting-link-label">
+            <div class="bold-small-text">Meeting Link</div>
+            <div @click="copyLink('meeting-link-value')">
+              <i class="icon fa-regular fa-copy"></i>
+            </div>
+          </div>
+          <div class="meeting-link-detail">
+            <div class="small-text" id="meeting-link-value">
+              www.teams.com/meeting/ASokp98e/Uid1112
+            </div>
+          </div>
+        </div>
+        <div class="attachment-file">
+          <div class="attachment-file-label bold-small-text">
+            Attachment File
+          </div>
+          <div class="attachment-download">
+            <div class="file-section">
+              <div class="first-section">
+                <div class="file-icon">
+                  <i class="icon fa-solid fa-file"></i>
+                </div>
+                <div class="file-details">
+                  <div class="file-name bold-smallest-text">File_name.pdf</div>
+                  <div class="file-size smallest-text">5.28KB</div>
+                </div>
+              </div>
+              <div class="file-download">
+                <i class="icon fa-solid fa-caret-down"></i>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </transition>
@@ -63,12 +121,10 @@
 
 <script>
 import InboxComp from "@/components/meeting/InboxComp.vue";
-import ResponseComp from "@/components/meeting/ResponseComp.vue";
-import BaseButton from "@/components/UI/BaseButton.vue";
 
 export default {
   name: "InboxView",
-  components: { InboxComp, ResponseComp, BaseButton },
+  components: { InboxComp },
   data() {
     return {
       searchInput: "",
@@ -92,6 +148,16 @@ export default {
         this.selectedId = id;
         return toBeConfirmed.id == id;
       });
+    },
+    copyLink(value) {
+      let copyText = document.getElementById(value).innerHTML;
+      navigator.clipboard.writeText(copyText);
+    },
+    onFocus() {
+      document.getElementById("search-input").placeholder = "Type to find...";
+    },
+    onBlur() {
+      document.getElementById("search-input").placeholder = "Search by title";
     },
   },
   mounted() {
@@ -223,7 +289,7 @@ export default {
       }
     }
     .inbox-list {
-      height: 66rem;
+      height: 62.5rem;
       width: 100%;
       background-color: $white;
       border-radius: 2.2rem;
@@ -249,6 +315,137 @@ export default {
     display: flex;
     flex-direction: column;
     overflow: scroll;
+    .line {
+      width: 100%;
+      height: 0.1rem;
+      background-color: $bgColor;
+      margin: 2rem 0;
+    }
+    .main-details {
+      display: grid;
+      grid-template-columns: 0.15fr 0.85fr;
+      .label-header,
+      .detail {
+        display: flex;
+        flex-direction: column;
+        row-gap: 2rem;
+      }
+      .detail {
+        color: $primaryViolet;
+        .see-more {
+          color: $primaryViolet;
+          text-decoration: underline;
+          font-weight: 600;
+          cursor: pointer;
+          transition: 0.2s all ease-in-out;
+          &:hover {
+            color: $darkViolet;
+          }
+        }
+      }
+    }
+    .meeting-detail {
+      text-indent: 1rem;
+      line-height: 1.8;
+      max-height: 25rem;
+      overflow-y: scroll;
+    }
+    .meeting-detail::-webkit-scrollbar {
+      display: block !important;
+      -ms-overflow-style: auto !important;
+      scrollbar-width: auto !important;
+      background-color: transparent;
+      width: 1rem;
+    }
+    .meeting-detail::-webkit-scrollbar-track {
+      margin: 1rem;
+      border-radius: 0.5rem;
+    }
+    .meeting-detail::-webkit-scrollbar-thumb {
+      background-color: $grey;
+      border-radius: 0.5rem;
+      transition: all 0.2s ease-in-out;
+    }
+    .meeting-detail::-webkit-scrollbar-thumb:hover {
+      background-color: $darkGrey;
+    }
+    .meeting-link {
+      display: flex;
+      flex-direction: column;
+      margin-top: 2rem;
+      row-gap: 1rem;
+      .meeting-link-label {
+        display: flex;
+        align-items: center;
+        .icon {
+          color: $darkGrey;
+          font-size: 1.8rem;
+          margin-left: 0.5rem;
+          cursor: pointer;
+          transition: 0.2s all ease-in-out;
+        }
+        .icon:hover {
+          color: $highlightViolet;
+        }
+      }
+      .meeting-link-detail {
+        color: $primaryViolet;
+        cursor: pointer;
+      }
+    }
+    .attachment-file {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      row-gap: 1rem;
+      .attachment-download {
+        width: 27rem;
+        height: 7rem;
+        border-radius: 0.5rem;
+        padding: 1.6rem 2rem;
+        background-color: $primaryGrey;
+        display: flex;
+        row-gap: 1.5rem;
+        align-items: center;
+        cursor: pointer;
+        .file-section {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          width: 100%;
+          .first-section {
+            display: flex;
+            column-gap: 1rem;
+            align-items: center;
+            .file-icon {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              width: 4rem;
+              height: 4rem;
+              border-radius: 0.5rem;
+              background-color: $white;
+              font-size: 1.4rem;
+              color: $primaryViolet;
+            }
+            .file-details {
+              display: flex;
+              flex-direction: column;
+              .file-name {
+                color: $darkViolet;
+              }
+              .file-size {
+                color: $darkGrey;
+              }
+            }
+          }
+          .file-download {
+            font-size: 1.4rem;
+            color: $darkGrey;
+          }
+        }
+      }
+    }
     .sent-from {
       color: $darkGrey;
     }
