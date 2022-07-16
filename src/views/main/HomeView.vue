@@ -177,8 +177,8 @@
           </div>
         </div>
         <div class="incoming-meetings">
-          <AttendeeGroup></AttendeeGroup>
-          <AttendeeGroup></AttendeeGroup>
+          <AttendeeGroup :id="1" :title="'Meeting/Conference name'" :startTime="'10:30'" :endTime="'12:30'" :date="'Mon 21 March, 2022'" :attendees="[1,2,3,4,5,6,7,8]" :location="'Microsoft Teams'" :link="true" :file="true"></AttendeeGroup>
+          <AttendeeGroup :id="2" :title="'Test Conference'" :startTime="'14:00'" :endTime="'15:00'" :date="'Mon 21 March, 2022'" :attendees="[1,2,3,4]" :location="'Zoom'" :link="true" :file="false"></AttendeeGroup>
         </div>
         <div class="mobile-see remark-text">
           <BaseButton
