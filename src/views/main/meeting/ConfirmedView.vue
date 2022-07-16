@@ -73,6 +73,7 @@
                 </div>
               </div>
               <div class="second-col">
+                <div class="form">
                 <form action="">
                   <div class="input-form">
                     <label for="title" class="bold-small-text"
@@ -176,6 +177,7 @@
                     </BaseButton>
                   </div>
                 </form>
+                </div>
               </div>
             </div>
           </teleport>
@@ -696,11 +698,18 @@ export default {
   }
   .second-col {
     width: 100%;
-    height: 100%;
+    height: 90%;
     background-color: $white;
     border-radius: 2.5rem;
     padding: 3.6rem 3.2rem;
-    overflow: scroll;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    .form {
+      width: 100%;
+      overflow-y: scroll;
+    }
     .file-info {
       margin: 1rem 0rem;
     }
@@ -832,7 +841,7 @@ export default {
       }
     }
     .inbox-list {
-      height: 66rem;
+      height: 62.5rem;
       width: 100%;
       background-color: $white;
       border-radius: 2.2rem;
