@@ -31,7 +31,7 @@
           <ul>
             <li>
               <div class="input">
-                <label for="due" class="bold-small-text">Due Date</label>
+                <label for="due" class="bold-small-text">Date within</label>
                 <litepie-datepicker
                   id="due"
                   as-single
