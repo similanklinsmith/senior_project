@@ -2,31 +2,32 @@
   <div class="meeting">
     <div class="mobile-meeting-card">
       <div class="first-section">
-        <div class="remark-text">Meeting/Conference name</div>
+        <div class="remark-text">{{title}}</div>
         <div class="date-time">
           <div class="time">
-            <i class="icon fa-regular fa-clock"></i>10:30 - 12:30
+            <i class="icon fa-regular fa-clock"></i>{{startTime}} - {{endTime}}
           </div>
           <div class="date">
-            <i class="icon fa-regular fa-calendar"></i>Mon 21 March, 2022
+            <i class="icon fa-regular fa-calendar"></i>{{date}}
           </div>
         </div>
         <div class="attendees">
           <div
             class="attendee"
-            v-for="(attendee, index) in 5"
+            v-for="(attendee, index) in attendees.slice(0,4)"
             :key="index"
           ></div>
+          <div class="attendee-more" v-if="attendees.length - 4 > 0"><div class="remark-text">+{{attendees.length - 4}}</div></div>
         </div>
       </div>
       <div class="second-section">
         <div class="location common-text">
           <i class="icon fa-solid fa-location-dot"></i
-          ><span>Microsoft Teams</span>
+          ><span>{{location}}</span>
         </div>
         <div class="attachments">
-          <div class="file"><i class="icon fa-regular fa-file"></i></div>
-          <div class="link"><i class="icon fa-solid fa-link"></i></div>
+          <div class="file" v-if="file"><i class="icon fa-regular fa-file"></i></div>
+          <div class="link" v-if="link"><i class="icon fa-solid fa-link"></i></div>
         </div>
       </div>
     </div>
@@ -38,18 +39,18 @@
       <div class="time flex-col-center">
         <div class="common-text">start-end time</div>
         <div class="content-text">
-          <i class="icon fa-regular fa-clock"></i>10:30 - 12:30
+          <i class="icon fa-regular fa-clock"></i>{{startTime}} - {{endTime}}
         </div>
       </div>
       <div class="line" />
       <div class="meeting-detail">
-        <div class="bold-content-text">Meeting/Conference name</div>
+        <div class="bold-content-text">{{title}}</div>
         <div class="additional-detail">
-          <div class="small-text">
+          <div class="small-text" v-if="file">
             <i class="icon fa-regular fa-file"></i
             ><span class="attached-file">attached file</span>
           </div>
-          <div class="small-text">
+          <div class="small-text" v-if="link">
             <i class="icon fa-solid fa-link"></i
             ><span class="attached-link">attached link</span>
           </div>
@@ -57,12 +58,15 @@
             <i class="icon fa-regular fa-user"></i>
             <div class="attendee-img">
               <div
-                v-for="(attendee, index) in 5"
+                v-for="(attendee, index) in attendees.slice(0,4)"
                 :key="index"
                 class="attendee"
                 :style="'background-color:' + colorsList[index] + ';'"
               >
                 <div class="small-content" style="color: white">N</div>
+              </div>
+              <div v-if="attendees.length - 4 > 0" class="attendee" :style="'background-color:' + colorsList[4] + ';'">
+                <div class="small-content" style="color: white">+{{attendees.length - 4}}</div>
               </div>
             </div>
           </div>
@@ -80,11 +84,25 @@
 <script>
 export default {
   name: "AttendeeGroup",
+    props: [
+      "id",
+      "title",
+      "startTime",
+      "endTime",
+      "date",
+      "attendees",
+      "location",
+      "file",
+      "link"
+  ],
   data() {
     return {
-      colorsList: ["#23106D", "#7452FF", "#DBD2FF", "#F4F4F4", "#FFCB57"],
+      colorsList: ["#23106D", "#7452FF", "#DBD2FF", "#F4F4F4", "#23106D"],
     };
   },
+  methods: {
+    btnAction() {console.log('go to inbox with id');}
+  }
 };
 </script>
 
@@ -139,6 +157,9 @@ export default {
   }
 }
 @media (max-width: 26.75em) {
+  .meeting {
+    box-shadow: rgba(0, 0, 0, 0.04) 0px 3px 5px;
+  }
   .mobile-meeting-card {
     display: flex;
     flex-direction: column;
@@ -149,7 +170,7 @@ export default {
       flex-direction: column;
       width: 100%;
       height: 100%;
-      row-gap: 2.4rem;
+      row-gap: 2.8rem;
       border-bottom: 1px solid $darkGrey;
       .date-time {
         display: flex;
@@ -171,6 +192,18 @@ export default {
           height: 6.4rem;
           border-radius: 0.5rem;
           background-color: $fadedViolet;
+        }
+        .attendee-more {
+          width: 6.4rem;
+          height: 6.4rem;
+          border-radius: 0.5rem;
+          background-color: $grey;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          .remark-text {
+            color: $primaryViolet;
+          }
         }
       }
     }
