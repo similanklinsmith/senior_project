@@ -95,23 +95,48 @@
         </BaseButton>
       </div>
     </div>
+      <BasePopup
+      v-if="isShowPopup"
+      @closeModal="isShowPopup = false"
+      :image="require(`@/assets/decorations/delete_executive.png`)"
+    >
+      <template v-slot:popupContent>
+        We apologize for the inconvenience due to disruption. Please try again. [Error: {{statusCode}}]
+      </template>
+      <template v-slot:buttons>
+        <BaseButton
+          buttonType="common-button"
+          btnText="Close"
+          textColor="white"
+          textHover="white"
+          color="#F33C3C"
+          hoverColor="#d93333"
+          width="100%"
+          @onClick="isShowPopup = false"
+        >
+        </BaseButton>
+      </template>
+    </BasePopup>
   </div>
 </template>
 
 <script>
 import BaseButton from "@/components/UI/BaseButton.vue";
+import BasePopup from "@/components/UI/BasePopup.vue";
 export default {
-  components: { BaseButton },
+  components: { BaseButton, BasePopup },
   name: "SignInView",
   data() {
     return {
       isSignIn: true,
+      isShowPopup: false,
       form: {
         email: "",
         password: "",
       },
       errors: {},
       notFound: "",
+      statusCode: ""
     };
   },
   methods: {
@@ -134,10 +159,14 @@ export default {
             this.$router.push("/");
           },
           (err) => {
+            this.isShowPopup = true;
             this.form.password = "";
             console.log(err.response.status);
             if (err.response.status == 403 || err.response.status == 404) {
               this.notFound = "Email or Password is invalid";
+            } else {
+              this.isShowPopup = true; 
+              this.statusCode = err.response.status;
             }
           }
         );
