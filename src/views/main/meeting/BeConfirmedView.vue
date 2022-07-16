@@ -223,7 +223,7 @@ export default {
       }
     }
     .inbox-list {
-      height: 66rem;
+      height: 62.5rem;
       width: 100%;
       background-color: $white;
       border-radius: 2.2rem;
