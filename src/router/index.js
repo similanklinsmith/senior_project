@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
-
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+// import { getAuth } from "firebase/auth";
 const routes = [
   {
     path: "/sign-in",
@@ -9,7 +10,7 @@ const routes = [
       const loggedIn = localStorage.getItem("user");
       if (!loggedIn) {
         next();
-      }else{
+      } else {
         next("/");
       }
     },
@@ -18,54 +19,119 @@ const routes = [
     path: "/",
     name: "home",
     component: () => import("@/views/main/HomeView.vue"),
-    beforeEnter: (to, from, next) => {
-      const loggedIn = localStorage.getItem("user");
-      if (loggedIn) {
-        next();
-      } else {
-        next("/sign-in");
-      }
+    // meta: {
+    //   authRequired: true,
+    // },
+    meta: {
+      requiresAuth: true,
     },
+    // beforeEnter: (to, from, next) => {
+    //   const loggedIn = localStorage.getItem("user");
+    //   if (loggedIn) {
+    //     next();
+    //   } else {
+    //     next("/sign-in");
+    //   }
+    // },
   },
   {
     path: "/calendar",
     name: "calendar",
     component: () => import("@/views/main/CalendarView.vue"),
-    beforeEnter: (to, from, next) => {
-      const loggedIn = localStorage.getItem("user");
-      if (loggedIn) {
-        next();
-      } else {
-        next("/sign-in");
-      }
+    meta: {
+      requiresAuth: true,
     },
+    // beforeEnter: (to, from, next) => {
+    //   const loggedIn = localStorage.getItem("user");
+    //   if (loggedIn) {
+    //     next();
+    //   } else {
+    //     next("/sign-in");
+    //   }
+    // },
   },
   {
     path: "/executives-management",
     name: "executive",
     props: true,
     component: () => import("@/views/main/ExecutiveView.vue"),
-    beforeEnter: (to, from, next) => {
-      const loggedIn = localStorage.getItem("user");
-      if (loggedIn) {
-        next();
-      } else {
-        next("/sign-in");
-      }
+    meta: {
+      requiresAuth: true,
     },
+    // beforeEnter: (to, from, next) => {
+    //   const loggedIn = localStorage.getItem("user");
+    //   if (loggedIn) {
+    //     next();
+    //   } else {
+    //     next("/sign-in");
+    //   }
+    // },
+  },
+  {
+    path: "/meetings-inbox/:type/:id",
+    name: "inbox-detail",
+    component: () => import("@/views/main/meeting/mobile/InboxViewDetail.vue"),
+    meta: {
+      requiresAuth: true,
+    },
+    // beforeEnter: (to, from, next) => {
+    //   const loggedIn = localStorage.getItem("user");
+    //   if (loggedIn) {
+    //     next();
+    //   } else {
+    //     next("/sign-in");
+    //   }
+    // },
+  },
+  {
+    path: "/meetings-sent/:type/:id",
+    name: "sent-detail",
+    component: () => import("@/views/main/meeting/mobile/SentViewDetail.vue"),
+    meta: {
+      requiresAuth: true,
+    },
+    // beforeEnter: (to, from, next) => {
+    //   const loggedIn = localStorage.getItem("user");
+    //   if (loggedIn) {
+    //     next();
+    //   } else {
+    //     next("/sign-in");
+    //   }
+    // },
+  },
+  {
+    path: "/meetings-be-confirmed/:type/:id",
+    name: "be-confirmed-detail",
+    component: () =>
+      import("@/views/main/meeting/mobile/BeConfirmedViewDetail.vue"),
+      meta: {
+        requiresAuth: true,
+      },
+    // beforeEnter: (to, from, next) => {
+    //   const loggedIn = localStorage.getItem("user");
+    //   if (loggedIn) {
+    //     next();
+    //   } else {
+    //     next("/sign-in");
+    //   }
+    // },
   },
   {
     path: "/meetings-management",
     name: "meeting",
+    props: true,
     component: () => import("@/views/main/MeetingView.vue"),
-    beforeEnter: (to, from, next) => {
-      const loggedIn = localStorage.getItem("user");
-      if (loggedIn) {
-        next();
-      } else {
-        next("/sign-in");
-      }
+    meta: {
+      requiresAuth: true,
     },
+    // beforeEnter: (to, from, next) => {
+    //   const loggedIn = localStorage.getItem("user");
+    //   if (loggedIn) {
+    //     next();
+    //   } else {
+    //     next("/sign-in");
+    //   }
+    // },
   },
   {
     path: "/setting",
@@ -79,9 +145,64 @@ const routes = [
   },
 ];
 
+const getCurrentUser = () => {
+  return new Promise((resolve, reject) => {
+    const removeListener = onAuthStateChanged(
+      getAuth(),
+      (user) => {
+        removeListener();
+        resolve(user);
+      },
+      reject
+    );
+  });
+};
+
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
 });
 
+router.beforeEach(async (to, from, next) => {
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    if (await getCurrentUser()) {
+      next();
+    } else {
+      alert("Please Sign in");
+      next("/sign-in");
+    }
+  } else {
+    next();
+  }
+});
+// router.beforeEach((to, from, next) => {
+//   if (to.path === '/sign-in' && getAuth().currentUser) {
+//     next('/')
+//     alert(getAuth().currentUser);
+//     return;
+//   }
+
+//   if (to.matched.some(record => record.meta.requiresAuth) && !getAuth().currentUser) {
+//     alert(getAuth().currentUser);
+//     next('/sign-in')
+//     return;
+//   }
+//   alert(getAuth().currentUser && getAuth().currentUser.displayName);
+//   alert("out");
+//   next();
+// // })
+// router.beforeEach((to, from, next) => {
+//   if (to.matched.some(record => record.meta.authRequired)) {
+//     if (getAuth().currentUser) {
+//       next();
+//     } else {
+//       alert('You must be logged in to see this page');
+//       next({
+//         path: '/sign-in',
+//       });
+//     }
+//   } else {
+//     next();
+//   }
+// });
 export default router;
