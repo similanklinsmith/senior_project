@@ -80,7 +80,7 @@
       <div class="inbox-detail" v-if="selectedInbox != null">
         <div class="title remark-text">{{ selectedInbox.title }}</div>
         <div class="sent-from smallest-text">
-          has already sent by you at
+          has already sent by you on
           {{ formatDateTime(selectedInbox.create_at) }}
         </div>
         <div class="line"></div>

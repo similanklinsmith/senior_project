@@ -34,7 +34,7 @@
       <div class="inbox-detail" v-if="selectedInbox != null">
         <div class="title remark-text">{{ selectedInbox.title }}</div>
         <div class="sent-from smallest-text">
-          created poll at 11:30 AM 04 Apr 2022
+          completed on {{ formatDateTime(selectedInbox.time) }}
         </div>
         <div class="result">
           <ResultComp
@@ -74,109 +74,112 @@
               </div>
               <div class="second-col">
                 <div class="form">
-                <form action="">
-                  <div class="input-form">
-                    <label for="title" class="bold-small-text"
-                      >Title<span class="required">*</span></label
-                    >
-                    <input
-                      class="small-text"
-                      type="text"
-                      placeholder="Title"
-                      id="title"
-                      name="title"
-                    />
-                  </div>
-                  <div class="input-form">
-                    <label for="description" class="bold-small-text"
-                      >Description<span class="required">*</span></label
-                    >
-                    <textarea
-                      class="small-text"
-                      type="text"
-                      placeholder="Description"
-                      id="description"
-                      name="description"
-                    />
-                  </div>
-                  <div class="row-input">
+                  <form action="">
                     <div class="input-form">
-                      <label for="date" class="bold-small-text">Date</label>
-                      <input
-                        class="small-text"
-                        type="date"
-                        placeholder="date"
-                        id="date"
-                        name="date"
-                        readonly
-                      />
-                    </div>
-                    <div class="input-form">
-                      <label for="from" class="bold-small-text"
-                        >From<span class="required">*</span></label
+                      <label for="title" class="bold-small-text"
+                        >Title<span class="required">*</span></label
                       >
                       <input
                         class="small-text"
-                        type="time"
-                        placeholder="HH:MM"
-                        id="from"
-                        name="from"
+                        type="text"
+                        placeholder="Title"
+                        id="title"
+                        name="title"
                       />
                     </div>
                     <div class="input-form">
-                      <label for="to" class="bold-small-text"
-                        >To<span class="required">*</span></label
+                      <label for="description" class="bold-small-text"
+                        >Description<span class="required">*</span></label
+                      >
+                      <textarea
+                        class="small-text"
+                        type="text"
+                        placeholder="Description"
+                        id="description"
+                        name="description"
+                      />
+                    </div>
+                    <div class="row-input">
+                      <div class="input-form">
+                        <label for="date" class="bold-small-text">Date</label>
+                        <input
+                          class="small-text"
+                          type="date"
+                          placeholder="date"
+                          id="date"
+                          name="date"
+                          readonly
+                        />
+                      </div>
+                      <div class="input-form">
+                        <label for="from" class="bold-small-text"
+                          >From<span class="required">*</span></label
+                        >
+                        <input
+                          class="small-text"
+                          type="time"
+                          placeholder="HH:MM"
+                          id="from"
+                          name="from"
+                        />
+                      </div>
+                      <div class="input-form">
+                        <label for="to" class="bold-small-text"
+                          >To<span class="required">*</span></label
+                        >
+                        <input
+                          class="small-text"
+                          type="time"
+                          placeholder="HH:MM"
+                          id="to"
+                          name="to"
+                        />
+                      </div>
+                    </div>
+                    <div class="input-form">
+                      <label for="location" class="bold-small-text"
+                        >Location<span class="required">*</span></label
                       >
                       <input
                         class="small-text"
-                        type="time"
-                        placeholder="HH:MM"
-                        id="to"
-                        name="to"
+                        type="text"
+                        placeholder="Location"
+                        id="location"
+                        name="location"
                       />
                     </div>
-                  </div>
-                  <div class="input-form">
-                    <label for="location" class="bold-small-text"
-                      >Location<span class="required">*</span></label
-                    >
-                    <input
-                      class="small-text"
-                      type="text"
-                      placeholder="Location"
-                      id="location"
-                      name="location"
-                    />
-                  </div>
-                  <div class="input-form">
-                    <label for="link" class="bold-small-text"
-                      >Meeting Link<span class="required">*</span></label
-                    >
-                    <input
-                      class="small-text"
-                      type="text"
-                      placeholder="www.example-link.com"
-                      id="link"
-                      name="link"
-                    />
-                  </div>
-                  <BaseDropZone @drop.prevent="drop" @change="selectedFile" />
-                  <div class="file-info bold-small-text">
-                    File: {{ dropzoneFile.name }}
-                  </div>
-                  <div class="button">
-                    <BaseButton
-                      buttonType="common-button"
-                      btnText="Create meeting"
-                      textColor="white"
-                      textHover="white"
-                      color="#7452FF"
-                      hoverColor="#23106D"
-                      width="fit-content"
-                    >
-                    </BaseButton>
-                  </div>
-                </form>
+                    <div class="input-form">
+                      <label for="link" class="bold-small-text"
+                        >Meeting Link<span class="required">*</span></label
+                      >
+                      <input
+                        class="small-text"
+                        type="text"
+                        placeholder="www.example-link.com"
+                        id="link"
+                        name="link"
+                      />
+                    </div>
+                    <div class="input-form">
+                    <BaseDropZone @drop.prevent="drop" @change="selectedFile" />
+                    </div>
+                    <div class="file-info bold-small-text" v-if="dropzoneFile">
+                      File: {{ dropzoneFile.name }} 
+                      <!-- <div @click="removeFile"><i class="fa-solid fa-xmark"></i></div> -->
+                    </div>
+                    <div class="button">
+                      <BaseButton
+                        buttonType="common-button"
+                        btnText="Create meeting"
+                        textColor="white"
+                        textHover="white"
+                        color="#7452FF"
+                        hoverColor="#23106D"
+                        width="fit-content"
+                      >
+                      </BaseButton>
+                    </div>
+                  </form>
                 </div>
               </div>
             </div>
@@ -195,6 +198,7 @@ import BaseButton from "@/components/UI/BaseButton.vue";
 import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
 import { ref } from "vue";
+import { formatDateTimeDetail } from "@/helpers/formatDateTime";
 export default {
   name: "ConfirmedView",
   components: { InboxComp, ResultComp, BaseDropZone, BaseButton, VueCal },
@@ -204,8 +208,13 @@ export default {
       dropzoneFile.value = e.dataTransfer.files[0];
     };
     const selectedFile = () => {
+      console.log("in");
       dropzoneFile.value = document.querySelector(".dropzoneFile").files[0];
+      console.log(dropzoneFile);
     };
+    // const removeFile = () => {
+    //   dropzoneFile.value = null;
+    // };
     return { dropzoneFile, drop, selectedFile };
   },
   data() {
@@ -344,6 +353,9 @@ export default {
     },
   },
   methods: {
+    formatDateTime(dateTime) {
+      return formatDateTimeDetail(dateTime);
+    },
     selectInbox(id) {
       this.selectedInbox = this.toBeConfirmedList.find((toBeConfirmed) => {
         this.selectedId = id;

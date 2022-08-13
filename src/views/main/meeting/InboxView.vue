@@ -37,7 +37,7 @@
       <div class="inbox-detail" v-if="selectedInbox != null">
         <div class="title remark-text">{{ selectedInbox.title }}</div>
         <div class="sent-from smallest-text">
-          sent at 10:00 AM 02/04/2022 by Katherine Perish
+          sent on {{ formatDateTime(selectedInbox.time) }} by <span>Katherine Perish</span> &lt;katherine@mail.kmutt.ac.th&gt;
         </div>
         <div class="line" />
         <div class="main-details">
@@ -121,7 +121,7 @@
 
 <script>
 import InboxComp from "@/components/meeting/InboxComp.vue";
-
+import { formatDateTimeDetail } from "@/helpers/formatDateTime";
 export default {
   name: "InboxView",
   components: { InboxComp },
@@ -143,6 +143,9 @@ export default {
     },
   },
   methods: {
+    formatDateTime(dateTime) {
+      return formatDateTimeDetail(dateTime);
+    },
     selectInbox(id) {
       this.selectedInbox = this.toBeConfirmedList.find((toBeConfirmed) => {
         this.selectedId = id;
@@ -448,6 +451,7 @@ export default {
     }
     .sent-from {
       color: $darkGrey;
+      span{text-decoration: underline;}
     }
     .button {
       display: flex;

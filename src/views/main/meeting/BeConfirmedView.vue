@@ -34,7 +34,7 @@
       <div class="inbox-detail" v-if="selectedInbox != null">
         <div class="title remark-text">{{ selectedInbox.title }}</div>
         <div class="sent-from smallest-text">
-          sent from Katherine Perish at 11:30 AM 04 Apr 2022
+          sent on {{ formatDateTime(selectedInbox.time) }} by <span>Katherine Perish</span> &lt;katherine@mail.kmutt.ac.th&gt;
         </div>
         <div class="response">
           <ResponseComp />
@@ -65,7 +65,7 @@
 import InboxComp from "@/components/meeting/InboxComp.vue";
 import ResponseComp from "@/components/meeting/ResponseComp.vue";
 import BaseButton from "@/components/UI/BaseButton.vue";
-
+import { formatDateTimeDetail } from "@/helpers/formatDateTime";
 export default {
   name: "BeConfirmedView",
   components: { InboxComp, ResponseComp, BaseButton },
@@ -87,6 +87,9 @@ export default {
     },
   },
   methods: {
+    formatDateTime(dateTime) {
+      return formatDateTimeDetail(dateTime);
+    },
     selectInbox(id) {
       this.selectedInbox = this.toBeConfirmedList.find((toBeConfirmed) => {
         this.selectedId = id;
@@ -251,6 +254,7 @@ export default {
     overflow: scroll;
     .sent-from {
       color: $darkGrey;
+      span{text-decoration: underline;}
     }
     .button {
       display: flex;
