@@ -3,7 +3,8 @@
     <div class="day bold-content-text">Wednesday, April 06, 2022</div>
     <div class="executive-response">
       <div class="executive-name bold-small-text">
-        Similan Klinsmith <span>(required)</span>
+        Similan Klinsmith <span class="desktop">(required)</span>
+        <span class="mobile">*</span>
       </div>
       <div class="buttons">
         <BaseButton
@@ -51,7 +52,7 @@
         textColor="#7452FF"
         textHover="#23106D"
         fontSize="1.4rem"
-        @onClick="handleAddTimeSlot('2022-04-06')"
+        @onClick="handleAddTimeSlot('2022-08-25')"
       >
         <template v-slot:before-icon>
           <i class="fa-solid fa-clock"></i>
@@ -64,7 +65,9 @@
         <div class="title bold-content-text">Timeslots</div>
         <div class="form">
           <div class="input-form">
-            <label for="date" class="bold-small-text">Date</label>
+            <label for="date" class="bold-small-text"
+              >Date <span class="gray-format">(mm/dd/yyyy)</span></label
+            >
             <input
               class="small-text"
               type="date"
@@ -77,7 +80,9 @@
           </div>
           <div class="input-form">
             <label for="from" class="bold-small-text"
-              >From<span class="required">* {{ errors.from }} </span></label
+              >From<span class="required"
+                >* {{ errors.from }} {{ errors.interval }}</span
+              ></label
             >
             <input
               class="small-text"
@@ -203,6 +208,9 @@ export default {
     toTimeIsValid() {
       return !!this.timeSlot.to;
     },
+    IntervalTimeIsValid() {
+      return this.timeSlot.from < this.timeSlot.to;
+    },
   },
   methods: {
     handleAddTimeSlot(date) {
@@ -239,7 +247,9 @@ export default {
     },
     addTimeSlot() {
       this.fromTimeIsValid
-        ? delete this.errors.from
+        ? (delete this.errors.from, this.IntervalTimeIsValid)
+          ? delete this.errors.interval
+          : (this.errors.interval = "NOT be greater than end time")
         : (this.errors.from = "Please choose");
       this.toTimeIsValid
         ? delete this.errors.to
@@ -250,6 +260,7 @@ export default {
           from: this.timeSlot.from,
           to: this.timeSlot.to,
         };
+        console.log(this.timeSlot.from > this.timeSlot.to);
         this.selectTimeSlots.push(selectedTime);
         // this.timeSlots.push(selectedTime);
         this.timeSlot.from = "";
@@ -353,6 +364,10 @@ export default {
       width: 100%;
       display: flex;
       flex-direction: column;
+      .gray-format {
+        color: $darkGrey;
+        font-weight: 400;
+      }
     }
     select,
     input {
@@ -390,7 +405,11 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  span {
+  span.desktop {
+    color: $primaryViolet;
+  }
+  span.mobile {
+    display: none;
     color: $primaryViolet;
   }
 }
@@ -416,6 +435,39 @@ export default {
     margin: 0.25rem 0;
     .bold-smallest-text {
       color: $darkViolet !important;
+    }
+  }
+}
+@media (max-width: 26.75em) {
+  .pop-up {
+    width: 90%;
+    .form {
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      row-gap: 1.6rem;
+    }
+  }
+  .executive-response {
+    .executive-name {
+      font-size: 2rem;
+    }
+    span.desktop {
+      display: none;
+    }
+    span.mobile {
+      display: inline;
+    }
+  }
+  .add-time-slot {
+    .bold-smallest-text {
+      font-size: 1.6rem;
+    }
+    .show-time-slot {
+      padding: 1.8rem 2.4rem;
+      margin: 0.75rem 0;
+      .bold-smallest-text {
+        font-size: 1.8rem;
+      }
     }
   }
 }

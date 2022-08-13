@@ -1,5 +1,5 @@
 <template>
-  <div class="inbox-comp">
+  <div class="inbox-comp" @click="handleClick">
     <div class="profile-image">
       <img
         src="@/assets/decorations/sample_profile.png"
@@ -29,6 +29,10 @@ export default {
     formatDateTime(dateTime) {
       return formatDateTimeInbox(dateTime);
     },
+    handleClick() {
+      this.$emit('handleClick', this.id);
+      // this.router.push({ name: 'meeting-detail', params: { type:'inbox', id: this.id } }) ;
+    }
   },
 };
 </script>

@@ -2,32 +2,59 @@
   <div class="meeting">
     <div class="mobile-meeting-card">
       <div class="first-section">
-        <div class="remark-text">{{title}}</div>
+        <div class="remark-text">{{ title }}</div>
         <div class="date-time">
           <div class="time">
-            <i class="icon fa-regular fa-clock"></i>{{startTime}} - {{endTime}}
+            <i class="icon fa-regular fa-clock"></i>{{ startTime }} -
+            {{ endTime }}
           </div>
           <div class="date">
-            <i class="icon fa-regular fa-calendar"></i>{{date}}
+            <i class="icon fa-regular fa-calendar"></i>{{ date }}
           </div>
         </div>
         <div class="attendees">
           <div
             class="attendee"
-            v-for="(attendee, index) in attendees.slice(0,4)"
+            v-for="(attendee, index) in attendees.slice(0, 4)"
             :key="index"
-          ></div>
-          <div class="attendee-more" v-if="attendees.length - 4 > 0"><div class="remark-text">+{{attendees.length - 4}}</div></div>
+          >
+            <div
+              class="profile-image"
+              v-if="attendee.image == 'default_profile.png'"
+            >
+              <img
+                src="@/assets/decorations/sample_profile.png"
+                alt="sample profile illustration"
+              />
+            </div>
+            <div class="real-profile-image" v-else>
+              <img
+                :src="urlImage + '/' + attendee.image"
+                alt="sample profile illustration"
+                @error="
+                  $event.target.src =
+                    'http://www.grand-cordel.com/wp-content/uploads/2015/08/import_placeholder.png'
+                "
+              />
+            </div>
+          </div>
+          <div class="attendee-more" v-if="attendees.length - 4 > 0">
+            <div class="remark-text">+{{ attendees.length - 4 }}</div>
+          </div>
         </div>
       </div>
       <div class="second-section">
         <div class="location common-text">
           <i class="icon fa-solid fa-location-dot"></i
-          ><span>{{location}}</span>
+          ><span>{{ location }}</span>
         </div>
         <div class="attachments">
-          <div class="file" v-if="file"><i class="icon fa-regular fa-file"></i></div>
-          <div class="link" v-if="link"><i class="icon fa-solid fa-link"></i></div>
+          <div class="file" v-if="file">
+            <i class="icon fa-regular fa-file"></i>
+          </div>
+          <div class="link" v-if="link">
+            <i class="icon fa-solid fa-link"></i>
+          </div>
         </div>
       </div>
     </div>
@@ -39,12 +66,13 @@
       <div class="time flex-col-center">
         <div class="common-text">start-end time</div>
         <div class="content-text">
-          <i class="icon fa-regular fa-clock"></i>{{startTime}} - {{endTime}}
+          <i class="icon fa-regular fa-clock"></i>{{ startTime }} -
+          {{ endTime }}
         </div>
       </div>
       <div class="line" />
       <div class="meeting-detail">
-        <div class="bold-content-text">{{title}}</div>
+        <div class="bold-content-text">{{ title }}</div>
         <div class="additional-detail">
           <div class="small-text" v-if="file">
             <i class="icon fa-regular fa-file"></i
@@ -58,15 +86,21 @@
             <i class="icon fa-regular fa-user"></i>
             <div class="attendee-img">
               <div
-                v-for="(attendee, index) in attendees.slice(0,4)"
+                v-for="(attendee, index) in attendees.slice(0, 4)"
                 :key="index"
                 class="attendee"
                 :style="'background-color:' + colorsList[index] + ';'"
               >
                 <div class="small-content" style="color: white">N</div>
               </div>
-              <div v-if="attendees.length - 4 > 0" class="attendee" :style="'background-color:' + colorsList[4] + ';'">
-                <div class="small-content" style="color: white">+{{attendees.length - 4}}</div>
+              <div
+                v-if="attendees.length - 4 > 0"
+                class="attendee"
+                :style="'background-color:' + colorsList[4] + ';'"
+              >
+                <div class="small-content" style="color: white">
+                  +{{ attendees.length - 4 }}
+                </div>
               </div>
             </div>
           </div>
@@ -84,35 +118,142 @@
 <script>
 export default {
   name: "AttendeeGroup",
-    props: [
-      "id",
-      "title",
-      "startTime",
-      "endTime",
-      "date",
-      "attendees",
-      "location",
-      "file",
-      "link"
+  props: [
+    "id",
+    "title",
+    "startTime",
+    "endTime",
+    "date",
+    "attendees",
+    "location",
+    "file",
+    "link",
   ],
   data() {
     return {
+      urlImage: this.$store.state.imageURL,
       colorsList: ["#23106D", "#7452FF", "#DBD2FF", "#F4F4F4", "#23106D"],
     };
   },
   methods: {
-    btnAction() {console.log('go to inbox with id');}
-  }
+    btnAction() {
+      console.log("go to inbox with id");
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 @import "@/assets/colors/webColors.scss";
-.meeting{display:flex;width:100%;padding:2.4rem 3.2rem;border-radius:2rem;background-color:$white;justify-content:space-between;align-items:center;margin-bottom:2rem;position:relative}
-.mobile-meeting-card {display: none;}
-.btnAction{cursor: pointer;color: $yellow;transition: 0.2s all ease-in-out;.icon {font-size: 1.8rem;margin-left: 1rem;transition: 0.2s all ease-in-out;}}
-.btnAction:hover{color: $primaryViolet;.icon{color: $primaryViolet;}}
-.meeting-card{display: flex;width: 80%;.display-day {width: fit-content;padding: 1.8rem;border-radius: 1.5rem;background-color: $primaryViolet;color: $white;row-gap: 0.4rem;margin-right: 1.5rem;}.time {margin-left: 1.5rem;row-gap: 1.6rem;align-items: start !important;.common-text {color: $darkViolet;}.content-text {color: $primaryViolet;.icon {font-size: 1.4rem;margin-right: 1rem;}}}.line{margin: 0 5rem;height: auto;width: 0.1rem;background-color: $grey;}.meeting-detail{display: flex;flex-direction: column;justify-content: center;.bold-content-text{margin-bottom: 2rem;}.additional-detail{display: flex;color: $darkViolet;align-items: center;column-gap: 5rem;.icon{margin-right: 1rem;color: $primaryViolet;}.attendees{display: flex;align-items: center;.icon{font-size: 1.4rem;margin-right: 1rem;color: $primaryViolet;}.attendee-img{display: flex;padding-top: 0.2rem;padding-bottom: 0.2rem;padding-left: 0.4rem;border-radius: 5rem;background-color: $fadedViolet;.attendee{width: 2.4rem;height: 2.4rem;border-radius: 50%;background-color: $primaryViolet;margin-right: -0.8rem;display: flex;justify-content: center;align-items: center;}}}}}}
+.meeting {
+  display: flex;
+  width: 100%;
+  padding: 2.4rem 3.2rem;
+  border-radius: 2rem;
+  background-color: $white;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  position: relative;
+}
+.mobile-meeting-card {
+  display: none;
+}
+.btnAction {
+  cursor: pointer;
+  color: $yellow;
+  transition: 0.2s all ease-in-out;
+  .icon {
+    font-size: 1.8rem;
+    margin-left: 1rem;
+    transition: 0.2s all ease-in-out;
+  }
+}
+.btnAction:hover {
+  color: $primaryViolet;
+  .icon {
+    color: $primaryViolet;
+  }
+}
+.meeting-card {
+  display: flex;
+  width: 80%;
+  .display-day {
+    width: fit-content;
+    padding: 1.8rem;
+    border-radius: 1.5rem;
+    background-color: $primaryViolet;
+    color: $white;
+    row-gap: 0.4rem;
+    margin-right: 1.5rem;
+  }
+  .time {
+    margin-left: 1.5rem;
+    row-gap: 1.6rem;
+    align-items: start !important;
+    .common-text {
+      color: $darkViolet;
+    }
+    .content-text {
+      color: $primaryViolet;
+      .icon {
+        font-size: 1.4rem;
+        margin-right: 1rem;
+      }
+    }
+  }
+  .line {
+    margin: 0 5rem;
+    height: auto;
+    width: 0.1rem;
+    background-color: $grey;
+  }
+  .meeting-detail {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    .bold-content-text {
+      margin-bottom: 2rem;
+    }
+    .additional-detail {
+      display: flex;
+      color: $darkViolet;
+      align-items: center;
+      column-gap: 5rem;
+      .icon {
+        margin-right: 1rem;
+        color: $primaryViolet;
+      }
+      .attendees {
+        display: flex;
+        align-items: center;
+        .icon {
+          font-size: 1.4rem;
+          margin-right: 1rem;
+          color: $primaryViolet;
+        }
+        .attendee-img {
+          display: flex;
+          padding-top: 0.2rem;
+          padding-bottom: 0.2rem;
+          padding-left: 0.4rem;
+          border-radius: 5rem;
+          background-color: $fadedViolet;
+          .attendee {
+            width: 2.4rem;
+            height: 2.4rem;
+            border-radius: 50%;
+            background-color: $primaryViolet;
+            margin-right: -0.8rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+        }
+      }
+    }
+  }
+}
 @media (max-width: 63.5em) {
   .meeting {
     padding: 1.4rem 2.2rem;
@@ -192,6 +333,17 @@ export default {
           height: 6.4rem;
           border-radius: 0.5rem;
           background-color: $fadedViolet;
+          .profile-image {
+            border-radius: 1rem;
+            width: 6.4rem;
+            height: 6.4rem;
+            background-color: $fadedViolet;
+            padding: 0.8rem;
+            img {
+              width: 100%;
+              height: 100%;
+            }
+          }
         }
         .attendee-more {
           width: 6.4rem;

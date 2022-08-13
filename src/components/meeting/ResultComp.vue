@@ -85,7 +85,7 @@
               v-for="(res, index) in response.declined.slice(0, 3)"
               :key="index"
               class="attendee"
-              :style="'background-color:' + colorsList[index - 1] + ';'"
+              :style="'background-color:' + colorsList[index] + ';'"
             >
               <div class="small-content" style="color: white">
                 {{ res.firstname.substring(0, 1) }}
@@ -130,7 +130,7 @@
               v-for="(res, index) in response.notResponse.slice(0, 3)"
               :key="index"
               class="attendee"
-              :style="'background-color:' + colorsList[index - 1] + ';'"
+              :style="'background-color:' + colorsList[index] + ';'"
             >
               <div class="small-content" style="color: white">
                 {{ res.firstname.substring(0, 1) }}
