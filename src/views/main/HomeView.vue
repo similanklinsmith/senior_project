@@ -177,8 +177,8 @@
           </div>
         </div>
         <div class="incoming-meetings">
-          <AttendeeGroup :id="1" :title="'Meeting/Conference name'" :startTime="'10:30'" :endTime="'12:30'" :date="'Mon 21 March, 2022'" :attendees="[1,2,3,4,5,6,7,8]" :location="'Microsoft Teams'" :link="true" :file="true"></AttendeeGroup>
-          <AttendeeGroup :id="2" :title="'Test Conference'" :startTime="'14:00'" :endTime="'15:00'" :date="'Mon 21 March, 2022'" :attendees="[1,2,3,4]" :location="'Zoom'" :link="true" :file="false"></AttendeeGroup>
+          <AttendeeGroup :id="1" :title="'Meeting/Conference name'" :startTime="'10:30'" :endTime="'12:30'" :date="'Mon 21 March, 2022'" :attendees="attendees" :location="'Microsoft Teams'" :link="true" :file="true" />
+          <AttendeeGroup :id="2" :title="'Test Conference'" :startTime="'14:00'" :endTime="'15:00'" :date="'Mon 21 March, 2022'" :attendees="attendees" :location="'Zoom'" :link="true" :file="false" />
         </div>
         <div class="mobile-see remark-text">
           <BaseButton
@@ -235,6 +235,57 @@ export default {
           end: "2022-05-22 15:00",
           title: "Doctor appointment",
           content: "Free Time 10:35 - 11:30",
+        },
+      ],
+      attendees: [
+        {
+          id: 1,
+          title: "Mr",
+          firstname: "Similan",
+          lastname: "Klinsmith",
+          image: "default_profile.png",
+        },
+        {
+          id: 2,
+          title: "Ms",
+          firstname: "Noparat",
+          lastname: "Prasongdee",
+          image: "default_profile.png",
+        },
+        {
+          id: 3,
+          title: "Ms",
+          firstname: "Praepanwa",
+          lastname: "Tedprasit",
+          image: "default_profile.png",
+        },
+        {
+          id: 4,
+          title: "Ms",
+          firstname: "Natcha",
+          lastname: "Phannoi",
+          image: "default_profile.png",
+        },
+        {
+          id: 5,
+          title: "Ms",
+          firstname: "Nattakorn",
+          lastname: "Lertsakornprasert",
+          image: "default_profile.png",
+        },
+        {
+          id: 6,
+          title: "Mr",
+          firstname: "Jiraphat",
+          lastname: "Poolprapha",
+          image: "default_profile.png",
+        },
+        {
+          id: 7,
+          title: "Ms",
+          firstname: "Sunanta",
+          lastname: "Sighka",
+          image: "default_profile.png",
         },
       ],
     };

@@ -451,7 +451,7 @@
       @onClickCloseSearch="isSearchMobile = false"
       @onClickSelectExecutive="selectExecutive"
     />
-    <div class="mobile-button-actions">
+    <div class="mobile-button-actions" v-if="getExecutivesList.length != 0">
       <div class="mobile-button" @click="handleAdd" v-if="!isAddExecutive">
         <i class="fa-solid fa-user-plus"></i>
       </div>
@@ -667,7 +667,7 @@ export default {
         e.target.value = "";
       }
     },
-    handleChangeExecutive() {
+    async handleChangeExecutive() {
       this.titleIsValid
         ? delete this.errors.title
         : (this.errors.title = "Please select title");
@@ -713,13 +713,20 @@ export default {
           email: this.form.email,
         };
         this.editId
-          ? (this.$store.dispatch("editExecutive", {
+          ? (await this.$store.dispatch("editExecutive", {
               editExecutive: newExecutive,
               id: this.editId,
               img_profile: this.form.imageProfile
                 ? this.form.imageProfile
                 : null,
             }),
+            // this.form.title = "",
+            // this.form.firstname = "",
+            // this.form.lastname = "",
+            // this.form.position = "",
+            // this.form.email = "",
+            // this.form.tel = "",
+            // this.form.imageProfile = "",
             (this.isLoading = true),
             /* eslint-disable */
             setTimeout(
@@ -734,8 +741,8 @@ export default {
               ),
               1000
             ),
-            (this.isAddExecutive = false))
-          : (this.$store.dispatch(
+            (this.cancelEdit))
+          : (await this.$store.dispatch(
               "addExecutive",
               {
                 newExecutive: newExecutive,
@@ -756,9 +763,9 @@ export default {
             ));
       }
     },
-    deleteExecutive(id) {
+    async deleteExecutive(id) {
       this.isShowDropdown = false;
-      this.$store.dispatch("deleteExecutive", id);
+      await this.$store.dispatch("deleteExecutive", id);
       this.isShowPopup = false;
       setTimeout(
         () =>

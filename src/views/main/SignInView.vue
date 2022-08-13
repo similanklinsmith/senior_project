@@ -88,6 +88,7 @@
           textHover="white"
           color="#7452FF"
           hoverColor="#23106D"
+          @onClick="signInWithGoogle"
         >
           <template v-slot:before-icon>
             <i class="fa-brands fa-google"></i>
@@ -121,6 +122,7 @@
 </template>
 
 <script>
+import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import BaseButton from "@/components/UI/BaseButton.vue";
 import BasePopup from "@/components/UI/BasePopup.vue";
 export default {
@@ -140,6 +142,19 @@ export default {
     };
   },
   methods: {
+    signInWithGoogle() {
+      const provider = new GoogleAuthProvider();
+      signInWithPopup(getAuth(), provider)
+      .then((result) => {
+        console.log(result.user);
+        this.$store.state.auth.user = result.user;
+        console.log(this.$store.state.auth.user);
+        // send user data to BE
+        this.$router.push('/');
+      }).catch((error) => {
+        console.log(error);
+      })
+    },
     handleSignIn() {
       this.emailIsValid
         ? delete this.errors.email
