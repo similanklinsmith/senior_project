@@ -50,11 +50,13 @@ import SplashView from "../src/views/splash/SplashView.vue";
 import SideNav from "../src/components/nav/SideNav.vue";
 import HeaderComp from "./components/header/HeaderComp.vue";
 import HeaderMobile from "./components/header/HeaderMobile.vue";
+import { getAuth, signOut } from 'firebase/auth';
 export default {
   components: { SideNav, HeaderComp, SplashView, HeaderMobile },
   data() {
     return {
       isToggled: false,
+      auth: null,
     };
   },
   computed: {
@@ -76,12 +78,16 @@ export default {
   methods: {
     handleSignOut() {
       this.isToggled = false;
+      signOut(this.auth).then(() => {
+        this.$router.push('/sign-in');
+      });
       this.$store.dispatch("auth/logout").then(() => {
         this.$router.replace("/sign-in");
       });
     },
   },
   mounted() {
+    this.auth = getAuth();
     // let htmlElement = document.documentElement;
     // htmlElement.setAttribute("theme", "light");
     if (window.location.pathname != "/sign-in") {
