@@ -131,7 +131,8 @@ export default createStore({
       } catch (error) {
         context.commit("GET_LOADING_STATUS", false);
         console.log(error.response.status);
-        if (error.response.status == 400 || error.response.status == 403) {
+        // if (error.response.status == 400 || error.response.status == 403) {
+        if (error.response.status == 403) {
           router.replace("/sign-in");
           this.dispatch("auth/logout");
         }
@@ -159,7 +160,8 @@ export default createStore({
           context.commit("ADD_EXECUTIVES", response.data.data);
         } catch (error) {
           console.log(error.response.status);
-          if (error.response.status == 403 || error.response.status == 400) {
+          // if (error.response.status == 403 || error.response.status == 400) {
+          if (error.response.status == 403) {
             context.commit("GET_FAILED", true);
             setTimeout(
               () => (
@@ -174,7 +176,8 @@ export default createStore({
         }
       } catch (error) {
         console.log(error.response.status);
-        if (error.response.status == 403 || error.response.status == 400) {
+        // if (error.response.status == 403 || error.response.status == 400) {
+        if (error.response.status == 403) {
           context.commit("GET_FAILED", true);
           setTimeout(
             () => (
@@ -217,14 +220,16 @@ export default createStore({
         } catch (error) {
           context.commit("GET_LOADING_STATUS", false);
           console.log(error.response.status);
-          if (error.response.status == 403 || error.response.status == 400) {
+          // if (error.response.status == 403 || error.response.status == 400) {
+          if (error.response.status == 403) {
             router.replace("/sign-in");
             this.dispatch("auth/logout");
           }
         }
       } catch (error) {
         console.log(error.response.status);
-        if (error.response.status == 403 || error.response.status == 400) {
+        // if (error.response.status == 403 || error.response.status == 400) {
+        if (error.response.status == 403) {
           context.commit("GET_FAILED", true);
           setTimeout(
             () => (
@@ -253,7 +258,8 @@ export default createStore({
         context.commit("DELETE_MY_EXECUTIVE", id);
       } catch (error) {
         console.log(error.response.status);
-        if (error.response.status == 403 || error.response.status == 400) {
+        // if (error.response.status == 403 || error.response.status == 400) {
+        if (error.response.status == 403) {
           context.commit("GET_FAILED", true);
           setTimeout(
             () => (
@@ -284,7 +290,8 @@ export default createStore({
       } catch (error) {
         context.commit("GET_LOADING_STATUS", false);
         console.log(error.response.status);
-        if (error.response.status == 400 || error.response.status == 403) {
+        // if (error.response.status == 400 || error.response.status == 403) {
+        if (error.response.status == 403) {
           this.dispatch("auth/logout");
           router.replace("/sign-in");
         }
@@ -301,7 +308,8 @@ export default createStore({
         setTimeout(() => context.commit("GET_SUCCESS", false), 3000);
       } catch (error) {
         console.log(error.response.status);
-        if (error.response.status == 403 || error.response.status == 400) {
+        // if (error.response.status == 403 || error.response.status == 400) {
+        if (error.response.status == 403) {
           context.commit("GET_FAILED", true);
           setTimeout(
             () => (
@@ -327,7 +335,8 @@ export default createStore({
         context.commit("DELETE_MY_POLL", id);
       } catch (error) {
         console.log(error.response);
-        if (error.response.status == 403 || error.response.status == 400) {
+        // if (error.response.status == 403 || error.response.status == 400) {
+        if (error.response.status == 403) {
           router.replace("/sign-in");
           this.dispatch("auth/logout");
         }
