@@ -41,7 +41,7 @@ jobs:
         uses: appleboy/ssh-action@v0.1.2
         with:
           host: ${{ secrets.SSH_HOST }}
-          password: ${{ secrets.PASSWORD }}
+          password: ${{ secrets.SSH_PASSWORD }}
           username: ${{ secrets.SSH_USERNAME }}
           script: |
             export CR_PAT=${{ secrets.GITHUB_TOKEN }}
