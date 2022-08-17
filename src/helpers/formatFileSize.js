@@ -1,0 +1,1 @@
+export function formatBytes(a,d){if(0==a)return"0 Bytes";var b=1024,e=d||2,f=["Bytes","KB","MB","GB","TB","PB","EB","ZB","YB"],c=Math.floor(Math.log(a)/Math.log(b));return parseFloat((a/Math.pow(b,c)).toFixed(e))+" "+f[c]}
