@@ -168,7 +168,6 @@ router.beforeEach(async (to, from, next) => {
     if (await getCurrentUser()) {
       next();
     } else {
-      alert("Please Sign in");
       next("/sign-in");
     }
   } else {
