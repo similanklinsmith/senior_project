@@ -160,12 +160,40 @@
                         name="link"
                       />
                     </div>
-                    <div class="input-form">
-                    <BaseDropZone @drop.prevent="drop" @change="selectedFile" />
+                    <div class="input-form" v-if="!dropzoneFile">
+                      <BaseDropZone
+                        @drop.prevent="drop"
+                        @change="selectedFile"
+                      />
                     </div>
-                    <div class="file-info bold-small-text" v-if="dropzoneFile">
-                      File: {{ dropzoneFile.name }} 
-                      <!-- <div @click="removeFile"><i class="fa-solid fa-xmark"></i></div> -->
+                    <div class="attachment-download" v-if="dropzoneFile">
+                      <div class="file-section">
+                        <div class="first-section">
+                          <div class="file-icon">
+                            <i class="icon fa-solid fa-file"></i>
+                          </div>
+                          <div class="file-details">
+                            <div class="file-name bold-small-text">
+                              {{
+                                dropzoneFile.name.length >= 10
+                                  ? dropzoneFile.name.substring(0, 10) +
+                                    ".." +
+                                    dropzoneFile.name.substring(
+                                      dropzoneFile.name.indexOf("."),
+                                      dropzoneFile.name.length
+                                    )
+                                  : dropzoneFile.name
+                              }}
+                            </div>
+                            <div class="file-size smallest-text">
+                              {{ formatFileSize(dropzoneFile.size) }}
+                            </div>
+                          </div>
+                        </div>
+                        <div class="file-delete" @click="removeFile">
+                          <i class="icon fa-solid fa-trash"></i>
+                        </div>
+                      </div>
                     </div>
                     <div class="button">
                       <BaseButton
@@ -199,6 +227,7 @@ import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
 import { ref } from "vue";
 import { formatDateTimeDetail } from "@/helpers/formatDateTime";
+import { formatBytes } from "@/helpers/formatFileSize";
 export default {
   name: "ConfirmedView",
   components: { InboxComp, ResultComp, BaseDropZone, BaseButton, VueCal },
@@ -208,14 +237,13 @@ export default {
       dropzoneFile.value = e.dataTransfer.files[0];
     };
     const selectedFile = () => {
-      console.log("in");
       dropzoneFile.value = document.querySelector(".dropzoneFile").files[0];
       console.log(dropzoneFile);
     };
-    // const removeFile = () => {
-    //   dropzoneFile.value = null;
-    // };
-    return { dropzoneFile, drop, selectedFile };
+    const removeFile = () => {
+      dropzoneFile.value = null;
+    };
+    return { dropzoneFile, drop, selectedFile, removeFile };
   },
   data() {
     return {
@@ -356,6 +384,9 @@ export default {
     formatDateTime(dateTime) {
       return formatDateTimeDetail(dateTime);
     },
+    formatFileSize(byte, decimal) {
+      return formatBytes(byte, decimal ? decimal : 2);
+    },
     selectInbox(id) {
       this.selectedInbox = this.toBeConfirmedList.find((toBeConfirmed) => {
         this.selectedId = id;
@@ -368,6 +399,7 @@ export default {
       this.getOverlaps(this.eventsArray);
     },
     onClickCloseSchedule() {
+      this.removeFile();
       this.isShowSchedule = false;
     },
     getDateObj(s) {
@@ -722,8 +754,56 @@ export default {
       width: 100%;
       overflow-y: scroll;
     }
-    .file-info {
-      margin: 1rem 0rem;
+    .attachment-download {
+      width: 25rem;
+      border-radius: 0.5rem;
+      padding: 1rem 1.4rem;
+      background-color: $primaryGrey;
+      display: flex;
+      row-gap: 1.5rem;
+      align-items: center;
+      .file-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        column-gap: 2rem;
+        width: 100%;
+        .first-section {
+          display: flex;
+          column-gap: 1rem;
+          align-items: center;
+          .file-icon {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 4rem;
+            height: 4rem;
+            border-radius: 0.5rem;
+            background-color: $white;
+            color: $primaryViolet;
+            font-size: 1.6rem;
+          }
+          .file-details {
+            display: flex;
+            flex-direction: column;
+            .file-name {
+              color: $darkViolet;
+            }
+            .file-size {
+              color: $darkGrey;
+            }
+          }
+        }
+        .file-delete {
+          cursor: pointer;
+          font-size: 1.6rem;
+          color: $darkGrey;
+          transition: all ease-in-out 0.2s;
+          &:hover {
+            color: $error;
+          }
+        }
+      }
     }
     .button {
       display: flex;
