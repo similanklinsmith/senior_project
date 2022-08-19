@@ -141,11 +141,11 @@ import {
   getAuth,
   GoogleAuthProvider,
   signInWithPopup,
-  signInWithEmailAndPassword,
   OAuthProvider,
 } from "firebase/auth";
 import BaseButton from "@/components/UI/BaseButton.vue";
 import BasePopup from "@/components/UI/BasePopup.vue";
+import jwtDecrypt from "@/helpers/jwtHelper";
 export default {
   components: { BaseButton, BasePopup },
   name: "SignInView",
@@ -178,6 +178,7 @@ export default {
         });
     },
     signInWithMicrosoft() {
+      // filter with own API
       const provider = new OAuthProvider("microsoft.com");
       const auth = getAuth();
       signInWithPopup(auth, provider)
@@ -189,6 +190,10 @@ export default {
           const credential = OAuthProvider.credentialFromResult(result);
           const accessToken = credential.accessToken;
           const idToken = credential.idToken;
+          console.log(accessToken);
+          console.log(idToken);
+          console.log(jwtDecrypt(idToken));
+          localStorage.setItem("user", idToken)
           this.$router.push("/");
         })
         .catch((error) => {
