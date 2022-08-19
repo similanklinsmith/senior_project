@@ -60,7 +60,7 @@ export default {
   },
   mounted() {
     window.onscroll = () => {this.isShowProfile = false;};
-    if (localStorage.getItem("user")) {this.user = `${jwtDecrypt(localStorage.getItem("user")).title_code}. ${jwtDecrypt(localStorage.getItem("user")).first_name} ${jwtDecrypt(localStorage.getItem("user")).last_name}`;}
+    if (localStorage.getItem("user")) {this.user = `${jwtDecrypt(localStorage.getItem("user")).name}`;}
   },
 };
 </script>

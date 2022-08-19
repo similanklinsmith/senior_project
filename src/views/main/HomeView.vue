@@ -357,9 +357,9 @@ export default {
   mounted() {
     this.selectedDate = new Date().toISOString().slice(0, 10);
     if (localStorage.getItem("user")) {
-      this.user = `${jwtDecrypt(localStorage.getItem("user")).title_code}. ${
-        jwtDecrypt(localStorage.getItem("user")).first_name
-      }`;
+      console.log(jwtDecrypt(localStorage.getItem("user")));
+      this.user = `${jwtDecrypt(localStorage.getItem("user")).name}
+      `;
     }
   },
 };
