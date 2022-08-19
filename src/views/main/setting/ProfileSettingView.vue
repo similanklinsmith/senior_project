@@ -95,6 +95,9 @@ export default {
 <style lang="scss" scoped>
 @import "@/assets/colors/webColors.scss";
 .left-side {
+  animation-name: appearsBottom;
+  animation-duration: 0.5s;
+  animation-iteration-count: 1;
   height: 100vh;
   grid-template-columns: 0.75fr 1.25fr;
   background-color: $white;

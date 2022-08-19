@@ -78,11 +78,12 @@ export default {
     handleMode(mode) {
       this.mode = mode;
       localStorage.setItem("mode", this.mode);
+      window.location.reload();
     },
   },
   mounted() {
     if (localStorage.getItem("mode")) {
-      this.mode = localStorage.getItem("mode")
+      this.mode = localStorage.getItem("mode");
     }
   },
 };
@@ -91,6 +92,9 @@ export default {
 <style lang="scss" scoped>
 @import "@/assets/colors/webColors.scss";
 .left-side {
+  animation-name: appearsBottom;
+  animation-duration: 0.5s;
+  animation-iteration-count: 1;
   height: 100vh;
   background-color: $white;
   padding: 4.8rem 3.6rem;

@@ -7,9 +7,9 @@
     </BaseHeader>
     <div class="body">
       <div class="container-section grid">
-        <ProfileSettingView v-if="selectedMenu == 1" />
-        <AppearanceSettingView v-if="selectedMenu == 2" />
-        <HelpSettingView v-if="selectedMenu == 3" />
+          <ProfileSettingView v-if="selectedMenu == 1" />
+          <AppearanceSettingView v-if="selectedMenu == 2" />
+          <HelpSettingView v-if="selectedMenu == 3" />
         <div class="right-side">
           <div class="content-text title">Personal Settings &amp; Helps</div>
           <div class="menus" v-for="(menu, index) in menus" :key="menu.id">
