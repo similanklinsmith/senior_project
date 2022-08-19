@@ -8,7 +8,9 @@
     <div class="body">
       <div class="mention">
         <div class="welcome">
-          <div class="say-hi">Hi, <span>{{ user }}</span></div>
+          <div class="say-hi">
+            Hi, <span>{{ user }}</span>
+          </div>
           <div class="num-mention">You have 2 meetings today</div>
         </div>
         <div class="profile-image"></div>
@@ -177,8 +179,28 @@
           </div>
         </div>
         <div class="incoming-meetings">
-          <AttendeeGroup :id="1" :title="'Meeting/Conference name'" :startTime="'10:30'" :endTime="'12:30'" :date="'Mon 21 March, 2022'" :attendees="attendees" :location="'Microsoft Teams'" :link="true" :file="true" />
-          <AttendeeGroup :id="2" :title="'Test Conference'" :startTime="'14:00'" :endTime="'15:00'" :date="'Mon 21 March, 2022'" :attendees="attendees" :location="'Zoom'" :link="true" :file="false" />
+          <AttendeeGroup
+            :id="1"
+            :title="'Meeting/Conference name'"
+            :startTime="'10:30'"
+            :endTime="'12:30'"
+            :date="'Mon 21 March, 2022'"
+            :attendees="attendees"
+            :location="'Microsoft Teams'"
+            :link="true"
+            :file="true"
+          />
+          <AttendeeGroup
+            :id="2"
+            :title="'Test Conference'"
+            :startTime="'14:00'"
+            :endTime="'15:00'"
+            :date="'Mon 21 March, 2022'"
+            :attendees="attendees"
+            :location="'Zoom'"
+            :link="true"
+            :file="false"
+          />
         </div>
         <div class="mobile-see remark-text">
           <BaseButton
@@ -385,7 +407,7 @@ export default {
       grid-template-columns: 0.65fr 1.25fr 1.15fr;
       column-gap: 3rem;
       .remark-text {
-        color: $darkViolet;
+        color: var(--outsideText);
       }
       .executives-card,
       .create-meeting-card,
@@ -415,6 +437,7 @@ export default {
             text-align: center;
             padding: 0 3.6rem 6.4rem 3.6rem;
             .remark-text {
+              color: $darkViolet;
               margin-bottom: 3rem;
             }
           }
@@ -442,6 +465,9 @@ export default {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            .remark-text {
+              color: $darkViolet;
+            }
             .no-executive {
               display: flex;
               flex-direction: column;
@@ -562,7 +588,7 @@ export default {
         display: flex;
         justify-content: space-between;
         .remark-text {
-          color: $darkViolet;
+          color: var(--outsideText);
         }
         .common-text {
           cursor: pointer;
