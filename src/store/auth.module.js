@@ -1,5 +1,6 @@
 import AuthService from "@/services/auth.service";
-const user = JSON.parse(localStorage.getItem("user"));
+import jwtDecrypt from "@/helpers/jwtHelper";
+const user = localStorage.getItem("user") ? jwtDecrypt(localStorage.getItem("user")) : null;
 const initialState = user
   ? { status: { loggedIn: true }, user }
   : { status: { loggedIn: false }, user: null };
