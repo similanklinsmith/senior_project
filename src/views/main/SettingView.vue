@@ -60,6 +60,7 @@ export default {
   name: "SettingView",
   data() {
     return {
+      user: null,
       selectedMenu: 1,
       menus: [
         {
