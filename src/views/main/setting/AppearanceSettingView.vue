@@ -82,9 +82,7 @@ export default {
     },
   },
   mounted() {
-    if (localStorage.getItem("mode")) {
-      this.mode = localStorage.getItem("mode");
-    }
+    localStorage.getItem("mode") ? this.mode = localStorage.getItem("mode") : this.mode = "light";
   },
 };
 </script>

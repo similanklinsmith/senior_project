@@ -1,7 +1,13 @@
 <template>
   <div class="left-side grid">
     <div class="first-col-left">
-      <div class="real-profile-image">
+      <div class="profile-image" v-if="!profileImage">
+        <img
+          src="@/assets/decorations/sample_profile.png"
+          alt="sample profile illustration"
+        />
+      </div>
+      <div class="real-profile-image" v-else>
         <img
           src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZmlsZXxlbnwwfHwwfHw%3D&w=1000&q=80"
           alt="profile of user"
@@ -11,7 +17,9 @@
           "
         />
       </div>
-      <div class="remark-text">Ms. Elizabeth Deluxe</div>
+      <div class="remark-text">
+        <span>{{ title }}</span> {{ name }}
+      </div>
     </div>
     <div class="last-col-left">
       <div class="content-text title">Official Information</div>
@@ -22,7 +30,7 @@
             <i class="icon fa-regular fa-copy"></i>
           </div>
         </div>
-        <div class="content-text" id="name-value">NAME SURNAME</div>
+        <div class="content-text" id="name-value">{{ name }}</div>
       </div>
       <div class="email">
         <div class="label bold-content-text">
@@ -32,7 +40,7 @@
           </div>
         </div>
         <div class="content-text" id="email-value">
-          name.lastname@mail.kmutt.ac.th
+          {{ email }}
         </div>
       </div>
       <div class="phone">
@@ -42,7 +50,10 @@
             <i class="icon fa-regular fa-copy"></i>
           </div>
         </div>
-        <div class="content-text" id="phone-value">081-551-9283</div>
+        <div class="content-text" id="phone-value">
+          <span v-if="phone">{{ phone }}</span
+          ><span v-else>-</span>
+        </div>
       </div>
       <div class="group-button">
         <BaseButton
@@ -77,17 +88,33 @@
 </template>
 
 <script>
+import jwtDecrypt from "@/helpers/jwtHelper";
 import BaseButton from "@/components/UI/BaseButton.vue";
 export default {
   name: "ProfileSettingView",
   components: {
     BaseButton,
   },
+  data() {
+    return {
+      name: "",
+      email: "",
+      title: "",
+      phone: "",
+      profileImage: "",
+    };
+  },
   methods: {
     copyLink(value) {
       let copyText = document.getElementById(value).innerHTML;
       navigator.clipboard.writeText(copyText);
     },
+  },
+  mounted() {
+    if (localStorage.getItem("user")) {
+      this.name = `${jwtDecrypt(localStorage.getItem("user")).name}`;
+      this.email = `${jwtDecrypt(localStorage.getItem("user")).email}`;
+    }
   },
 };
 </script>
@@ -108,6 +135,19 @@ export default {
     flex-direction: column;
     align-items: center;
     row-gap: 2rem;
+    .profile-image {
+      border-radius: 2rem;
+      width: 16rem;
+      height: 16rem;
+      background-color: $fadedViolet;
+      text-align: center;
+      padding: 2.4rem;
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
     .real-profile-image {
       border-radius: 2rem;
       width: 16rem;
@@ -131,6 +171,9 @@ export default {
       width: 100%;
       column-gap: 1.8rem;
     }
+    .title { 
+      color: $darkGrey
+    };
     .email,
     .phone,
     .secretary {

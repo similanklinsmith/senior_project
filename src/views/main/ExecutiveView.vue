@@ -797,9 +797,7 @@ export default {
   mounted() {
     if (localStorage.getItem("user")) {
       this.secretary = `${
-        jwtDecrypt(localStorage.getItem("user")).title_code
-      }. ${jwtDecrypt(localStorage.getItem("user")).first_name} ${
-        jwtDecrypt(localStorage.getItem("user")).last_name
+        jwtDecrypt(localStorage.getItem("user")).name
       } (${jwtDecrypt(localStorage.getItem("user")).email})`;
     }
     window.onscroll = () => {
