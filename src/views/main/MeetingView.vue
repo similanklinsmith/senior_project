@@ -520,7 +520,7 @@ export default {
       height: 100%;
       display: flex;
       flex-direction: column;
-      background-color: $white;
+      background-color: var(--bgHeaderComp);
       padding: 3rem 2rem;
       row-gap: 1.6rem;
     }

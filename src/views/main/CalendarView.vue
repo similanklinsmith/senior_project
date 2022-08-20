@@ -31,7 +31,7 @@
             </vue-cal>
           </div>
           <div class="filter-executive">
-            <div class="remark-text">Executive label</div>
+            <div class="remark-text label">Executive label</div>
             <div class="search-filter">
               <div class="input-icon">
                 <i class="icon fa-solid fa-magnifying-glass"></i>
@@ -194,6 +194,7 @@ export default {
           row-gap: 1rem;
           position: relative;
           margin-top: 3rem;
+          .label {color:var(--outsideText)}
           .search-filter {
             position: relative;
             width: 100%;
@@ -262,7 +263,7 @@ export default {
               display: flex;
               align-items: center;
               justify-content: center;
-              height: 80%;
+              height: 100%;
               text-align: center;
               color: $darkGrey;
             }
