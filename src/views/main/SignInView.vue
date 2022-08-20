@@ -81,7 +81,7 @@
           </BaseButton>
         </form>
         <div class="or thin-content-text">or continue with</div>
-        <BaseButton
+        <!-- <BaseButton
           buttonType="outlined-button"
           btnText="Sign in with Google"
           textColor="#7452FF"
@@ -93,7 +93,7 @@
           <template v-slot:before-icon>
             <i class="fa-brands fa-google"></i>
           </template>
-        </BaseButton>
+        </BaseButton> -->
         <BaseButton
           buttonType="outlined-button"
           btnText="Sign in with Microsoft"
@@ -190,21 +190,24 @@ export default {
           const credential = OAuthProvider.credentialFromResult(result);
           const accessToken = credential.accessToken;
           const idToken = credential.idToken;
-          console.log("------ACCESS TOKEN------");
-          console.log(accessToken);
-          console.log("------ID TOKEN------");
-          console.log(idToken);
-          console.log(jwtDecrypt(idToken));
-          localStorage.setItem("user", idToken)
+          // console.log("------ACCESS TOKEN------");
+          // console.log(accessToken);
+          // console.log("------ID TOKEN------");
+          // console.log(idToken);
+          // console.log(jwtDecrypt(idToken));
+          // localStorage.setItem("user", idToken)
           console.log("------GET ID TOKEN--------");
           getAuth().currentUser.getIdToken().then((result) => {
-            console.log(result);
+            console.log(jwtDecrypt(result));
+            localStorage.setItem("user", result)
           })
           this.$router.push("/");
         })
         .catch((error) => {
           // Handle error.
           console.log(error);
+            this.isShowPopup = true;
+            this.statusCode = error;
         });
     },
     handleSignIn() {
