@@ -190,15 +190,15 @@ export default {
           const credential = OAuthProvider.credentialFromResult(result);
           const accessToken = credential.accessToken;
           const idToken = credential.idToken;
-          // console.log("------ACCESS TOKEN------");
-          // console.log(accessToken);
-          // console.log("------ID TOKEN------");
-          // console.log(idToken);
+          console.log("------ACCESS TOKEN------");
+          console.log(accessToken);
+          console.log("------ID TOKEN------");
+          console.log(idToken);
           // console.log(jwtDecrypt(idToken));
           // localStorage.setItem("user", idToken)
           console.log("------GET ID TOKEN--------");
           getAuth().currentUser.getIdToken().then((result) => {
-            console.log(jwtDecrypt(result));
+            console.log(result);
             localStorage.setItem("user", result)
           })
           this.$router.push("/");
