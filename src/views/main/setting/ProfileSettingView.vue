@@ -21,7 +21,7 @@
         <span>{{ title }}</span> {{ name }}
       </div>
     </div>
-    <div class="last-col-left">
+    <div class="last-col-left" v-if="!isEdit">
       <div class="content-text title">Official Information</div>
       <div class="email">
         <div class="label bold-content-text">
@@ -66,7 +66,7 @@
           width="100%"
         >
           <template v-slot:before-icon>
-            <i class="fa-brands fa-google"></i>
+            <i class="fa-brands fa-microsoft"></i>
           </template>
         </BaseButton>
         <BaseButton
@@ -77,10 +77,79 @@
           color="#7452FF"
           hoverColor="#23106D"
           width="100%"
+          @onClick="editProfile"
         >
           <template v-slot:before-icon>
             <i class="icon fa-solid fa-pencil"></i>
           </template>
+        </BaseButton>
+      </div>
+    </div>
+    <div class="last-col-left" v-else>
+      <div class="input-form">
+        <label for="title" class="bold-small-text">Title</label>
+        <select name="title" id="title">
+          <option value="">none</option>
+          <option value="Mr">Mr</option>
+          <option value="Mrs">Mrs</option>
+          <option value="Ms">Ms</option>
+        </select>
+      </div>
+      <div class="input-form">
+        <label for="name" class="bold-small-text">Display name</label>
+        <input
+          class="small-text readonly"
+          type="text"
+          placeholder="Name"
+          id="name"
+          name="name"
+          :value="name"
+          readonly
+        />
+      </div>
+      <div class="input-form">
+        <label for="email" class="bold-small-text">Email</label>
+        <input
+          class="small-text readonly"
+          type="text"
+          placeholder="Email"
+          id="email"
+          name="email"
+          :value="email"
+          readonly
+        />
+      </div>
+      <div class="input-form">
+        <label for="phone" class="bold-small-text">Phone number</label>
+        <input
+          class="small-text"
+          type="tel"
+          placeholder="e.g. 0810000000"
+          id="phone"
+          name="phone"
+        />
+      </div>
+      <div class="group-button" style="width: 80%">
+        <BaseButton
+          buttonType="outlined-button"
+          btnText="Cancel"
+          textColor="#F33C3C"
+          textHover="white"
+          color="#F33C3C"
+          hoverColor="#d93333"
+          width="100%"
+          @onClick="cancelEditProfile"
+        >
+        </BaseButton>
+        <BaseButton
+          buttonType="common-button"
+          btnText="Confirm Edit"
+          textColor="white"
+          textHover="white"
+          color="#7452FF"
+          hoverColor="#23106D"
+          width="100%"
+        >
         </BaseButton>
       </div>
     </div>
@@ -102,12 +171,20 @@ export default {
       title: "",
       phone: "",
       profileImage: "",
+      isEdit: false,
     };
   },
   methods: {
     copyLink(value) {
       let copyText = document.getElementById(value).innerHTML;
       navigator.clipboard.writeText(copyText);
+    },
+    editProfile() {
+      this.isEdit = true;
+      console.log(this.isEdit);
+    },
+    cancelEditProfile() {
+      this.isEdit = false;
     },
   },
   mounted() {
@@ -166,14 +243,17 @@ export default {
     flex-direction: column;
     justify-content: flex-start;
     row-gap: 3rem;
+    animation-name: appearsBottom;
+    animation-duration: 0.5s;
+    animation-iteration-count: 1;
     .group-button {
       display: flex;
       width: 100%;
       column-gap: 1.8rem;
     }
-    .title { 
-      color: $darkGrey
-    };
+    .title {
+      color: $darkGrey;
+    }
     .email,
     .phone,
     .secretary {
@@ -196,6 +276,42 @@ export default {
       }
       .content-text {
         color: $primaryViolet;
+      }
+    }
+    .input-form {
+      width: 80%;
+      display: flex;
+      flex-direction: column;
+      input[type="text"].readonly {
+        background-color: $grey;
+      }
+      select,
+      input[type="text"],
+      input[type="tel"] {
+        margin-top: 1rem;
+        padding: 1rem 1.4rem;
+        width: 100%;
+        height: 4rem;
+        border-radius: 0.5rem;
+        border: none;
+        background-color: $primaryGrey;
+        font-family: "Poppins", sans-serif;
+      }
+      input[type="text"]:focus,
+      input[type="tel"]:focus {
+        outline: none;
+        border: 0.1rem solid $primaryViolet;
+      }
+      input::placeholder {
+        font-size: 1.4rem;
+        color: $darkGrey;
+      }
+      select {
+        font-size: 1.4rem;
+      }
+      select:focus {
+        outline: none;
+        border: 0.1rem solid $primaryViolet;
       }
     }
   }
