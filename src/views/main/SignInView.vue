@@ -192,6 +192,7 @@ export default {
           const idToken = credential.idToken;
           console.log("------ACCESS TOKEN------");
           console.log(accessToken);
+          localStorage.setItem('accessToken', accessToken);
           console.log("------ID TOKEN------");
           console.log(idToken);
           // console.log(jwtDecrypt(idToken));
