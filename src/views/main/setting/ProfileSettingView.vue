@@ -9,7 +9,7 @@
       </div>
       <div class="real-profile-image" v-else>
         <img
-          src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZmlsZXxlbnwwfHwwfHw%3D&w=1000&q=80"
+          :src="profileImage"
           alt="profile of user"
           @error="
             $event.target.src =
@@ -157,6 +157,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import jwtDecrypt from "@/helpers/jwtHelper";
 import BaseButton from "@/components/UI/BaseButton.vue";
 export default {
@@ -170,7 +171,7 @@ export default {
       email: "",
       title: "",
       phone: "",
-      profileImage: "",
+      profileImage: null,
       isEdit: false,
     };
   },
@@ -186,6 +187,31 @@ export default {
     cancelEditProfile() {
       this.isEdit = false;
     },
+    async getProfileImage() {
+      var accessToken = localStorage.getItem("accessToken");
+      await axios
+        .get("https://graph.microsoft.com/v1.0/me/photo/$value", {
+          headers: {
+            "content-type": "image/jpeg",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          responseType: "blob",
+        })
+        .then((result) => {
+          let blob = new Blob([result.data], { type: "image/jpeg" });
+          var reader = new FileReader();
+          reader.readAsDataURL(blob);
+          reader.onload = () => {
+            var base64String = reader.result;
+            this.profileImage = base64String
+              .toString()
+              .substr(base64String.toString().indexOf(", ") + 1);
+          };
+        });
+    },
+  },
+  created() {
+    this.getProfileImage();
   },
   mounted() {
     if (localStorage.getItem("user")) {
