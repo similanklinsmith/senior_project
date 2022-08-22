@@ -81,9 +81,10 @@ export default {
       signOut(this.auth).then(() => {
         this.$router.push("/sign-in");
       });
-      this.$store.dispatch("auth/logout").then(() => {
-        this.$router.replace("/sign-in");
-      });
+      this.$store.dispatch("auth/logout");
+      // this.$store.dispatch("auth/logout").then(() => {
+      //   this.$router.replace("/sign-in");
+      // });
     },
   },
   mounted() {

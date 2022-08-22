@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-// import { getAuth } from "firebase/auth";
 const routes = [
   {
     path: "/sign-in",
@@ -19,9 +18,6 @@ const routes = [
     path: "/",
     name: "home",
     component: () => import("@/views/main/HomeView.vue"),
-    // meta: {
-    //   authRequired: true,
-    // },
     meta: {
       requiresAuth: true,
     },
@@ -41,14 +37,6 @@ const routes = [
     meta: {
       requiresAuth: true,
     },
-    // beforeEnter: (to, from, next) => {
-    //   const loggedIn = localStorage.getItem("user");
-    //   if (loggedIn) {
-    //     next();
-    //   } else {
-    //     next("/sign-in");
-    //   }
-    // },
   },
   {
     path: "/executives-management",
@@ -58,14 +46,6 @@ const routes = [
     meta: {
       requiresAuth: true,
     },
-    // beforeEnter: (to, from, next) => {
-    //   const loggedIn = localStorage.getItem("user");
-    //   if (loggedIn) {
-    //     next();
-    //   } else {
-    //     next("/sign-in");
-    //   }
-    // },
   },
   {
     path: "/meetings-inbox/:type/:id",
@@ -74,14 +54,6 @@ const routes = [
     meta: {
       requiresAuth: true,
     },
-    // beforeEnter: (to, from, next) => {
-    //   const loggedIn = localStorage.getItem("user");
-    //   if (loggedIn) {
-    //     next();
-    //   } else {
-    //     next("/sign-in");
-    //   }
-    // },
   },
   {
     path: "/meetings-sent/:type/:id",
@@ -89,32 +61,16 @@ const routes = [
     component: () => import("@/views/main/meeting/mobile/SentViewDetail.vue"),
     meta: {
       requiresAuth: true,
-    },
-    // beforeEnter: (to, from, next) => {
-    //   const loggedIn = localStorage.getItem("user");
-    //   if (loggedIn) {
-    //     next();
-    //   } else {
-    //     next("/sign-in");
-    //   }
-    // },
+    }
   },
   {
     path: "/meetings-be-confirmed/:type/:id",
     name: "be-confirmed-detail",
     component: () =>
       import("@/views/main/meeting/mobile/BeConfirmedViewDetail.vue"),
-      meta: {
-        requiresAuth: true,
-      },
-    // beforeEnter: (to, from, next) => {
-    //   const loggedIn = localStorage.getItem("user");
-    //   if (loggedIn) {
-    //     next();
-    //   } else {
-    //     next("/sign-in");
-    //   }
-    // },
+    meta: {
+      requiresAuth: true,
+    }
   },
   {
     path: "/meetings-management",
@@ -123,20 +79,15 @@ const routes = [
     component: () => import("@/views/main/MeetingView.vue"),
     meta: {
       requiresAuth: true,
-    },
-    // beforeEnter: (to, from, next) => {
-    //   const loggedIn = localStorage.getItem("user");
-    //   if (loggedIn) {
-    //     next();
-    //   } else {
-    //     next("/sign-in");
-    //   }
-    // },
+    }
   },
   {
     path: "/setting",
     name: "setting",
     component: () => import("@/views/main/SettingView.vue"),
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: "/:catchall(.*)",
@@ -174,34 +125,4 @@ router.beforeEach(async (to, from, next) => {
     next();
   }
 });
-// router.beforeEach((to, from, next) => {
-//   if (to.path === '/sign-in' && getAuth().currentUser) {
-//     next('/')
-//     alert(getAuth().currentUser);
-//     return;
-//   }
-
-//   if (to.matched.some(record => record.meta.requiresAuth) && !getAuth().currentUser) {
-//     alert(getAuth().currentUser);
-//     next('/sign-in')
-//     return;
-//   }
-//   alert(getAuth().currentUser && getAuth().currentUser.displayName);
-//   alert("out");
-//   next();
-// // })
-// router.beforeEach((to, from, next) => {
-//   if (to.matched.some(record => record.meta.authRequired)) {
-//     if (getAuth().currentUser) {
-//       next();
-//     } else {
-//       alert('You must be logged in to see this page');
-//       next({
-//         path: '/sign-in',
-//       });
-//     }
-//   } else {
-//     next();
-//   }
-// });
 export default router;
