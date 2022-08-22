@@ -64,6 +64,7 @@
           color="#7452FF"
           hoverColor="#23106D"
           width="100%"
+          @onClick="goToMicrosoftAccount"
         >
           <template v-slot:before-icon>
             <i class="fa-brands fa-microsoft"></i>
@@ -153,6 +154,29 @@
         </BaseButton>
       </div>
     </div>
+    <BasePopup
+      v-if="isShowPopup"
+      @closeModal="isShowPopup = false"
+      :image="require(`@/assets/decorations/delete_executive.png`)"
+    >
+      <template v-slot:popupContent>
+        We apologize for the inconvenience due to disruption. Please try again.
+        [Error: {{ statusCode }}]
+      </template>
+      <template v-slot:buttons>
+        <BaseButton
+          buttonType="common-button"
+          btnText="Close"
+          textColor="white"
+          textHover="white"
+          color="#F33C3C"
+          hoverColor="#d93333"
+          width="100%"
+          @onClick="isShowPopup = false"
+        >
+        </BaseButton>
+      </template>
+    </BasePopup>
   </div>
 </template>
 
@@ -160,10 +184,13 @@
 import axios from "axios";
 import jwtDecrypt from "@/helpers/jwtHelper";
 import BaseButton from "@/components/UI/BaseButton.vue";
+import BasePopup from "@/components/UI/BasePopup.vue";
+import { getAuth, signOut } from "firebase/auth";
 export default {
   name: "ProfileSettingView",
   components: {
     BaseButton,
+    BasePopup,
   },
   data() {
     return {
@@ -173,12 +200,18 @@ export default {
       phone: "",
       profileImage: null,
       isEdit: false,
+      isShowPopup: false,
+      auth: null,
+      statusCode: null,
     };
   },
   methods: {
     copyLink(value) {
       let copyText = document.getElementById(value).innerHTML;
       navigator.clipboard.writeText(copyText);
+    },
+    goToMicrosoftAccount() {
+      window.open('https://myaccount.microsoft.com/', '_blank');
     },
     editProfile() {
       this.isEdit = true;
@@ -189,31 +222,41 @@ export default {
     },
     async getProfileImage() {
       var accessToken = localStorage.getItem("accessToken");
-      await axios
-        .get("https://graph.microsoft.com/v1.0/me/photo/$value", {
-          headers: {
-            "content-type": "image/jpeg",
-            Authorization: `Bearer ${accessToken}`,
-          },
-          responseType: "blob",
-        })
-        .then((result) => {
-          let blob = new Blob([result.data], { type: "image/jpeg" });
-          var reader = new FileReader();
-          reader.readAsDataURL(blob);
-          reader.onload = () => {
-            var base64String = reader.result;
-            this.profileImage = base64String
-              .toString()
-              .substr(base64String.toString().indexOf(", ") + 1);
-          };
+      try {
+        await axios
+          .get("https://graph.microsoft.com/v1.0/me/photo/$value", {
+            headers: {
+              "content-type": "image/jpeg",
+              Authorization: `Bearer ${accessToken}`,
+            },
+            responseType: "blob",
+          })
+          .then((result) => {
+            let blob = new Blob([result.data], { type: "image/jpeg" });
+            var reader = new FileReader();
+            reader.readAsDataURL(blob);
+            reader.onload = () => {
+              var base64String = reader.result;
+              this.profileImage = base64String
+                .toString()
+                .substr(base64String.toString().indexOf(", ") + 1);
+            };
+          });
+      } catch (error) {
+        this.statusCode = error.response.status;
+        this.isToggled = false;
+        signOut(this.auth).then(() => {
+          this.$router.push("/sign-in");
         });
+        this.$store.dispatch("auth/logout");
+      }
     },
   },
   created() {
     this.getProfileImage();
   },
   mounted() {
+    this.auth = getAuth();
     if (localStorage.getItem("user")) {
       this.name = `${jwtDecrypt(localStorage.getItem("user")).name}`;
       this.email = `${jwtDecrypt(localStorage.getItem("user")).email}`;
