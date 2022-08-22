@@ -353,7 +353,7 @@
                     >Report to</label
                   >
                   <input
-                    class="small-text"
+                    class="small-text readonly"
                     type="text"
                     placeholder="report to"
                     id="secretary"
@@ -737,11 +737,11 @@ export default {
                   }
                 )),
                 (this.selectedId = this.editId),
-                (this.isLoading = false)
+                (this.isLoading = false),
+                (this.cancelEdit())
               ),
               1000
-            ),
-            (this.cancelEdit))
+            ))
           : (await this.$store.dispatch(
               "addExecutive",
               {
@@ -1220,6 +1220,7 @@ export default {
             display: flex;
             gap: 5rem;
             .input-form {
+              .readonly { background-color: $grey !important }
               width: 100%;
               display: flex;
               flex-direction: column;
