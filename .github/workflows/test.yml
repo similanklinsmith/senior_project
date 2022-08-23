@@ -25,6 +25,13 @@ jobs:
         run: |
           touch .env
           echo VUE_APP_API_PATH=${{ secrets.BACKEND_URL }} >> .env
+          echo VUE_APP_FIREBASE_API_KEY=${{ secrets.FIREBASE_API }} >> .env
+          echo VUE_APP_FIREBASE_AUTH_DOMAIN=${{ secrets.FIREBASE_AUTH }} >> .env
+          echo VUE_APP_FIREBASE_PROJECT_ID=${{ secrets.FIREBASE_PROJECT }} >> .env
+          echo VUE_APP_FIREBASE_STORAGE_BUCKET=${{ secrets.FIREBASE_STORAGE }} >> .env
+          echo VUE_APP_FIREBASE_MESSAGING_SENDER_ID=${{ secrets.FIREBASE_MESSAGING }} >> .env
+          echo VUE_APP_FIREBASE_APP_ID=${{ secrets.FIREBASE_APP }} >> .env
+          echo VUE_APP_FIREBASE_MEASUREMENT_ID=${{ secrets.FIREBASE_MEASUREMENT }} >> .env
           ls -a
 
       - name: Build Docker image
@@ -47,10 +54,9 @@ jobs:
             export CR_PAT=${{ secrets.GITHUB_TOKEN }}
             echo $CR_PAT | docker login ghcr.io -u mai126 --password-stdin
             docker ps
-            docker rm -f frontend
             docker pull ghcr.io/momento-appointment-scheduling-system/front-end
+            docker rm -f frontend
             docker images
             docker-compose up -d
             docker image prune -f
             docker ps -a
-            docker run -d --name frontend --network momentonetwork ghcr.io/momento-appointment-scheduling-system/front-end
