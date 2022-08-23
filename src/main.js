@@ -3,13 +3,13 @@ import App from "./App.vue";
 import router from "./router";
 import { initializeApp } from 'firebase/app'
 const firebaseConfig = {
-  apiKey: "AIzaSyCo-1tRO760FU8sT75cCmPT4Ev5K0Dv6jo",
-  authDomain: "momento-login.firebaseapp.com",
-  projectId: "momento-login",
-  storageBucket: "momento-login.appspot.com",
-  messagingSenderId: "1074886318514",
-  appId: "1:1074886318514:web:460d96c875c0e47bbbacab",
-  measurementId: "G-799B0JZLSE"
+  apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
+  authDomain: process.env.VUE_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.VUE_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.VUE_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.VUE_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.VUE_APP_FIREBASE_APP_ID,
+  measurementId: process.env.VUE_APP_FIREBASE_MEASUREMENT_ID
 };
 initializeApp(firebaseConfig);
 import store from "./store";
