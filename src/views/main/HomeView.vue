@@ -13,7 +13,16 @@
           </div>
           <div class="num-mention">You have 2 meetings today</div>
         </div>
-        <div class="profile-image"></div>
+        <div class="profile-image">
+          <img
+            :src="profileImage"
+            alt="profile of user"
+            @error="
+              $event.target.src =
+                'http://www.grand-cordel.com/wp-content/uploads/2015/08/import_placeholder.png'
+            "
+          />
+        </div>
       </div>
       <div class="first-body-section grid">
         <transition name="slide" appear>
@@ -231,11 +240,13 @@ import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
 import jwtDecrypt from "@/helpers/jwtHelper";
 import { mapGetters, mapActions } from "vuex";
+import axios from "axios";
 export default {
   components: { BaseButton, BaseHeader, AttendeeGroup, VueCal },
   name: "HomeView",
   data() {
     return {
+      profileImage: null,
       user: "",
       urlImage: this.$store.state.imageURL,
       selectedDate: "",
@@ -329,6 +340,32 @@ export default {
       "getExecutiveTitle",
       "getExecutivePosition",
     ]),
+    async getProfileImage() {
+      var accessToken = localStorage.getItem("accessToken");
+      try {
+        await axios
+          .get("https://graph.microsoft.com/v1.0/me/photo/$value", {
+            headers: {
+              "content-type": "image/jpeg",
+              Authorization: `Bearer ${accessToken}`,
+            },
+            responseType: "blob",
+          })
+          .then((result) => {
+            let blob = new Blob([result.data], { type: "image/jpeg" });
+            var reader = new FileReader();
+            reader.readAsDataURL(blob);
+            reader.onload = () => {
+              var base64String = reader.result;
+              this.profileImage = base64String
+                .toString()
+                .substr(base64String.toString().indexOf(", ") + 1);
+            };
+          });
+      } catch (error) {
+        console.log(error);
+      }
+    },
     navToCreateMeeting() {
       localStorage.setItem("index", 1);
       this.$router.push({ path: "/meetings-management" });
@@ -353,6 +390,7 @@ export default {
     this.getMyExecutives();
     this.getExecutiveTitle();
     this.getExecutivePosition();
+    this.getProfileImage();
   },
   mounted() {
     this.selectedDate = new Date().toISOString().slice(0, 10);
@@ -387,6 +425,7 @@ export default {
         height: 6.4rem;
         background-color: $fadedViolet;
         border-radius: 0.5rem;
+        overflow: hidden;
       }
       .welcome {
         display: flex;
