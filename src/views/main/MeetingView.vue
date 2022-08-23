@@ -253,78 +253,13 @@
       </div>
     </div>
     <div class="meeting-screen-mobile" v-else>
-      <div class="compose-button">
-        <teleport to="#portal-target" v-if="isShowComposeButton">
-          <transition name="route" appear>
-            <div class="modal" @click="isShowComposeButton = false"></div>
-          </transition>
-          <transition name="route" appear>
-            <div class="element-container">
-              <span
-                class="float-element"
-                v-if="isSelected != 1"
-                @click="onClickNav(1)"
-              >
-                <div class="tooltip">Create poll meeting</div>
-                <i class="fa-solid fa-plus"></i>
-              </span>
-              <span
-                class="float-element"
-                v-if="isSelected != 2"
-                @click="onClickNav(2)"
-              >
-                <div class="tooltip">Inbox</div>
-                <i class="fa-solid fa-inbox"></i>
-              </span>
-              <span
-                class="float-element"
-                v-if="isSelected != 3"
-                @click="onClickNav(3)"
-              >
-                <div class="tooltip">Sent</div>
-                <i class="fa-solid fa-paper-plane"></i>
-              </span>
-              <span
-                class="float-element"
-                v-if="isSelected != 4"
-                @click="onClickNav(4)"
-              >
-                <div class="tooltip">To be confirmed</div>
-                <i class="fa-solid fa-clipboard-list"></i>
-              </span>
-              <span
-                class="float-element"
-                v-if="isSelected != 5"
-                @click="onClickNav(5)"
-              >
-                <div class="tooltip">Confirmed</div>
-                <i class="fa-solid fa-square-check"></i>
-              </span>
-              <span
-                class="float-element"
-                v-if="isSelected != 6"
-                @click="onClickNav(6)"
-              >
-                <div class="tooltip">Trash</div>
-                <i class="fa-solid fa-trash"></i>
-              </span>
-            </div>
-          </transition>
-        </teleport>
-        <div
-          class="mobile-button"
-          @click="isShowComposeButton = !isShowComposeButton"
-          :style="
-            !isShowComposeButton
-              ? { backgroundColor: '#7452FF' }
-              : { backgroundColor: '#FFFFFF', color: '#7452FF' }
-          "
-        >
-          <span v-if="isShowComposeButton"
-            ><i class="fa-solid fa-xmark"></i></span
-          ><span v-else><i class="fa-solid fa-bars"></i></span>
-        </div>
-      </div>
+      <BaseComposeButton
+        :isShowComposeButton="isShowComposeButton"
+        :isSelected="isSelected"
+        @onClick="onClickNav"
+        @toggleButton="isShowComposeButton = !isShowComposeButton"
+        :buttons="composeButtons"
+      />
       <CreateMeetingView v-if="isSelected == 1" />
       <MeetingViewMobile
         :header="showHeaderMobile"
@@ -344,10 +279,12 @@ import SentView from "./meeting/SentView.vue";
 import MeetingViewMobile from "./meeting/mobile/MeetingViewMobile.vue";
 import BaseButton from "@/components/UI/BaseButton.vue";
 import BaseHeader from "@/components/UI/BaseHeader.vue";
+import BaseComposeButton from "@/components/UI/BaseComposeButton.vue";
 export default {
   components: {
     BaseButton,
     BaseHeader,
+    BaseComposeButton,
     CreateMeetingView,
     BeConfirmedView,
     ConfirmedView,
@@ -361,6 +298,38 @@ export default {
       isMobile: false,
       isShowComposeButton: false,
       headerMobile: "",
+      composeButtons: [
+        {
+          id: 1,
+          icon: "fa-solid fa-plus",
+          tooltip: "Create poll meeting",
+        },
+        {
+          id: 2,
+          icon: "fa-solid fa-inbox",
+          tooltip: "Inbox",
+        },
+        {
+          id: 3,
+          icon: "fa-solid fa-paper-plane",
+          tooltip: "Sent",
+        },
+        {
+          id: 4,
+          icon: "fa-solid fa-clipboard-list",
+          tooltip: "To be confirmed",
+        },
+        {
+          id: 5,
+          icon: "fa-solid fa-square-check",
+          tooltip: "Confirmed",
+        },
+        {
+          id: 6,
+          icon: "fa-solid fa-trash",
+          tooltip: "Trash",
+        },
+      ],
     };
   },
   computed: {
@@ -417,85 +386,11 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/colors/webColors.scss";
-.modal {
-  width: 100%;
-  height: 100vh;
-  position: fixed;
-  background-color: rgba(24, 24, 26, 0.4);
-  z-index: 11;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-.element-container {
-  z-index: 12;
-  right: 0%;
-  bottom: 0%;
-  position: fixed;
-  display: flex;
-  row-gap: 2rem;
-  flex-direction: column;
-  transform: translateX(-5rem) translateY(-15rem);
-  .float-element {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: $white;
-    font-size: 2rem;
-    width: 6.4rem;
-    height: 6.4rem;
-    border-radius: 1rem;
-    box-shadow: 1.8rem 1.8rem 1.3rem 0 rgb(171 171 171 / 30%);
-    background-color: $primaryViolet;
-    position: relative;
-    .tooltip {
-      display: none;
-      font-size: 1.6rem;
-      position: fixed;
-      transform: translateX(-9rem);
-      width: fit-content;
-      padding: 0.4rem 1.2rem;
-      border-radius: 1rem;
-      background-color: rgba(24, 24, 26, 0.75);
-    }
-  }
-  .float-element:active {
-    .tooltip {
-      display: block;
-    }
-  }
-}
 .meeting-screen-mobile {
   display: flex;
   flex-direction: column;
   row-gap: 2rem;
   padding: 3rem;
-  .compose-button {
-    z-index: 12;
-    right: 0%;
-    bottom: 0%;
-    position: fixed;
-    display: flex;
-    flex-direction: column;
-    row-gap: 2rem;
-    .mobile-button {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: #ffffff;
-      font-size: 2rem;
-      width: 6.4rem;
-      height: 6.4rem;
-      border-radius: 1rem;
-      box-shadow: 1.8rem 1.8rem 1.3rem 0 rgb(171 171 171 / 30%);
-      transform: translateX(-5rem) translateY(-5rem);
-      transition: 0.3s all ease-in-out;
-    }
-    .mobile-button:active {
-      animation: press 0.2s 1 linear;
-    }
-  }
   .header {
     color: $darkViolet;
   }
