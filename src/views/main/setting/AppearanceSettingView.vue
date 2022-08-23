@@ -82,7 +82,9 @@ export default {
     },
   },
   mounted() {
-    localStorage.getItem("mode") ? this.mode = localStorage.getItem("mode") : this.mode = "light";
+    localStorage.getItem("mode")
+      ? (this.mode = localStorage.getItem("mode"))
+      : (this.mode = "light");
   },
 };
 </script>
@@ -132,6 +134,20 @@ export default {
         line-height: 1.6;
         .detail {
           color: $darkGrey;
+        }
+      }
+    }
+  }
+}
+@media (max-width: 40em) {
+  .left-side {
+    height: auto;
+    .modes {
+      .mode {
+        height: 15rem;
+        width: 100%;
+        .content {
+          width: 80%;
         }
       }
     }

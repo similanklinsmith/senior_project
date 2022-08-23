@@ -263,4 +263,9 @@ export default {
     }
   }
 }
+@media (max-width: 40em) {
+  .left-side {
+    height: auto;
+  }
+}
 </style>

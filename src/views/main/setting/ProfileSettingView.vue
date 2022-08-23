@@ -1,7 +1,7 @@
 <template>
   <div class="left-side grid">
     <div class="first-col-left">
-      <div class="profile-image" v-if="!profileImage">
+      <div class="profile-image" v-if="!$store.state.myProfilePic">
         <img
           src="@/assets/decorations/sample_profile.png"
           alt="sample profile illustration"
@@ -9,7 +9,7 @@
       </div>
       <div class="real-profile-image" v-else>
         <img
-          :src="profileImage"
+          :src="$store.state.myProfilePic"
           alt="profile of user"
           @error="
             $event.target.src =
@@ -18,7 +18,7 @@
         />
       </div>
       <div class="remark-text">
-        <span>{{ title }}</span> {{ name }}
+        <span>{{ form.title }}</span> {{ form.name }}
       </div>
     </div>
     <div class="last-col-left" v-if="!isEdit">
@@ -30,7 +30,7 @@
             <i class="icon fa-regular fa-copy"></i>
           </div>
         </div>
-        <div class="content-text" id="name-value">{{ name }}</div>
+        <div class="content-text" id="name-value">{{ form.name }}</div>
       </div>
       <div class="email">
         <div class="label bold-content-text">
@@ -40,7 +40,7 @@
           </div>
         </div>
         <div class="content-text" id="email-value">
-          {{ email }}
+          {{ form.email }}
         </div>
       </div>
       <div class="phone">
@@ -51,8 +51,7 @@
           </div>
         </div>
         <div class="content-text" id="phone-value">
-          <span v-if="phone">{{ phone }}</span
-          ><span v-else>-</span>
+          <span>{{ form.phone ? form.phone : "-" }}</span>
         </div>
       </div>
       <div class="group-button">
@@ -86,13 +85,13 @@
         </BaseButton>
       </div>
     </div>
-    <div class="last-col-left" v-else>
+    <div class="last-col-left is_edit" v-else>
       <div class="input-form">
         <label for="title" class="bold-small-text">Title</label>
-        <select name="title" id="title">
+        <select name="title" id="title" v-model="form.title">
           <option value="">none</option>
           <option
-            v-for="(title, index) in $store.state.executiveTitle"
+            v-for="(title, index) in getterExecutiveTitles"
             :key="title"
             :value="index"
           >
@@ -108,7 +107,7 @@
           placeholder="Name"
           id="name"
           name="name"
-          :value="name"
+          :value="form.name"
           readonly
         />
       </div>
@@ -120,7 +119,7 @@
           placeholder="Email"
           id="email"
           name="email"
-          :value="email"
+          :value="form.email"
           readonly
         />
       </div>
@@ -132,6 +131,7 @@
           placeholder="e.g. 0810000000"
           id="phone"
           name="phone"
+          v-model="form.phone"
         />
       </div>
       <div class="group-button" style="width: 80%">
@@ -154,67 +154,40 @@
           color="#7452FF"
           hoverColor="#23106D"
           width="100%"
+          @onClick="handleEditProfile"
         >
         </BaseButton>
       </div>
     </div>
-    <BasePopup
-      v-if="isShowPopup"
-      @closeModal="isShowPopup = false"
-      :image="require(`@/assets/decorations/delete_executive.png`)"
-    >
-      <template v-slot:popupContent>
-        We apologize for the inconvenience due to disruption. Please try again.
-        [Error: {{ statusCode }}]
-      </template>
-      <template v-slot:buttons>
-        <BaseButton
-          buttonType="common-button"
-          btnText="Close"
-          textColor="white"
-          textHover="white"
-          color="#F33C3C"
-          hoverColor="#d93333"
-          width="100%"
-          @onClick="isShowPopup = false"
-        >
-        </BaseButton>
-      </template>
-    </BasePopup>
   </div>
 </template>
 
 <script>
-import axios from "axios";
 import jwtDecrypt from "@/helpers/jwtHelper";
 import BaseButton from "@/components/UI/BaseButton.vue";
-import BasePopup from "@/components/UI/BasePopup.vue";
 import { mapGetters, mapActions } from "vuex";
-import { getAuth, signOut } from "firebase/auth";
 export default {
   name: "ProfileSettingView",
   components: {
     BaseButton,
-    BasePopup,
   },
   data() {
     return {
-      name: "",
-      email: "",
-      title: "",
-      phone: "",
-      profileImage: null,
       isEdit: false,
-      isShowPopup: false,
-      auth: null,
-      statusCode: null,
+      secretaryId: null,
+      form: {
+        title: "",
+        name: "",
+        email: "",
+        phone: "",
+      },
     };
   },
-  compmuted: {
+  computed: {
     ...mapGetters(["getterExecutiveTitles"]),
   },
   methods: {
-    ...mapActions(["getExecutiveTitle"]),
+    ...mapActions(["getExecutiveTitle","getProfileImage"]),
     copyLink(value) {
       let copyText = document.getElementById(value).innerHTML;
       navigator.clipboard.writeText(copyText);
@@ -222,49 +195,19 @@ export default {
     goToMicrosoftAccount() {
       window.open("https://myaccount.microsoft.com/", "_blank");
     },
-    async getProfileImage() {
-      var accessToken = localStorage.getItem("accessToken");
-      try {
-        await axios
-          .get("https://graph.microsoft.com/v1.0/me/photo/$value", {
-            headers: {
-              "content-type": "image/jpeg",
-              Authorization: `Bearer ${accessToken}`,
-            },
-            responseType: "blob",
-          })
-          .then((result) => {
-            let blob = new Blob([result.data], { type: "image/jpeg" });
-            var reader = new FileReader();
-            reader.readAsDataURL(blob);
-            reader.onload = () => {
-              var base64String = reader.result;
-              this.profileImage = base64String
-                .toString()
-                .substr(base64String.toString().indexOf(", ") + 1);
-            };
-          });
-      } catch (error) {
-        this.statusCode = error.response.status;
-        this.isShowPopup = true;
-        if (this.statusCode == 401 && this.isShowPopup == false) {
-          signOut(this.auth).then(() => {
-            this.$router.push("/sign-in");
-          });
-          this.$store.dispatch("auth/logout");
-        }
-      }
-    },
+    handleEditProfile() {
+      console.log(this.form);
+    }
   },
   created() {
     this.getProfileImage();
     this.getExecutiveTitle();
   },
   mounted() {
-    this.auth = getAuth();
     if (localStorage.getItem("user")) {
-      this.name = `${jwtDecrypt(localStorage.getItem("user")).name}`;
-      this.email = `${jwtDecrypt(localStorage.getItem("user")).email}`;
+      this.form.name = `${jwtDecrypt(localStorage.getItem("user")).name}`;
+      this.form.email = `${jwtDecrypt(localStorage.getItem("user")).email}`;
+      this.secretaryId = `${jwtDecrypt(localStorage.getItem("user")).user_id}`;
     }
   },
 };
@@ -388,6 +331,15 @@ export default {
         border: 0.1rem solid $primaryViolet;
       }
     }
+  }
+}
+@media (max-width: 40em) {
+  .left-side {
+    display: flex;
+    flex-direction: column;
+    row-gap: 2rem;
+    height: auto;
+    .last-col-left.is_edit {align-items: center;}
   }
 }
 </style>
