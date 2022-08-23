@@ -1,9 +1,9 @@
 <template>
-  <div class="response-container">
-    <div class="day bold-content-text">Wednesday, April 06, 2022</div>
+  <div>
     <div class="executive-response">
       <div class="executive-name bold-small-text">
-        Similan Klinsmith <span class="desktop">(required)</span>
+        {{ executive.first_name }} {{ executive.last_name }}
+        <span class="desktop">(required)</span>
         <span class="mobile">*</span>
       </div>
       <div class="buttons">
@@ -16,7 +16,7 @@
           fontSize="1.4rem"
           :class="isAccept ? 'common-button' : 'outlined-button'"
           :style="isAccept ? { color: 'white' } : { color: '#39CF5A' }"
-          @onClick="(isAccept = true), (isDecline = false)"
+          @onClick="handleAccept(executive.executive_id)"
         >
           <template v-slot:after-icon>
             <i class="fa-solid fa-check"></i>
@@ -31,7 +31,7 @@
           fontSize="1.4rem"
           :class="isDecline ? 'common-button' : 'outlined-button'"
           :style="isDecline ? { color: 'white' } : { color: '#F33C3C' }"
-          @onClick="(isDecline = true), (isAccept = false)"
+          @onClick="handleDecline(executive.executive_id)"
         >
           <template v-slot:after-icon>
             <i class="fa-solid fa-xmark"></i>
@@ -52,7 +52,7 @@
         textColor="#7452FF"
         textHover="#23106D"
         fontSize="1.4rem"
-        @onClick="handleAddTimeSlot('2022-08-25')"
+        @onClick="handleAddTimeSlot"
       >
         <template v-slot:before-icon>
           <i class="fa-solid fa-clock"></i>
@@ -60,9 +60,10 @@
       </BaseButton>
     </div>
     <teleport to="#portal-target" v-if="isAddTimeSlot">
-      <div class="modal" @click="handleCloseTimeSlot"></div>
+      <div class="modal"></div>
       <div class="pop-up">
         <div class="title bold-content-text">Timeslots</div>
+        <div class="title bold-content-text">duration: {{duration}} hour(s)</div>
         <div class="form">
           <div class="input-form">
             <label for="date" class="bold-small-text"
@@ -74,7 +75,7 @@
               placeholder="date"
               id="date"
               name="date"
-              :value="timeSlot.date"
+              :value="date"
               readonly
             />
           </div>
@@ -125,12 +126,12 @@
         <div class="time-slots">
           <div
             class="time-slot"
-            v-for="(slot, index) in filterTimeSlots(timeSlot.date)"
+            v-for="(slot, index) in selectTimeSlots"
             :key="slot"
           >
             <div class="row">
               <div class="column">
-                <div class="bold-small-text">Wednesday, April 06, 2022</div>
+                <div class="bold-small-text">{{dateTimeHeader}}</div>
                 <div class="small-text">
                   From {{ slot.from }} to {{ slot.to }}
                 </div>
@@ -179,6 +180,7 @@ import BaseButton from "@/components/UI/BaseButton.vue";
 export default {
   name: "ResponseComp",
   components: { BaseButton },
+  props: ["executive", "date", "duration","dateTimeHeader"],
   data() {
     return {
       isAddTimeSlot: false,
@@ -187,11 +189,17 @@ export default {
       timeSlots: [],
       selectTimeSlots: [],
       timeSlot: {
-        date: null,
         from: null,
         to: null,
       },
+      tempAnswer: "",
+      form: {
+        date: null,
+        status: null,
+        preferredTime: [],
+      },
       errors: {},
+      executiveId: null,
     };
   },
   computed: {
@@ -213,22 +221,55 @@ export default {
     },
   },
   methods: {
-    handleAddTimeSlot(date) {
+    handleAccept(id) {
+      this.isDecline = false;
+      this.isAccept = true;
+      this.form.date = this.date;
+      this.form.status = "accept";
+      this.executiveId = id;
+    },
+    handleDecline(id) {
+      this.isDecline = true;
+      this.isAccept = false;
+      this.timeSlots = [];
+      this.form.status = "decline";
+      this.form.preferredTime = [];
+      this.form.date = this.date;
+      this.executiveId = id;
+      this.confirmResponse();
+    },
+    confirmResponse() {
+      if (this.tempAnswer == "") {
+        this.tempAnswer = this.form.status;
+        this.$emit("onResponse", {
+          executiveId: this.executiveId,
+          timeSlot: [this.form],
+        });
+      } else {
+        if (this.tempAnswer == "decline" || this.tempAnswer != "accept") {
+          return;
+        } else {
+          this.tempAnswer = this.form.status;
+          this.$emit("onResponse", {
+            executiveId: this.executiveId,
+            timeSlot: [this.form],
+          });
+        }
+      }
+    },
+    handleAddTimeSlot() {
       this.isAddTimeSlot = true;
-      this.timeSlot.date = date;
-      console.log(this.timeSlots);
-      console.log(this.selectTimeSlots);
+      this.form.date = this.date;
       this.selectTimeSlots = this.timeSlots;
+      this.form.preferredTime = this.selectTimeSlots;
       // if (this.timeSlots.length != 0) {
       //   this.selectTimeSlots = this.timeSlots
       //   console.log(this.timeSlots);
       // }
     },
     handleCloseTimeSlot() {
-      console.log(this.selectTimeSlots);
       this.selectTimeSlots = [];
       this.isAddTimeSlot = false;
-      console.log(this.timeSlots);
     },
     handleConfirm() {
       // console.log("selected Time Slots: ");
@@ -236,6 +277,7 @@ export default {
       this.timeSlots = [...this.selectTimeSlots];
       this.selectTimeSlots = [];
       this.isAddTimeSlot = false;
+      this.confirmResponse();
       // console.log("Time Slots: ");
       // console.log(this.timeSlots);
     },
@@ -256,7 +298,6 @@ export default {
         : (this.errors.to = "Please choose");
       if (Object.keys(this.errors).length == 0) {
         var selectedTime = {
-          date: this.timeSlot.date,
           from: this.timeSlot.from,
           to: this.timeSlot.to,
         };
@@ -265,26 +306,17 @@ export default {
         // this.timeSlots.push(selectedTime);
         this.timeSlot.from = "";
         this.timeSlot.to = "";
-        // console.log(this.timeSlots);
       }
     },
     deleteTimeSlot(index) {
       this.selectTimeSlots.splice(index, 1);
-    },
-    filterTimeSlots(date) {
-      return this.selectTimeSlots.filter((slot) => {
-        return slot.date == date;
-      });
-    },
+    }
   },
 };
 </script>
 
 <style lang="scss" scoped>
 @import "@/assets/colors/webColors.scss";
-.response-container {
-  margin: 2.5rem 0;
-}
 .modal {
   width: 100%;
   height: 100vh;
@@ -398,10 +430,8 @@ export default {
     }
   }
 }
-.day {
-  color: $darkViolet;
-}
 .executive-response {
+  margin: 1rem 0;
   display: flex;
   justify-content: space-between;
   align-items: center;

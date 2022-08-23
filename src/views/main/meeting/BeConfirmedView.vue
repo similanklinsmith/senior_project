@@ -19,8 +19,8 @@
             :key="inbox.id"
             :id="inbox.id"
             :title="inbox.title"
-            :content="inbox.content"
-            :time="inbox.time"
+            :content="'Response poll appointment'"
+            :time="inbox.create_at"
             :selectedId="selectedId"
             @selectInbox="selectInbox"
           />
@@ -34,18 +34,50 @@
       <div class="inbox-detail" v-if="selectedInbox != null">
         <div class="title remark-text">{{ selectedInbox.title }}</div>
         <div class="sent-from smallest-text">
-          sent on {{ formatDateTime(selectedInbox.time) }} by <span>Katherine Perish</span> &lt;katherine@mail.kmutt.ac.th&gt;
+          sent on {{ formatDateTime(selectedInbox.create_at) }} by
+          <span
+            >{{ selectedInbox.secretary.first_name }}
+            {{ selectedInbox.secretary.last_name }}</span
+          >
+          &lt;{{ selectedInbox.secretary.email }}&gt;
         </div>
-        <div class="response">
-          <ResponseComp />
-          <ResponseComp />
-          <ResponseComp />
-          <ResponseComp />
-          <ResponseComp />
-          <ResponseComp />
+        <div class="bold-small-text due-date">
+          <span>*</span>This form will be expired in
+          {{ selectedInbox.due_date_time.split("T")[0] }}
+          <span v-if="new Date(selectedInbox.due_date_time) >= new Date()"
+            >({{ calculateRemainingDay(selectedInbox.due_date_time) }} days
+            left)</span
+          >
+          <span v-else>(Already expired)</span>
+        </div>
+        <div
+          class="response"
+          :class="`${
+            new Date(selectedInbox.due_date_time) < new Date() ? 'expired' : ''
+          }`"
+        >
+          <div
+            class="response-container"
+            v-for="(periodOfTime, index) in selectedInbox.periodOfTime"
+            :key="index"
+          >
+            <div class="day bold-content-text">
+              {{ formatDateTimeHeader(periodOfTime.date) }}
+            </div>
+            <ResponseComp
+              @onResponse="handleResponse"
+              v-for="executive in periodOfTime.executives"
+              :key="executive.executive_id"
+              :executive="executive"
+              :date="periodOfTime.date"
+              :duration="selectedInbox.duration_of_time"
+              :dateTimeHeader="formatDateTimeHeader(periodOfTime.date)"
+            />
+          </div>
         </div>
         <div class="button">
           <BaseButton
+            v-if="responseAll"
             buttonType="common-button"
             btnText="Confirm response"
             textColor="white"
@@ -53,6 +85,7 @@
             color="#7452FF"
             hoverColor="#23106D"
             width="24rem"
+            @onClick="confirmResponse"
           >
           </BaseButton>
         </div>
@@ -65,7 +98,10 @@
 import InboxComp from "@/components/meeting/InboxComp.vue";
 import ResponseComp from "@/components/meeting/ResponseComp.vue";
 import BaseButton from "@/components/UI/BaseButton.vue";
-import { formatDateTimeDetail } from "@/helpers/formatDateTime";
+import {
+  formatDateTimeDetail,
+  formatDateTimeHeader,
+} from "@/helpers/formatDateTime";
 export default {
   name: "BeConfirmedView",
   components: { InboxComp, ResponseComp, BaseButton },
@@ -75,6 +111,7 @@ export default {
       toBeConfirmedList: [],
       selectedInbox: null,
       selectedId: null,
+      response: [],
     };
   },
   computed: {
@@ -85,10 +122,64 @@ export default {
           .includes(this.searchInput.toLowerCase());
       });
     },
+    responseAll() {
+      let isValid;
+      if (
+        this.response.length > 0 &&
+        this.response.length == this.selectedInbox.periodOfTime.length
+      ) {
+        for (let index = 0; index < this.response.length; index++) {
+          isValid =
+            this.response[index].timeSlot.length ==
+            this.selectedInbox.periodOfTime.length;
+        }
+        return isValid;
+      } else {
+        return false;
+      }
+    },
   },
   methods: {
+    calculateRemainingDay(date) {
+      return Math.round(
+        (new Date(date) - new Date(Date.now())) / (24 * 60 * 60 * 1000)
+      ) < 0
+        ? 0
+        : Math.round(
+            (new Date(date) - new Date(Date.now())) / (24 * 60 * 60 * 1000)
+          );
+    },
+    handleResponse(answer) {
+      if (this.response.length > 0) {
+        const index = this.response.findIndex(
+          (res) => res.executiveId == answer.executiveId
+        );
+        if (index != -1) {
+          const indexDate = this.response[index].timeSlot.findIndex(
+            (slot) => slot.date == answer.timeSlot[0].date
+          );
+          if (indexDate != -1) {
+            console.log(answer.timeSlot[0].preferredTime);
+            this.response[index].timeSlot[indexDate].preferredTime =
+              answer.timeSlot[0].preferredTime;
+          } else {
+            this.response[index].timeSlot.push(answer.timeSlot[0]);
+          }
+        } else {
+          this.response.push(answer);
+        }
+      } else {
+        this.response.push(answer);
+      }
+    },
+    confirmResponse() {
+      console.log(this.response);
+    },
     formatDateTime(dateTime) {
       return formatDateTimeDetail(dateTime);
+    },
+    formatDateTimeHeader(dateTime) {
+      return formatDateTimeHeader(dateTime);
     },
     selectInbox(id) {
       this.selectedInbox = this.toBeConfirmedList.find((toBeConfirmed) => {
@@ -102,44 +193,152 @@ export default {
       {
         id: "1",
         title: "Discover what’s happened this week",
-        content:
-          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-        time: "2022-05-15T07:40:32.000Z",
+        create_at: "2022-05-15T07:40:32.000Z",
+        due_date_time: "2022-08-20T07:40:32.000Z",
+        duration_of_time: "2",
+        secretary: {
+          id: 1,
+          first_name: "Jennie",
+          last_name: "Kim",
+          email: "jennie@mail.kmutt.ac.th",
+        },
+        periodOfTime: [
+          {
+            date: "2022-08-25",
+            executives: [
+              {
+                executive_id: "1",
+                first_name: "Similan",
+                last_name: "Klinsmith",
+              },
+              {
+                executive_id: "2",
+                first_name: "Noparat",
+                last_name: "Prasongdee",
+              },
+              {
+                executive_id: "3",
+                first_name: "Praepanwa",
+                last_name: "Tedprasit",
+              },
+            ],
+          },
+          {
+            date: "2022-08-26",
+            executives: [
+              {
+                executive_id: "1",
+                first_name: "Similan",
+                last_name: "Klinsmith",
+              },
+              {
+                executive_id: "2",
+                first_name: "Noparat",
+                lastname: "Prasongdee",
+              },
+              {
+                executive_id: "3",
+                first_name: "Praepanwa",
+                last_name: "Tedprasit",
+              },
+            ],
+          },
+          {
+            date: "2022-08-27",
+            executives: [
+              {
+                executive_id: "1",
+                first_name: "Similan",
+                last_name: "Klinsmith",
+              },
+              {
+                executive_id: "2",
+                first_name: "Noparat",
+                last_name: "Prasongdee",
+              },
+              {
+                executive_id: "3",
+                first_name: "Praepanwa",
+                last_name: "Tedprasit",
+              },
+            ],
+          },
+        ],
       },
       {
         id: "2",
-        title: "Let's have meeting",
-        content:
-          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-        time: "2022-05-15T07:40:32.000Z",
-      },
-      {
-        id: "3",
-        title: "Whatcha doin today everyone?",
-        content:
-          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-        time: "2022-05-15T07:40:32.000Z",
-      },
-      {
-        id: "4",
         title: "Discover what’s happened this week",
-        content:
-          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-        time: "2022-05-15T07:40:32.000Z",
-      },
-      {
-        id: "5",
-        title: "Discover what’s happened this week",
-        content:
-          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-        time: "2022-05-15T07:40:32.000Z",
-      },
-      {
-        id: "6",
-        title: "Discover what’s happened this week",
-        content:
-          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-        time: "2022-05-15T07:40:32.000Z",
+        create_at: "2022-05-15T07:40:32.000Z",
+        due_date_time: "2022-08-30T07:40:32.000Z",
+        duration_of_time: "2",
+        secretary: {
+          id: 1,
+          first_name: "Jennie",
+          last_name: "Kim",
+          email: "jennie@mail.kmutt.ac.th",
+        },
+        periodOfTime: [
+          {
+            date: "2022-08-25",
+            executives: [
+              {
+                executive_id: "1",
+                first_name: "Similan",
+                last_name: "Klinsmith",
+              },
+              {
+                executive_id: "2",
+                first_name: "Noparat",
+                last_name: "Prasongdee",
+              },
+              {
+                executive_id: "3",
+                first_name: "Praepanwa",
+                last_name: "Tedprasit",
+              },
+            ],
+          },
+          {
+            date: "2022-08-26",
+            executives: [
+              {
+                executive_id: "1",
+                first_name: "Similan",
+                last_name: "Klinsmith",
+              },
+              {
+                executive_id: "2",
+                first_name: "Noparat",
+                lastname: "Prasongdee",
+              },
+              {
+                executive_id: "3",
+                first_name: "Praepanwa",
+                last_name: "Tedprasit",
+              },
+            ],
+          },
+          {
+            date: "2022-08-27",
+            executives: [
+              {
+                executive_id: "1",
+                first_name: "Similan",
+                last_name: "Klinsmith",
+              },
+              {
+                executive_id: "2",
+                first_name: "Noparat",
+                last_name: "Prasongdee",
+              },
+              {
+                executive_id: "3",
+                first_name: "Praepanwa",
+                last_name: "Tedprasit",
+              },
+            ],
+          },
+        ],
       },
     ];
   },
@@ -148,6 +347,11 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/colors/webColors.scss";
+.expired {
+  filter: grayscale(1);
+  opacity: 0.5;
+  pointer-events: none;
+}
 .response {
   display: flex;
   flex-direction: column;
@@ -156,6 +360,12 @@ export default {
   overflow: scroll;
   margin: 1rem 0;
   padding: 0 1rem;
+  .response-container {
+    margin: 2.5rem 0;
+    .day {
+      color: $darkViolet;
+    }
+  }
 }
 .response::-webkit-scrollbar {
   display: block !important;
@@ -252,9 +462,18 @@ export default {
     display: flex;
     flex-direction: column;
     overflow: scroll;
+    .due-date {
+      margin-top: 2rem;
+      color: $primaryViolet;
+      span {
+        color: $error;
+      }
+    }
     .sent-from {
       color: $darkGrey;
-      span{text-decoration: underline;}
+      span {
+        text-decoration: underline;
+      }
     }
     .button {
       display: flex;
