@@ -78,7 +78,7 @@
           color="#7452FF"
           hoverColor="#23106D"
           width="100%"
-          @onClick="editProfile"
+          @onClick="isEdit = true"
         >
           <template v-slot:before-icon>
             <i class="icon fa-solid fa-pencil"></i>
@@ -91,9 +91,13 @@
         <label for="title" class="bold-small-text">Title</label>
         <select name="title" id="title">
           <option value="">none</option>
-          <option value="Mr">Mr</option>
-          <option value="Mrs">Mrs</option>
-          <option value="Ms">Ms</option>
+          <option
+            v-for="(title, index) in $store.state.executiveTitle"
+            :key="title"
+            :value="index"
+          >
+            {{ title }}
+          </option>
         </select>
       </div>
       <div class="input-form">
@@ -139,7 +143,7 @@
           color="#F33C3C"
           hoverColor="#d93333"
           width="100%"
-          @onClick="cancelEditProfile"
+          @onClick="isEdit = false"
         >
         </BaseButton>
         <BaseButton
@@ -185,6 +189,7 @@ import axios from "axios";
 import jwtDecrypt from "@/helpers/jwtHelper";
 import BaseButton from "@/components/UI/BaseButton.vue";
 import BasePopup from "@/components/UI/BasePopup.vue";
+import { mapGetters, mapActions } from "vuex";
 import { getAuth, signOut } from "firebase/auth";
 export default {
   name: "ProfileSettingView",
@@ -205,20 +210,17 @@ export default {
       statusCode: null,
     };
   },
+  compmuted: {
+    ...mapGetters(["getterExecutiveTitles"]),
+  },
   methods: {
+    ...mapActions(["getExecutiveTitle"]),
     copyLink(value) {
       let copyText = document.getElementById(value).innerHTML;
       navigator.clipboard.writeText(copyText);
     },
     goToMicrosoftAccount() {
-      window.open('https://myaccount.microsoft.com/', '_blank');
-    },
-    editProfile() {
-      this.isEdit = true;
-      console.log(this.isEdit);
-    },
-    cancelEditProfile() {
-      this.isEdit = false;
+      window.open("https://myaccount.microsoft.com/", "_blank");
     },
     async getProfileImage() {
       var accessToken = localStorage.getItem("accessToken");
@@ -244,16 +246,19 @@ export default {
           });
       } catch (error) {
         this.statusCode = error.response.status;
-        this.isToggled = false;
-        signOut(this.auth).then(() => {
-          this.$router.push("/sign-in");
-        });
-        this.$store.dispatch("auth/logout");
+        this.isShowPopup = true;
+        if (this.statusCode == 401 && this.isShowPopup == false) {
+          signOut(this.auth).then(() => {
+            this.$router.push("/sign-in");
+          });
+          this.$store.dispatch("auth/logout");
+        }
       }
     },
   },
   created() {
     this.getProfileImage();
+    this.getExecutiveTitle();
   },
   mounted() {
     this.auth = getAuth();
