@@ -7,9 +7,9 @@
     </BaseHeader>
     <div class="body">
       <div class="container-section grid">
-          <ProfileSettingView v-if="selectedMenu == 1" />
-          <AppearanceSettingView v-if="selectedMenu == 2" />
-          <HelpSettingView v-if="selectedMenu == 3" />
+        <ProfileSettingView v-if="selectedMenu == 1" />
+        <AppearanceSettingView v-if="selectedMenu == 2" />
+        <HelpSettingView v-if="selectedMenu == 3" />
         <div class="right-side">
           <div class="content-text title">Personal Settings &amp; Helps</div>
           <div class="menus" v-for="(menu, index) in menus" :key="menu.id">
@@ -20,7 +20,7 @@
                   selectedMenu == menu.id ? { backgroundColor: '#7452FF' } : {}
                 "
               >
-                <i :class="['fa-solid ' + menu.icon]"></i>
+                <i :class="menu.icon"></i>
               </div>
               <div class="content">
                 <div
@@ -42,17 +42,26 @@
         </div>
       </div>
     </div>
+    <BaseComposeButton
+      :isShowComposeButton="isShowComposeButton"
+      :isSelected="selectedMenu"
+      @onClick="onClickMenu"
+      @toggleButton="isShowComposeButton = !isShowComposeButton"
+      :buttons="menus"
+    />
   </div>
 </template>
 
 <script>
 import BaseHeader from "@/components/UI/BaseHeader.vue";
+import BaseComposeButton from "@/components/UI/BaseComposeButton.vue";
 import ProfileSettingView from "@/views/main/setting/ProfileSettingView.vue";
 import AppearanceSettingView from "@/views/main/setting/AppearanceSettingView.vue";
 import HelpSettingView from "@/views/main/setting/HelpSettingView.vue";
 export default {
   components: {
     BaseHeader,
+    BaseComposeButton,
     ProfileSettingView,
     AppearanceSettingView,
     HelpSettingView,
@@ -60,32 +69,37 @@ export default {
   name: "SettingView",
   data() {
     return {
+      isShowComposeButton: false,
       user: null,
       selectedMenu: 1,
       menus: [
         {
           id: 1,
           header: "Account Settings",
+          tooltip: "Account Settings",
           detail: "Personal Information",
-          icon: "fa-user",
+          icon: "fa-solid fa-user",
         },
         {
           id: 2,
           header: "Appearances",
+          tooltip: "Appearances",
           detail: "Dark and Light Mode",
-          icon: "fa-wand-magic-sparkles",
+          icon: "fa-solid fa-wand-magic-sparkles",
         },
         {
           id: 3,
           header: "Helps & Instructions",
+          tooltip: "Helps & Instructions",
           detail: "FAQ and Instructions",
-          icon: "fa-info",
+          icon: "fa-solid fa-info",
         },
       ],
     };
   },
   methods: {
     onClickMenu(id) {
+      this.isShowComposeButton = false;
       this.selectedMenu = id;
       localStorage.setItem("setting_menu", id);
     },
@@ -160,6 +174,18 @@ export default {
               }
             }
           }
+        }
+      }
+    }
+  }
+}
+@media (max-width: 26.75em) {
+  .setting-screen {
+    .body {
+      .container-section {
+        display: block;
+        .right-side {
+          display: none;
         }
       }
     }
