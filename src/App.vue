@@ -77,16 +77,15 @@ export default {
   methods: {
     handleSignOut() {
       this.isToggled = false;
-      signOut(this.$store.state.auth).then(() => {
+      signOut(this.$store.state.getAuth).then(() => {
         this.$router.push("/sign-in");
       });
       this.$store.dispatch("auth/logout");
-      this.$store.state.auth = null;
+      this.$store.state.getAuth = null;
     },
   },
   mounted() {
-    this.$store.state.auth = getAuth();
-    console.log(this.$store.state.auth);
+    this.$store.state.getAuth = getAuth();
     let htmlElement = document.documentElement;
     let theme = localStorage.getItem("mode");
 
@@ -115,7 +114,7 @@ export default {
 <style lang="scss" scoped>
 @import "assets/colors/webColors.scss";
 .mobile-menu {display: none;}
-.mobile-nav {display: none;width: 100%;height: 12rem;background-color: $white;padding: 3.2rem 4rem;justify-content: space-between;align-items: center;.icon {font-size: 2.8rem;color: $darkViolet;}.last-section {display: flex;column-gap: 2rem;align-items: center;justify-content: center;.notification {cursor: pointer;position: relative;width: 4rem;height: 4rem;background-color: $primaryViolet;border-radius: 1rem;display: flex;justify-content: center;align-items: center;transition: 0.2s all ease-in-out;.icon {color: $white;font-size: 1.6rem;}.alert-circle {transform: translateX(0.6rem) translateY(-0.6rem);top: 0%;right: 0%;width: 1.5rem;height: 1.5rem;position: absolute;border-radius: 50%;background-color: $error;display: flex;justify-content: center;align-items: center;color: $white;font-weight: 600;font-size: 1.1rem;outline: 0.2rem solid $white;}&:hover {background-color: $darkViolet;.icon {animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;}}}}}
+.mobile-nav {.burger-bar{.icon{color: var(--colorTextHeaderComp)}}display: none;width: 100%;height: 12rem;background-color: var(--bgHeaderComp);padding: 3.2rem 4rem;justify-content: space-between;align-items: center;.icon {font-size: 2.8rem;color: $darkViolet;}.last-section {.remark-text{color: var(--colorTextHeaderComp)}display: flex;column-gap: 2rem;align-items: center;justify-content: center;.notification {cursor: pointer;position: relative;width: 4rem;height: 4rem;background-color: $primaryViolet;border-radius: 1rem;display: flex;justify-content: center;align-items: center;transition: 0.2s all ease-in-out;.icon {color: $white;font-size: 1.6rem;}.alert-circle {transform: translateX(0.6rem) translateY(-0.6rem);top: 0%;right: 0%;width: 1.5rem;height: 1.5rem;position: absolute;border-radius: 50%;background-color: $error;display: flex;justify-content: center;align-items: center;color: $white;font-weight: 600;font-size: 1.1rem;outline: 0.2rem solid $white;}&:hover {background-color: $darkViolet;.icon {animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;}}}}}
 .space-left {margin-left: 12.5em;}
 .modal {width: 100%;height: 100vh;position: fixed;background-color: $fakeDark;opacity: 0.4;z-index: 9;}
 .fixed {z-index: 8;top: 0%;position: fixed !important;background-color: var(--fixedBgHeaderComp);padding-bottom: 3.6rem;backdrop-filter: blur(10px) saturate(100%) contrast(45%) brightness(130%);-webkit-backdrop-filter: blur(10px) saturate(100%) contrast(45%)  brightness(130%);transition: 0.3s all ease-in-out;}
