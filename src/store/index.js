@@ -8,7 +8,12 @@ import { signOut } from "firebase/auth";
 export default createStore({
   state: {
     // auth
-    auth: null,
+    getAuth: null,
+    //secretaries
+    secretaryURL: `${BASE_URL}/secretary`,
+    secretaryImageURL: "https://graph.microsoft.com/v1.0/me/photo/$value",
+    myProfile: null,
+    myProfilePic: null,
     // executives
     imageURL: `${BASE_URL}/image`,
     executiveTitleURL: `${BASE_URL}/executive-title-fulltitle`,
@@ -38,6 +43,12 @@ export default createStore({
     },
     GET_FAILED(state, failed) {
       state.failed = failed;
+    },
+    GET_PROFILE(state, profile) {
+      state.myProfile = profile;
+    },
+    GET_PROFILE_PIC(state, pic) {
+      state.myProfilePic = pic;
     },
     GET_EXECUTIVES_TITLES(state, titles) {
       state.executiveTitle = titles;
@@ -70,7 +81,6 @@ export default createStore({
         state.myExecutives.splice(index, 1);
       }
     },
-
     GET_MY_POLLS(state, polls) {
       state.myPolls = polls;
     },
@@ -85,6 +95,57 @@ export default createStore({
     },
   },
   actions: {
+    async getMyProfile(context) {
+      try {
+        const data = await axios.get(this.state.secretaryURL, {
+          headers: authHeader(),
+        });
+        context.commit("GET_PROFILE", data.data.data);
+      } catch (error) {
+        console.log(error.response.status);
+        if (error.response.status == 401) {
+          signOut(this.state.getAuth).then(() => {
+            router.push("/sign-in");
+          });
+          this.dispatch("auth/logout");
+        }
+      }
+    },
+    async getProfileImage(context) {
+      var accessToken = localStorage.getItem("accessToken");
+      try {
+        await axios
+          .get(this.state.secretaryImageURL, {
+            headers: {
+              "content-type": "image/jpeg",
+              Authorization: `Bearer ${accessToken}`,
+            },
+            responseType: "blob",
+          })
+          .then((result) => {
+            let blob = new Blob([result.data], { type: "image/jpeg" });
+            var reader = new FileReader();
+            reader.readAsDataURL(blob);
+            reader.onload = () => {
+              var base64String = reader.result;
+              context.commit(
+                "GET_PROFILE_PIC",
+                base64String
+                  .toString()
+                  .substr(base64String.toString().indexOf(", ") + 1)
+              );
+            };
+          });
+      } catch (error) {
+        console.log(error);
+        if (error.response.status == 401) {
+          signOut(this.state.getAuth).then(() => {
+            router.push("/sign-in");
+          });
+          this.dispatch("auth/logout");
+        }
+      }
+    },
     async getExecutiveTitle(context) {
       try {
         const data = await axios.get(this.state.executiveTitleURL);
@@ -135,7 +196,7 @@ export default createStore({
         context.commit("GET_LOADING_STATUS", false);
         console.log(error.response.status);
         if (error.response.status == 401) {
-          signOut(this.$store.state.auth).then(() => {
+          signOut(this.state.getAuth).then(() => {
             router.push("/sign-in");
           });
           this.dispatch("auth/logout");
@@ -169,7 +230,7 @@ export default createStore({
             setTimeout(
               () => (
                 context.commit("GET_FAILED", false),
-                signOut(this.$store.state.auth).then(() => {
+                signOut(this.state.getAuth).then(() => {
                   router.push("/sign-in");
                 }),
                 this.dispatch("auth/logout")
@@ -186,7 +247,7 @@ export default createStore({
           setTimeout(
             () => (
               context.commit("GET_FAILED", false),
-              signOut(this.$store.state.auth).then(() => {
+              signOut(this.state.getAuth).then(() => {
                 router.push("/sign-in");
               }),
               this.dispatch("auth/logout")
@@ -227,7 +288,7 @@ export default createStore({
           context.commit("GET_LOADING_STATUS", false);
           console.log(error.response.status);
           if (error.response.status == 401) {
-            signOut(this.$store.state.auth).then(() => {
+            signOut(this.state.getAuth).then(() => {
               router.replace("/sign-in");
             }),
               this.dispatch("auth/logout");
@@ -240,7 +301,7 @@ export default createStore({
           setTimeout(
             () => (
               context.commit("GET_FAILED", false),
-              signOut(this.$store.state.auth).then(() => {
+              signOut(this.state.getAuth).then(() => {
                 router.replace("/sign-in");
               }),
               this.dispatch("auth/logout")
@@ -264,7 +325,7 @@ export default createStore({
           setTimeout(
             () => (
               context.commit("GET_FAILED", false),
-              signOut(this.$store.state.auth).then(() => {
+              signOut(this.state.getAuth).then(() => {
                 router.replace("/sign-in");
               }),
               this.dispatch("auth/logout")
@@ -293,7 +354,7 @@ export default createStore({
         context.commit("GET_LOADING_STATUS", false);
         console.log(error.response.status);
         if (error.response.status == 401) {
-          signOut(this.$store.state.auth).then(() => {
+          signOut(this.state.getAuth).then(() => {
             router.replace("/sign-in");
           });
           this.dispatch("auth/logout");
@@ -316,7 +377,7 @@ export default createStore({
           setTimeout(
             () => (
               context.commit("GET_FAILED", false),
-              signOut(this.$store.state.auth).then(() => {
+              signOut(this.state.getAuth).then(() => {
                 router.replace("/sign-in");
               }),
               this.dispatch("auth/logout")
@@ -340,7 +401,7 @@ export default createStore({
       } catch (error) {
         console.log(error.response);
         if (error.response.status == 401) {
-          signOut(this.$store.state.auth).then(() => {
+          signOut(this.state.getAuth).then(() => {
             router.replace("/sign-in");
           });
           this.dispatch("auth/logout");

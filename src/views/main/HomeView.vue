@@ -15,7 +15,7 @@
         </div>
         <div class="profile-image">
           <img
-            :src="profileImage"
+            :src="$store.state.myProfilePic"
             alt="profile of user"
             @error="
               $event.target.src =
@@ -240,7 +240,6 @@ import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
 import jwtDecrypt from "@/helpers/jwtHelper";
 import { mapGetters, mapActions } from "vuex";
-import axios from "axios";
 export default {
   components: { BaseButton, BaseHeader, AttendeeGroup, VueCal },
   name: "HomeView",
@@ -339,33 +338,8 @@ export default {
       "getMyExecutives",
       "getExecutiveTitle",
       "getExecutivePosition",
+      "getProfileImage",
     ]),
-    async getProfileImage() {
-      var accessToken = localStorage.getItem("accessToken");
-      try {
-        await axios
-          .get("https://graph.microsoft.com/v1.0/me/photo/$value", {
-            headers: {
-              "content-type": "image/jpeg",
-              Authorization: `Bearer ${accessToken}`,
-            },
-            responseType: "blob",
-          })
-          .then((result) => {
-            let blob = new Blob([result.data], { type: "image/jpeg" });
-            var reader = new FileReader();
-            reader.readAsDataURL(blob);
-            reader.onload = () => {
-              var base64String = reader.result;
-              this.profileImage = base64String
-                .toString()
-                .substr(base64String.toString().indexOf(", ") + 1);
-            };
-          });
-      } catch (error) {
-        console.log(error);
-      }
-    },
     navToCreateMeeting() {
       localStorage.setItem("index", 1);
       this.$router.push({ path: "/meetings-management" });
@@ -395,7 +369,6 @@ export default {
   mounted() {
     this.selectedDate = new Date().toISOString().slice(0, 10);
     if (localStorage.getItem("user")) {
-      console.log(jwtDecrypt(localStorage.getItem("user")));
       this.user = `${jwtDecrypt(localStorage.getItem("user")).name}
       `;
     }

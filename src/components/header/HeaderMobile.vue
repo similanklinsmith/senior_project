@@ -4,7 +4,7 @@
       <div class="profile">
         <div class="profile-image">
             <img
-              :src="profileImage"
+              :src="$store.state.myProfilePic"
               alt="profile of user"
               @error="
                 $event.target.src =
@@ -97,10 +97,9 @@
 </template>
 
 <script>
-import axios from "axios";
-import { signOut } from "firebase/auth";
 import jwtDecrypt from "@/helpers/jwtHelper";
 import BaseButton from "@/components/UI/BaseButton.vue";
+import { mapActions } from "vuex";
 export default {
   name: "HeaderMobile",
   components: { BaseButton },
@@ -110,44 +109,12 @@ export default {
       user: "",
       email: "",
       isShowProfile: false,
-      profileImage: null
     };
   },
   methods: {
+    ...mapActions(["getProfileImage"]),
     handleSignOut() {this.$emit("signOut");},
     toggleCloseNav() {this.$emit("toggleCloseNav");},
-    async getProfileImage() {
-      var accessToken = localStorage.getItem("accessToken");
-      try {
-        await axios
-          .get("https://graph.microsoft.com/v1.0/me/photo/$value", {
-            headers: {
-              "content-type": "image/jpeg",
-              Authorization: `Bearer ${accessToken}`,
-            },
-            responseType: "blob",
-          })
-          .then((result) => {
-            let blob = new Blob([result.data], { type: "image/jpeg" });
-            var reader = new FileReader();
-            reader.readAsDataURL(blob);
-            reader.onload = () => {
-              var base64String = reader.result;
-              this.profileImage = base64String
-                .toString()
-                .substr(base64String.toString().indexOf(", ") + 1);
-            };
-          });
-      } catch (error) {
-        if (error.response.status == 401) {
-          signOut(this.$store.state.auth).then(() => {
-            this.$router.push("/sign-in");
-          });
-          this.$store.dispatch("auth/logout");
-        }
-        console.log(error.response.status);
-      }
-    },
   },
   created() {this.getProfileImage();},
   mounted() {
