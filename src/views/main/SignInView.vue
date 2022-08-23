@@ -5,19 +5,6 @@
         <span class="primaryViolet">M</span>OMENT<span class="yellow">O</span
         ><span class="fadedViolet">.</span>
       </div>
-      <div class="group-button">
-        <BaseButton
-          btnText="Sign in"
-          width="14rem"
-          textColor="#7452FF"
-          textHover="#DBD2FF"
-          color="#7452FF"
-          hoverColor="#23106D"
-          :class="isSignIn ? 'outlined-button' : 'texted-button'"
-          @onClick="isSignIn = true"
-        >
-        </BaseButton>
-      </div>
     </div>
     <div class="body">
       <div class="first-section">
@@ -81,19 +68,6 @@
           </BaseButton>
         </form>
         <div class="or thin-content-text">or continue with</div>
-        <!-- <BaseButton
-          buttonType="outlined-button"
-          btnText="Sign in with Google"
-          textColor="#7452FF"
-          textHover="white"
-          color="#7452FF"
-          hoverColor="#23106D"
-          @onClick="signInWithGoogle"
-        >
-          <template v-slot:before-icon>
-            <i class="fa-brands fa-google"></i>
-          </template>
-        </BaseButton> -->
         <BaseButton
           buttonType="outlined-button"
           btnText="Sign in with Microsoft"
@@ -136,16 +110,14 @@
 </template>
 
 <script>
-/* eslint-disable */
 import {
   getAuth,
-  GoogleAuthProvider,
+  // GoogleAuthProvider,
   signInWithPopup,
   OAuthProvider,
 } from "firebase/auth";
 import BaseButton from "@/components/UI/BaseButton.vue";
 import BasePopup from "@/components/UI/BasePopup.vue";
-import jwtDecrypt from "@/helpers/jwtHelper";
 export default {
   components: { BaseButton, BasePopup },
   name: "SignInView",
@@ -163,20 +135,20 @@ export default {
     };
   },
   methods: {
-    signInWithGoogle() {
-      const provider = new GoogleAuthProvider();
-      signInWithPopup(getAuth(), provider)
-        .then((result) => {
-          console.log(result);
-          this.$store.state.auth.user = result.user;
-          console.log(this.$store.state.auth.user);
-          // send user data to BE
-          this.$router.push("/");
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
+    // signInWithGoogle() {
+    //   const provider = new GoogleAuthProvider();
+    //   signInWithPopup(getAuth(), provider)
+    //     .then((result) => {
+    //       console.log(result);
+    //       this.$store.state.getAuth.user = result.user;
+    //       console.log(this.$store.state.getAuth.user);
+    //       // send user data to BE
+    //       this.$router.push("/");
+    //     })
+    //     .catch((error) => {
+    //       console.log(error);
+    //     });
+    // },
     signInWithMicrosoft() {
       // filter with own API
       const provider = new OAuthProvider("microsoft.com");
