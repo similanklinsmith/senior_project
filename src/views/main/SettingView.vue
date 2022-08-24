@@ -43,6 +43,7 @@
       </div>
     </div>
     <BaseComposeButton
+      v-if="isMobile"
       :isShowComposeButton="isShowComposeButton"
       :isSelected="selectedMenu"
       @onClick="onClickMenu"
@@ -72,6 +73,7 @@ export default {
       isShowComposeButton: false,
       user: null,
       selectedMenu: 1,
+      isMobile: false,
       menus: [
         {
           id: 1,
@@ -103,11 +105,16 @@ export default {
       this.selectedMenu = id;
       localStorage.setItem("setting_menu", id);
     },
+    onResize() {
+      this.isMobile = window.innerWidth < 428;
+    },
   },
   mounted() {
     window.onscroll = () => {
       this.isShowDropdown = false;
     };
+    this.onResize();
+    window.addEventListener("resize", this.onResize, { passive: true });
     if (localStorage.getItem("setting_menu")) {
       this.selectedMenu = localStorage.getItem("setting_menu");
     }
