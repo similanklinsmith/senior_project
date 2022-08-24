@@ -111,6 +111,7 @@ export default {
       toBeConfirmedList: [],
       selectedInbox: null,
       selectedId: null,
+      dataToBe: {},
       response: [],
     };
   },
@@ -173,7 +174,9 @@ export default {
       }
     },
     confirmResponse() {
+      this.dataToBe.responses = this.response;
       console.log(this.response);
+      console.log(this.dataToBe);
     },
     formatDateTime(dateTime) {
       return formatDateTimeDetail(dateTime);
@@ -182,6 +185,7 @@ export default {
       return formatDateTimeHeader(dateTime);
     },
     selectInbox(id) {
+      this.dataToBe.id = id;
       this.selectedInbox = this.toBeConfirmedList.find((toBeConfirmed) => {
         this.selectedId = id;
         return toBeConfirmed.id == id;
@@ -234,7 +238,7 @@ export default {
               {
                 executive_id: "2",
                 first_name: "Noparat",
-                lastname: "Prasongdee",
+                last_name: "Prasongdee",
               },
               {
                 executive_id: "3",

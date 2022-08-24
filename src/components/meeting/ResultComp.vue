@@ -1,19 +1,5 @@
 <template>
   <div class="result-comp">
-    <div class="row-header">
-      <div class="bold-content-text">{{ response.dateTime }}</div>
-      <BaseButton
-        buttonType="common-button"
-        btnText="Show schedule"
-        textColor="white"
-        textHover="white"
-        color="#7452FF"
-        hoverColor="#23106D"
-        width="fit-content"
-        @onClick="onClickShowSchedule"
-      >
-      </BaseButton>
-    </div>
     <div class="result-detail">
       <div class="slot">
         <BaseButton
@@ -197,9 +183,9 @@
               <div
                 class="executive-checkbox"
                 v-for="attendee in filterByName"
-                :key="attendee.id"
+                :key="attendee.executive_id"
               >
-                <label :for="attendee.id">
+                <label :for="attendee.executive_id">
                   <div class="profile-image">
                     <img
                       src="@/assets/decorations/sample_profile.png"
@@ -460,6 +446,7 @@ export default {
       .attendees {
         display: flex;
         align-items: center;
+        min-width: 2rem;
         .attendee-img {
           display: flex;
           padding-top: 0.2rem;
