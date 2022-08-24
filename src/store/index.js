@@ -296,6 +296,7 @@ export default createStore({
         }
       } catch (error) {
         console.log(error.response.status);
+        context.commit("GET_FAILED", true);
         if (error.response.status == 401) {
           context.commit("GET_FAILED", true);
           setTimeout(
@@ -309,7 +310,7 @@ export default createStore({
             2500
           );
         }
-        setTimeout(() => context.commit("GET_FAILED", false), 2500);
+        setTimeout(() => (context.commit("GET_FAILED", false), context.commit("GET_LOADING_STATUS", false)), 2500);
       }
     },
     async deleteExecutive(context, id) {
