@@ -225,14 +225,14 @@ export default {
       this.isDecline = false;
       this.isAccept = true;
       this.form.date = this.date;
-      this.form.status = "accept";
+      this.form.status = "accepted";
       this.executiveId = id;
     },
     handleDecline(id) {
       this.isDecline = true;
       this.isAccept = false;
       this.timeSlots = [];
-      this.form.status = "decline";
+      this.form.status = "declined";
       this.form.preferredTime = [];
       this.form.date = this.date;
       this.executiveId = id;
