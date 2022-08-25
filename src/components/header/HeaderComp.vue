@@ -19,12 +19,18 @@
       <div class="profile" @click="toggleProfileDropdown">
         <div class="image-profile">
           <img
+            v-if="$store.state.myProfilePic"
             :src="$store.state.myProfilePic"
             alt="profile of user"
             @error="
               $event.target.src =
                 'http://www.grand-cordel.com/wp-content/uploads/2015/08/import_placeholder.png'
             "
+        />
+        <img
+          v-else
+          src="@/assets/decorations/sample_profile.png"
+          alt="sample profile illustration"
         />
         </div>
         <div class="thin-content-text display-name">{{ user }}</div>

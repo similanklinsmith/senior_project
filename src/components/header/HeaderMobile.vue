@@ -4,12 +4,18 @@
       <div class="profile">
         <div class="profile-image">
             <img
+              v-if="$store.state.myProfilePic"
               :src="$store.state.myProfilePic"
               alt="profile of user"
               @error="
                 $event.target.src =
                   'http://www.grand-cordel.com/wp-content/uploads/2015/08/import_placeholder.png'
               "
+        />
+        <img
+          v-else
+          src="@/assets/decorations/sample_profile.png"
+          alt="sample profile illustration"
         />
         </div>
         <div class="profile-info">
