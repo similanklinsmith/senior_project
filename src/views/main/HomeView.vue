@@ -13,7 +13,7 @@
           </div>
           <div class="num-mention">You have 2 meetings today</div>
         </div>
-        <div class="profile-image">
+        <div class="profile-image" v-if="$store.state.myProfilePic">
           <img
             :src="$store.state.myProfilePic"
             alt="profile of user"
@@ -21,6 +21,12 @@
               $event.target.src =
                 'http://www.grand-cordel.com/wp-content/uploads/2015/08/import_placeholder.png'
             "
+          />
+        </div>
+        <div class="default-image" v-else>
+          <img
+            src="@/assets/decorations/sample_profile.png"
+            alt="sample profile illustration"
           />
         </div>
       </div>
@@ -393,13 +399,14 @@ export default {
     .mention {
       display: none;
       color: $darkViolet;
-      .profile-image {
+      .profile-image, .default-image {
         width: 6.4rem;
         height: 6.4rem;
         background-color: $fadedViolet;
         border-radius: 0.5rem;
         overflow: hidden;
       }
+      .default-image { padding: 0.2rem ;}
       .welcome {
         display: flex;
         flex-direction: column;
