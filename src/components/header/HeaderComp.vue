@@ -41,7 +41,7 @@
         >
           <ul>
         <li @click="$router.push({ path: '/setting' })">
-        <div class="image-profile">
+        <div class="image-profile" v-if="$store.state.myProfilePic">
           <img
             :src="$store.state.myProfilePic"
             alt="profile of user"
@@ -49,6 +49,12 @@
               $event.target.src =
                 'http://www.grand-cordel.com/wp-content/uploads/2015/08/import_placeholder.png'
             "
+        />
+        </div>
+        <div class="default-profile" v-else>
+          <img
+            src="@/assets/decorations/sample_profile.png"
+            alt="sample profile illustration"
         />
         </div>
             <div class="bold-content-text">{{ user.length > 15 ? user.substring(0,15)+'...' : user }}</div>
