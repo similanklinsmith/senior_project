@@ -92,7 +92,7 @@
             </div>
             <div class="second-col">
               <div class="form">
-                <form action="">
+                <form @submit.prevent="handleCreateMeeting">
                   <div class="input-form">
                     <label for="title" class="bold-small-text"
                       >Title<span class="required">*</span></label
@@ -220,6 +220,7 @@
                       color="#7452FF"
                       hoverColor="#23106D"
                       width="fit-content"
+                      type="submit"
                     >
                     </BaseButton>
                   </div>
@@ -355,14 +356,17 @@ export default {
           });
         }
         if (
-          this.selectedInbox.slots[slotIndex].responses[0].notResponse.length > 0
+          this.selectedInbox.slots[slotIndex].responses[0].notResponse.length >
+          0
         ) {
           temp2.push({
-            id: this.selectedInbox.slots[slotIndex].responses[0].notResponse[index]
-              .executive_id,
+            id: this.selectedInbox.slots[slotIndex].responses[0].notResponse[
+              index
+            ].executive_id,
             label:
-              this.selectedInbox.slots[slotIndex].responses[0].notResponse[index]
-                .firstname +
+              this.selectedInbox.slots[slotIndex].responses[0].notResponse[
+                index
+              ].firstname +
               " " +
               this.selectedInbox.slots[slotIndex].responses[0].notResponse[
                 index
@@ -433,6 +437,7 @@ export default {
       this.bestTimeSlot = filteredData;
       console.log(this.bestTimeSlot);
     },
+    handleCreateMeeting() {},
   },
   mounted() {
     this.toBeConfirmedList = [
