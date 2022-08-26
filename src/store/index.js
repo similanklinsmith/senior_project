@@ -260,17 +260,17 @@ export default createStore({
     },
     async editExecutive(context, payload) {
       context.commit("GET_LOADING_STATUS", true);
+      let imageResponse = payload.img_profile;
       try {
-        const formData = new FormData();
-        formData.append("files", payload.img_profile);
-        const imageResponse =
-          payload.img_profile == null
-            ? null
-            : await axios.post(this.state.imageURL, formData);
+        if (typeof payload.img_profile != "string") {
+          const formData = new FormData();
+          formData.append("files", payload.img_profile);
+          let result = await axios.post(this.state.imageURL, formData);
+          imageResponse = result.data.image_name;
+        }
         try {
           const editExecutive = payload.editExecutive;
-          editExecutive["img_profile"] =
-            imageResponse == null ? null : imageResponse.data.image_name;
+          editExecutive["img_profile"] = imageResponse;
           const response = await axios.put(
             this.state.myExecutiveURL + "/" + payload.id,
             editExecutive,
@@ -310,7 +310,13 @@ export default createStore({
             2500
           );
         }
-        setTimeout(() => (context.commit("GET_FAILED", false), context.commit("GET_LOADING_STATUS", false)), 2500);
+        setTimeout(
+          () => (
+            context.commit("GET_FAILED", false),
+            context.commit("GET_LOADING_STATUS", false)
+          ),
+          2500
+        );
       }
     },
     async deleteExecutive(context, id) {
