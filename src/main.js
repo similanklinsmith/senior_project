@@ -13,7 +13,6 @@ const firebaseConfig = {
 };
 initializeApp(firebaseConfig);
 import store from "./store";
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 import LitepieDatepicker from 'litepie-datepicker';
 import axios from 'axios'
 import VueAxios from 'vue-axios'
@@ -23,4 +22,4 @@ import * as LottiePlayer from "@lottiefiles/lottie-player";
 import "../public/general.scss";
 import './index.css'
 const app = createApp(App)
-app.component('font-awesome-icon', FontAwesomeIcon).use(store).use(VueAxios, axios).use(router).use(LitepieDatepicker).use(LottiePlayer).mount("#app");
+app.use(store).use(VueAxios, axios).use(router).use(LitepieDatepicker).use(LottiePlayer).mount("#app");
