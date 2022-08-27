@@ -73,7 +73,7 @@
         </div>
       </div>
       <div class="inbox-body">
-                <!-- :maximum="getPollsList.length" -->
+        <!-- :maximum="getPollsList.length" -->
         <BaseInifniteScroll
           :showLoading="loading"
           @loadMore="loadMore()"
@@ -86,7 +86,7 @@
               :key="inbox.id"
               :title="inbox.title"
               :time="inbox.create_at"
-              :content="'Poll appointments'"
+              :content="inbox.content"
               :id="inbox.id"
               @handleClick="onNav"
             />
@@ -142,138 +142,66 @@ export default {
     limitScrollItems: 10,
   },
   computed: {
-    ...mapGetters(["getterMyPolls"]),
+    ...mapGetters(["getterMyPolls", "getterMyBeConfirmeds"]),
     cards() {
-      //   const card = this.getterMyPolls.slice(0, this.upto).map((item) => {
-      //     return item;
-      //   });
-      //   return card;
-      const card = [
-        {
-          id: "1",
-          title: "Discover what’s happened this week",
-          content:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-          create_at: "2022-07-15T07:40:32.000Z",
-        },
-        {
-          id: "2",
-          title: "Let's have meeting",
-          content:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-          create_at: "2022-05-15T07:40:32.000Z",
-        },
-        {
-          id: "3",
-          title: "Whatcha doin today everyone?",
-          content:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-          create_at: "2022-05-15T07:40:32.000Z",
-        },
-        {
-          id: "4",
-          title: "Discover what’s happened this week",
-          content:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-          create_at: "2022-05-15T07:40:32.000Z",
-        },
-        {
-          id: "5",
-          title: "Discover what’s happened this week",
-          content:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-          create_at: "2022-05-15T07:40:32.000Z",
-        },
-        {
-          id: "6",
-          title: "Discover what’s happened this week",
-          content:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-          create_at: "2022-05-15T07:40:32.000Z",
-        },
-        {
-          id: "7",
-          title: "Discover what’s happened this week",
-          content:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-          create_at: "2022-05-15T07:40:32.000Z",
-        },
-        {
-          id: "8",
-          title: "Discover what’s happened this week",
-          content:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-          create_at: "2022-05-15T07:40:32.000Z",
-        },
-        {
-          id: "9",
-          title: "Discover what’s happened this week",
-          content:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-          create_at: "2022-05-15T07:40:32.000Z",
-        },
-        {
-          id: "10",
-          title: "Discover what’s happened this week",
-          content:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-          create_at: "2022-05-15T07:40:32.000Z",
-        },
-        {
-          id: "11",
-          title: "Discover what’s happened this week",
-          content:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-          create_at: "2022-05-15T07:40:32.000Z",
-        },
-      ]
-        .slice(0, this.upto)
-        .map((item) => {
+      if (this.index == 3) {
+        const card = this.getterMyPolls.slice(0, this.upto).map((item) => {
           return item;
         });
-      return card;
+        return card;
+      }
+      if (this.index == 4) {
+        const card = this.getterMyBeConfirmeds.slice(0, this.upto).map((item) => {
+          return item;
+        });
+        return card;
+      }
+      return [];
     },
     getPollsList() {
       return this.$store.getters.getterMyPolls;
     },
+    getBeConfirmedList() {
+      return this.$store.getters.getterMyBeConfirmeds;
+    },
     filterByTitle() {
-    //   if (this.searchInput != "") {
-    //     return this.getPollsList.filter((toBeConfirmed) => {
-    //       if (this.filterDate) {
-    //         return (
-    //           toBeConfirmed.title
-    //             .toLowerCase()
-    //             .includes(this.searchInput.toLowerCase()) &&
-    //           new Date(
-    //             toBeConfirmed.create_at.split("T")[0]
-    //           ).toLocaleDateString() ==
-    //             new Date(this.filterDate).toLocaleDateString()
-    //         );
-    //       } else {
-    //         return toBeConfirmed.title
-    //           .toLowerCase()
-    //           .includes(this.searchInput.toLowerCase());
-    //       }
-    //     });
-    //   } else {
-    //     return this.cards.filter((toBeConfirmed) => {
-    //       if (this.filterDate) {
-    //         return (
-    //           toBeConfirmed.title
-    //             .toLowerCase()
-    //             .includes(this.searchInput.toLowerCase()) &&
-    //           new Date(
-    //             toBeConfirmed.create_at.split("T")[0]
-    //           ).toLocaleDateString() ==
-    //             new Date(this.filterDate).toLocaleDateString()
-    //         );
-    //       } else {
-    //         return toBeConfirmed.title
-    //           .toLowerCase()
-    //           .includes(this.searchInput.toLowerCase());
-    //       }
-    //     });
-    //   }
+      //   if (this.searchInput != "") {
+      //     return this.getPollsList.filter((toBeConfirmed) => {
+      //       if (this.filterDate) {
+      //         return (
+      //           toBeConfirmed.title
+      //             .toLowerCase()
+      //             .includes(this.searchInput.toLowerCase()) &&
+      //           new Date(
+      //             toBeConfirmed.create_at.split("T")[0]
+      //           ).toLocaleDateString() ==
+      //             new Date(this.filterDate).toLocaleDateString()
+      //         );
+      //       } else {
+      //         return toBeConfirmed.title
+      //           .toLowerCase()
+      //           .includes(this.searchInput.toLowerCase());
+      //       }
+      //     });
+      //   } else {
+      //     return this.cards.filter((toBeConfirmed) => {
+      //       if (this.filterDate) {
+      //         return (
+      //           toBeConfirmed.title
+      //             .toLowerCase()
+      //             .includes(this.searchInput.toLowerCase()) &&
+      //           new Date(
+      //             toBeConfirmed.create_at.split("T")[0]
+      //           ).toLocaleDateString() ==
+      //             new Date(this.filterDate).toLocaleDateString()
+      //         );
+      //       } else {
+      //         return toBeConfirmed.title
+      //           .toLowerCase()
+      //           .includes(this.searchInput.toLowerCase());
+      //       }
+      //     });
+      //   }
       if (this.searchInput != "") {
         return this.cards.filter((toBeConfirmed) => {
           if (this.filterDate) {
@@ -314,23 +242,38 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["getMyPolls"]),
+    ...mapActions(["getMyPolls", "getMyBeConfirmeds"]),
     onNav(id) {
       switch (parseInt(this.index)) {
         case 2:
-          this.$router.push({ name: 'inbox-detail', params: { type:'inbox', id: id } }) ;
+          this.$router.push({
+            name: "inbox-detail",
+            params: { type: "inbox", id: id },
+          });
           break;
         case 3:
-          this.$router.push({ name: 'sent-detail', params: { type:'sent', id: id } }) ;
+          this.$router.push({
+            name: "sent-detail",
+            params: { type: "sent", id: id },
+          });
           break;
         case 4:
-          this.$router.push({ name: 'be-confirmed-detail', params: { type:'toBeConfirmed', id: id } }) ;
+          this.$router.push({
+            name: "be-confirmed-detail",
+            params: { type: "toBeConfirmed", id: id },
+          });
           break;
         case 5:
-          this.$router.push({ name: 'inbox-detail', params: { type:'confirmed', id: id } }) ;
-          break; 
+          this.$router.push({
+            name: "inbox-detail",
+            params: { type: "confirmed", id: id },
+          });
+          break;
         default:
-          this.$router.push({ name: 'inbox-detail', params: { type:'inbox', id: id } }) ;
+          this.$router.push({
+            name: "inbox-detail",
+            params: { type: "inbox", id: id },
+          });
           break;
       }
     },
@@ -373,13 +316,9 @@ export default {
     selectInbox(id) {
       this.isShowMore = false;
       this.slice = 2;
-    //   this.selectedInbox = this.getPollsList.find((toBeConfirmed) => {
-    //     this.selectedId = id;
-    //     return toBeConfirmed.id == id;
-    //   });
-      this.selectedInbox = this.cards.find((toBeConfirmed) => {
+      this.selectedInbox = this.cards.find((data) => {
         this.selectedId = id;
-        return toBeConfirmed.id == id;
+        return data.id == id;
       });
     },
     calculateRemainingDay(date) {
@@ -392,13 +331,13 @@ export default {
     deletePollAppointment(id) {
       this.$store.dispatch("deletePollAppointment", id);
       this.isShowPopup = false;
-    //   setTimeout(
-    //     () => (
-    //       (this.selectedInbox = this.getPollsList[0]),
-    //       (this.selectedId = this.getPollsList[0].id)
-    //     ),
-    //     1000
-    //   );
+      //   setTimeout(
+      //     () => (
+      //       (this.selectedInbox = this.getPollsList[0]),
+      //       (this.selectedId = this.getPollsList[0].id)
+      //     ),
+      //     1000
+      //   );
       setTimeout(
         () => (
           (this.selectedInbox = this.cards[0]),
@@ -410,6 +349,7 @@ export default {
   },
   created() {
     this.getMyPolls();
+    this.getMyBeConfirmeds();
   },
   mounted() {
     this.cards;

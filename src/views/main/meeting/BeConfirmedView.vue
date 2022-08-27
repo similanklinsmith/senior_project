@@ -31,63 +31,70 @@
       </div>
     </div>
     <transition name="route">
-      <div class="inbox-detail" v-if="selectedInbox != null">
-        <div class="title remark-text">{{ selectedInbox.title }}</div>
-        <div class="sent-from smallest-text">
-          sent on {{ formatDateTime(selectedInbox.create_at) }} by
-          <span
-            >{{ selectedInbox.secretary.first_name }}
-            {{ selectedInbox.secretary.last_name }}</span
-          >
-          &lt;{{ selectedInbox.secretary.email }}&gt;
-        </div>
-        <div class="bold-small-text due-date">
-          <span>*</span>This form will be expired in
-          {{ selectedInbox.due_date_time.split("T")[0] }}
-          <span v-if="new Date(selectedInbox.due_date_time) >= new Date()"
-            >({{ calculateRemainingDay(selectedInbox.due_date_time) }} days
-            left)</span
-          >
-          <span v-else>(Already expired)</span>
-        </div>
-        <div
-          class="response"
-          :class="`${
-            new Date(selectedInbox.due_date_time) < new Date() ? 'expired' : ''
-          }`"
-        >
+      <div v-if="selectedId != null">
+        <div class="inbox-detail">
           <div
-            class="response-container"
-            v-for="(periodOfTime, index) in selectedInbox.periodOfTime"
-            :key="index"
+            class="inbox-detail-content"
+            v-if="isLoading == false && inboxDetail != null"
           >
-            <div class="day bold-content-text">
-              {{ formatDateTimeHeader(periodOfTime.date) }}
+            <div class="title remark-text">{{ inboxDetail.title }}</div>
+            <div class="sent-from smallest-text">
+              sent on {{ formatDateTime(inboxDetail.create_at) }} by
+              <span>{{ inboxDetail.secretary.name }}</span>
+              &lt;{{ inboxDetail.secretary.email }}&gt;
             </div>
-            <ResponseComp
-              @onResponse="handleResponse"
-              v-for="executive in periodOfTime.executives"
-              :key="executive.executive_id"
-              :executive="executive"
-              :date="periodOfTime.date"
-              :duration="selectedInbox.duration_of_time"
-              :dateTimeHeader="formatDateTimeHeader(periodOfTime.date)"
-            />
+            <div class="bold-small-text due-date">
+              <span>*</span>This form will be expired in
+              {{ inboxDetail.due_date_time.split("T")[0] }}
+              <span v-if="new Date(inboxDetail.due_date_time) >= new Date()"
+                >({{ calculateRemainingDay(inboxDetail.due_date_time) }} days
+                left)</span
+              >
+              <span v-else>(Already expired)</span>
+            </div>
+            <div
+              class="response"
+              :class="`${
+                new Date(inboxDetail.due_date_time) < new Date()
+                  ? 'expired'
+                  : ''
+              }`"
+            >
+              <div
+                class="response-container"
+                v-for="(periodOfTime, index) in inboxDetail.periodOfTime"
+                :key="index"
+              >
+                <div class="day bold-content-text">
+                  {{ formatDateTimeHeader(periodOfTime.date) }}
+                </div>
+                <ResponseComp
+                  @onResponse="handleResponse"
+                  v-for="executive in periodOfTime.executives"
+                  :key="executive.executive_id"
+                  :executive="executive"
+                  :date="periodOfTime.date"
+                  :duration="inboxDetail.duration_of_time"
+                  :dateTimeHeader="formatDateTimeHeader(periodOfTime.date)"
+                />
+              </div>
+            </div>
+            <div class="button">
+              <BaseButton
+                v-if="responseAll"
+                buttonType="common-button"
+                btnText="Confirm response"
+                textColor="white"
+                textHover="white"
+                color="#7452FF"
+                hoverColor="#23106D"
+                width="24rem"
+                @onClick="confirmResponse"
+              >
+              </BaseButton>
+            </div>
           </div>
-        </div>
-        <div class="button">
-          <BaseButton
-            v-if="responseAll"
-            buttonType="common-button"
-            btnText="Confirm response"
-            textColor="white"
-            textHover="white"
-            color="#7452FF"
-            hoverColor="#23106D"
-            width="24rem"
-            @onClick="confirmResponse"
-          >
-          </BaseButton>
+          <div v-else class="remark-text not-found loading">Loading...</div>
         </div>
       </div>
     </transition>
@@ -98,6 +105,7 @@
 import InboxComp from "@/components/meeting/InboxComp.vue";
 import ResponseComp from "@/components/meeting/ResponseComp.vue";
 import BaseButton from "@/components/UI/BaseButton.vue";
+import { mapGetters, mapActions } from "vuex";
 import {
   formatDateTimeDetail,
   formatDateTimeHeader,
@@ -109,38 +117,48 @@ export default {
     return {
       searchInput: "",
       toBeConfirmedList: [],
-      selectedInbox: null,
+      inboxDetail: null,
       selectedId: null,
+      isLoading: false,
       dataToBe: {},
       response: [],
     };
   },
   computed: {
+    ...mapGetters(["getterMyBeConfirmeds", "getterMyBeConfirmedDetail"]),
+    getBeConfirmedList() {
+      return this.$store.getters.getterMyBeConfirmeds;
+    },
     filterByTitle() {
-      return this.toBeConfirmedList.filter((toBeConfirmed) => {
+      return this.getBeConfirmedList.filter((toBeConfirmed) => {
         return toBeConfirmed.title
           .toLowerCase()
           .includes(this.searchInput.toLowerCase());
       });
     },
     responseAll() {
-      let isValid;
-      if (
-        this.response.length > 0 &&
-        this.response.length == this.selectedInbox.periodOfTime.length
-      ) {
+      var isValid;
+      if (this.response.length > 0 && this.response.length == this.inboxDetail.periodOfTime[0].executives.length) {
         for (let index = 0; index < this.response.length; index++) {
-          isValid =
-            this.response[index].timeSlot.length ==
-            this.selectedInbox.periodOfTime.length;
+          isValid = this.response[index].timeSlot.length == this.inboxDetail.periodOfTime.length
+          if (isValid == false) {
+            return false;
+          }
+          for (let i = 0; i < this.response[index].timeSlot.length; i++) {
+            if (this.response[index].timeSlot[i].status == 'accepted') {
+              isValid = this.response[index].timeSlot[i].preferredTime.length;
+              console.log(isValid);
+              return isValid;
+            }
+          }
         }
         return isValid;
-      } else {
-        return false;
       }
+      return false;
     },
   },
   methods: {
+    ...mapActions(["getMyBeConfirmeds", "getMyBeConfirmedDetail"]),
     calculateRemainingDay(date) {
       return Math.round(
         (new Date(date) - new Date(Date.now())) / (24 * 60 * 60 * 1000)
@@ -184,167 +202,179 @@ export default {
     formatDateTimeHeader(dateTime) {
       return formatDateTimeHeader(dateTime);
     },
-    selectInbox(id) {
+    async selectInbox(id) {
       this.dataToBe.id = id;
-      this.selectedInbox = this.toBeConfirmedList.find((toBeConfirmed) => {
-        this.selectedId = id;
-        return toBeConfirmed.id == id;
-      });
+      this.selectedId = id;
+      this.isLoading = true;
+      try {
+        this.inboxDetail = await this.$store.dispatch(
+          "getMyBeConfirmedDetail",
+          this.selectedId
+        );
+        console.log(this.inboxDetail);
+        this.isLoading = false;
+      } catch (error) {
+        this.isLoading = false;
+      }
     },
   },
+  created() {
+    this.getMyBeConfirmeds();
+  },
   mounted() {
-    this.toBeConfirmedList = [
-      {
-        id: "1",
-        title: "Discover what’s happened this week",
-        create_at: "2022-05-15T07:40:32.000Z",
-        due_date_time: "2022-08-20T07:40:32.000Z",
-        duration_of_time: "2",
-        secretary: {
-          id: 1,
-          first_name: "Jennie",
-          last_name: "Kim",
-          email: "jennie@mail.kmutt.ac.th",
-        },
-        periodOfTime: [
-          {
-            date: "2022-08-25",
-            executives: [
-              {
-                executive_id: "1",
-                first_name: "Similan",
-                last_name: "Klinsmith",
-              },
-              {
-                executive_id: "2",
-                first_name: "Noparat",
-                last_name: "Prasongdee",
-              },
-              {
-                executive_id: "3",
-                first_name: "Praepanwa",
-                last_name: "Tedprasit",
-              },
-            ],
-          },
-          {
-            date: "2022-08-26",
-            executives: [
-              {
-                executive_id: "1",
-                first_name: "Similan",
-                last_name: "Klinsmith",
-              },
-              {
-                executive_id: "2",
-                first_name: "Noparat",
-                last_name: "Prasongdee",
-              },
-              {
-                executive_id: "3",
-                first_name: "Praepanwa",
-                last_name: "Tedprasit",
-              },
-            ],
-          },
-          {
-            date: "2022-08-27",
-            executives: [
-              {
-                executive_id: "1",
-                first_name: "Similan",
-                last_name: "Klinsmith",
-              },
-              {
-                executive_id: "2",
-                first_name: "Noparat",
-                last_name: "Prasongdee",
-              },
-              {
-                executive_id: "3",
-                first_name: "Praepanwa",
-                last_name: "Tedprasit",
-              },
-            ],
-          },
-        ],
-      },
-      {
-        id: "2",
-        title: "Discover what’s happened this week",
-        create_at: "2022-05-15T07:40:32.000Z",
-        due_date_time: "2022-08-30T07:40:32.000Z",
-        duration_of_time: "2",
-        secretary: {
-          id: 1,
-          first_name: "Jennie",
-          last_name: "Kim",
-          email: "jennie@mail.kmutt.ac.th",
-        },
-        periodOfTime: [
-          {
-            date: "2022-08-25",
-            executives: [
-              {
-                executive_id: "1",
-                first_name: "Similan",
-                last_name: "Klinsmith",
-              },
-              {
-                executive_id: "2",
-                first_name: "Noparat",
-                last_name: "Prasongdee",
-              },
-              {
-                executive_id: "3",
-                first_name: "Praepanwa",
-                last_name: "Tedprasit",
-              },
-            ],
-          },
-          {
-            date: "2022-08-26",
-            executives: [
-              {
-                executive_id: "1",
-                first_name: "Similan",
-                last_name: "Klinsmith",
-              },
-              {
-                executive_id: "2",
-                first_name: "Noparat",
-                lastname: "Prasongdee",
-              },
-              {
-                executive_id: "3",
-                first_name: "Praepanwa",
-                last_name: "Tedprasit",
-              },
-            ],
-          },
-          {
-            date: "2022-08-27",
-            executives: [
-              {
-                executive_id: "1",
-                first_name: "Similan",
-                last_name: "Klinsmith",
-              },
-              {
-                executive_id: "2",
-                first_name: "Noparat",
-                last_name: "Prasongdee",
-              },
-              {
-                executive_id: "3",
-                first_name: "Praepanwa",
-                last_name: "Tedprasit",
-              },
-            ],
-          },
-        ],
-      },
-    ];
+    // this.getMyBeConfirmeds();
+    // this.toBeConfirmedList = [
+    //   {
+    //     id: "1",
+    //     title: "Discover what’s happened this week",
+    //     create_at: "2022-05-15T07:40:32.000Z",
+    //     due_date_time: "2022-08-20T07:40:32.000Z",
+    //     duration_of_time: "2",
+    //     secretary: {
+    //       id: 1,
+    //       first_name: "Jennie",
+    //       last_name: "Kim",
+    //       email: "jennie@mail.kmutt.ac.th",
+    //     },
+    //     periodOfTime: [
+    //       {
+    //         date: "2022-08-25",
+    //         executives: [
+    //           {
+    //             executive_id: "1",
+    //             first_name: "Similan",
+    //             last_name: "Klinsmith",
+    //           },
+    //           {
+    //             executive_id: "2",
+    //             first_name: "Noparat",
+    //             last_name: "Prasongdee",
+    //           },
+    //           {
+    //             executive_id: "3",
+    //             first_name: "Praepanwa",
+    //             last_name: "Tedprasit",
+    //           },
+    //         ],
+    //       },
+    //       {
+    //         date: "2022-08-26",
+    //         executives: [
+    //           {
+    //             executive_id: "1",
+    //             first_name: "Similan",
+    //             last_name: "Klinsmith",
+    //           },
+    //           {
+    //             executive_id: "2",
+    //             first_name: "Noparat",
+    //             last_name: "Prasongdee",
+    //           },
+    //           {
+    //             executive_id: "3",
+    //             first_name: "Praepanwa",
+    //             last_name: "Tedprasit",
+    //           },
+    //         ],
+    //       },
+    //       {
+    //         date: "2022-08-27",
+    //         executives: [
+    //           {
+    //             executive_id: "1",
+    //             first_name: "Similan",
+    //             last_name: "Klinsmith",
+    //           },
+    //           {
+    //             executive_id: "2",
+    //             first_name: "Noparat",
+    //             last_name: "Prasongdee",
+    //           },
+    //           {
+    //             executive_id: "3",
+    //             first_name: "Praepanwa",
+    //             last_name: "Tedprasit",
+    //           },
+    //         ],
+    //       },
+    //     ],
+    //   },
+    //   {
+    //     id: "2",
+    //     title: "Discover what’s happened this week",
+    //     create_at: "2022-05-15T07:40:32.000Z",
+    //     due_date_time: "2022-08-30T07:40:32.000Z",
+    //     duration_of_time: "2",
+    //     secretary: {
+    //       id: 1,
+    //       first_name: "Jennie",
+    //       last_name: "Kim",
+    //       email: "jennie@mail.kmutt.ac.th",
+    //     },
+    //     periodOfTime: [
+    //       {
+    //         date: "2022-08-25",
+    //         executives: [
+    //           {
+    //             executive_id: "1",
+    //             first_name: "Similan",
+    //             last_name: "Klinsmith",
+    //           },
+    //           {
+    //             executive_id: "2",
+    //             first_name: "Noparat",
+    //             last_name: "Prasongdee",
+    //           },
+    //           {
+    //             executive_id: "3",
+    //             first_name: "Praepanwa",
+    //             last_name: "Tedprasit",
+    //           },
+    //         ],
+    //       },
+    //       {
+    //         date: "2022-08-26",
+    //         executives: [
+    //           {
+    //             executive_id: "1",
+    //             first_name: "Similan",
+    //             last_name: "Klinsmith",
+    //           },
+    //           {
+    //             executive_id: "2",
+    //             first_name: "Noparat",
+    //             lastname: "Prasongdee",
+    //           },
+    //           {
+    //             executive_id: "3",
+    //             first_name: "Praepanwa",
+    //             last_name: "Tedprasit",
+    //           },
+    //         ],
+    //       },
+    //       {
+    //         date: "2022-08-27",
+    //         executives: [
+    //           {
+    //             executive_id: "1",
+    //             first_name: "Similan",
+    //             last_name: "Klinsmith",
+    //           },
+    //           {
+    //             executive_id: "2",
+    //             first_name: "Noparat",
+    //             last_name: "Prasongdee",
+    //           },
+    //           {
+    //             executive_id: "3",
+    //             first_name: "Praepanwa",
+    //             last_name: "Tedprasit",
+    //           },
+    //         ],
+    //       },
+    //     ],
+    //   },
+    // ];
   },
 };
 </script>
@@ -463,25 +493,45 @@ export default {
     background-color: $white;
     border-radius: 2.5rem;
     padding: 5rem 4.4rem;
-    display: flex;
     flex-direction: column;
-    overflow: scroll;
-    .due-date {
-      margin-top: 2rem;
-      color: $primaryViolet;
-      span {
-        color: $error;
-      }
-    }
-    .sent-from {
-      color: $darkGrey;
-      span {
-        text-decoration: underline;
-      }
-    }
-    .button {
+    display: flex;
+    .not-found {
+      padding: 1.8rem;
+      width: 100%;
       display: flex;
-      justify-content: flex-end;
+      align-items: center;
+      justify-content: center;
+      height: 80%;
+      text-align: center;
+      color: $darkGrey;
+    }
+    .loading {
+      animation-name: floating;
+      -webkit-animation-name: floating;
+      animation-duration: 3s;
+      -webkit-animation-duration: 3s;
+      animation-iteration-count: infinite;
+      -webkit-animation-iteration-count: infinite;
+    }
+    .inbox-detail-content {
+      overflow: scroll;
+      .due-date {
+        margin-top: 2rem;
+        color: $primaryViolet;
+        span {
+          color: $error;
+        }
+      }
+      .sent-from {
+        color: $darkGrey;
+        span {
+          text-decoration: underline;
+        }
+      }
+      .button {
+        display: flex;
+        justify-content: flex-end;
+      }
     }
   }
 }

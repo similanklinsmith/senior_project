@@ -1,35 +1,73 @@
 <template>
-  <MaskMeetingDetailMobile
-    :title="`[Firebase] Client access to your Realtime Database 'flutter2-f80d0-
-        default-rtdb is expiring soon`"
-    :dateTime="'2022-05-15T07:40:32.000Z'"
-    :type="type"
-    :sender="'Katherine Perish'"
-  >
-    <template v-slot:detail-slot>
-      <div class="expired-date">
-        <span>*</span>This form will be expired in 2022-05-10
-        <span>(3 days left)</span>
-      </div>
-      <div class="response">
-        <ResponseComp />
-        <ResponseComp />
-        <ResponseComp />
-        <ResponseComp />
-        <ResponseComp />
-        <ResponseComp />
-      </div>
-    </template>
-  </MaskMeetingDetailMobile>
+  <div v-if="!isLoading && inboxDetail != null">
+    <MaskMeetingDetailMobile
+      :title="inboxDetail.title"
+      :dateTime="inboxDetail.create_at"
+      :type="type"
+      :sender="inboxDetail.secretary.name"
+    >
+      <template v-slot:detail-slot>
+        <div class="expired-date">
+          <span>*</span>This form will be expired in
+          {{ inboxDetail.due_date_time.split("T")[0] }}
+          <span v-if="new Date(inboxDetail.due_date_time) >= new Date()"
+            >({{ calculateRemainingDay(inboxDetail.due_date_time) }} days
+            left)</span
+          >
+          <span v-else>(Already expired)</span>
+        </div>
+        <div
+          class="response"
+          :class="`${
+            new Date(inboxDetail.due_date_time) < new Date() ? 'expired' : ''
+          }`"
+        >
+          <div
+            class="response-container"
+            v-for="(periodOfTime, index) in inboxDetail.periodOfTime"
+            :key="index"
+          >
+            <div class="day remark-text">
+              {{ formatDateTimeHeader(periodOfTime.date) }}
+            </div>
+            <ResponseComp
+              @onResponse="handleResponse"
+              v-for="executive in periodOfTime.executives"
+              :key="executive.executive_id"
+              :executive="executive"
+              :date="periodOfTime.date"
+              :duration="inboxDetail.duration_of_time"
+              :dateTimeHeader="formatDateTimeHeader(periodOfTime.date)"
+            />
+          </div>
+        </div>
+        <BaseButton
+          v-if="responseAll"
+          buttonType="common-button"
+          btnText="Confirm response"
+          textColor="white"
+          textHover="white"
+          color="#7452FF"
+          hoverColor="#23106D"
+          width="100%"
+          @onClick="confirmResponse"
+        >
+        </BaseButton>
+      </template>
+    </MaskMeetingDetailMobile>
+  </div>
 </template>
 
 <script>
 import MaskMeetingDetailMobile from "@/components/meeting/MaskMeetingDetailMobile.vue";
+import BaseButton from "@/components/UI/BaseButton.vue";
 import ResponseComp from "@/components/meeting/ResponseComp.vue";
+import { mapGetters, mapActions } from "vuex";
 import { useRoute } from "vue-router";
+import { formatDateTimeHeader } from "@/helpers/formatDateTime";
 export default {
   name: "BeConfirmedViewDetail",
-  components: { MaskMeetingDetailMobile, ResponseComp },
+  components: { MaskMeetingDetailMobile, ResponseComp, BaseButton },
   setup() {
     const route = useRoute();
     const id = route.params.id;
@@ -38,86 +76,110 @@ export default {
   },
   data() {
     return {
-      urlImage: this.$store.state.imageURL,
-      searchInput: "",
-      isShowAttendees: false,
-      attendees: [
-        {
-          id: 1,
-          title: "Mr",
-          firstname: "Similan",
-          lastname: "Klinsmith",
-          image: "default_profile.png",
-        },
-        {
-          id: 2,
-          title: "Ms",
-          firstname: "Noparat",
-          lastname: "Prasongdee",
-          image: "default_profile.png",
-        },
-        {
-          id: 3,
-          title: "Ms",
-          firstname: "Praepanwa",
-          lastname: "Tedprasit",
-          image: "default_profile.png",
-        },
-        {
-          id: 4,
-          title: "Ms",
-          firstname: "Natcha",
-          lastname: "Phannoi",
-          image: "default_profile.png",
-        },
-        {
-          id: 5,
-          title: "Ms",
-          firstname: "Nattakorn",
-          lastname: "Lertsakornprasert",
-          image: "default_profile.png",
-        },
-        {
-          id: 6,
-          title: "Mr",
-          firstname: "Jiraphat",
-          lastname: "Poolprapha",
-          image: "default_profile.png",
-        },
-        {
-          id: 7,
-          title: "Ms",
-          firstname: "Sunanta",
-          lastname: "Singka",
-          image: "default_profile.png",
-        },
-      ],
+      isLoading: false,
+      inboxDetail: null,
+      dataToBe: {},
+      response: [],
     };
   },
-  methods: {
-    copyLink(value) {
-      let copyText = document.getElementById(value).innerHTML;
-      navigator.clipboard.writeText(copyText);
-    },
-    showAllAttendee() {
-      this.isShowAttendees = true;
+  computed: {
+    ...mapGetters(["getterMyBeConfirmedDetail"]),
+    responseAll() {
+      var isValid;
+      if (this.response.length > 0 && this.response.length == this.inboxDetail.periodOfTime[0].executives.length) {
+        for (let index = 0; index < this.response.length; index++) {
+          isValid = this.response[index].timeSlot.length == this.inboxDetail.periodOfTime.length
+          if (isValid == false) {
+            return false;
+          }
+          for (let i = 0; i < this.response[index].timeSlot.length; i++) {
+            if (this.response[index].timeSlot[i].status == 'accepted') {
+              isValid = this.response[index].timeSlot[i].preferredTime.length;
+              console.log(isValid);
+              return isValid;
+            }
+          }
+        }
+        return isValid;
+      }
+      return false;
     },
   },
-  mounted() {
+  methods: {
+    ...mapActions(["getMyBeConfirmedDetail"]),
+    async getBeConfirmedDetail() {
+      try {
+        this.inboxDetail = await this.$store.dispatch(
+          "getMyBeConfirmedDetail",
+          this.id
+        );
+        console.log(this.inboxDetail);
+        this.isLoading = false;
+      } catch (error) {
+        this.isLoading = false;
+      }
+    },
+    formatDateTimeHeader(dateTime) {
+      return formatDateTimeHeader(dateTime);
+    },
+    calculateRemainingDay(date) {
+      return Math.round(
+        (new Date(date) - new Date(Date.now())) / (24 * 60 * 60 * 1000)
+      ) < 0
+        ? 0
+        : Math.round(
+            (new Date(date) - new Date(Date.now())) / (24 * 60 * 60 * 1000)
+          );
+    },
+    handleResponse(answer) {
+      if (this.response.length > 0) {
+        const index = this.response.findIndex(
+          (res) => res.executiveId == answer.executiveId
+        );
+        if (index != -1) {
+          const indexDate = this.response[index].timeSlot.findIndex(
+            (slot) => slot.date == answer.timeSlot[0].date
+          );
+          if (indexDate != -1) {
+            console.log(answer.timeSlot[0].preferredTime);
+            this.response[index].timeSlot[indexDate].preferredTime =
+              answer.timeSlot[0].preferredTime;
+          } else {
+            this.response[index].timeSlot.push(answer.timeSlot[0]);
+          }
+        } else {
+          this.response.push(answer);
+        }
+      } else {
+        this.response.push(answer);
+      }
+    },
+    confirmResponse() {
+      this.dataToBe.responses = this.response;
+      console.log(this.response);
+      console.log(this.dataToBe);
+    },
+  },
+  created() {
     console.log(`This is params id: ${this.id}`);
     console.log(`This is params type: ${this.type}`);
-    // GET by /:{type}/:{id}
-    // Ex. /inbox/1
+    this.getBeConfirmedDetail();
   },
 };
 </script>
 
 <style lang="scss" scoped>
 @import "@/assets/colors/webColors.scss";
+.expired {
+  filter: grayscale(1);
+  opacity: 0.5;
+  pointer-events: none;
+}
 .expired-date {
   font-size: 2rem;
   font-weight: 500;
   color: $primaryViolet;
+  line-height: 1.6;
   span {
     color: $error;
   }
@@ -130,6 +192,12 @@ export default {
   overflow: scroll;
   margin: 1rem 0;
   padding: 0 1rem;
+  .response-container {
+    margin: 2.5rem 0;
+    .day {
+      color: $darkViolet;
+    }
+  }
 }
 .response::-webkit-scrollbar {
   display: block !important;
