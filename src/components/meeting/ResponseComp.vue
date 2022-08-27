@@ -16,7 +16,7 @@
           fontSize="1.4rem"
           :class="isAccept ? 'common-button' : 'outlined-button'"
           :style="isAccept ? { color: 'white' } : { color: '#39CF5A' }"
-          @onClick="handleAccept(executive.executive_id)"
+          @onClick="handleAccept(executive.id)"
         >
           <template v-slot:after-icon>
             <i class="fa-solid fa-check"></i>
@@ -31,7 +31,7 @@
           fontSize="1.4rem"
           :class="isDecline ? 'common-button' : 'outlined-button'"
           :style="isDecline ? { color: 'white' } : { color: '#F33C3C' }"
-          @onClick="handleDecline(executive.executive_id)"
+          @onClick="handleDecline(executive.id)"
         >
           <template v-slot:after-icon>
             <i class="fa-solid fa-xmark"></i>
@@ -470,6 +470,7 @@ export default {
 }
 @media (max-width: 26.75em) {
   .pop-up {
+    row-gap: 1rem;
     width: 90%;
     .form {
       flex-wrap: wrap;

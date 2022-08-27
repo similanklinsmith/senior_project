@@ -80,6 +80,7 @@ export default {
     .date-time {
       color: $darkGrey;
       font-size: 1.8rem;
+      line-height: 1.6;
     }
   }
 }

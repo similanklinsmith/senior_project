@@ -13,8 +13,11 @@
         }}</span
         ><span>{{ formatDateTime(time) }}</span>
       </div>
-      <div class="inbox-content content-text">
+      <div class="inbox-content content-text" v-if="content">
         {{ content.length > 50 ? content.substring(0, 50) + "..." : content }}
+      </div>
+      <div class="inbox-content content-text" v-else>
+        Response poll appointment
       </div>
     </div>
   </div>
