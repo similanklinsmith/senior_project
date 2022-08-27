@@ -1,4 +1,4 @@
-<template>
+<template> 
   <div id="app">
     <SplashView></SplashView>
     <div v-if="$route.name != 'NotFound' && $route.name != 'sign-in'">
