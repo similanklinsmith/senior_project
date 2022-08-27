@@ -30,6 +30,10 @@ export default createStore({
     myPollsURL: `${BASE_URL}/yourPolls`,
     myPolls: [],
 
+    // beConfirmed lists
+    myBeConfirmedURL: `${BASE_URL}/yourConfirmed`,
+    myBeConfirmeds: [],
+
     loadingStatus: false,
     success: false,
     failed: false,
@@ -92,6 +96,9 @@ export default createStore({
       if (index !== -1) {
         state.myPolls.splice(index, 1);
       }
+    },
+    GET_MY_BE_CONFIRMED(state, beConfirmeds) {
+      state.myBeConfirmeds = beConfirmeds;
     },
   },
   actions: {
@@ -415,6 +422,30 @@ export default createStore({
         }
       }
     },
+    async getMyBeConfirmeds(context) {
+      context.commit("GET_LOADING_STATUS", true);
+      try {
+        const data = await axios.get(this.state.myBeConfirmedURL, {
+          headers: authHeader(),
+        });
+        context.commit(
+          "GET_MY_BE_CONFIRMED",
+          data.data.data.sort((a, b) => {
+            return new Date(b.create_at) - new Date(a.create_at);
+          })
+        );
+        context.commit("GET_LOADING_STATUS", false);
+      } catch (error) {
+        context.commit("GET_LOADING_STATUS", false);
+        console.log(error.response.status);
+        if (error.response.status == 401) {
+          signOut(this.state.getAuth).then(() => {
+            router.replace("/sign-in");
+          });
+          this.dispatch("auth/logout");
+        }
+      }
+    },
   },
   getters: {
     getterLoadingStatus(state) {
@@ -441,6 +472,9 @@ export default createStore({
 
     getterMyPolls(state) {
       return state.myPolls;
+    },
+    getterMyBeConfirmeds(state) {
+      return state.myBeConfirmeds;
     },
   },
   modules: { auth },
