@@ -20,7 +20,7 @@
     "litepie-datepicker": "^1.0.14",
     "vue": "^3.2.13",
     "vue-axios": "^3.4.1",
-    "vue-cal": "^4.2.0",
+    "vue-cal": "^4.4.0",
     "vue-router": "^4.0.3",
     "vuex": "^4.0.0"
   },
