@@ -1,12 +1,12 @@
 <template>
   <div class="infscroll__container">
     <div id="infinite-list" class="infscroll__items">
+      <slot></slot>
       <transition name="route" appear>
-        <div class="infscroll__loader-bg" v-show="showLoading">
+        <div class="infscroll__loader-bg remark-text" v-show="showLoading">
           <div class="infscroll__loader">{{ textLoading }}</div>
         </div>
       </transition>
-      <slot></slot>
       <BaseButton
         v-if="maximum != length"
         buttonType="common-button"
@@ -79,4 +79,7 @@ export default {
   },
 };
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+@import "@/assets/colors/webColors.scss";
+.infscroll__loader-bg {width: 100%;padding: 3rem;text-align: center;.infscroll__loader {color: $highlightViolet;}}
+</style>
