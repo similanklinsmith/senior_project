@@ -1,6 +1,7 @@
 import { createStore } from "vuex";
 import axios from "axios";
 const BASE_URL = process.env.VUE_APP_API_PATH;
+import { customAxios } from "./axios";
 import { auth } from "./auth.module";
 import authHeader from "@/services/auth-header";
 import router from "@/router";
@@ -109,7 +110,7 @@ export default createStore({
   actions: {
     async getMyProfile(context) {
       try {
-        const data = await axios.get(this.state.secretaryURL, {
+        const data = await customAxios.instance.get(this.state.secretaryURL, {
           headers: authHeader(),
         });
         context.commit("GET_PROFILE", data.data.data);
@@ -160,7 +161,7 @@ export default createStore({
     },
     async getExecutiveTitle(context) {
       try {
-        const data = await axios.get(this.state.executiveTitleURL);
+        const data = await customAxios.instance.get(this.state.executiveTitleURL);
         context.commit("GET_EXECUTIVES_TITLES", data.data.data);
       } catch (error) {
         console.log(error);
@@ -168,7 +169,7 @@ export default createStore({
     },
     async getExecutivePosition(context) {
       try {
-        const data = await axios.get(this.state.executivePositionURL);
+        const data = await customAxios.instance.get(this.state.executivePositionURL);
         context.commit("GET_EXECUTIVES_POSITIONS", data.data.data);
       } catch (error) {
         console.log(error);
@@ -177,7 +178,7 @@ export default createStore({
     async getExecutives(context) {
       context.commit("GET_LOADING_STATUS", true);
       try {
-        const data = await axios.get(this.state.executiveURL);
+        const data = await customAxios.instance.get(this.state.executiveURL);
         context.commit(
           "GET_EXECUTIVES",
           data.data.data.sort((a, b) =>
@@ -194,7 +195,7 @@ export default createStore({
       // GET Executives by Secretary ID
       context.commit("GET_LOADING_STATUS", true);
       try {
-        const data = await axios.get(this.state.myExecutiveURL + "/", {
+        const data = await customAxios.instance.get(this.state.myExecutiveURL + "/", {
           headers: authHeader(),
         });
         context.commit(
@@ -222,12 +223,12 @@ export default createStore({
         const imageResponse =
           payload.img_profile == null
             ? null
-            : await axios.post(this.state.imageURL, formData);
+            : await customAxios.instance.post(this.state.imageURL, formData);
         try {
           const newExecutive = payload.newExecutive;
           newExecutive["img_profile"] =
             imageResponse == null ? null : imageResponse.data.image_name;
-          const response = await axios.post(
+          const response = await customAxios.instance.post(
             this.state.myExecutiveURL,
             newExecutive,
             {
@@ -277,13 +278,13 @@ export default createStore({
         if (typeof payload.img_profile != "string") {
           const formData = new FormData();
           formData.append("files", payload.img_profile);
-          let result = await axios.post(this.state.imageURL, formData);
+          let result = await customAxios.instance.post(this.state.imageURL, formData);
           imageResponse = result.data.image_name;
         }
         try {
           const editExecutive = payload.editExecutive;
           editExecutive["img_profile"] = imageResponse;
-          const response = await axios.put(
+          const response = await customAxios.instance.put(
             this.state.myExecutiveURL + "/" + payload.id,
             editExecutive,
             {
@@ -333,7 +334,7 @@ export default createStore({
     },
     async deleteExecutive(context, id) {
       try {
-        await axios.delete(this.state.myExecutiveURL + "/" + id, {
+        await customAxios.instance.delete(this.state.myExecutiveURL + "/" + id, {
           headers: authHeader(),
         });
         context.commit("DELETE_MY_EXECUTIVE", id);
@@ -359,7 +360,7 @@ export default createStore({
     async getMyPolls(context) {
       context.commit("GET_LOADING_STATUS", true);
       try {
-        const data = await axios.get(this.state.myPollsURL, {
+        const data = await customAxios.instance.get(this.state.myPollsURL, {
           headers: authHeader(),
         });
         context.commit(
@@ -383,7 +384,7 @@ export default createStore({
     async addPollAppointment(context, payload) {
       try {
         const newPoll = payload;
-        const response = await axios.post(this.state.addPollURL, newPoll, {
+        const response = await customAxios.instance.post(this.state.addPollURL, newPoll, {
           headers: authHeader(),
         });
         context.commit("ADD_POLLS", response.data.data);
@@ -409,7 +410,7 @@ export default createStore({
     },
     async deletePollAppointment(context, id) {
       try {
-        const response = await axios.delete(this.state.addPollURL + "/" + id, {
+        const response = await customAxios.instance.delete(this.state.addPollURL + "/" + id, {
           headers: authHeader(),
         });
         console.log(response.status);
@@ -430,7 +431,7 @@ export default createStore({
     async getMyBeConfirmeds(context) {
       context.commit("GET_LOADING_STATUS", true);
       try {
-        const data = await axios.get(this.state.myBeConfirmedURL, {
+        const data = await customAxios.instance.get(this.state.myBeConfirmedURL, {
           headers: authHeader(),
         });
         context.commit(
@@ -454,7 +455,7 @@ export default createStore({
     async getMyBeConfirmedDetail(context, id) {
       context.commit("GET_LOADING_STATUS", true);
       try {
-        const data = await axios.get(this.state.myBeConfirmedDetailURL+'/'+id, {
+        const data = await customAxios.instance.get(this.state.myBeConfirmedDetailURL+'/'+id, {
           headers: authHeader(),
         });
         context.commit(
