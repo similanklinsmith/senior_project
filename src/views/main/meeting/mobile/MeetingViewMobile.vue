@@ -77,7 +77,7 @@
         <BaseInifniteScroll
           :showLoading="loading"
           @loadMore="loadMore()"
-          :maximum="11"
+          :maximum="maximumLength"
           :length="cards.length"
         >
           <transition-group name="route" appear>
@@ -128,7 +128,7 @@ export default {
   data() {
     return {
       loading: false,
-      upto: 10,
+      upto: 1,
       searchInput: "",
       selectedInbox: null,
       selectedId: null,
@@ -136,6 +136,7 @@ export default {
       isShowDropdown: false,
       withInDate: "",
       filterDate: "",
+      maximumLength: null,
     };
   },
   static: {
@@ -145,12 +146,14 @@ export default {
     ...mapGetters(["getterMyPolls", "getterMyBeConfirmeds"]),
     cards() {
       if (this.index == 3) {
+        this.changeMaximum(this.getterMyPolls);
         const card = this.getterMyPolls.slice(0, this.upto).map((item) => {
           return item;
         });
         return card;
       }
       if (this.index == 4) {
+        this.changeMaximum(this.getterMyBeConfirmeds);
         const card = this.getterMyBeConfirmeds.slice(0, this.upto).map((item) => {
           return item;
         });
@@ -243,6 +246,9 @@ export default {
   },
   methods: {
     ...mapActions(["getMyPolls", "getMyBeConfirmeds"]),
+    changeMaximum(data) {
+        this.maximumLength = data.length;
+    },
     onNav(id) {
       switch (parseInt(this.index)) {
         case 2:

@@ -105,7 +105,7 @@
           <BaseButton
             buttonType="navigator-button"
             height="5rem"
-            btnText="Trash"
+            btnText="Replied"
             textHover="white"
             hoverColor="#23106D"
             @onClick="onClickNav(6)"
@@ -116,7 +116,7 @@
             "
           >
             <template v-slot:before-icon>
-              <i class="fa-solid fa-trash"></i>
+              <i class="fa-solid fa-reply"></i>
             </template>
           </BaseButton>
         </div>
@@ -227,7 +227,7 @@
               buttonType="navigator-button"
               height="5rem"
               minWidth="23rem"
-              btnText="Trash"
+              btnText="Replied"
               textHover="white"
               hoverColor="#23106D"
               @onClick="onClickNav(6)"
@@ -238,7 +238,7 @@
               "
             >
               <template v-slot:before-icon>
-                <i class="fa-solid fa-trash"></i>
+                <i class="fa-solid fa-reply"></i>
               </template>
             </BaseButton>
           </div>
@@ -249,6 +249,7 @@
           <SentView v-if="isSelected == 3" />
           <BeConfirmedView v-if="isSelected == 4" />
           <ConfirmedView v-if="isSelected == 5" />
+          <RepliedView v-if="isSelected == 6" />
         </transition-group>
       </div>
     </div>
@@ -276,6 +277,7 @@ import BeConfirmedView from "./meeting/BeConfirmedView.vue";
 import ConfirmedView from "./meeting/ConfirmedView.vue";
 import InboxView from "./meeting/InboxView.vue";
 import SentView from "./meeting/SentView.vue";
+import RepliedView from "./meeting/RepliedView.vue";
 import MeetingViewMobile from "./meeting/mobile/MeetingViewMobile.vue";
 import BaseButton from "@/components/UI/BaseButton.vue";
 import BaseHeader from "@/components/UI/BaseHeader.vue";
@@ -290,6 +292,7 @@ export default {
     ConfirmedView,
     InboxView,
     SentView,
+    RepliedView,
     MeetingViewMobile,
   },
   data() {
@@ -326,8 +329,8 @@ export default {
         },
         {
           id: 6,
-          icon: "fa-solid fa-trash",
-          tooltip: "Trash",
+          icon: "fa-solid fa-reply",
+          tooltip: "Replied",
         },
       ],
     };
@@ -346,7 +349,7 @@ export default {
         case 5:
           return "Confirmed";
         case 6:
-          return "Trash";
+          return "Replied";
         default:
           return "Create Meeting";
       }
