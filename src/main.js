@@ -21,5 +21,6 @@ import '@fortawesome/fontawesome-free/js/all.js'
 import * as LottiePlayer from "@lottiefiles/lottie-player";
 import "../public/general.scss";
 import './index.css'
+import VueCookies from 'vue-cookies'
 const app = createApp(App)
-app.use(store).use(VueAxios, axios).use(router).use(LitepieDatepicker).use(LottiePlayer).mount("#app");
+app.use(store).use(VueCookies).use(VueAxios, axios).use(router).use(LitepieDatepicker).use(LottiePlayer).mount("#app");

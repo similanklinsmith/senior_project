@@ -112,7 +112,6 @@
 <script>
 import {
   getAuth,
-  // GoogleAuthProvider,
   signInWithPopup,
   OAuthProvider,
 } from "firebase/auth";
@@ -135,20 +134,6 @@ export default {
     };
   },
   methods: {
-    // signInWithGoogle() {
-    //   const provider = new GoogleAuthProvider();
-    //   signInWithPopup(getAuth(), provider)
-    //     .then((result) => {
-    //       console.log(result);
-    //       this.$store.state.getAuth.user = result.user;
-    //       console.log(this.$store.state.getAuth.user);
-    //       // send user data to BE
-    //       this.$router.push("/");
-    //     })
-    //     .catch((error) => {
-    //       console.log(error);
-    //     });
-    // },
     signInWithMicrosoft() {
       // filter with own API
       const provider = new OAuthProvider("microsoft.com");
@@ -169,10 +154,12 @@ export default {
           console.log(idToken);
           // console.log(jwtDecrypt(idToken));
           // localStorage.setItem("user", idToken)
+          this.$cookies.set("refreshToken", result.user.stsTokenManager.refreshToken);
           console.log("------GET ID TOKEN--------");
           getAuth().currentUser.getIdToken().then((result) => {
             console.log(result);
             localStorage.setItem("user", result)
+            this.$cookies.set("idToken", result);
           })
           this.$router.push("/");
         })
