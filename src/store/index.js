@@ -1,4 +1,5 @@
 import { createStore } from "vuex";
+/* eslint-disable */
 import axios from "axios";
 const BASE_URL = process.env.VUE_APP_API_PATH;
 import { customAxios } from "./axios";
@@ -106,6 +107,12 @@ export default createStore({
     GET_MY_BE_CONFIRMED_DETAIL(state, beConfirmedDetail) {
       state.myBeConfirmedDetail = beConfirmedDetail;
     },
+    REPLY_BE_CONFIRMED_DETAIL(state, id) {
+      const index = state.myBeConfirmeds.findIndex((list) => list.id == id);
+      if (index !== -1) {
+        state.myBeConfirmeds.splice(index, 1);
+      }
+    },
   },
   actions: {
     async getMyProfile(context) {
@@ -161,7 +168,9 @@ export default createStore({
     },
     async getExecutiveTitle(context) {
       try {
-        const data = await customAxios.instance.get(this.state.executiveTitleURL);
+        const data = await customAxios.instance.get(
+          this.state.executiveTitleURL
+        );
         context.commit("GET_EXECUTIVES_TITLES", data.data.data);
       } catch (error) {
         console.log(error);
@@ -169,7 +178,9 @@ export default createStore({
     },
     async getExecutivePosition(context) {
       try {
-        const data = await customAxios.instance.get(this.state.executivePositionURL);
+        const data = await customAxios.instance.get(
+          this.state.executivePositionURL
+        );
         context.commit("GET_EXECUTIVES_POSITIONS", data.data.data);
       } catch (error) {
         console.log(error);
@@ -195,9 +206,12 @@ export default createStore({
       // GET Executives by Secretary ID
       context.commit("GET_LOADING_STATUS", true);
       try {
-        const data = await customAxios.instance.get(this.state.myExecutiveURL + "/", {
-          headers: authHeader(),
-        });
+        const data = await customAxios.instance.get(
+          this.state.myExecutiveURL + "/",
+          {
+            headers: authHeader(),
+          }
+        );
         context.commit(
           "GET_MY_EXECUTIVES",
           data.data.data.sort((a, b) =>
@@ -278,7 +292,10 @@ export default createStore({
         if (typeof payload.img_profile != "string") {
           const formData = new FormData();
           formData.append("files", payload.img_profile);
-          let result = await customAxios.instance.post(this.state.imageURL, formData);
+          let result = await customAxios.instance.post(
+            this.state.imageURL,
+            formData
+          );
           imageResponse = result.data.image_name;
         }
         try {
@@ -334,9 +351,12 @@ export default createStore({
     },
     async deleteExecutive(context, id) {
       try {
-        await customAxios.instance.delete(this.state.myExecutiveURL + "/" + id, {
-          headers: authHeader(),
-        });
+        await customAxios.instance.delete(
+          this.state.myExecutiveURL + "/" + id,
+          {
+            headers: authHeader(),
+          }
+        );
         context.commit("DELETE_MY_EXECUTIVE", id);
       } catch (error) {
         console.log(error.response.status);
@@ -384,9 +404,13 @@ export default createStore({
     async addPollAppointment(context, payload) {
       try {
         const newPoll = payload;
-        const response = await customAxios.instance.post(this.state.addPollURL, newPoll, {
-          headers: authHeader(),
-        });
+        const response = await customAxios.instance.post(
+          this.state.addPollURL,
+          newPoll,
+          {
+            headers: authHeader(),
+          }
+        );
         context.commit("ADD_POLLS", response.data.data);
         context.commit("GET_SUCCESS", true);
         setTimeout(() => context.commit("GET_SUCCESS", false), 3000);
@@ -410,9 +434,12 @@ export default createStore({
     },
     async deletePollAppointment(context, id) {
       try {
-        const response = await customAxios.instance.delete(this.state.addPollURL + "/" + id, {
-          headers: authHeader(),
-        });
+        const response = await customAxios.instance.delete(
+          this.state.addPollURL + "/" + id,
+          {
+            headers: authHeader(),
+          }
+        );
         console.log(response.status);
         if (response.status == 400) {
           console.log("need to login");
@@ -431,9 +458,12 @@ export default createStore({
     async getMyBeConfirmeds(context) {
       context.commit("GET_LOADING_STATUS", true);
       try {
-        const data = await customAxios.instance.get(this.state.myBeConfirmedURL, {
-          headers: authHeader(),
-        });
+        const data = await customAxios.instance.get(
+          this.state.myBeConfirmedURL,
+          {
+            headers: authHeader(),
+          }
+        );
         context.commit(
           "GET_MY_BE_CONFIRMED",
           data.data.data.sort((a, b) => {
@@ -455,13 +485,13 @@ export default createStore({
     async getMyBeConfirmedDetail(context, id) {
       context.commit("GET_LOADING_STATUS", true);
       try {
-        const data = await customAxios.instance.get(this.state.myBeConfirmedDetailURL+'/'+id, {
-          headers: authHeader(),
-        });
-        context.commit(
-          "GET_MY_BE_CONFIRMED_DETAIL",
-          data.data.data
+        const data = await customAxios.instance.get(
+          this.state.myBeConfirmedDetailURL + "/" + id,
+          {
+            headers: authHeader(),
+          }
         );
+        context.commit("GET_MY_BE_CONFIRMED_DETAIL", data.data.data);
         context.commit("GET_LOADING_STATUS", false);
         return data.data.data;
       } catch (error) {
@@ -473,6 +503,37 @@ export default createStore({
           });
           this.dispatch("auth/logout");
         }
+      }
+    },
+    async replyToBeConfirmed(context, payload) {
+      try {
+        const answer = payload.answer;
+        await customAxios.instance.put(
+          this.state.myBeConfirmedURL + "/" + payload.is,
+          answer,
+          {
+            headers: authHeader(),
+          }
+        );
+        context.commit("REPLY_BE_CONFIRMED_DETAIL", payload);
+        context.commit("GET_SUCCESS", true);
+        setTimeout(() => context.commit("GET_SUCCESS", false), 3000);
+      } catch (error) {
+        console.log(error.response.status);
+        if (error.response.status == 401) {
+          context.commit("GET_FAILED", true);
+          setTimeout(
+            () => (
+              context.commit("GET_FAILED", false),
+              signOut(this.state.getAuth).then(() => {
+                router.replace("/sign-in");
+              }),
+              this.dispatch("auth/logout")
+            ),
+            2500
+          );
+        }
+        setTimeout(() => context.commit("GET_FAILED", false), 2500);
       }
     },
   },
