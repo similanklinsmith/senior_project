@@ -128,7 +128,7 @@ export default {
   data() {
     return {
       loading: false,
-      upto: 1,
+      upto: 10,
       searchInput: "",
       selectedInbox: null,
       selectedId: null,
