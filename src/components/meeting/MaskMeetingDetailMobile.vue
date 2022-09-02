@@ -36,7 +36,7 @@ export default {
           return `created poll on ${formatDateTimeDetail(this.dateTime)}`;
         case "toBeConfirmed":
           return `sent on ${formatDateTimeDetail(this.dateTime)} by ${this.sender}`;
-        case "confirmed":
+        case "results":
           return `completed on ${formatDateTimeDetail(this.dateTime)}`;
         case "replied":
           return `delete on ${formatDateTimeDetail(this.dateTime)} by ${this.sender}`;

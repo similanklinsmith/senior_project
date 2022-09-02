@@ -83,7 +83,7 @@
           <BaseButton
             buttonType="navigator-button"
             height="5rem"
-            btnText="Confirmed"
+            btnText="Results"
             textHover="white"
             hoverColor="#23106D"
             @onClick="onClickNav(5)"
@@ -204,7 +204,7 @@
               buttonType="navigator-button"
               height="5rem"
               minWidth="23rem"
-              btnText="Confirmed"
+              btnText="Results"
               textHover="white"
               hoverColor="#23106D"
               @onClick="onClickNav(5)"
@@ -325,7 +325,7 @@ export default {
         {
           id: 5,
           icon: "fa-solid fa-square-check",
-          tooltip: "Confirmed",
+          tooltip: "Results",
         },
         {
           id: 6,
@@ -347,7 +347,7 @@ export default {
         case 4:
           return "To be confirmed";
         case 5:
-          return "Confirmed";
+          return "Results";
         case 6:
           return "Replied";
         default:
