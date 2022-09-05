@@ -33,7 +33,7 @@ export default createStore({
     myPolls: [],
 
     // beConfirmed lists
-    myBeConfirmedURL: `${BASE_URL}/allList`,
+    myBeConfirmedURL: `${BASE_URL}/allPendingConfirmList`,
     myBeConfirmedDetailURL: `${BASE_URL}/pendingConfirm`,
     myBeConfirmeds: [],
     myBeConfirmedDetail: null,
