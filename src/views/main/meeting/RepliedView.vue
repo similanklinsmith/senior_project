@@ -50,6 +50,7 @@
                 <div>
                   <div class="name bold-content-text">
                     {{ executive.first_name }} {{ executive.last_name }}
+                    <span>(required)</span>
                   </div>
                   <div class="bold-smallest-text label-text">
                     Preferred-timeslots
@@ -197,8 +198,39 @@ export default {
               },
               {
                 date: "2022-08-26",
-                is_accpet: false,
+                is_accept: false,
                 periodOfTime: [],
+              },
+            ],
+          },
+          {
+            executive_id: "2",
+            first_name: "Noparat",
+            last_name: "Prasongdee",
+            responses: [
+              {
+                date: "2022-08-25",
+                is_accept: true,
+                periodOfTime: [
+                  {
+                    from: "12:00",
+                    to: "15:00",
+                  },
+                ],
+              },
+              {
+                date: "2022-08-26",
+                is_accept: true,
+                periodOfTime: [
+                  {
+                    from: "10:00",
+                    to: "13:00",
+                  },
+                  {
+                    from: "15:00",
+                    to: "17:00",
+                  },
+                ],
               },
             ],
           },
@@ -221,10 +253,13 @@ export default {
     flex-direction: column;
     row-gap: 2.4rem;
     .name {
-      color: $darkViolet;
+      span {
+        color: $primaryViolet;
+        font-weight: 400;
+      }
     }
     .label-text {
-    margin-top: 1rem;
+      margin-top: 1rem;
       color: $darkGrey;
     }
     .days {

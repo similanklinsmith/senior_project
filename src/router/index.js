@@ -73,6 +73,15 @@ const routes = [
     }
   },
   {
+    path: "/meetings-replied/:type/:id",
+    name: "replied-detail",
+    component: () =>
+      import("@/views/main/meeting/mobile/RepliedViewDetail.vue"),
+    meta: {
+      requiresAuth: true,
+    }
+  },
+  {
     path: "/meetings-management",
     name: "meeting",
     props: true,
