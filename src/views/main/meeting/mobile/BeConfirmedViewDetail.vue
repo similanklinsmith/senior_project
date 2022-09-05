@@ -191,7 +191,6 @@ export default {
   height: 100%;
   overflow: scroll;
   margin: 1rem 0;
-  padding: 0 1rem;
   .response-container {
     margin: 2.5rem 0;
     .day {

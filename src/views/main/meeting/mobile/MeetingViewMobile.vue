@@ -272,7 +272,13 @@ export default {
         case 5:
           this.$router.push({
             name: "inbox-detail",
-            params: { type: "confirmed", id: id },
+            params: { type: "results", id: id },
+          });
+          break;
+        case 6:
+          this.$router.push({
+            name: "replied-detail",
+            params: { type: "replied", id: id },
           });
           break;
         default:
