@@ -101,6 +101,9 @@ export default {
           for (let i = 0; i < this.response[index].timeSlot.length; i++) {
             if (this.response[index].timeSlot[i].status == "accepted") {
               isValid = this.response[index].timeSlot[i].preferredTime.length != 0;
+              if (isValid == false) {
+                return isValid
+              }
             }
           }
         }
