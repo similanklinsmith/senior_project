@@ -286,10 +286,10 @@ export default {
         this.response.push(answer);
       }
     },
-    confirmResponse() {
+    async confirmResponse() {
       this.dataToBe.responses = this.response;
-      console.log(this.response);
       console.log(this.dataToBe);
+      await this.$store.dispatch("replyToBeConfirmed", this.dataToBe);
     },
     formatDateTime(dateTime) {
       return formatDateTimeDetail(dateTime);

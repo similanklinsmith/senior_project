@@ -33,18 +33,18 @@
     <transition name="route">
       <div v-if="selectedId != null">
         <div class="inbox-detail">
-          <div class="inbox-detail-content">
-            <div class="title remark-text">{{ selectedInbox.title }}</div>
+          <div class="inbox-detail-content" v-if="isLoading == false && inboxDetail != null">
+            <div class="title remark-text">{{ inboxDetail.title }}</div>
             <div class="sent-from smallest-text">
-              sent on {{ formatDateTime(selectedInbox.create_at) }} by
-              <span>{{ selectedInbox.secretary.name }}</span>
-              &lt;{{ selectedInbox.secretary.email }}&gt;
+              sent on {{ formatDateTime(inboxDetail.create_at) }} by
+              <span>{{ inboxDetail.secretary.name }}</span>
+              &lt;{{ inboxDetail.secretary.email }}&gt;
             </div>
             <div class="line" />
             <div class="response">
               <div
                 class="response-container"
-                v-for="(executive, index) in selectedInbox.executives"
+                v-for="(executive, index) in inboxDetail.executives"
                 :key="index"
               >
                 <div>
@@ -64,15 +64,15 @@
                   <div
                     class="bold-small-text"
                     :style="
-                      response.is_accept
+                      response.is_accept == '1'
                         ? { color: '#39CF5A' }
                         : { color: '#F33C3C' }
                     "
                   >
                     {{ formatDateTimeHeader(response.date) }}
-                    <span v-if="!response.is_accept">(Declined)</span>
+                    <span v-if="response.is_accept == '0'">(Declined)</span>
                   </div>
-                  <div class="slots">
+                  <div class="slots" v-if="response.is_accept != '0'">
                     <div
                       class="show-time-slot"
                       v-for="time in response.periodOfTime"
@@ -95,7 +95,7 @@
 
 <script>
 import InboxComp from "@/components/meeting/InboxComp.vue";
-// import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import {
   formatDateTimeDetail,
   formatDateTimeHeader,
@@ -114,12 +114,12 @@ export default {
     };
   },
   computed: {
-    // ...mapGetters(["getterMyBeConfirmeds", "getterMyBeConfirmedDetail"]),
-    // getBeConfirmedList() {
-    //   return this.$store.getters.getterMyBeConfirmeds;
-    // },
+    ...mapGetters(["getterMyReplies", "getterMyReplyDetail"]),
+    getReplyList() {
+      return this.$store.getters.getterMyReplies;
+    },
     filterByTitle() {
-      return this.repliedList.filter((reply) => {
+      return this.getReplyList.filter((reply) => {
         return reply.title
           .toLowerCase()
           .includes(this.searchInput.toLowerCase());
@@ -127,7 +127,7 @@ export default {
     },
   },
   methods: {
-    // ...mapActions(["getMyBeConfirmeds", "getMyBeConfirmedDetail"]),
+    ...mapActions(["getMyReplies", "getMyReplyDetail"]),
     calculateRemainingDay(date) {
       return Math.round(
         (new Date(date) - new Date(Date.now())) / (24 * 60 * 60 * 1000)
@@ -146,97 +146,20 @@ export default {
     async selectInbox(id) {
       this.selectedId = id;
       this.isLoading = true;
-      this.selectedInbox = this.repliedList.find((reply) => {
-        return reply.id == id;
-      });
-      //   try {
-      //     this.inboxDetail = await this.$store.dispatch(
-      //       "getMyBeConfirmedDetail",
-      //       this.selectedId
-      //     );
-      //     console.log(this.inboxDetail);
-      //     this.isLoading = false;
-      //   } catch (error) {
-      //     this.isLoading = false;
-      //   }
+      try {
+        this.inboxDetail = await this.$store.dispatch(
+          "getMyReplyDetail",
+          this.selectedId
+        );
+        console.log(this.inboxDetail);
+        this.isLoading = false;
+      } catch (error) {
+        this.isLoading = false;
+      }
     },
   },
   created() {
-    // this.getMyBeConfirmeds();
-  },
-  mounted() {
-    this.repliedList = [
-      {
-        id: "1",
-        title: "Discover what’s happened this week",
-        create_at: "2022-05-15T07:40:32.000Z",
-        secretary: {
-          id: 1,
-          first_name: "Jennie",
-          last_name: "Kim",
-          email: "jennie@mail.kmutt.ac.th",
-        },
-        executives: [
-          {
-            executive_id: "1",
-            first_name: "Similan",
-            last_name: "Klinsmith",
-            responses: [
-              {
-                date: "2022-08-25",
-                is_accept: true,
-                periodOfTime: [
-                  {
-                    from: "11:00",
-                    to: "14:00",
-                  },
-                  {
-                    from: "15:00",
-                    to: "17:00",
-                  },
-                ],
-              },
-              {
-                date: "2022-08-26",
-                is_accept: false,
-                periodOfTime: [],
-              },
-            ],
-          },
-          {
-            executive_id: "2",
-            first_name: "Noparat",
-            last_name: "Prasongdee",
-            responses: [
-              {
-                date: "2022-08-25",
-                is_accept: true,
-                periodOfTime: [
-                  {
-                    from: "12:00",
-                    to: "15:00",
-                  },
-                ],
-              },
-              {
-                date: "2022-08-26",
-                is_accept: true,
-                periodOfTime: [
-                  {
-                    from: "10:00",
-                    to: "13:00",
-                  },
-                  {
-                    from: "15:00",
-                    to: "17:00",
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-    ];
+    this.getMyReplies();
   },
 };
 </script>

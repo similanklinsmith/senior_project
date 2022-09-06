@@ -143,7 +143,7 @@ export default {
     limitScrollItems: 10,
   },
   computed: {
-    ...mapGetters(["getterMyPolls", "getterMyBeConfirmeds"]),
+    ...mapGetters(["getterMyPolls", "getterMyBeConfirmeds", "getterMyReplies"]),
     cards() {
       if (this.index == 3) {
         this.changeMaximum(this.getterMyPolls);
@@ -155,6 +155,13 @@ export default {
       if (this.index == 4) {
         this.changeMaximum(this.getterMyBeConfirmeds);
         const card = this.getterMyBeConfirmeds.slice(0, this.upto).map((item) => {
+          return item;
+        });
+        return card;
+      }
+      if (this.index == 6) {
+        this.changeMaximum(this.getterMyReplies);
+        const card = this.getterMyReplies.slice(0, this.upto).map((item) => {
           return item;
         });
         return card;
@@ -245,7 +252,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["getMyPolls", "getMyBeConfirmeds"]),
+    ...mapActions(["getMyPolls", "getMyBeConfirmeds", "getMyReplies"]),
     changeMaximum(data) {
         this.maximumLength = data.length;
     },
@@ -340,28 +347,11 @@ export default {
         )
       );
     },
-    deletePollAppointment(id) {
-      this.$store.dispatch("deletePollAppointment", id);
-      this.isShowPopup = false;
-      //   setTimeout(
-      //     () => (
-      //       (this.selectedInbox = this.getPollsList[0]),
-      //       (this.selectedId = this.getPollsList[0].id)
-      //     ),
-      //     1000
-      //   );
-      setTimeout(
-        () => (
-          (this.selectedInbox = this.cards[0]),
-          (this.selectedId = this.cards[0].id)
-        ),
-        1000
-      );
-    },
   },
   created() {
     this.getMyPolls();
     this.getMyBeConfirmeds();
+    this.getMyReplies();
   },
   mounted() {
     this.cards;
