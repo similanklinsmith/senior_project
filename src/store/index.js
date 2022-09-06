@@ -35,8 +35,15 @@ export default createStore({
     // beConfirmed lists
     myBeConfirmedURL: `${BASE_URL}/allPendingConfirmList`,
     myBeConfirmedDetailURL: `${BASE_URL}/pendingConfirm`,
+    responseBeConfirmedURL: `${BASE_URL}/responsePoll`,
     myBeConfirmeds: [],
     myBeConfirmedDetail: null,
+
+    // replied lists
+    myReplyURL: `${BASE_URL}/allResponseList`,
+    myReplyDetailURL: `${BASE_URL}/AResponsedListById`,
+    myReplies: [],
+    myReplyDetail: null,
 
     loadingStatus: false,
     success: false,
@@ -112,6 +119,12 @@ export default createStore({
       if (index !== -1) {
         state.myBeConfirmeds.splice(index, 1);
       }
+    },
+    GET_MY_REPLIES(state, replies) {
+      state.myReplies = replies;
+    },
+    GET_MY_REPLY_DETAIL(state, replyDetail) {
+      state.myReplyDetail = replyDetail;
     },
   },
   actions: {
@@ -507,10 +520,9 @@ export default createStore({
     },
     async replyToBeConfirmed(context, payload) {
       try {
-        const answer = payload.answer;
-        await customAxios.instance.put(
-          this.state.myBeConfirmedURL + "/" + payload.is,
-          answer,
+        await customAxios.instance.post(
+          this.state.responseBeConfirmedURL,
+          payload,
           {
             headers: authHeader(),
           }
@@ -534,6 +546,53 @@ export default createStore({
           );
         }
         setTimeout(() => context.commit("GET_FAILED", false), 2500);
+      }
+    },
+    async getMyReplies(context) {
+      context.commit("GET_LOADING_STATUS", true);
+      try {
+        const data = await customAxios.instance.get(this.state.myReplyURL, {
+          headers: authHeader(),
+        });
+        context.commit(
+          "GET_MY_REPLIES",
+          data.data.data.sort((a, b) => {
+            return new Date(b.create_at) - new Date(a.create_at);
+          })
+        );
+        context.commit("GET_LOADING_STATUS", false);
+      } catch (error) {
+        context.commit("GET_LOADING_STATUS", false);
+        console.log(error.response.status);
+        if (error.response.status == 401) {
+          signOut(this.state.getAuth).then(() => {
+            router.replace("/sign-in");
+          });
+          this.dispatch("auth/logout");
+        }
+      }
+    },
+    async getMyReplyDetail(context, id) {
+      context.commit("GET_LOADING_STATUS", true);
+      try {
+        const data = await customAxios.instance.get(
+          this.state.myReplyDetailURL + "/" + id,
+          {
+            headers: authHeader(),
+          }
+        );
+        context.commit("GET_MY_REPLY_DETAIL", data.data.data);
+        context.commit("GET_LOADING_STATUS", false);
+        return data.data.data;
+      } catch (error) {
+        context.commit("GET_LOADING_STATUS", false);
+        console.log(error);
+        if (error.response.status == 401) {
+          signOut(this.state.getAuth).then(() => {
+            router.replace("/sign-in");
+          });
+          this.dispatch("auth/logout");
+        }
       }
     },
   },
@@ -568,6 +627,12 @@ export default createStore({
     },
     getterMyBeConfirmedDetail(state) {
       return state.myBeConfirmedDetail;
+    },
+    getterMyReplies(state) {
+      return state.myReplies;
+    },
+    getterMyReplyDetail(state) {
+      return state.myReplyDetail;
     },
   },
   modules: { auth },
