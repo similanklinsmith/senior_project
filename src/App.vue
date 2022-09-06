@@ -87,8 +87,7 @@ export default {
   mounted() {
     this.$store.state.getAuth = getAuth();
     let htmlElement = document.documentElement;
-    let theme = localStorage.getItem("mode");
-
+    let theme = this.$cookies.get("mode");
     if (theme === "dark") {
       htmlElement.setAttribute("theme", "dark");
     } else {
