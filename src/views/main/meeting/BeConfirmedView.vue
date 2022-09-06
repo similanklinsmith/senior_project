@@ -66,7 +66,7 @@
             :key="inbox.id"
             :id="inbox.id"
             :title="inbox.title"
-            :content="'Response poll appointment'"
+            :content="'need to answer poll appointment'"
             :time="inbox.create_at"
             :selectedId="selectedId"
             @selectInbox="selectInbox"

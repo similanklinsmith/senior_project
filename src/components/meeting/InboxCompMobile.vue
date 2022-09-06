@@ -13,11 +13,8 @@
         }}</span
         ><span>{{ formatDateTime(time) }}</span>
       </div>
-      <div class="inbox-content content-text" v-if="content">
-        {{ content.length > 50 ? content.substring(0, 50) + "..." : content }}
-      </div>
-      <div class="inbox-content content-text" v-else>
-        Response poll appointment
+      <div class="inbox-content content-text">
+        {{ getContent.length > 50 ? getContent.substring(0, 50) + "..." : getContent }}
       </div>
     </div>
   </div>
@@ -27,15 +24,28 @@
 import { formatDateTimeInbox } from "@/helpers/formatDateTime";
 export default {
   name: "InboxCompMobile",
-  props: ["title", "content", "id", "time"],
+  props: ["title", "content", "id", "time", "type"],
   methods: {
     formatDateTime(dateTime) {
       return formatDateTimeInbox(dateTime);
     },
     handleClick() {
-      this.$emit('handleClick', this.id);
-      // this.router.push({ name: 'meeting-detail', params: { type:'inbox', id: this.id } }) ;
-    }
+      this.$emit("handleClick", this.id);
+    },
+  },
+  computed: {
+    getContent() {
+      switch (this.type) {
+        case "sent":
+          return "sent poll appointment";
+        case "beConfirmed":
+          return "need to answer poll appointment";
+        case "replied":
+          return "replied to " + this.title;
+        default:
+          return this.content;
+      }
+    },
   },
 };
 </script>

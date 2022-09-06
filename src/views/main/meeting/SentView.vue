@@ -67,6 +67,7 @@
             :id="inbox.id"
             :title="inbox.title"
             :time="inbox.create_at"
+            :content="'sent poll appointment'"
             :selectedId="selectedId"
             @selectInbox="selectInbox"
           />

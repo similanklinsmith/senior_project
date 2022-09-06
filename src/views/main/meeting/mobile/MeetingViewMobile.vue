@@ -88,6 +88,7 @@
               :time="inbox.create_at"
               :content="inbox.content"
               :id="inbox.id"
+              :type="type"
               @handleClick="onNav"
             />
             <div class="remark-text not-found" v-if="filterByTitle.length == 0">
@@ -137,6 +138,7 @@ export default {
       withInDate: "",
       filterDate: "",
       maximumLength: null,
+      type: "",
     };
   },
   static: {
@@ -146,6 +148,7 @@ export default {
     ...mapGetters(["getterMyPolls", "getterMyBeConfirmeds", "getterMyReplies"]),
     cards() {
       if (this.index == 3) {
+        this.setType('sent')
         this.changeMaximum(this.getterMyPolls);
         const card = this.getterMyPolls.slice(0, this.upto).map((item) => {
           return item;
@@ -153,13 +156,17 @@ export default {
         return card;
       }
       if (this.index == 4) {
+        this.setType('beConfirmed');
         this.changeMaximum(this.getterMyBeConfirmeds);
-        const card = this.getterMyBeConfirmeds.slice(0, this.upto).map((item) => {
-          return item;
-        });
+        const card = this.getterMyBeConfirmeds
+          .slice(0, this.upto)
+          .map((item) => {
+            return item;
+          });
         return card;
       }
       if (this.index == 6) {
+        this.setType('replied');
         this.changeMaximum(this.getterMyReplies);
         const card = this.getterMyReplies.slice(0, this.upto).map((item) => {
           return item;
@@ -254,7 +261,10 @@ export default {
   methods: {
     ...mapActions(["getMyPolls", "getMyBeConfirmeds", "getMyReplies"]),
     changeMaximum(data) {
-        this.maximumLength = data.length;
+      this.maximumLength = data.length;
+    },
+    setType(typeStr) {
+      this.type = typeStr;
     },
     onNav(id) {
       switch (parseInt(this.index)) {
