@@ -210,7 +210,7 @@ export default {
       });
     },
     responseAll() {
-      var isValid;
+      var isValid = false;
       if (
         this.response.length > 0 &&
         this.response.length ==
@@ -225,9 +225,7 @@ export default {
           }
           for (let i = 0; i < this.response[index].timeSlot.length; i++) {
             if (this.response[index].timeSlot[i].status == "accepted") {
-              isValid = this.response[index].timeSlot[i].preferredTime.length;
-              console.log(isValid);
-              return isValid;
+              isValid = this.response[index].timeSlot[i].preferredTime.length != 0;
             }
           }
         }

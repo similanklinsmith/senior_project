@@ -85,18 +85,22 @@ export default {
   computed: {
     ...mapGetters(["getterMyBeConfirmedDetail"]),
     responseAll() {
-      var isValid;
-      if (this.response.length > 0 && this.response.length == this.inboxDetail.periodOfTime[0].executives.length) {
+      var isValid = false;
+      if (
+        this.response.length > 0 &&
+        this.response.length ==
+          this.inboxDetail.periodOfTime[0].executives.length
+      ) {
         for (let index = 0; index < this.response.length; index++) {
-          isValid = this.response[index].timeSlot.length == this.inboxDetail.periodOfTime.length
+          isValid =
+            this.response[index].timeSlot.length ==
+            this.inboxDetail.periodOfTime.length;
           if (isValid == false) {
             return false;
           }
           for (let i = 0; i < this.response[index].timeSlot.length; i++) {
-            if (this.response[index].timeSlot[i].status == 'accepted') {
-              isValid = this.response[index].timeSlot[i].preferredTime.length;
-              console.log(isValid);
-              return isValid;
+            if (this.response[index].timeSlot[i].status == "accepted") {
+              isValid = this.response[index].timeSlot[i].preferredTime.length != 0;
             }
           }
         }
