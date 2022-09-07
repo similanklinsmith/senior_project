@@ -63,7 +63,9 @@
       <div class="modal"></div>
       <div class="pop-up">
         <div class="title bold-content-text">Timeslots</div>
-        <div class="title bold-content-text">duration: {{duration}} hour(s)</div>
+        <div class="title bold-content-text">
+          duration: {{ duration }} hour(s)
+        </div>
         <div class="form">
           <div class="input-form">
             <label for="date" class="bold-small-text"
@@ -123,6 +125,8 @@
             ></BaseButton
           >
         </div>
+        <span class="required">{{ errors.unique }}</span>
+        <span class="required">{{ errors.overlap }}</span>
         <div class="time-slots">
           <div
             class="time-slot"
@@ -131,7 +135,7 @@
           >
             <div class="row">
               <div class="column">
-                <div class="bold-small-text">{{dateTimeHeader}}</div>
+                <div class="bold-small-text">{{ dateTimeHeader }}</div>
                 <div class="small-text">
                   From {{ slot.from }} to {{ slot.to }}
                 </div>
@@ -176,11 +180,12 @@
 </template>
 
 <script>
+/* eslint-disable */
 import BaseButton from "@/components/UI/BaseButton.vue";
 export default {
   name: "ResponseComp",
   components: { BaseButton },
-  props: ["executive", "date", "duration","dateTimeHeader"],
+  props: ["executive", "date", "duration", "dateTimeHeader"],
   data() {
     return {
       isAddTimeSlot: false,
@@ -219,8 +224,50 @@ export default {
     IntervalTimeIsValid() {
       return this.timeSlot.from < this.timeSlot.to;
     },
+    uniqueTime() {
+      if (this.selectTimeSlots.length > 0) {
+        for (let index = 0; index < this.selectTimeSlots.length; index++) {
+          if (this.selectTimeSlots[index].from == this.timeSlot.from) {
+            return false;
+          }
+        }
+      }
+      return true;
+    },
+    getOverlaps() {
+      if (this.selectTimeSlots.length > 0) {
+        this.selectTimeSlots.sort((a, b) => {
+          return this.getDateObj(a.from) - this.getDateObj(b.from);
+        });
+        for (var i = 0, l = this.selectTimeSlots.length; i < l; i++) {
+          var oEvent = this.selectTimeSlots[i];
+          var nOverlaps = 0;
+            var oCompareEvent = {
+              'from': this.timeSlot.from,
+              'to': this.timeSlot.to
+            };
+            if (
+              (oCompareEvent.from <= oEvent.to &&
+                oCompareEvent.to > oEvent.from) ||
+              (oCompareEvent.to <= oEvent.from &&
+                oCompareEvent.from > oEvent.to)
+            ) {
+              nOverlaps++;
+              console.log(nOverlaps);
+              return false;
+            }
+        }
+      }
+      return true;
+    },
   },
   methods: {
+    getDateObj(a) {
+      var bits = a.split(/[- :]/);
+      var date = new Date();
+      date.setHours(bits[0], bits[1], 0);
+      return date.getHours() + ":" + date.getMinutes();
+    },
     handleAccept(id) {
       this.isDecline = false;
       this.isAccept = true;
@@ -296,6 +343,12 @@ export default {
       this.toTimeIsValid
         ? delete this.errors.to
         : (this.errors.to = "Please choose");
+      this.uniqueTime
+        ? delete this.errors.unique
+        : (this.errors.unique = "This time has been already choose");
+      this.getOverlaps
+        ? delete this.errors.overlap
+        : (this.errors.overlap = "This time is overlapping");
       if (Object.keys(this.errors).length == 0) {
         var selectedTime = {
           from: this.timeSlot.from,
@@ -310,7 +363,7 @@ export default {
     },
     deleteTimeSlot(index) {
       this.selectTimeSlots.splice(index, 1);
-    }
+    },
   },
 };
 </script>
