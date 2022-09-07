@@ -279,7 +279,8 @@ ul {
   .response-container {
     display: flex;
     flex-direction: column;
-    row-gap: 2.4rem;
+    row-gap: 2.2rem;
+    margin-bottom: 3rem;
     .name {
       span {
         color: $primaryViolet;

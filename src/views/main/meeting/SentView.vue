@@ -147,10 +147,7 @@
         </div>
         <div
           class="button"
-          v-if="
-            new Date(selectedInbox.due_date_time) >=
-            new Date()
-          "
+          v-if="new Date(selectedInbox.due_date_time) >= new Date()"
         >
           <BaseButton
             buttonType="common-button"
@@ -202,6 +199,12 @@
         </BaseButton>
       </template>
     </BasePopup>
+    <BaseAlert v-if="getterSuccess" :status="`success`">
+      Poll is succesfully deleted
+    </BaseAlert>
+    <BaseAlert v-if="getterFailed" :status="`failed`">
+      Poll is failed to delete
+    </BaseAlert>
   </div>
 </template>
 
@@ -211,12 +214,19 @@ import LitepieDatepicker from "litepie-datepicker";
 import InboxComp from "@/components/meeting/InboxComp.vue";
 import BaseButton from "@/components/UI/BaseButton.vue";
 import BasePopup from "@/components/UI/BasePopup.vue";
+import BaseAlert from "@/components/UI/BaseAlert.vue";
 import { mapGetters, mapActions } from "vuex";
 import { ref } from "vue";
 
 export default {
   name: "InboxView",
-  components: { InboxComp, BaseButton, BasePopup, LitepieDatepicker },
+  components: {
+    InboxComp,
+    BaseButton,
+    BasePopup,
+    LitepieDatepicker,
+    BaseAlert,
+  },
   setup() {
     const formatter = ref({
       date: "YYYY-MM-DD",
@@ -240,7 +250,12 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getterMyPolls", "getterExecutiveTitles"]),
+    ...mapGetters([
+      "getterMyPolls",
+      "getterExecutiveTitles",
+      "getterSuccess",
+      "getterFailed",
+    ]),
     getPollsList() {
       return this.$store.getters.getterMyPolls;
     },
@@ -251,8 +266,10 @@ export default {
             toBeConfirmed.title
               .toLowerCase()
               .includes(this.searchInput.toLowerCase()) &&
-              new Date(toBeConfirmed.create_at.split("T")[0]).toLocaleDateString() ==
-                new Date(this.filterDate).toLocaleDateString()
+            new Date(
+              toBeConfirmed.create_at.split("T")[0]
+            ).toLocaleDateString() ==
+              new Date(this.filterDate).toLocaleDateString()
           );
         } else {
           return toBeConfirmed.title
@@ -288,10 +305,16 @@ export default {
       });
     },
     calculateRemainingDay(date) {
-      return Math.round((new Date(date) - new Date(Date.now())) / (24 * 60 * 60 * 1000)) < 0 ? 0 : Math.round((new Date(date) - new Date(Date.now())) / (24 * 60 * 60 * 1000));
+      return Math.round(
+        (new Date(date) - new Date(Date.now())) / (24 * 60 * 60 * 1000)
+      ) < 0
+        ? 0
+        : Math.round(
+            (new Date(date) - new Date(Date.now())) / (24 * 60 * 60 * 1000)
+          );
     },
     formatDateTime(dateTime) {
-      return formatDateTimeDetail(dateTime)
+      return formatDateTimeDetail(dateTime);
     },
     formatTitle(str) {
       return this.getterExecutiveTitles[str];
@@ -308,14 +331,16 @@ export default {
     async deletePollAppointment(id) {
       await this.$store.dispatch("deletePollAppointment", id);
       this.isShowPopup = false;
-      this.getPollsList.length > 0 ?
-      setTimeout(
-        () => (
-          (this.selectedInbox = this.getPollsList[0]),
-          (this.selectedId = this.getPollsList[0].id)
-        ),
-        1000
-      ) : this.selectedInbox = null, this.selectedId = null;
+      this.getPollsList.length > 0
+        ? setTimeout(
+            () => (
+              (this.selectedInbox = this.getPollsList[0]),
+              (this.selectedId = this.getPollsList[0].id)
+            ),
+            1000
+          )
+        : (this.selectedInbox = null),
+        (this.selectedId = null);
     },
   },
   created() {
