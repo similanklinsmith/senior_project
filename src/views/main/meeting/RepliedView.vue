@@ -129,7 +129,11 @@
                       :key="time"
                     >
                       <div class="bold-smallest-text">
-                        From {{ time.from }}, End with {{ time.to }}
+                        From {{ time.from.split(":")[0] }}:{{
+                          time.from.split(":")[1]
+                        }}, End with {{ time.to.split(":")[0] }}:{{
+                          time.to.split(":")[1]
+                        }}
                       </div>
                     </div>
                   </div>
