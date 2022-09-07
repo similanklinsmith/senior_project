@@ -161,16 +161,20 @@ export default {
         this.response.push(answer);
       }
     },
-    confirmResponse() {
+    async confirmResponse() {
       this.dataToBe.responses = this.response;
-      console.log(this.response);
-      console.log(this.dataToBe);
+      await this.$store.dispatch("replyToBeConfirmed", this.dataToBe);
+      this.dataToBe.id = null;
+      this.selectedId = null;
+      this.inboxDetail = null;
+      this.$router.go(-1);
     },
   },
   created() {
     console.log(`This is params id: ${this.id}`);
     console.log(`This is params type: ${this.type}`);
     this.getBeConfirmedDetail();
+    this.dataToBe.id = parseInt(this.id);
   },
 };
 </script>

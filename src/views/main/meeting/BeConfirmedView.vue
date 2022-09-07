@@ -145,6 +145,12 @@
         </div>
       </div>
     </transition>
+    <BaseAlert v-if="getterSuccess" :status="`success`">
+      Answer is succesfully sent
+    </BaseAlert>
+    <BaseAlert v-if="getterFailed" :status="`failed`">
+      Answer is failed to sent
+    </BaseAlert>
   </div>
 </template>
 
@@ -153,6 +159,7 @@ import InboxComp from "@/components/meeting/InboxComp.vue";
 import ResponseComp from "@/components/meeting/ResponseComp.vue";
 import BaseButton from "@/components/UI/BaseButton.vue";
 import LitepieDatepicker from "litepie-datepicker";
+import BaseAlert from "@/components/UI/BaseAlert.vue";
 import { mapGetters, mapActions } from "vuex";
 import {
   formatDateTimeDetail,
@@ -161,7 +168,13 @@ import {
 import { ref } from "vue";
 export default {
   name: "BeConfirmedView",
-  components: { InboxComp, ResponseComp, BaseButton, LitepieDatepicker },
+  components: {
+    InboxComp,
+    ResponseComp,
+    BaseButton,
+    LitepieDatepicker,
+    BaseAlert,
+  },
   setup() {
     const formatter = ref({
       date: "YYYY-MM-DD",
@@ -186,7 +199,12 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getterMyBeConfirmeds", "getterMyBeConfirmedDetail"]),
+    ...mapGetters([
+      "getterMyBeConfirmeds",
+      "getterMyBeConfirmedDetail",
+      "getterSuccess",
+      "getterFailed",
+    ]),
     getBeConfirmedList() {
       return this.$store.getters.getterMyBeConfirmeds;
     },
@@ -225,9 +243,10 @@ export default {
           }
           for (let i = 0; i < this.response[index].timeSlot.length; i++) {
             if (this.response[index].timeSlot[i].status == "accepted") {
-              isValid = this.response[index].timeSlot[i].preferredTime.length != 0;
+              isValid =
+                this.response[index].timeSlot[i].preferredTime.length != 0;
               if (isValid == false) {
-                return isValid
+                return isValid;
               }
             }
           }
@@ -288,8 +307,10 @@ export default {
     },
     async confirmResponse() {
       this.dataToBe.responses = this.response;
-      console.log(this.dataToBe);
       await this.$store.dispatch("replyToBeConfirmed", this.dataToBe);
+      this.dataToBe.id = null;
+      this.selectedId = null;
+      this.inboxDetail = null;
     },
     formatDateTime(dateTime) {
       return formatDateTimeDetail(dateTime);
