@@ -114,8 +114,10 @@ export default createStore({
     GET_MY_BE_CONFIRMED_DETAIL(state, beConfirmedDetail) {
       state.myBeConfirmedDetail = beConfirmedDetail;
     },
-    REPLY_BE_CONFIRMED_DETAIL(state, id) {
-      const index = state.myBeConfirmeds.findIndex((list) => list.id == id);
+    REPLY_BE_CONFIRMED_DETAIL(state, data) {
+      const index = state.myBeConfirmeds.findIndex(
+        (list) => list.id == data.id
+      );
       if (index !== -1) {
         state.myBeConfirmeds.splice(index, 1);
       }
@@ -454,18 +456,25 @@ export default createStore({
           }
         );
         console.log(response.status);
-        if (response.status == 400) {
-          console.log("need to login");
-        }
         context.commit("DELETE_MY_POLL", id);
+        context.commit("GET_SUCCESS", true);
+        setTimeout(() => context.commit("GET_SUCCESS", false), 3000);
       } catch (error) {
-        console.log(error.response);
+        console.log(error.response.status);
         if (error.response.status == 401) {
-          signOut(this.state.getAuth).then(() => {
-            router.replace("/sign-in");
-          });
-          this.dispatch("auth/logout");
+          context.commit("GET_FAILED", true);
+          setTimeout(
+            () => (
+              context.commit("GET_FAILED", false),
+              signOut(this.state.getAuth).then(() => {
+                router.replace("/sign-in");
+              }),
+              this.dispatch("auth/logout")
+            ),
+            2500
+          );
         }
+        setTimeout(() => context.commit("GET_FAILED", false), 2500);
       }
     },
     async getMyBeConfirmeds(context) {
