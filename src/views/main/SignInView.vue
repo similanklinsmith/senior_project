@@ -110,11 +110,8 @@
 </template>
 
 <script>
-import {
-  getAuth,
-  signInWithPopup,
-  OAuthProvider,
-} from "firebase/auth";
+import axios from "axios";
+import { getAuth, signInWithPopup, OAuthProvider } from "firebase/auth";
 import BaseButton from "@/components/UI/BaseButton.vue";
 import BasePopup from "@/components/UI/BasePopup.vue";
 export default {
@@ -135,56 +132,69 @@ export default {
   },
   methods: {
     signInWithMicrosoft() {
-      // filter with own API
       const provider = new OAuthProvider("microsoft.com");
       const auth = getAuth();
       provider.addScope("openid");
+      provider.addScope("offline_access");
       provider.addScope("profile");
       provider.setCustomParameters({
-        // Force re-consent.
         prompt: "consent",
-        // Target specific email with login hint.
         login_hint: "user@firstadd.onmicrosoft.com",
       });
       signInWithPopup(auth, provider)
         .then((result) => {
-          // console.log("🚀 ~ file: SignInView.vue ~ line 143 ~ .then ~ result", result)
-          console.log("🚀_____result.user.accessToken_____", result.user.accessToken)
-          // localStorage.setItem('accessToken', result.user.accessToken);
-          // User is signed in.
-          // IdP data available in result.additionalUserInfo.profile.
-
-          // Get the OAuth access token and ID Token
-          const credential = OAuthProvider.credentialFromResult(result);
-          // console.log("🚀 ~ file: SignInView.vue ~ line 155 ~ .then ~ credential", credential)
-          const accessToken = credential.accessToken;
-          const idToken = credential.idToken;
-          console.log("------ACCESS TOKEN------");
-          console.log(accessToken);
-          localStorage.setItem("accessToken", accessToken);
-          console.log("------ID TOKEN------");
-          console.log(idToken);
-          // console.log(jwtDecrypt(idToken));
-          // localStorage.setItem("user", idToken)
-          this.$cookies.set(
-            "refreshToken",
-            result.user.stsTokenManager.refreshToken
-          );
-          console.log("------GET ID TOKEN--------");
-          getAuth()
-            .currentUser.getIdToken()
-            .then((result) => {
+          const BASE_URL = process.env.VUE_APP_API_PATH;
+          let jsonEmail = {
+            email: result.user.email,
+          };
+          axios
+            .post(`${BASE_URL}/filterPermission`, jsonEmail)
+            .then(() => {
               console.log(
-                "🚀 ~ file: SignInView.vue ~ line 160 ~ getAuth ~ result",
+                "🚀 ~ file: SignInView.vue ~ line 143 ~ .then ~ result",
                 result
               );
-              localStorage.setItem("user", result);
-              this.$cookies.set("idToken", result);
+              const credential = OAuthProvider.credentialFromResult(result);
+              console.log(
+                "🚀 ~ file: SignInView.vue ~ line 155 ~ .then ~ credential",
+                credential
+              );
+              const accessToken = credential.accessToken;
+              const idToken = credential.idToken;
+              console.log("------ACCESS TOKEN------");
+              console.log(accessToken);
+              localStorage.setItem("accessToken", accessToken);
+              console.log("------ID TOKEN------");
+              console.log(idToken);
+              this.$cookies.set(
+                "refreshToken",
+                result.user.stsTokenManager.refreshToken
+              );
+              console.log("------GET ID TOKEN--------");
+              getAuth()
+                .currentUser.getIdToken()
+                .then((result) => {
+                  console.log(
+                    "🚀 ~ file: SignInView.vue ~ line 160 ~ getAuth ~ result",
+                    result
+                  );
+                  localStorage.setItem("user", result);
+                  this.$cookies.set("idToken", result);
+                });
+              this.$router.push("/");
+            })
+            .catch((err) => {
+              if (err.response.status == 401) {
+                this.isShowPopup = true;
+                this.statusCode = "You do NOT have authorization to access";
+                return;
+              } else {
+                this.isShowPopup = true;
+                this.statusCode = err;
+              }
             });
-          this.$router.push("/");
         })
         .catch((error) => {
-          // Handle error.
           console.log(error);
           this.isShowPopup = true;
           this.statusCode = error;
