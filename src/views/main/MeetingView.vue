@@ -377,6 +377,7 @@ export default {
     },
   },
   mounted() {
+    window.scrollTo(0, 0);
     this.isSelected = localStorage.getItem("index")
       ? localStorage.getItem("index")
       : 1;

@@ -62,9 +62,9 @@
     <teleport to="#portal-target" v-if="isAddTimeSlot">
       <div class="modal"></div>
       <div class="pop-up">
-        <div class="title bold-content-text">Timeslots</div>
-        <div class="title bold-content-text">
-          duration: {{ duration }} hour(s)
+        <div class="title remark-text">Timeslots</div>
+        <div class="duration bold-content-text">
+          Duration<span class="duration-label">{{ duration }} hour(s)</span>
         </div>
         <div class="form">
           <div class="input-form">
@@ -72,7 +72,7 @@
               >Date <span class="gray-format">(mm/dd/yyyy)</span></label
             >
             <input
-              class="small-text"
+              class="small-text readonly"
               type="date"
               placeholder="date"
               id="date"
@@ -125,8 +125,9 @@
             ></BaseButton
           >
         </div>
-        <span class="required">{{ errors.unique }}</span>
-        <span class="required">{{ errors.overlap }}</span>
+        <div class="error-container bold-content-text" v-if="errors.overlap || errors.duration">
+          {{ errors.overlap }} {{ errors.duration }}
+        </div>
         <div class="time-slots">
           <div
             class="time-slot"
@@ -224,15 +225,15 @@ export default {
     IntervalTimeIsValid() {
       return this.timeSlot.from < this.timeSlot.to;
     },
-    uniqueTime() {
-      if (this.selectTimeSlots.length > 0) {
-        for (let index = 0; index < this.selectTimeSlots.length; index++) {
-          if (this.selectTimeSlots[index].from == this.timeSlot.from) {
-            return false;
-          }
-        }
-      }
-      return true;
+    durationTimeIsValid() {
+      var minDuration = this.duration*60;
+      var fromTime = this.timeSlot.from.split(/[- :]/);
+      var toTime = this.timeSlot.to.split(/[- :]/);
+      var fromDate = new Date();
+      var toDate = new Date();
+      fromDate.setHours(fromTime[0], fromTime[1], 0);
+      toDate.setHours(toTime[0], toTime[1], 0);
+      return ((toDate.getTime() - fromDate.getTime())/60000) == minDuration;
     },
     getOverlaps() {
       if (this.selectTimeSlots.length > 0) {
@@ -242,20 +243,19 @@ export default {
         for (var i = 0, l = this.selectTimeSlots.length; i < l; i++) {
           var oEvent = this.selectTimeSlots[i];
           var nOverlaps = 0;
-            var oCompareEvent = {
-              'from': this.timeSlot.from,
-              'to': this.timeSlot.to
-            };
-            if (
-              (oCompareEvent.from <= oEvent.to &&
-                oCompareEvent.to > oEvent.from) ||
-              (oCompareEvent.to <= oEvent.from &&
-                oCompareEvent.from > oEvent.to)
-            ) {
-              nOverlaps++;
-              console.log(nOverlaps);
-              return false;
-            }
+          var oCompareEvent = {
+            from: this.timeSlot.from,
+            to: this.timeSlot.to,
+          };
+          if (
+            (oCompareEvent.from <= oEvent.to &&
+              oCompareEvent.to > oEvent.from) ||
+            (oCompareEvent.to <= oEvent.from && oCompareEvent.from > oEvent.to)
+          ) {
+            nOverlaps++;
+            console.log(nOverlaps);
+            return false;
+          }
         }
       }
       return true;
@@ -309,24 +309,19 @@ export default {
       this.form.date = this.date;
       this.selectTimeSlots = this.timeSlots;
       this.form.preferredTime = this.selectTimeSlots;
-      // if (this.timeSlots.length != 0) {
-      //   this.selectTimeSlots = this.timeSlots
-      //   console.log(this.timeSlots);
-      // }
     },
     handleCloseTimeSlot() {
       this.selectTimeSlots = [];
       this.isAddTimeSlot = false;
     },
     handleConfirm() {
-      // console.log("selected Time Slots: ");
-      //   console.log(this.selectTimeSlots);
       this.timeSlots = [...this.selectTimeSlots];
       this.selectTimeSlots = [];
       this.isAddTimeSlot = false;
       this.confirmResponse();
-      // console.log("Time Slots: ");
-      // console.log(this.timeSlots);
+      this.timeSlot.from = null;
+      this.timeSlot.to = null;
+      this.errors = {}
     },
     selectInbox(id) {
       this.selectedInbox = this.toBeConfirmedList.find((toBeConfirmed) => {
@@ -343,12 +338,12 @@ export default {
       this.toTimeIsValid
         ? delete this.errors.to
         : (this.errors.to = "Please choose");
-      this.uniqueTime
-        ? delete this.errors.unique
-        : (this.errors.unique = "This time has been already choose");
       this.getOverlaps
         ? delete this.errors.overlap
         : (this.errors.overlap = "This time is overlapping");
+      this.durationTimeIsValid
+        ? delete this.errors.duration
+        : (this.errors.duration = "The duration of time is not correct");
       if (Object.keys(this.errors).length == 0) {
         var selectedTime = {
           from: this.timeSlot.from,
@@ -370,6 +365,9 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/colors/webColors.scss";
+.readonly {
+  background-color: $grey !important;
+}
 .modal {
   width: 100%;
   height: 100vh;
@@ -400,6 +398,15 @@ export default {
     color: $error;
     margin-left: 0.2rem;
     font-size: 1.4rem !important;
+  }
+  .error-container {
+    width: 100%;
+    padding: 1rem 2rem;
+    border-radius: 1rem;
+    background-color: $error;
+    color: $white !important;
+    margin-bottom: 1.8rem;
+    text-align: center;
   }
   .confirm-button {
     display: flex;
@@ -439,12 +446,24 @@ export default {
   .title {
     color: $primaryViolet;
   }
+  .duration {
+    margin-top: 1rem;
+    color: $darkViolet;
+    .duration-label {
+      background-color: $yellow;
+      color: $fakeDark;
+      border-radius: 1rem;
+      padding: 0.5rem 1.75rem;
+      margin-left: 1rem;
+      font-weight: 600;
+    }
+  }
   .form {
     display: flex;
     justify-content: space-around;
     column-gap: 1rem;
     align-items: flex-end;
-    margin-bottom: 2rem;
+    margin: 2rem 0;
     .input-form {
       width: 100%;
       display: flex;

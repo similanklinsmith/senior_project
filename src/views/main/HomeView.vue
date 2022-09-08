@@ -31,7 +31,6 @@
         </div>
       </div>
       <div class="first-body-section grid">
-        <transition name="slide" appear>
           <div class="create-meeting-card">
             <div class="remark-text">Start meetings</div>
             <div class="card">
@@ -63,8 +62,6 @@
               </div>
             </div>
           </div>
-        </transition>
-        <transition name="slide" appear>
           <div class="executives-card">
             <div class="remark-text">Executives</div>
             <div class="card">
@@ -167,8 +164,6 @@
               </div>
             </div>
           </div>
-        </transition>
-        <transition name="slide" appear>
           <div class="calendar-card">
             <div class="remark-text">Calendar</div>
             <div class="card">
@@ -184,7 +179,6 @@
               </vue-cal>
             </div>
           </div>
-        </transition>
       </div>
       <div class="second-body-section">
         <div class="title-section">
@@ -373,6 +367,7 @@ export default {
     this.getProfileImage();
   },
   mounted() {
+    window.scrollTo(0, 0);
     this.selectedDate = new Date().toISOString().slice(0, 10);
     if (localStorage.getItem("user")) {
       this.user = `${jwtDecrypt(localStorage.getItem("user")).name}
@@ -434,6 +429,7 @@ export default {
         height: 50rem;
         width: 100%;
         position: relative;
+        animation-name: appearsBottom;animation-duration: 0.75s;animation-iteration-count: 1;
       }
       .create-meeting-card {
         .card {

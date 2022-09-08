@@ -5,6 +5,19 @@
         <span class="primaryViolet">M</span>OMENT<span class="yellow">O</span
         ><span class="fadedViolet">.</span>
       </div>
+      <BaseButton
+        buttonType="outlined-button"
+        btnText="Sign in"
+        textColor="#23106D"
+        textHover="white"
+        color="#23106D"
+        hoverColor="#23106D"
+        @onClick="signInWithMicrosoft"
+      >
+        <template v-slot:before-icon>
+          <i class="fa-regular fa-user"></i>
+        </template>
+      </BaseButton>
     </div>
     <div class="body">
       <div class="first-section">
@@ -259,7 +272,7 @@ export default {
 .sign-in-screen {
   width: 100%;
   height: 100vh;
-  background-color: $white;
+  background-color: var(--bgHeaderComp);
   display: flex;
   flex-direction: column;
   position: fixed;
@@ -272,6 +285,7 @@ export default {
     .logo-text {
       font-size: 3.6rem;
       font-weight: 600;
+      color: var(--headerSignin);
     }
     .group-button {
       display: flex;
@@ -296,6 +310,7 @@ export default {
     .first-section {
       display: flex;
       justify-content: center;
+      animation-name: appearsBottom;animation-duration: 0.75s;animation-iteration-count: 1;
       .display-text {
         display: flex;
         flex-direction: column;
@@ -307,6 +322,7 @@ export default {
         }
         .first {
           transform: translateX(-10rem);
+          color: var(--headerSignin);
         }
         .second {
           .violet {
@@ -328,6 +344,7 @@ export default {
       row-gap: 2.5rem;
       padding: 4.8rem 2rem;
       width: 90%;
+      animation-name: appearsBottom;animation-duration: 0.85s;animation-iteration-count: 1;
       .sign-in-form {
         display: flex;
         flex-direction: column;
@@ -336,6 +353,9 @@ export default {
       .input-form {
         display: flex;
         flex-direction: column;
+        label {
+          color: var(--headerSignin);
+        }
         input[type="text"],
         input[type="password"] {
           margin-top: 1rem;
@@ -360,6 +380,7 @@ export default {
         text-align: right;
         cursor: pointer;
         transition: all 0.2s ease-in-out;
+        color: var(--headerSignin);
       }
       .forget-password:hover {
         color: $primaryViolet;

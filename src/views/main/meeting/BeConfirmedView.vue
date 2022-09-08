@@ -90,6 +90,7 @@
               <span>{{ inboxDetail.secretary.name }}</span>
               &lt;{{ inboxDetail.secretary.email }}&gt;
             </div>
+            <div class="line"></div>
             <div class="bold-small-text due-date">
               <span>*</span>This form will be expired in
               {{ inboxDetail.due_date_time.split("T")[0] }}
@@ -547,6 +548,12 @@ ul {
     padding: 5rem 4.4rem;
     flex-direction: column;
     display: flex;
+    .line {
+      margin-top: 2.4rem;
+      width: 100%;
+      height: 0.1rem;
+      background-color: $grey;
+    }
     .not-found {
       padding: 1.8rem;
       width: 100%;
