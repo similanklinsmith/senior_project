@@ -25,10 +25,10 @@ instance.interceptors.response.use(
     console.log(error.response.statusText); // Unauthorized
     let refreshToken = VueCookies.get("refreshToken");
     if (error.response.status == 401) {
-      if (
-        message == "TOKEN EXPIRED" ||
-        error.response.statusText == "Unauthorized"
-      ) {
+      // if (
+      //   message == "TOKEN EXPIRED" ||
+      //   error.response.statusText == "Unauthorized"
+      // ) {
         console.log("RUN");
         let refreshTokenUrl = `https://securetoken.googleapis.com/v1/token?key=${process.env.VUE_APP_API_KEY}`;
         let token = await axios.post(refreshTokenUrl, {
@@ -38,7 +38,7 @@ instance.interceptors.response.use(
         let { data } = token;
         console.log("🚀 ~ file: axios.js ~ line 35 ~ token", token);
         VueCookies.set("idToken", data.id_token);
-      }
+      // }
     }
   }
 );
