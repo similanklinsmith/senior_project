@@ -163,34 +163,34 @@ export default {
           axios
             .post(`${BASE_URL}/filterPermission`, jsonEmail)
             .then(() => {
-              console.log(
-                "🚀 ~ file: SignInView.vue ~ line 143 ~ .then ~ result",
-                result
-              );
+              // console.log(
+              //   "🚀 ~ file: SignInView.vue ~ line 143 ~ .then ~ result",
+              //   result
+              // );
               const credential = OAuthProvider.credentialFromResult(result);
-              console.log(
-                "🚀 ~ file: SignInView.vue ~ line 155 ~ .then ~ credential",
-                credential
-              );
+              // console.log(
+              //   "🚀 ~ file: SignInView.vue ~ line 155 ~ .then ~ credential",
+              //   credential
+              // );
               const accessToken = credential.accessToken;
-              const idToken = credential.idToken;
-              console.log("------ACCESS TOKEN------");
-              console.log(accessToken);
+              // const idToken = credential.idToken;
+              // console.log("------ACCESS TOKEN------");
+              // console.log(accessToken);
               localStorage.setItem("accessToken", accessToken);
-              console.log("------ID TOKEN------");
-              console.log(idToken);
+              // console.log("------ID TOKEN------");
+              // console.log(idToken);
               this.$cookies.set(
                 "refreshToken",
                 result.user.stsTokenManager.refreshToken
               );
-              console.log("------GET ID TOKEN--------");
+              // console.log("------GET ID TOKEN--------");
               getAuth()
                 .currentUser.getIdToken()
                 .then((result) => {
-                  console.log(
-                    "🚀 ~ file: SignInView.vue ~ line 160 ~ getAuth ~ result",
-                    result
-                  );
+                  // console.log(
+                  //   "🚀 ~ file: SignInView.vue ~ line 160 ~ getAuth ~ result",
+                  //   result
+                  // );
                   localStorage.setItem("user", result);
                   this.$cookies.set("idToken", result);
                 });
