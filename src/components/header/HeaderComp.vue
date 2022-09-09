@@ -60,18 +60,18 @@
             <div class="bold-content-text">{{ user.length > 15 ? user.substring(0,15)+'...' : user }}</div>
             </li>
               <li><div class="line" /></li>
-            <li>
+            <li @click="$router.push({ path: '/setting' })">
               <div class="icon-container">
                 <i class="icon fa-solid fa-pencil"></i>
               </div>
-              <div class="thin-content-text" @click="$router.push({ path: '/setting' })">Edit my profile</div>
+              <div class="thin-content-text">Edit my profile</div>
             </li>
             <li><div class="line" /></li>
-            <li>
+            <li @click="handleSignOut">
               <div class="icon-container">
                 <i class="icon fa-solid fa-arrow-right-from-bracket"></i>
               </div>
-              <div class="thin-content-text" @click="handleSignOut">
+              <div class="thin-content-text">
                 Sign out
               </div>
             </li>
