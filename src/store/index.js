@@ -63,6 +63,7 @@ export default createStore({
       state.myProfile = profile;
     },
     GET_PROFILE_PIC(state, pic) {
+      localStorage.setItem("profile_image", pic);
       state.myProfilePic = pic;
     },
     GET_EXECUTIVES_TITLES(state, titles) {
@@ -148,37 +149,40 @@ export default createStore({
     },
     async getProfileImage(context) {
       var accessToken = localStorage.getItem("accessToken");
-      try {
-        await axios
-          .get(this.state.secretaryImageURL, {
-            headers: {
-              "content-type": "image/jpeg",
-              Authorization: `Bearer ${accessToken}`,
-            },
-            responseType: "blob",
-          })
-          .then((result) => {
-            let blob = new Blob([result.data], { type: "image/jpeg" });
-            var reader = new FileReader();
-            reader.readAsDataURL(blob);
-            reader.onload = () => {
-              var base64String = reader.result;
-              context.commit(
-                "GET_PROFILE_PIC",
-                base64String
-                  .toString()
-                  .substr(base64String.toString().indexOf(", ") + 1)
-              );
-            };
-          });
-      } catch (error) {
-        console.log(error);
-        if (error.response.status == 401) {
-          signOut(this.state.getAuth).then(() => {
-            router.push("/sign-in");
-          });
-          this.dispatch("auth/logout");
+      if (localStorage.getItem("profile_image") == null) {
+        try {
+          await axios
+            .get(this.state.secretaryImageURL, {
+              headers: {
+                "content-type": "image/jpeg",
+                Authorization: `Bearer ${accessToken}`,
+              },
+              responseType: "blob",
+            })
+            .then((result) => {
+              let blob = new Blob([result.data], { type: "image/jpeg" });
+              var reader = new FileReader();
+              reader.readAsDataURL(blob);
+              reader.onload = () => {
+                var base64String = reader.result;
+                context.commit(
+                  "GET_PROFILE_PIC",
+                  base64String
+                    .toString()
+                    .substr(base64String.toString().indexOf(", ") + 1)
+                );
+              };
+            });
+        } catch (error) {
+          if (error.response.status == 401) {
+            signOut(this.state.getAuth).then(() => {
+              router.push("/sign-in");
+            });
+            this.dispatch("auth/logout");
+          }
         }
+      } else {
+        this.state.myProfilePic = localStorage.getItem('profile_image')
       }
     },
     async getExecutiveTitle(context) {
