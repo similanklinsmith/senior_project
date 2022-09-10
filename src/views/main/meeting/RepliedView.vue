@@ -31,6 +31,7 @@
                 <litepie-datepicker
                   id="due"
                   as-single
+                  :disable-date="dDate"
                   :formatter="formatter"
                   v-model="withInDate"
                   :style="{ fontSize: '12px !important', marginTop: '1rem' }"
@@ -161,12 +162,16 @@ export default {
   name: "BeConfirmedView",
   components: { InboxComp, LitepieDatepicker, BaseButton },
   setup() {
+    const dDate = (date) => {
+      return date > new Date();
+    };
     const formatter = ref({
       date: "YYYY-MM-DD",
       month: "MMM",
     });
     return {
       formatter,
+      dDate
     };
   },
   data() {
