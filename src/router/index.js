@@ -99,7 +99,7 @@ const routes = [
     },
   },
   {
-    path: "/:catchall(.*)",
+    path: "/:catchAll(.*)*",
     name: "NotFound",
     component: () => import("@/views/exception/NotFoundView.vue"),
   },
