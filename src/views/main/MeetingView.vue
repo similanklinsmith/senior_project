@@ -35,11 +35,11 @@
             <template v-slot:before-icon>
               <i class="fa-solid fa-inbox"></i>
             </template>
-            <template v-slot:after-icon>
+            <!-- <template v-slot:after-icon>
               <div class="badge">
                 <div class="bold-smallest-text">2</div>
               </div>
-            </template>
+            </template> -->
           </BaseButton>
           <BaseButton
             buttonType="navigator-button"
@@ -76,7 +76,7 @@
             </template>
             <template v-slot:after-icon>
               <div class="badge">
-                <div class="bold-smallest-text">3</div>
+                <div class="bold-smallest-text">{{$store.state.myBeConfirmeds.length}}</div>
               </div>
             </template>
           </BaseButton>
