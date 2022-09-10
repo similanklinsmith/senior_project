@@ -39,6 +39,7 @@ instance.interceptors.response.use(
         let { data } = token;
         console.log("🚀 ~ file: axios.js ~ line 35 ~ token", token);
         VueCookies.set("idToken", data.id_token);
+        localStorage.setItem("user", data.id_token);
       // }
     }
   }
