@@ -26,7 +26,7 @@
             class="detail small-text"
             :style="mode == 'light' ? { color: '#A58EFF' } : {}"
           >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Colour of some elements will change to be lighter colour.
           </div>
         </div>
       </div>
@@ -54,7 +54,7 @@
             class="detail small-text"
             :style="mode == 'dark' ? { color: '#A58EFF' } : {}"
           >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            Colour of some elements will change to be darker colour.
           </div>
         </div>
       </div>
@@ -91,6 +91,6 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/colors/webColors.scss";
-.left-side {animation-name: appearsBottom;animation-duration: 0.5s;animation-iteration-count: 1;height: 100vh;background-color: $white;padding: 4.8rem 3.6rem;border-radius: 2.5rem;.title {color: $darkGrey;margin-bottom: 1.5rem;}.modes {display: flex;flex-direction: column;row-gap: 1rem;.mode {width: 80%;height: 10rem;background-color: $primaryGrey;border-radius: 0.5rem;display: flex;align-items: center;padding: 1.8rem 2.6rem;column-gap: 3rem;cursor: pointer;transition: all 0.2s ease-in-out;&:hover {background-color: $grey;}.check-box {width: 2rem;height: 2rem;background-color: $white;border-radius: 0.5rem;}.content {display: flex;flex-direction: column;width: 60%;line-height: 1.6;.detail {color: $darkGrey;}}}}}
+.left-side {animation-name: appearsBottom;animation-duration: 0.5s;animation-iteration-count: 1;height: 100vh;background-color: $white;padding: 4.8rem 3.6rem;border-radius: 2.5rem;.title {color: $darkGrey;margin-bottom: 1.5rem;}.modes {display: flex;flex-direction: column;row-gap: 1rem;.mode {width: 80%;height: 10rem;background-color: $primaryGrey;border-radius: 0.5rem;display: flex;align-items: center;padding: 1.8rem 2.6rem;column-gap: 3rem;cursor: pointer;transition: all 0.2s ease-in-out;&:hover {background-color: $grey;}.check-box {width: 2rem;height: 2rem;background-color: $white;border-radius: 0.5rem;}.content {display: flex;flex-direction: column;width: 70%;line-height: 1.6;.detail {color: $darkGrey;}}}}}
 @media (max-width: 40em) {.left-side {height: auto;.modes {.mode {height: 15rem;width: 100%;.content {width: 80%;}}}}}
 </style>
