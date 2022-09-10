@@ -380,8 +380,8 @@ export default {
 @import "@/assets/colors/webColors.scss";
 .home {
   .badge {
-    padding: 0.3rem 0.5rem;
-    background-color: $error;
+    padding: 0.4rem 0.65rem;
+    background-color: $highlightViolet;
     border-radius: 50%;
     display: inline-block;
     color: $white;

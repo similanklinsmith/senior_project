@@ -8,9 +8,9 @@
       <BaseButton
         buttonType="outlined-button"
         btnText="Sign in"
-        textColor="#23106D"
+        textColor="#7452FF"
         textHover="white"
-        color="#23106D"
+        color="#7452FF"
         hoverColor="#23106D"
         @onClick="signInWithMicrosoft"
       >
