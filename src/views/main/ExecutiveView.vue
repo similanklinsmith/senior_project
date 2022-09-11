@@ -445,6 +445,29 @@
         </BaseButton>
       </template>
     </BasePopup>
+    <BasePopup
+      v-if="isShowSizeError"
+      @closeModal="isShowSizeError = false"
+      :image="require(`@/assets/decorations/not_found.png`)"
+    >
+      <template v-slot:popupContent>
+        Sorry, the file size of image exceeds maximum file-size(1MB). 
+        Please choose another pretty one.
+      </template>
+      <template v-slot:buttons>
+        <BaseButton
+          buttonType="common-button"
+          btnText="Ah, Okay"
+          textColor="white"
+          textHover="white"
+          color="#F33C3C"
+          hoverColor="#d93333"
+          width="100%"
+          @onClick="isShowSizeError = false"
+        >
+        </BaseButton>
+      </template>
+    </BasePopup>
     <BaseAlert v-if="getterFailed" :status="`failed`">
       Your actions are not executed properly
     </BaseAlert>
@@ -501,6 +524,7 @@ export default {
       secretary: "",
       isAddExecutive: false,
       isShowPopup: false,
+      isShowSizeError: false,
       searchInput: "",
       selectedExecutive: null,
       selectedId: null,
@@ -658,7 +682,8 @@ export default {
           : this.selectedExecutive.img_profile;
     },
     uploadImage(e) {
-      if (e.target.files.length != 0) {
+      if (e.target.files[0].size < 1000000) {
+        if (e.target.files.length != 0) {
         this.previewImage = "";
         this.realImage = "";
         const image = e.target.files[0];
@@ -669,6 +694,9 @@ export default {
           this.previewImage = e.target.result;
         };
         e.target.value = "";
+      }
+      } else {
+        this.isShowSizeError = true;
       }
     },
     async handleChangeExecutive() {
