@@ -94,19 +94,21 @@
               id="from"
               name="from"
               v-model="timeSlot.from"
+              @change="triggerFillToTime"
             />
           </div>
           <div class="input-form">
             <label for="to" class="bold-small-text"
-              >To<span class="required">* {{ errors.to }} </span></label
+              >To</label
             >
             <input
-              class="small-text"
+              class="small-text readonly"
               type="time"
               placeholder="HH:MM"
               id="to"
               name="to"
               v-model="timeSlot.to"
+              readonly
             />
           </div>
           <BaseButton
@@ -219,9 +221,6 @@ export default {
     fromTimeIsValid() {
       return !!this.timeSlot.from;
     },
-    toTimeIsValid() {
-      return !!this.timeSlot.to;
-    },
     IntervalTimeIsValid() {
       return this.timeSlot.from < this.timeSlot.to;
     },
@@ -262,6 +261,15 @@ export default {
     },
   },
   methods: {
+    triggerFillToTime() {
+      console.log(this.timeSlot.from);
+      var bits = this.timeSlot.from.split(/[- :]/);
+      var date = new Date();
+      date.setHours(bits[0], bits[1], 0);
+      var endTimeHour = date.getHours()+this.duration < 12 ? `${date.getHours()+this.duration}`.padStart(2, '0') : `${date.getHours()+this.duration}`;
+      var endTime = `${endTimeHour}:${date.getMinutes()}`;
+      this.timeSlot.to = endTime;
+    },
     getDateObj(a) {
       var bits = a.split(/[- :]/);
       var date = new Date();
@@ -335,9 +343,6 @@ export default {
           ? delete this.errors.interval
           : (this.errors.interval = "NOT be greater than end time")
         : (this.errors.from = "Please choose");
-      this.toTimeIsValid
-        ? delete this.errors.to
-        : (this.errors.to = "Please choose");
       this.getOverlaps
         ? delete this.errors.overlap
         : (this.errors.overlap = "This time is overlapping");
