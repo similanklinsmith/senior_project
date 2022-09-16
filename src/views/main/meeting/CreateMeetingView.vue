@@ -103,11 +103,17 @@
               <select name="duration" id="duration" v-model="form.duration">
                 <option value="">none</option>
                 <option value="1">1 hour</option>
+                <option value="1.5">1.5 hour</option>
                 <option value="2">2 hours</option>
+                <option value="2.5">2.5 hours</option>
                 <option value="3">3 hours</option>
+                <option value="3.5">3.5 hours</option>
                 <option value="4">4 hours</option>
+                <option value="4.5">4.5 hours</option>
                 <option value="5">5 hours</option>
+                <option value="5.5">5.5 hours</option>
                 <option value="6">6 hours</option>
+                <option value="6.5">6.5 hours</option>
               </select>
             </div>
           </div>
