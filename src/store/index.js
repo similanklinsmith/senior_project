@@ -29,8 +29,10 @@ export default createStore({
 
     // appointment polls
     addPollURL: `${BASE_URL}/poll`,
-    myPollsURL: `${BASE_URL}/yourPolls`,
+    myPollsURL: `${BASE_URL}/createdPollsList`,
+    myPollDetailURL: `${BASE_URL}/createdPollById`,
     myPolls: [],
+    myPollDetail: null,
 
     // beConfirmed lists
     myBeConfirmedURL: `${BASE_URL}/allPendingConfirmList`,
@@ -99,6 +101,9 @@ export default createStore({
     },
     GET_MY_POLLS(state, polls) {
       state.myPolls = polls;
+    },
+    GET_MY_POLL_DETAIL(state, pollDetail) {
+      state.myPollDetail = pollDetail;
     },
     ADD_POLLS(state, polls) {
       state.myPolls.push(polls);
@@ -182,7 +187,7 @@ export default createStore({
           }
         }
       } else {
-        this.state.myProfilePic = localStorage.getItem('profile_image')
+        this.state.myProfilePic = localStorage.getItem("profile_image");
       }
     },
     async getExecutiveTitle(context) {
@@ -420,6 +425,30 @@ export default createStore({
         }
       }
     },
+    async getMyPollDetail(context, id) {
+      context.commit("GET_LOADING_STATUS", true);
+      try {
+        const data = await customAxios.instance.get(
+          this.state.myPollDetailURL + "/" + id,
+          {
+            headers: authHeader(),
+          }
+        );
+        console.log(data.data.data);
+        context.commit("GET_MY_POLL_DETAIL", data.data.data);
+        context.commit("GET_LOADING_STATUS", false);
+        return data.data.data;
+      } catch (error) {
+        context.commit("GET_LOADING_STATUS", false);
+        console.log(error.response.status);
+        if (error.response.status == 401) {
+          signOut(this.state.getAuth).then(() => {
+            router.replace("/sign-in");
+          });
+          this.dispatch("auth/logout");
+        }
+      }
+    },
     async addPollAppointment(context, payload) {
       try {
         const newPoll = payload;
@@ -634,6 +663,9 @@ export default createStore({
 
     getterMyPolls(state) {
       return state.myPolls;
+    },
+    getterMyPollDetail(state) {
+      return state.myPollDetail;
     },
     getterMyBeConfirmeds(state) {
       return state.myBeConfirmeds;
