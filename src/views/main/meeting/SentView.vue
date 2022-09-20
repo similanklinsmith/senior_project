@@ -79,88 +79,99 @@
       </div>
     </div>
     <transition name="route">
-      <div class="inbox-detail" v-if="selectedInbox != null">
-        <div class="title remark-text">{{ selectedInbox.title }}</div>
-        <div class="sent-from smallest-text">
-          has already sent by you on
-          {{ formatDateTime(selectedInbox.create_at) }}
-        </div>
-        <div class="line"></div>
-        <div class="content">
-          <div class="attendees">
-            <div class="bold-small-text">Attendees:</div>
-            <div
-              class="small-text attendee-list"
-              v-for="(attendee, index) in selectedInbox.attendees.slice(
-                0,
-                slice
-              )"
-              :key="attendee"
-            >
-              {{ formatAttendee(attendee)
-              }}<span v-if="index != selectedInbox.attendees.length - 1"
-                >,</span
-              >
-            </div>
-            <span
-              class="see-more bold-small-text"
-              v-if="selectedInbox.attendees.length > 2"
-              @click="showAllAttendee"
-              ><div v-if="!isShowMore">
-                show more &#40;{{ selectedInbox.attendees.length - 2 }}&#41;
-              </div>
-              <div v-else>show less</div></span
-            >
-          </div>
-          <div class="time-slots">
-            <div class="bold-small-text faded">Timeslots</div>
-            <div class="slot">
-              <div class="start">
-                <div class="bold-small-text">Start Date:</div>
-                <div class="small-text">
-                  {{ selectedInbox.start_date.split("T")[0] }}
-                </div>
-              </div>
-              <div class="end">
-                <div class="bold-small-text">End Date:</div>
-                <div class="small-text">
-                  {{ selectedInbox.end_date.split("T")[0] }}
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="duration">
-            <div class="bold-small-text">Durations of meeting:</div>
-            <div class="small-text">
-              {{ selectedInbox.duration_of_time }} hour&#40;s&#41;
-            </div>
-          </div>
-          <div class="due-date">
-            <div class="bold-small-text">Due Date:</div>
-            <div class="small-text">
-              {{ selectedInbox.due_date_time.split("T")[0] }}
-              <div class="remaining-day">
-                &#40;{{ calculateRemainingDay(selectedInbox.due_date_time) }}
-                days remaining&#41;
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="button"
-          v-if="new Date(selectedInbox.due_date_time) >= new Date()"
-        >
-          <BaseButton
-            buttonType="common-button"
-            btnText="Delete Poll"
-            textColor="white"
-            textHover="white"
-            color="#F33C3C"
-            hoverColor="#d93333"
-            width="fit-content"
-            @click="isShowPopup = true"
+      <div v-if="selectedId != null">
+        <div class="inbox-detail">
+          <div
+            class="inbox-detail-content"
+            v-if="isLoading == false && selectedInbox != null"
           >
-          </BaseButton>
+            <div class="title remark-text">{{ selectedInbox.title }}</div>
+            <div class="sent-from smallest-text">
+              has already sent by you on
+              {{ formatDateTime(selectedInbox.create_at) }}
+            </div>
+            <div class="line"></div>
+            <div class="content">
+              <div class="attendees">
+                <div class="bold-small-text">Attendees:</div>
+                <div
+                  class="small-text attendee-list"
+                  v-for="(attendee, index) in selectedInbox.attendees.slice(
+                    0,
+                    slice
+                  )"
+                  :key="attendee"
+                >
+                  {{ formatAttendee(attendee)
+                  }}<span v-if="index != selectedInbox.attendees.length - 1"
+                    >,</span
+                  >
+                </div>
+                <span
+                  class="see-more bold-small-text"
+                  v-if="selectedInbox.attendees.length > 2"
+                  @click="showAllAttendee"
+                  ><div v-if="!isShowMore">
+                    show more &#40;{{ selectedInbox.attendees.length - 2 }}&#41;
+                  </div>
+                  <div v-else>show less</div></span
+                >
+              </div>
+              <div class="time-slots">
+                <div class="bold-small-text faded">Timeslots</div>
+                <div class="slot">
+                  <div class="start">
+                    <div class="bold-small-text">Start Date:</div>
+                    <div class="small-text">
+                      {{ selectedInbox.start_date.split("T")[0] }}
+                    </div>
+                  </div>
+                  <div class="end">
+                    <div class="bold-small-text">End Date:</div>
+                    <div class="small-text">
+                      {{ selectedInbox.end_date.split("T")[0] }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="duration">
+                <div class="bold-small-text">Durations of meeting:</div>
+                <div class="small-text">
+                  {{ selectedInbox.duration_of_time.toString().split(".")[0] }}hr
+                  <span v-if="selectedInbox.duration_of_time.toString().split('.')[1]">{{ selectedInbox.duration_of_time.toString().split(".")[1]*6 }}min</span>
+                </div>
+              </div>
+              <div class="due-date">
+                <div class="bold-small-text">Due Date:</div>
+                <div class="small-text">
+                  {{ selectedInbox.due_date_time.split("T")[0] }}
+                  <div class="remaining-day">
+                    &#40;{{
+                      calculateRemainingDay(selectedInbox.due_date_time)
+                    }}
+                    days remaining&#41;
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="button"
+              v-if="new Date(selectedInbox.due_date_time) >= new Date()"
+            >
+              <BaseButton
+                buttonType="common-button"
+                btnText="Delete Poll"
+                textColor="white"
+                textHover="white"
+                color="#F33C3C"
+                hoverColor="#d93333"
+                width="fit-content"
+                @click="isShowPopup = true"
+              >
+              </BaseButton>
+            </div>
+          </div>
+          <div v-else class="remark-text not-found loading">Loading...</div>
         </div>
       </div>
     </transition>
@@ -238,7 +249,7 @@ export default {
     });
     return {
       formatter,
-      dDate
+      dDate,
     };
   },
   data() {
@@ -252,11 +263,13 @@ export default {
       isShowDropdown: false,
       withInDate: "",
       filterDate: "",
+      isLoading: false,
     };
   },
   computed: {
     ...mapGetters([
       "getterMyPolls",
+      "getterMyPollDetail",
       "getterExecutiveTitles",
       "getterSuccess",
       "getterFailed",
@@ -285,7 +298,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["getMyPolls", "getExecutiveTitle"]),
+    ...mapActions(["getMyPolls", "getMyPollDetail", "getExecutiveTitle"]),
     onFocus() {
       document.getElementById("search-input").placeholder = "Type to find...";
     },
@@ -301,13 +314,22 @@ export default {
       this.isShowDropdown = false;
       this.selectedInbox = null;
     },
-    selectInbox(id) {
+    async selectInbox(id) {
+      this.selectedInbox = null;
       this.isShowMore = false;
       this.slice = 2;
-      this.selectedInbox = this.getPollsList.find((toBeConfirmed) => {
-        this.selectedId = id;
-        return toBeConfirmed.id == id;
-      });
+      this.selectedId = id;
+      this.isLoading = true;
+      try {
+        this.selectedInbox = await this.$store.dispatch(
+          "getMyPollDetail",
+          this.selectedId
+        );
+        console.log(this.selectedInbox);
+        this.isLoading = false;
+      } catch (error) {
+        this.isLoading = false;
+      }
     },
     calculateRemainingDay(date) {
       return Math.round(
@@ -336,16 +358,18 @@ export default {
     async deletePollAppointment(id) {
       await this.$store.dispatch("deletePollAppointment", id);
       this.isShowPopup = false;
-      this.getPollsList.length > 0
-        ? setTimeout(
-            () => (
-              (this.selectedInbox = this.getPollsList[0]),
-              (this.selectedId = this.getPollsList[0].id)
-            ),
-            1000
-          )
-        : (this.selectedInbox = null),
-        (this.selectedId = null);
+      this.selectedInbox = null;
+      this.selectedId = null;
+      // this.getPollsList.length > 0
+      //   ? setTimeout(
+      //       () => (
+      //         (this.selectedInbox = this.getPollsList[0]),
+      //         (this.selectedId = this.getPollsList[0].id)
+      //       ),
+      //       1000
+      //     )
+      //   : (this.selectedInbox = null),
+      //   (this.selectedId = null);
     },
   },
   created() {
@@ -401,6 +425,24 @@ ul {
   grid-template-columns: 0.35fr 0.65fr;
   column-gap: 2.2rem;
   padding: 3rem;
+  .not-found {
+    padding: 1.8rem;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 80%;
+    text-align: center;
+    color: $darkGrey;
+  }
+  .loading {
+    animation-name: floating;
+    -webkit-animation-name: floating;
+    animation-duration: 3s;
+    -webkit-animation-duration: 3s;
+    animation-iteration-count: infinite;
+    -webkit-animation-iteration-count: infinite;
+  }
   .inbox {
     width: 100%;
     height: 100%;
@@ -545,13 +587,32 @@ ul {
   }
   .inbox-detail {
     width: 100%;
-    height: 100%;
+    height: fit-content;
     background-color: $white;
     border-radius: 2.5rem;
     padding: 5rem 4.4rem;
-    display: flex;
     flex-direction: column;
-    overflow: scroll;
+    display: flex;
+    .inbox-detail-content {
+      overflow: scroll;
+      .due-date {
+        margin-top: 2rem;
+        color: $primaryViolet;
+        span {
+          color: $error;
+        }
+      }
+      .sent-from {
+        color: $darkGrey;
+        span {
+          text-decoration: underline;
+        }
+      }
+      .button {
+        display: flex;
+        justify-content: flex-end;
+      }
+    }
     .line {
       margin-top: 2.4rem;
       width: 100%;

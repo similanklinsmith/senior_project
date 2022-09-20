@@ -1,94 +1,152 @@
 <template>
-  <MaskMeetingDetailMobile
-    :title="`[Firebase] Client access to your Realtime Database 'flutter2-f80d0-
-        default-rtdb is expiring soon`"
-    :dateTime="'2022-05-15T07:40:32.000Z'"
-    :type="type"
-    :sender="'Katherine Perish'"
-  >
-    <template v-slot:detail-slot>
-      <div class="expired-date">
-        <span>*</span>This form will be expired in 2022-05-10
-        <span>(3 days left)</span>
-      </div>
-      <div class="timeSlot-label">Timeslots</div>
-      <div class="timeSlot">
-        <div class="label-header">
-          <i class="fa-regular fa-calendar"></i>
-          <i class="fa-regular fa-clock"></i>
-        </div>
-        <div class="detail">
-          <div>From 2022-05-15 to 2022-05-20</div>
-          <div>2 hours</div>
-        </div>
-      </div>
-      <div class="attendees-label">Attendees</div>
-      <div class="attendees" @click="showAllAttendee">
-        <div
-          class="attendee"
-          v-for="attendee in attendees.slice(0, 5)"
-          :key="attendee"
-        >
-          <div
-            class="profile-image"
-            v-if="attendee.image == 'default_profile.png'"
+  <div v-if="!isLoading && inboxDetail != null">
+    <MaskMeetingDetailMobile
+      :title="inboxDetail.title"
+      :dateTime="inboxDetail.create_at"
+      :type="type"
+      :sender="''"
+    >
+      {{ inboxDetail }}
+      <template v-slot:detail-slot>
+        <div class="expired-date">
+          <span>*</span>This form will be expired in
+          {{ inboxDetail.due_date_time.split("T")[0] }}
+          <span
+            >({{ calculateRemainingDay(inboxDetail.due_date_time) }} days
+            left)</span
           >
-            <img
-              src="@/assets/decorations/sample_profile.png"
-              alt="sample profile illustration"
-            />
+        </div>
+        <div class="timeSlot-label">Timeslots</div>
+        <div class="timeSlot">
+          <div class="label-header">
+            <i class="fa-regular fa-calendar"></i>
+            <i class="fa-regular fa-clock"></i>
           </div>
-          <div class="real-profile-image" v-else>
-            <img
-              :src="urlImage + '/' + attendee.image"
-              alt="sample profile illustration"
-              @error="
-                $event.target.src =
-                  'http://www.grand-cordel.com/wp-content/uploads/2015/08/import_placeholder.png'
-              "
-            />
+          <div class="detail">
+            <div>
+              From {{ inboxDetail.start_date.split("T")[0] }} to
+              {{ inboxDetail.end_date.split("T")[0] }}
+            </div>
+            <div>
+              {{ inboxDetail.duration_of_time.toString().split(".")[0] }}hr
+              <span v-if="inboxDetail.duration_of_time.toString().split('.')[1]"
+                >{{
+                  inboxDetail.duration_of_time.toString().split(".")[1] * 6
+                }}min</span
+              >
+            </div>
           </div>
         </div>
-        <div v-if="attendees.length > 5" class="attendee-more">
-          <div class="remark-text">+{{ attendees.length - 5 }}</div>
+        <div class="attendees-label">Attendees</div>
+        <div class="attendees" @click="showAllAttendee">
+          <div
+            class="attendee"
+            v-for="attendee in inboxDetail.attendees.slice(0, 5)"
+            :key="attendee"
+          >
+            <div
+              class="profile-image"
+              v-if="attendee.executive.img_profile == 'default_profile.png'"
+            >
+              <img
+                src="@/assets/decorations/sample_profile.png"
+                alt="sample profile illustration"
+              />
+            </div>
+            <div class="real-profile-image" v-else>
+              <img
+                :src="urlImage + '/' + attendee.executive.img_profile"
+                alt="sample profile illustration"
+                @error="
+                  $event.target.src =
+                    'http://www.grand-cordel.com/wp-content/uploads/2015/08/import_placeholder.png'
+                "
+              />
+            </div>
+          </div>
+          <div v-if="inboxDetail.attendees.length > 5" class="attendee-more">
+            <div class="remark-text">
+              +{{ inboxDetail.attendees.length - 5 }}
+            </div>
+          </div>
         </div>
-      </div>
-      <!-- <div
+        <div
           class="button"
-          v-if="
-            new Date(selectedInbox.due_date_time) >=
-            new Date()
-          "
-        > -->
-      <div class="button">
+          v-if="new Date(inboxDetail.due_date_time) >= new Date()"
+        >
+          <BaseButton
+            buttonType="common-button"
+            btnText="Delete Poll"
+            textColor="white"
+            textHover="white"
+            color="#F33C3C"
+            hoverColor="#d93333"
+            width="fit-content"
+            @click="isShowPopup = true"
+          />
+        </div>
+        <BaseAttendeesPopup
+          :attendees="inboxDetail.attendees"
+          :isShowAttendees="isShowAttendees"
+          @onClosePopup="isShowAttendees = false"
+        />
+      </template>
+    </MaskMeetingDetailMobile>
+    <BasePopup
+      v-if="isShowPopup"
+      @closeModal="isShowPopup = false"
+      :image="require(`@/assets/decorations/delete_executive.png`)"
+    >
+      <template v-slot:popupContent>
+        This Poll(<span :style="{ color: '#C4C4C4 !important' }">{{
+          inboxDetail.title
+        }}</span
+        >) will be deleted immediately after confirming!
+      </template>
+      <template v-slot:buttons>
         <BaseButton
           buttonType="common-button"
-          btnText="Delete Poll"
+          btnText="Confirm delete"
           textColor="white"
           textHover="white"
           color="#F33C3C"
           hoverColor="#d93333"
-          width="fit-content"
-          @click="isShowPopup = true"
-        />
-      </div>
-      <BaseAttendeesPopup
-        :attendees="attendees"
-        :isShowAttendees="isShowAttendees"
-        @onClosePopup="isShowAttendees = false"
-      />
-    </template>
-  </MaskMeetingDetailMobile>
+          width="100%"
+          @onClick="deletePollAppointment(inboxDetail.id)"
+        >
+        </BaseButton>
+        <BaseButton
+          buttonType="outlined-button"
+          btnText="Cancel"
+          textColor="#F33C3C"
+          textHover="white"
+          color="#F33C3C"
+          hoverColor="#d93333"
+          width="100%"
+          @onClick="isShowPopup = false"
+        >
+        </BaseButton>
+      </template>
+    </BasePopup>
+  </div>
+  <div v-else class="loading remark-text flex-col-center">Loading...</div>
 </template>
 
 <script>
 import MaskMeetingDetailMobile from "@/components/meeting/MaskMeetingDetailMobile.vue";
 import BaseAttendeesPopup from "@/components/UI/BaseAttendeesPopup.vue";
 import BaseButton from "@/components/UI/BaseButton.vue";
+import BasePopup from "@/components/UI/BasePopup.vue";
 import { useRoute } from "vue-router";
+import { mapGetters, mapActions } from "vuex";
 export default {
   name: "SentViewDetail",
-  components: { MaskMeetingDetailMobile, BaseAttendeesPopup, BaseButton },
+  components: {
+    MaskMeetingDetailMobile,
+    BaseAttendeesPopup,
+    BaseButton,
+    BasePopup,
+  },
   setup() {
     const route = useRoute();
     const id = route.params.id;
@@ -97,74 +155,58 @@ export default {
   },
   data() {
     return {
+      inboxDetail: null,
+      isLoading: false,
       urlImage: this.$store.state.imageURL,
       searchInput: "",
       isShowAttendees: false,
-      attendees: [
-        {
-          id: 1,
-          title: "Mr",
-          firstname: "Similan",
-          lastname: "Klinsmith",
-          image: "default_profile.png",
-        },
-        {
-          id: 2,
-          title: "Ms",
-          firstname: "Noparat",
-          lastname: "Prasongdee",
-          image: "default_profile.png",
-        },
-        {
-          id: 3,
-          title: "Ms",
-          firstname: "Praepanwa",
-          lastname: "Tedprasit",
-          image: "default_profile.png",
-        },
-        {
-          id: 4,
-          title: "Ms",
-          firstname: "Natcha",
-          lastname: "Phannoi",
-          image: "default_profile.png",
-        },
-        {
-          id: 5,
-          title: "Ms",
-          firstname: "Nattakorn",
-          lastname: "Lertsakornprasert",
-          image: "default_profile.png",
-        },
-        {
-          id: 6,
-          title: "Mr",
-          firstname: "Jiraphat",
-          lastname: "Poolprapha",
-          image: "default_profile.png",
-        },
-        {
-          id: 7,
-          title: "Ms",
-          firstname: "Sunanta",
-          lastname: "Sighka",
-          image: "default_profile.png",
-        },
-      ],
+      isShowPopup: false,
     };
   },
+  computed: {
+    ...mapGetters(["getterMyPollDetail", "getterExecutiveTitles"]),
+  },
   methods: {
+    ...mapActions(["getMyPollDetail", "getExecutiveTitle"]),
+    async getPollDetail() {
+      try {
+        this.inboxDetail = await this.$store.dispatch(
+          "getMyPollDetail",
+          this.id
+        );
+        console.log(this.inboxDetail);
+        this.isLoading = false;
+      } catch (error) {
+        this.isLoading = false;
+      }
+    },
+    async deletePollAppointment(id) {
+      await this.$store.dispatch("deletePollAppointment", id);
+      this.isShowPopup = false;
+      this.inboxDetail = null;
+      this.$router.push({ path: "/meetings-management" });
+    },
+    calculateRemainingDay(date) {
+      return Math.round(
+        (new Date(date) - new Date(Date.now())) / (24 * 60 * 60 * 1000)
+      ) < 0
+        ? 0
+        : Math.round(
+            (new Date(date) - new Date(Date.now())) / (24 * 60 * 60 * 1000)
+          );
+    },
+    showAllAttendee() {
+      this.isShowAttendees = !this.isShowAttendees;
+    },
     copyLink(value) {
       let copyText = document.getElementById(value).innerHTML;
       navigator.clipboard.writeText(copyText);
-    },
-    showAllAttendee() {
-      this.isShowAttendees = true;
     },
   },
   mounted() {
     console.log(`This is params id: ${this.id}`);
     console.log(`This is params type: ${this.type}`);
+    this.getPollDetail();
     // GET by /:{type}/:{id}
     // Ex. /inbox/1
   },
@@ -173,6 +215,16 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/colors/webColors.scss";
+.loading {
+  height: 100vh;
+  color: $highlightViolet;
+  animation-name: floating;
+  -webkit-animation-name: floating;
+  animation-duration: 3s;
+  -webkit-animation-duration: 3s;
+  animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+}
 .timeSlot-label,
 .attendees-label {
   color: $darkGrey;
@@ -204,6 +256,18 @@ export default {
     img {
       width: 100%;
       height: 100%;
+    }
+  }
+  .real-profile-image {
+    border-radius: 1rem;
+    width: 6rem;
+    height: 6rem;
+    background-color: $fadedViolet;
+    overflow: hidden;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
   }
   .attendee,
