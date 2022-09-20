@@ -79,7 +79,7 @@
                 <vue-cal
                   class="vuecal--violet-theme vuecal--disabled-button"
                   :selected-date="selectedDate"
-                  :time-from="7 * 60"
+                  :time-from="0 * 60"
                   :time-step="30"
                   active-view="day"
                   :events="acceptedArray"
@@ -92,6 +92,26 @@
             </div>
             <div class="second-col">
               <div class="form">
+                <div class="duration-container">
+                  <div class="duration bold-small-text">
+                    Required duration
+                    {{
+                      selectedInbox.duration_of_time.toString().split(".")[0]
+                    }}hr
+                    <span
+                      v-if="
+                        selectedInbox.duration_of_time.toString().split('.')[1]
+                      "
+                      >{{
+                        parseInt(
+                          selectedInbox.duration_of_time
+                            .toString()
+                            .split(".")[1]
+                        ) * 6
+                      }}min</span
+                    >
+                  </div>
+                </div>
                 <form @submit.prevent="handleCreateMeeting">
                   <div class="input-form">
                     <label for="title" class="bold-small-text"
@@ -121,7 +141,7 @@
                     <div class="input-form">
                       <label for="date" class="bold-small-text">Date</label>
                       <input
-                        class="small-text"
+                        class="small-text readonly"
                         type="date"
                         placeholder="date"
                         id="date"
@@ -212,6 +232,15 @@
                     </div>
                   </div>
                   <div class="button">
+                    <BaseButton
+                      buttonType="outlined-button"
+                      btnText="Cancel"
+                      textColor="#F33C3C"
+                      textHover="white"
+                      color="#F33C3C"
+                      hoverColor="#F33C3C"
+                      @onClick="onClickCloseSchedule"
+                    />
                     <BaseButton
                       buttonType="common-button"
                       btnText="Create meeting"
@@ -442,13 +471,13 @@ export default {
   mounted() {
     this.toBeConfirmedList = [
       {
-        id: "1",
+        id: 1,
         title: "Discover what’s happened this week",
         create_at: "2022-05-15T07:40:32.000Z",
-        secretary_id: "1",
+        duration_of_time: 3.5,
         slots: [
           {
-            id: "1",
+            id: 1,
             date: "2022-08-25",
             responses: [
               {
@@ -461,14 +490,14 @@ export default {
                     imageProfile: "",
                     periodOfTime: [
                       {
-                        id: "109123",
-                        split: 1,
+                        id: 109123,
+                        split: 1, // split number must match the executuve_id
                         start: "2022-08-25 10:30",
                         end: "2022-08-25 11:30",
                       },
                       {
-                        id: "109124",
-                        split: 1,
+                        id: 109124,
+                        split: 1, // split number must match the executuve_id
                         start: "2022-08-25 15:30",
                         end: "2022-08-25 17:30",
                       },
@@ -482,14 +511,14 @@ export default {
                     imageProfile: "",
                     periodOfTime: [
                       {
-                        id: "109130",
-                        split: 2,
+                        id: 109130,
+                        split: 2, // split number must match the executuve_id
                         start: "2022-08-25 12:30",
                         end: "2022-08-25 14:30",
                       },
                       {
-                        id: "109131",
-                        split: 2,
+                        id: 109131,
+                        split: 2, // split number must match the executuve_id
                         start: "2022-08-25 16:30",
                         end: "2022-08-25 18:30",
                       },
@@ -502,7 +531,7 @@ export default {
             ],
           },
           {
-            id: "2",
+            id: 2,
             date: "2022-08-26",
             responses: [
               {
@@ -515,14 +544,14 @@ export default {
                     imageProfile: "",
                     periodOfTime: [
                       {
-                        id: "109125",
-                        split: 1,
+                        id: 109125,
+                        split: 1, // split number must match the executuve_id
                         start: "2022-08-26 10:30",
                         end: "2022-08-26 11:30",
                       },
                       {
-                        id: "109126",
-                        split: 1,
+                        id: 109126,
+                        split: 1, // split number must match the executuve_id
                         start: "2022-08-26 15:30",
                         end: "2022-08-26 17:30",
                       },
@@ -551,6 +580,9 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/colors/webColors.scss";
+.readonly {
+  background-color: $grey !important;
+}
 .required {
   color: $error;
   margin-left: 0.2rem;
@@ -574,7 +606,7 @@ export default {
   position: fixed;
   z-index: 12;
   width: 95% !important;
-  height: 90%;
+  height: 95%;
   display: grid;
   grid-template-columns: 1.25fr 0.75fr;
   column-gap: 2rem;
@@ -616,7 +648,7 @@ export default {
   }
   .second-col {
     width: 100%;
-    height: 90%;
+    height: 80%;
     background-color: $white;
     border-radius: 2.5rem;
     padding: 3.6rem 3.2rem;
@@ -627,6 +659,17 @@ export default {
     .form {
       width: 100%;
       overflow-y: scroll;
+      .duration-container {
+        display: flex;
+        justify-content: flex-end;
+        .duration {
+          width: fit-content;
+          background-color: $fadedYellow;
+          padding: 1rem 1.4rem;
+          border-radius: 1.6rem;
+          color: $yellow;
+        }
+      }
     }
     .attachment-download {
       width: 25rem;
@@ -683,6 +726,7 @@ export default {
       display: flex;
       justify-content: flex-end;
       width: 100%;
+      column-gap: 1rem;
     }
     .row-input {
       display: flex;
