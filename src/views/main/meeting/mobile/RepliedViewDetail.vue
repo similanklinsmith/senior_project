@@ -60,6 +60,7 @@
       </template>
     </MaskMeetingDetailMobile>
   </div>
+    <div v-else class="loading remark-text flex-col-center">Loading...</div>
 </template>
 
 <script>
@@ -114,5 +115,5 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/colors/webColors.scss";
-.response {display: flex;flex-direction: column;row-gap: 3.6rem;height: 100%;overflow: scroll;margin: 1rem 0;padding: 0 1rem;.response-container {display: flex;flex-direction: column;row-gap: 2.4rem;.name {span {color: $primaryViolet;font-weight: 400;}}.label-text {margin-top: 1rem;color: $darkGrey;}.days {display: flex;flex-direction: column;row-gap: 2rem;}.slots {display: flex;flex-direction: column;row-gap: 0.25rem;.show-time-slot {width: fit-content;border: 1px solid $darkViolet;padding: 3rem 3.4rem;border-radius: 0.5rem;margin: 0.25rem 0;.bold-smallest-text {color: $darkViolet !important;}}}}}.response::-webkit-scrollbar {display: block !important;-ms-overflow-style: auto !important;scrollbar-width: auto !important;background-color: transparent;width: 1rem;}.response::-webkit-scrollbar-track {margin: 1rem;border-radius: 0.5rem;}.response::-webkit-scrollbar-thumb {background-color: $grey;border-radius: 0.5rem;transition: all 0.2s ease-in-out;}.response::-webkit-scrollbar-thumb:hover {background-color: $darkGrey;}
+.loading {height: 100vh;color: $highlightViolet;animation-name: floating;-webkit-animation-name: floating;animation-duration: 3s;-webkit-animation-duration: 3s;animation-iteration-count: infinite;-webkit-animation-iteration-count: infinite;}.response {display: flex;flex-direction: column;row-gap: 3.6rem;height: 100%;overflow: scroll;margin: 1rem 0;padding: 0 1rem;.response-container {display: flex;flex-direction: column;row-gap: 2.4rem;.name {span {color: $primaryViolet;font-weight: 400;}}.label-text {margin-top: 1rem;color: $darkGrey;}.days {display: flex;flex-direction: column;row-gap: 2rem;}.slots {display: flex;flex-direction: column;row-gap: 0.25rem;.show-time-slot {width: fit-content;border: 1px solid $darkViolet;padding: 3rem 3.4rem;border-radius: 0.5rem;margin: 0.25rem 0;.bold-smallest-text {color: $darkViolet !important;}}}}}.response::-webkit-scrollbar {display: block !important;-ms-overflow-style: auto !important;scrollbar-width: auto !important;background-color: transparent;width: 1rem;}.response::-webkit-scrollbar-track {margin: 1rem;border-radius: 0.5rem;}.response::-webkit-scrollbar-thumb {background-color: $grey;border-radius: 0.5rem;transition: all 0.2s ease-in-out;}.response::-webkit-scrollbar-thumb:hover {background-color: $darkGrey;}
 </style>

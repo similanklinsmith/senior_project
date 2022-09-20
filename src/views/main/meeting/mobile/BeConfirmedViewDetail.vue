@@ -56,6 +56,7 @@
       </template>
     </MaskMeetingDetailMobile>
   </div>
+  <div v-else class="loading remark-text flex-col-center">Loading...</div>
 </template>
 
 <script>
@@ -100,9 +101,10 @@ export default {
           }
           for (let i = 0; i < this.response[index].timeSlot.length; i++) {
             if (this.response[index].timeSlot[i].status == "accepted") {
-              isValid = this.response[index].timeSlot[i].preferredTime.length != 0;
+              isValid =
+                this.response[index].timeSlot[i].preferredTime.length != 0;
               if (isValid == false) {
-                return isValid
+                return isValid;
               }
             }
           }
@@ -181,6 +183,16 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/colors/webColors.scss";
+.loading {
+  height: 100vh;
+  color: $highlightViolet;
+  animation-name: floating;
+  -webkit-animation-name: floating;
+  animation-duration: 3s;
+  -webkit-animation-duration: 3s;
+  animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+}
 .expired {
   filter: grayscale(1);
   opacity: 0.5;
