@@ -284,7 +284,7 @@ export default {
               }`.padStart(2, "0")
             : 
                 (date.getHours() +
-                Math.floor((date.getMinutes() + minuteDuration) / 60)) > 24 ?
+                Math.floor((date.getMinutes() + minuteDuration) / 60)) >= 24 ?
                 ((date.getHours() +
                 Math.floor((date.getMinutes() + minuteDuration) / 60)) - 24).toString().padStart(2, "0"): (date.getHours() +
                 Math.floor((date.getMinutes() + minuteDuration) / 60))
