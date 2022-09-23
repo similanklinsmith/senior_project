@@ -282,10 +282,13 @@ export default {
                 date.getHours() +
                 Math.floor((date.getMinutes() + minuteDuration) / 60)
               }`.padStart(2, "0")
-            : `${
-                date.getHours() +
-                Math.floor((date.getMinutes() + minuteDuration) / 60)
-              }`;
+            : 
+                (date.getHours() +
+                Math.floor((date.getMinutes() + minuteDuration) / 60)) > 24 ?
+                ((date.getHours() +
+                Math.floor((date.getMinutes() + minuteDuration) / 60)) - 24).toString().padStart(2, "0"): (date.getHours() +
+                Math.floor((date.getMinutes() + minuteDuration) / 60))
+              ;
       } else {
         endTimeMinute = date.getMinutes().toString().padStart(2, "0");
         endTimeHour =
