@@ -78,7 +78,7 @@
               <div class="calendar">
                 <vue-cal
                   class="vuecal--violet-theme vuecal--disabled-button"
-                  :selected-date="selectedDate"
+                  :selected-date="form.date"
                   :time-from="0 * 60"
                   :time-step="30"
                   active-view="day"
@@ -93,6 +93,7 @@
             <div class="second-col">
               <div class="form">
                 <div class="duration-container">
+                  <div class="bold-content-text">Create meeting</div>
                   <div class="duration bold-small-text">
                     Required duration
                     {{
@@ -113,9 +114,11 @@
                   </div>
                 </div>
                 <form @submit.prevent="handleCreateMeeting">
-                  <div class="input-form">
+                  <div class="input-form" id="top">
                     <label for="title" class="bold-small-text"
-                      >Title<span class="required">*</span></label
+                      >Title<span class="required"
+                        >* {{ errors.title }}</span
+                      ></label
                     >
                     <input
                       class="small-text"
@@ -127,7 +130,9 @@
                   </div>
                   <div class="input-form">
                     <label for="description" class="bold-small-text"
-                      >Description<span class="required">*</span></label
+                      >Description<span class="required"
+                        >* {{ errors.description }}</span
+                      ></label
                     >
                     <textarea
                       class="small-text"
@@ -135,6 +140,7 @@
                       placeholder="Description"
                       id="description"
                       name="description"
+                      v-model="form.description"
                     />
                   </div>
                   <div class="row-input">
@@ -146,13 +152,15 @@
                         placeholder="date"
                         id="date"
                         name="date"
-                        :value="selectedDate"
+                        :value="form.date"
                         readonly
                       />
                     </div>
                     <div class="input-form">
                       <label for="from" class="bold-small-text"
-                        >From<span class="required">*</span></label
+                        >From<span class="required"
+                          >* {{ errors.from }}</span
+                        ></label
                       >
                       <input
                         class="small-text"
@@ -160,36 +168,64 @@
                         placeholder="HH:MM"
                         id="from"
                         name="from"
+                        v-model="form.from"
+                        @change="triggerFillToTime"
                       />
                     </div>
                     <div class="input-form">
-                      <label for="to" class="bold-small-text"
-                        >To<span class="required">*</span></label
-                      >
+                      <label for="to" class="bold-small-text">To</label>
                       <input
-                        class="small-text"
+                        class="small-text readonly"
                         type="time"
                         placeholder="HH:MM"
                         id="to"
                         name="to"
+                        v-model="form.to"
+                        readonly
                       />
                     </div>
                   </div>
                   <div class="input-form">
                     <label for="location" class="bold-small-text"
-                      >Location<span class="required">*</span></label
+                      >Location<span class="required"
+                        >* {{ errors.location }}</span
+                      ></label
+                    >
+                    <select
+                      name="location"
+                      id="location"
+                      v-model="form.location"
+                    >
+                      <option value="">none</option>
+                      <option value="Microsoft Team">Microsoft Teams </option>
+                      <option value="Zoom">Zoom</option>
+                      <option value="WebEx">WebEx</option>
+                      <option value="Google Meet">Google Meet</option>
+                      <option value="Others">Others</option>
+                    </select>
+                  </div>
+                  <div class="input-form" v-if="form.location == 'Others'">
+                    <label for="other" class="bold-small-text"
+                      >Other Location<span class="required"
+                        >* {{ errors.other }}</span
+                      ></label
                     >
                     <input
                       class="small-text"
                       type="text"
-                      placeholder="Location"
-                      id="location"
-                      name="location"
+                      placeholder="room number or any platforms"
+                      id="other"
+                      name="other"
+                      v-model="form.other"
                     />
                   </div>
+                  <div class="bold-small-text optional">Optional</div>
                   <div class="input-form">
                     <label for="link" class="bold-small-text"
-                      >Meeting Link<span class="required">*</span></label
+                      >Meeting Link
+                      <div class="required">
+                        {{ errors.meetingLink }}
+                      </div></label
                     >
                     <input
                       class="small-text"
@@ -197,6 +233,7 @@
                       placeholder="www.example-link.com"
                       id="link"
                       name="link"
+                      v-model="form.meetingLink"
                     />
                   </div>
                   <div class="input-form" v-if="!dropzoneFile">
@@ -295,7 +332,6 @@ export default {
   },
   data() {
     return {
-      selectedDate: "",
       acceptedArray: [],
       searchInput: "",
       toBeConfirmedList: [],
@@ -306,6 +342,18 @@ export default {
       stickySplitLabels: false,
       bestTimeSlot: [],
       splitDays: [],
+      form: {
+        title: null,
+        description: null,
+        date: null,
+        from: null,
+        to: null,
+        location: "",
+        other: "",
+        meetingLink: null,
+      },
+      errors: {},
+      regex: /^((ftp|http|https):\/\/)?(www.)?(?!.*(ftp|http|https|www.))/,
     };
   },
   computed: {
@@ -316,8 +364,70 @@ export default {
           .includes(this.searchInput.toLowerCase());
       });
     },
+    titleIsValid() {
+      return !!this.form.title;
+    },
+    descriptionIsValid() {
+      return !!this.form.description;
+    },
+    fromIsValid() {
+      return !!this.form.from;
+    },
+    locationIsValid() {
+      return !!this.form.location;
+    },
+    otherIsValid() {
+      return !!this.form.other;
+    },
+    isURLValid() {
+      return this.regex.test(this.form.meetingLink);
+    },
   },
   methods: {
+    triggerFillToTime() {
+      var bits = this.form.from.split(/[- :]/);
+      var date = new Date();
+      date.setHours(bits[0], bits[1], 0);
+      var minuteDuration = this.selectedInbox.duration_of_time * 60;
+      var endTimeHour;
+      var endTimeMinute;
+      var endTime;
+      if (minuteDuration % 60 != 0) {
+        endTimeMinute = ((date.getMinutes() + minuteDuration) % 60)
+          .toString()
+          .padStart(2, "0");
+        endTimeHour =
+          date.getHours() +
+            Math.floor((date.getMinutes() + minuteDuration) / 60) <
+          12
+            ? `${
+                date.getHours() +
+                Math.floor((date.getMinutes() + minuteDuration) / 60)
+              }`.padStart(2, "0")
+            : date.getHours() +
+                Math.floor((date.getMinutes() + minuteDuration) / 60) >=
+              24
+            ? (
+                date.getHours() +
+                Math.floor((date.getMinutes() + minuteDuration) / 60) -
+                24
+              )
+                .toString()
+                .padStart(2, "0")
+            : date.getHours() +
+              Math.floor((date.getMinutes() + minuteDuration) / 60);
+      } else {
+        endTimeMinute = date.getMinutes().toString().padStart(2, "0");
+        endTimeHour =
+          date.getHours() + this.selectedInbox.duration_of_time < 12
+            ? `${
+                date.getHours() + this.selectedInbox.duration_of_time
+              }`.padStart(2, "0")
+            : `${date.getHours() + this.selectedInbox.duration_of_time}`;
+      }
+      endTime = `${endTimeHour}:${endTimeMinute}`;
+      this.form.to = endTime;
+    },
     formatDateTime(dateTime) {
       return formatDateTimeDetail(dateTime);
     },
@@ -337,7 +447,7 @@ export default {
       this.acceptedArray = [];
       this.splitArray = [];
       this.isShowSchedule = true;
-      this.selectedDate = date;
+      this.form.date = date;
       let slotIndex = this.selectedInbox.slots.findIndex(
         (slot) => slot.id == id
       );
@@ -466,7 +576,33 @@ export default {
       this.bestTimeSlot = filteredData;
       console.log(this.bestTimeSlot);
     },
-    handleCreateMeeting() {},
+    handleCreateMeeting() {
+      this.titleIsValid
+        ? delete this.errors.title
+        : (this.errors.title = "Please inform title");
+      this.descriptionIsValid
+        ? delete this.errors.title
+        : (this.errors.description = "Please inform description");
+      this.fromIsValid
+        ? delete this.errors.from
+        : (this.errors.from = "Please choose");
+      this.locationIsValid
+        ? delete this.errors.location
+        : (this.errors.location = "Please inform location");
+      console.log("Hi " + this.otherIsValid);
+      this.form.location == "Others" && this.otherIsValid
+        ? delete this.errors.other
+        : (this.errors.other = "Please inform other location");
+      this.form.meetingLink != null && this.isURLValid
+        ? delete this.errors.meetingLink
+        : (this.errors.meetingLink = "Meeting link is invalid");
+      // eslint-disable-next-line
+      if (Object.keys(this.errors).length == 0) {
+        // create meeting
+      } else {
+        location.href = "#top";
+      }
+    },
   },
   mounted() {
     this.toBeConfirmedList = [
@@ -648,7 +784,7 @@ export default {
   }
   .second-col {
     width: 100%;
-    height: 80%;
+    height: 68rem;
     background-color: $white;
     border-radius: 2.5rem;
     padding: 3.6rem 3.2rem;
@@ -659,9 +795,21 @@ export default {
     .form {
       width: 100%;
       overflow-y: scroll;
+      .optional {
+        margin-top: 3.6rem;
+        background-color: $bgColor;
+        color: $highlightViolet;
+        border-radius: 1.4rem;
+        padding: 0.6rem 1.2rem;
+        width: fit-content;
+      }
       .duration-container {
         display: flex;
-        justify-content: flex-end;
+        justify-content: space-between;
+        align-items: center;
+        .bold-content-text {
+          color: $primaryViolet;
+        }
         .duration {
           width: fit-content;
           background-color: $fadedYellow;
@@ -723,6 +871,7 @@ export default {
       }
     }
     .button {
+      margin-top: 1.8rem;
       display: flex;
       justify-content: flex-end;
       width: 100%;
@@ -741,6 +890,10 @@ export default {
       display: flex;
       flex-direction: column;
       margin: 1.6rem 0rem;
+      select {
+        font-size: 1.4rem;
+      }
+      select,
       input {
         margin-top: 1rem;
         padding: 1rem 1.4rem;
@@ -760,11 +913,13 @@ export default {
         font-family: "Poppins", sans-serif;
         resize: none;
       }
+      select:focus,
       input:focus,
       textarea:focus {
         outline: none;
         border: 0.1rem solid $primaryViolet;
       }
+      select::placeholder,
       input::placeholder,
       textarea::placeholder {
         font-size: 1.4rem;
