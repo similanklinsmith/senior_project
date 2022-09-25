@@ -36,6 +36,7 @@
         <div class="sent-from smallest-text">
           completed on {{ formatDateTime(selectedInbox.create_at) }}
         </div>
+        <div class="line"/>
         <div class="result">
           <div v-for="slot in selectedInbox.slots" :key="slot.id">
             <div class="row-header">
@@ -1041,6 +1042,12 @@ export default {
     display: flex;
     flex-direction: column;
     overflow: scroll;
+    .line {
+      margin: 2.4rem 0;
+      width: 100%;
+      height: 0.1rem;
+      background-color: $grey;
+    }
     .sent-from {
       color: $darkGrey;
     }

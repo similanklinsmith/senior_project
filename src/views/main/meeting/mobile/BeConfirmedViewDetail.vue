@@ -183,6 +183,11 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/colors/webColors.scss";
+@media (min-width: 27em) {
+  .expired-date {
+    font-size: 1.6rem !important;
+  }
+}
 .loading {
   height: 100vh;
   color: $highlightViolet;

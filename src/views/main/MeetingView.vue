@@ -76,7 +76,7 @@
             </template>
             <template v-slot:after-icon>
               <div class="badge">
-                <div class="bold-smallest-text">{{$store.state.myBeConfirmeds.length}}</div>
+                <div class="bold-smallest-text">{{$store.state.myBeConfirmeds.length >= 100 ? '99+' : $store.state.myBeConfirmeds.length}}</div>
               </div>
             </template>
           </BaseButton>
@@ -196,7 +196,7 @@
               </template>
               <template v-slot:after-icon>
                 <div class="badge">
-                  <div class="bold-smallest-text">3</div>
+                  <div class="bold-smallest-text">{{$store.state.myBeConfirmeds.length >= 100 ? '99+' : $store.state.myBeConfirmeds.length}}</div>
                 </div>
               </template>
             </BaseButton>

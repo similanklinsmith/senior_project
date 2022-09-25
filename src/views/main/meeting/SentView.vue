@@ -587,7 +587,7 @@ ul {
   }
   .inbox-detail {
     width: 100%;
-    height: fit-content;
+    height: 100%;
     background-color: $white;
     border-radius: 2.5rem;
     padding: 5rem 4.4rem;
