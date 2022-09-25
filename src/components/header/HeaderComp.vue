@@ -8,7 +8,7 @@
           class="small-text"
           type="text"
           placeholder="Search anything... "
-          @focus="isShowList = true"
+          @focus="isShowList = true, isShowProfile = false"
           @blur="isShowList = false"
           v-model="inputSearch"
         />
