@@ -18,7 +18,8 @@
         </div>
         <div class="add-attendees">
           <div class="bold-content-text">
-            Add attendees<span class="required">* {{ errors.attendees }}</span>
+            Add attendees<span class="required">*</span>
+            <div class="bold-small-text required">{{ errors.attendees }}</div>
           </div>
           <div class="small-text required-attendees">Required attendees</div>
           <div class="selected-attendees">
@@ -65,7 +66,7 @@
         <form @submit.prevent="handleSendPoll" class="add-details">
           <div class="input-form">
             <label for="title" class="bold-small-text"
-              >Title<span class="required">* {{ errors.title }}</span></label
+              >Title<span class="required">*</span></label
             >
             <input
               class="small-text"
@@ -75,12 +76,13 @@
               name="title"
               v-model="form.title"
             />
+            <div class="bold-small-text required">{{ errors.title }}</div>
           </div>
           <div class="input-form-row">
             <div class="input">
               <label for="date" class="bold-small-text"
                 >Date Slot<span class="required"
-                  >* {{ errors.dateSlot }}</span
+                  >*</span
                 ></label
               >
               <litepie-datepicker
@@ -93,11 +95,12 @@
                 :formatter="formatter"
                 :style="{ fontSize: '1.6rem !important', marginTop: '1rem' }"
               />
+              <div class="bold-small-text required">{{ errors.dateSlot }}</div>
             </div>
             <div class="input">
               <label for="duration" class="bold-small-text"
                 >Durations of meeting<span class="required"
-                  >* {{ errors.duration }}</span
+                  >*</span
                 ></label
               >
               <select name="duration" id="duration" v-model="form.duration">
@@ -115,13 +118,14 @@
                 <option value="6">6 hours</option>
                 <option value="6.5">6.5 hours</option>
               </select>
+              <div class="bold-small-text required">{{ errors.duration }}</div>
             </div>
           </div>
           <div class="input-form-row" v-if="form.dateSlot">
             <div class="input">
               <label for="due" class="bold-small-text"
                 >Due Date<span class="required"
-                  >* {{ errors.dueDate }}</span
+                  >*</span
                 ></label
               >
               <litepie-datepicker
@@ -132,6 +136,7 @@
                 v-model="form.dueDate"
                 :style="{ fontSize: '1.6rem !important', marginTop: '1rem' }"
               />
+              <div class="bold-small-text required">{{ errors.dueDate }}</div>
             </div>
             <div class="input"></div>
           </div>
@@ -397,7 +402,7 @@ export default {
 @import "@/assets/colors/webColors.scss";
 .mobile.remark-text{display:none;}
 .input-mobile-button {display: none;order: 3;}
-.required {color: $error;margin-left: 0.2rem;font-size: 1.4rem !important;}
+.required {color: $error;margin-top: 0.8rem;font-size: 1.4rem !important;}
 .modal {width: 100%;height: 100vh;position: fixed;background-color: rgba(24, 24, 26, 0.4);z-index: 11;display: flex;flex-direction: column;align-items: center;justify-content: center;}
 .pop-up {top: 50%;left: 50%;transform: translate(-50%, -50%);position: fixed;z-index: 12;border-radius: 2.5rem;display: flex;flex-direction: column;align-items: center;background-color: $white;width: 44rem;padding: 2.4rem 1.6rem;animation-name: appears;animation-duration: 0.5s;animation-iteration-count: 1;.image {transform: translateY(-3.6rem);img {width: 17.5rem;}}.remark-text {width: 100%;color: $primaryViolet;margin-bottom: 1rem;span {color: $darkGrey !important;}}.search-filter {margin-bottom: 1.5rem;position: relative;width: 100%;display: flex;align-items: center;justify-items: center;.input-icon {width: 100%;display: flex;align-items: center;justify-items: center;input[type="text"] {padding: 1rem 1.4rem;width: 100%;height: 4rem;border-radius: 0.5rem;border: none;background-color: $primaryGrey;font-family: "Poppins", sans-serif;}input[type="text"]:focus {outline: none;border: 0.1rem solid $primaryViolet;}input::placeholder {font-size: 1.4rem;color: $darkGrey;}.icon {position: absolute;right: 0;font-size: 1.4rem;margin-right: 1rem;color: $darkGrey;}}}.pop-up-content {display: flex;flex-direction: column;margin-bottom: 1rem;width: 100%;height: 30rem;overflow: scroll;.not-found {display: flex;align-items: center;justify-content: center;color: $darkGrey;height: 100%;}.loading {animation-name: floating;-webkit-animation-name: floating;animation-duration: 3s;-webkit-animation-duration: 3s;animation-iteration-count: infinite;-webkit-animation-iteration-count: infinite;}.list-checkbox {width: 100%;display: flex;flex-direction: column;color: $darkViolet;row-gap: 1.5rem;.executive-checkbox {display: flex;align-items: center;justify-content: space-between;label {cursor: pointer;display: flex;align-items: center;column-gap: 1.5rem;}input[type="checkbox"] {cursor: pointer; border-radius: 0.6rem;width: 2.4rem;height: 2.4rem;-webkit-appearance: none;box-shadow: inset 0 0 0 1px rgba(85, 85, 85, 0.25);}input[type="checkbox"]:checked {background-color: $yellow;}.real-profile-image {border-radius: 1rem;width: 5rem;height: 5rem;background-color: $fadedViolet;overflow: hidden;img {width: 100%;height: 100%;object-fit: cover;}}.profile-image {border-radius: 1rem;width: 5rem;height: 5rem;background-color: $fadedViolet;padding: 0.8rem;img {width: 100%;height: 100%;}}}}}.button-action {width: 100%;row-gap: 1rem;}}
 .first-body-section {padding: 3rem;width: 100%;height: 100%;.card-section {padding: 5rem 4.4rem;width: 100%;height: 100vh;background-color: $white;border-radius: 2.5rem;display: grid;grid-template-columns: 0.5fr 1.5fr;column-gap: 2rem;.add-attendees {width: 100%;height: 100%;display: flex;flex-direction: column;.bold-content-text {margin-bottom: 2rem;}.required-attendees {margin-bottom: 1.4rem;}.selected-attendees {display: flex;flex-direction: column;width: 100%;margin-bottom: 1rem;.selected-attendee {margin-bottom: 1rem;.profile-section {display: flex;width: 100%;column-gap: 0.8rem;.executive-profile {width: 15rem;flex-wrap: wrap !important;align-items: flex-start !important;}.real-profile-image {border-radius: 1rem;width: 3.5rem;height: 3.5rem;background-color: $fadedViolet;overflow: hidden;img {width: 100%;height: 100%;object-fit: cover;}}.profile-image {border-radius: 1rem;width: 3.5rem;height: 3.5rem;background-color: $fadedViolet;margin-right: 0.5rem;text-align: center;padding: 0.2rem;img {width: 100%;height: 100%;}}}}}.action-add {cursor: pointer;display: flex;color: $primaryViolet;align-items: center;column-gap: 0.8rem;transition: 0.2s all ease-in-out;}.action-add:hover {color: $highlightViolet;}}.add-details {width: 100%;height: 100%;display: flex;flex-direction: column;row-gap: 2rem;.input-form-button {width: 100%;display: flex;justify-content: space-between;}.input-form-row {width: 100%;display: flex;column-gap: 2.4rem;.input {width: 100%;}}.input-form {width: 100%;display: flex;flex-direction: column;}select,input[type="text"] {margin-top: 1rem;padding: 1rem 1.4rem;width: 100%;height: 4rem;border-radius: 0.5rem;border: none;background-color: $primaryGrey;font-family: "Poppins", sans-serif;}input[type="text"]:focus {outline: none;border: 0.1rem solid $primaryViolet;}select::placeholder,input::placeholder {font-size: 1.4rem;color: $darkGrey;}select {font-size: 1.4rem;}select:focus {outline: none;border: 0.1rem solid $primaryViolet;}}}}

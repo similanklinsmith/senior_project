@@ -6,7 +6,7 @@
           <div class="input-icon">
             <i class="icon fa-solid fa-magnifying-glass"></i>
             <input
-              id="search-input"
+              id="search-input-sent"
               class="small-text"
               type="text"
               placeholder="Search by title"
@@ -300,10 +300,10 @@ export default {
   methods: {
     ...mapActions(["getMyPolls", "getMyPollDetail", "getExecutiveTitle"]),
     onFocus() {
-      document.getElementById("search-input").placeholder = "Type to find...";
+      document.getElementById("search-input-sent").placeholder = "Type to find...";
     },
     onBlur() {
-      document.getElementById("search-input").placeholder = "Search by title";
+      document.getElementById("search-input-sent").placeholder = "Search by title";
     },
     toggleDropdown() {
       this.isShowDropdown = !this.isShowDropdown;

@@ -5,7 +5,7 @@
       <div class="input-icon">
         <i class="icon fa-solid fa-magnifying-glass"></i>
         <input
-          id="search-input"
+          id="search-input-help"
           class="small-text"
           type="text"
           placeholder="Search anything... "
@@ -117,10 +117,10 @@ export default {
       navigator.clipboard.writeText(copyText);
     },
     onFocus() {
-      document.getElementById("search-input").placeholder = "Type to find...";
+      document.getElementById("search-input-help").placeholder = "Type to find...";
     },
     onBlur() {
-      document.getElementById("search-input").placeholder = "Search by name";
+      document.getElementById("search-input-help").placeholder = "Search by name";
     },
     handleClick(index) {
       this.searchInput != ""

@@ -6,7 +6,7 @@
           <div class="input-icon">
             <i class="icon fa-solid fa-magnifying-glass"></i>
             <input
-              id="search-input"
+              id="search-input-be-confirmed"
               class="small-text"
               type="text"
               placeholder="Search by title"
@@ -265,10 +265,10 @@ export default {
   methods: {
     ...mapActions(["getMyBeConfirmeds", "getMyBeConfirmedDetail"]),
     onFocus() {
-      document.getElementById("search-input").placeholder = "Type to find...";
+      document.getElementById("search-input-be-confirmed").placeholder = "Type to find...";
     },
     onBlur() {
-      document.getElementById("search-input").placeholder = "Search by title";
+      document.getElementById("search-input-be-confirmed").placeholder = "Search by title";
     },
     toggleDropdown() {
       this.isShowDropdown = !this.isShowDropdown;
