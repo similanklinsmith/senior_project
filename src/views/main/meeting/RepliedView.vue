@@ -142,6 +142,7 @@
               </div>
             </div>
           </div>
+          <div v-if="isLoading" class="remark-text not-found loading">Loading...</div>
         </div>
       </div>
     </transition>

@@ -24,7 +24,7 @@
             <div class="input-icon">
               <i class="icon fa-solid fa-magnifying-glass"></i>
               <input
-                id="search-input"
+                id="search-input-executive"
                 class="small-text"
                 type="text"
                 placeholder="Search by name"
@@ -82,6 +82,7 @@
             <div
               class="dropdown__content"
               :class="`${isShowDropdown ? 'is-show' : ''}`"
+              @mouseleave="isShowDropdown = false"
             >
               <ul>
                 <li @click="editExecutive(selectedExecutive.id)">
@@ -251,7 +252,7 @@
                 <div class="input-form">
                   <label for="title" class="bold-small-text"
                     >Title<span class="required"
-                      >* {{ errors.title }}</span
+                      >*</span
                     ></label
                   >
                   <select name="title" id="title" v-model="form.title">
@@ -264,11 +265,12 @@
                       {{ title }}
                     </option>
                   </select>
+                  <div class="bold-small-text required">{{ errors.title }}</div>
                 </div>
                 <div class="input-form">
                   <label for="name" class="bold-small-text"
                     >Name<span class="required"
-                      >* {{ errors.firstname }}</span
+                      >*</span
                     ></label
                   >
                   <input
@@ -280,13 +282,14 @@
                     @keydown.space.prevent
                     v-model.trim="form.firstname"
                   />
+                  <div class="bold-small-text required">{{ errors.firstname }}</div>
                 </div>
               </div>
               <div class="input">
                 <div class="input-form">
                   <label for="surname" class="bold-small-text"
                     >Surname<span class="required"
-                      >* {{ errors.lastname }}</span
+                      >*</span
                     ></label
                   >
                   <input
@@ -298,11 +301,12 @@
                     @keydown.space.prevent
                     v-model.trim="form.lastname"
                   />
+                  <div class="bold-small-text required">{{ errors.lastname }}</div>
                 </div>
                 <div class="input-form">
                   <label for="position" class="bold-small-text"
                     >Position<span class="required"
-                      >* {{ errors.position }}</span
+                      >*</span
                     ></label
                   >
                   <select name="position" id="position" v-model="form.position">
@@ -315,13 +319,14 @@
                       {{ position }}
                     </option>
                   </select>
+                  <div class="bold-small-text required">{{ errors.position }}</div>
                 </div>
               </div>
               <div class="input">
                 <div class="input-form">
                   <label for="email" class="bold-small-text"
                     >Email<span class="required"
-                      >* {{ errors.email }} {{ errors.uniqueEmail }}</span
+                      >*</span
                     ></label
                   >
                   <input
@@ -333,11 +338,12 @@
                     @keydown.space.prevent
                     v-model.trim="form.email"
                   />
+                  <div class="bold-small-text required">{{ errors.email }} {{ errors.uniqueEmail }}</div>
                 </div>
                 <div class="input-form">
                   <label for="phone-number" class="bold-small-text"
                     >Phone number<span class="required"
-                      >* {{ errors.tel }} {{ errors.uniqueTel }}</span
+                      >*</span
                     ></label
                   >
                   <input
@@ -349,6 +355,7 @@
                     @keydown.space.prevent
                     v-model.trim="form.tel"
                   />
+                  <div class="bold-small-text required">{{ errors.tel }} {{ errors.uniqueTel}} </div>
                 </div>
               </div>
               <div class="input">
@@ -603,8 +610,8 @@ export default {
       "getExecutiveTitle",
       "getExecutivePosition",
     ]),
-    onFocus() {document.getElementById("search-input").placeholder = "Type to find...";},
-    onBlur() {document.getElementById("search-input").placeholder = "Search by name";},
+    onFocus() {document.getElementById("search-input-executive").placeholder = "Type to find...";},
+    onBlur() {document.getElementById("search-input-executive").placeholder = "Search by name";},
     formatPhoneNumber(str) {
       let cleaned = ("" + str).replace(/\D/g, "");
       let match = cleaned.length == 10 ? cleaned.match(/^(\d{3})(\d{3})(\d{4})$/) : cleaned.match(/^(\d{2})(\d{3})(\d{4})$/);
@@ -839,7 +846,7 @@ export default {
 .mobile-button:active,
 .mobile-button-search:active {animation: press 0.2s 1 linear;}
 .search-mobile-button {display: none;}
-.required {color: $error;margin-left: 0.2rem;font-size: 1.4rem !important;}
+.required {color: $error;margin-top: 0.8rem;font-size: 1.4rem !important;}
 .executive-screen {.body {padding: 3rem;.first-body-section {grid-template-columns: 1fr 2fr;column-gap: 3rem;.filter-executive {width: 100%;height: 100%;display: flex;flex-direction: column;row-gap: 1rem;position: relative;.search-filter {position: relative;width: 100%;display: flex;align-items: center;justify-items: center;.input-icon {width: 100%;display: flex;align-items: center;justify-items: center;input[type="text"] {padding: 1rem 1.4rem;width: 100%;height: 4rem;border-radius: 0.5rem;border: none;background-color: $white;font-family: "Poppins", sans-serif;}input[type="text"]:focus {outline: none;border: 0.1rem solid $primaryViolet;}input::placeholder {font-size: 1.4rem;color: $darkGrey;}.icon {position: absolute;right: 0;font-size: 1.4rem;margin-right: 1rem;color: $darkGrey;}}}.list-executive-card::-webkit-scrollbar {display: block !important;-ms-overflow-style: auto !important;scrollbar-width: auto !important;background-color: transparent;width: 1.4rem;}.list-executive-card::-webkit-scrollbar-track {margin: 1rem;border-radius: 0.5rem;}.list-executive-card::-webkit-scrollbar-thumb {background-color: $grey;border-radius: 0.5rem;transition: all 0.2s ease-in-out;}.list-executive-card::-webkit-scrollbar-thumb:hover {background-color: $darkGrey;}.list-executive-card {width: 100%;height: 64rem;border-radius: 1.5rem;background-color: $white;overflow: hidden;.not-found {padding: 1.8rem;width: 100%;display: flex;align-items: center;justify-content: center;height: 80%;text-align: center;color: $darkGrey;}.loading {animation-name: floating;-webkit-animation-name: floating;animation-duration: 3s;-webkit-animation-duration: 3s;animation-iteration-count: infinite;-webkit-animation-iteration-count: infinite;}}}.container {animation-name: appearsBottom;animation-duration: 0.75s;animation-iteration-count: 1;width: 100% !important;height: 100%;border-radius: 2.5rem;background-color: $white;padding: 5.4rem 6.4rem;position: relative;.loading {color: $darkGrey;height: 100%;display: flex;justify-content: center;align-items: center;animation-name: floating;-webkit-animation-name: floating;animation-duration: 3s;-webkit-animation-duration: 3s;animation-iteration-count: infinite;-webkit-animation-iteration-count: infinite;}.icon-dropdown {position: absolute;top: 5.4rem;right: 6.4rem;font-size: 2.2rem;color: $darkViolet;z-index: 7;cursor: pointer;transition: 0.2s all ease-in-out;}.icon-dropdown:hover {color: $primaryViolet;}.dropdown__content {.icon-container,.icon-container-red{height: 3.6rem;margin-right: 1.6rem;width: 3.6rem;border-radius: 1rem;display: flex;justify-content: center;align-items: center;background-color: $fadedViolet;}.icon-container-red{background-color: $error;} box-shadow: 0px 0px 5px $fadedViolet;z-index: -1;display: flex;text-align: center;justify-content: center;align-items: center;margin-top: 1rem;position: absolute;opacity: 0;background-color: $white;overflow: hidden;padding: 2.8rem 3.6rem;right: 6.4rem;transition: 0.3s all ease-in-out;border-radius: 1.5rem;cursor: auto;&.is-show {transform: translateY(2rem);opacity: 1;z-index: 1;cursor: pointer;}ul {width: 100%;list-style: none;li {color: $darkViolet;display: flex;align-items: center;transition: 0.3s all ease-in-out;.icon {font-size: 1.4rem;transition: 0.3s all ease-in-out;}.line {width: 100% !important;margin: 1.5rem 0;height: 0.1rem;background-color: $grey;}}li:hover {color: $primaryViolet;.icon {color: $primaryViolet !important;}}li.red-color{.icon{color: $white;}}li.red-color:hover {color: $error;.icon {color: $white !important;}}}}}.executive-card {grid-template-columns: 0.65fr 1.35fr;column-gap: 2.4rem;position: relative;.left-side {display: flex;flex-direction: column;align-items: center;text-align: center;row-gap: 1.2rem;.real-profile-image {border-radius: 2rem;width: 14rem;height: 14rem;background-color: $fadedViolet;overflow: hidden;img {width: 100%;height: 100%;object-fit: cover;}}.profile-image {border-radius: 2rem;width: 14rem;height: 14rem;background-color: $fadedViolet;padding: 2.4rem;img {width: 100%;height: 100%;}}.executive-profile {display: flex;flex-direction: column;row-gap: 0.6rem;.name {color: $darkViolet;}.position {line-height: 1.4;color: $highlightViolet;}}}.right-side {display: flex;flex-direction: column;justify-content: flex-start;row-gap: 3rem;.title {color: $darkGrey;}.email,.phone,.secretary {display: flex;flex-direction: column;row-gap: 1.2rem;.label {display: flex;align-items: center;.icon {color: $darkGrey;font-size: 1.8rem;margin-left: 0.5rem;cursor: pointer;transition: 0.2s all ease-in-out;}.icon:hover {color: $highlightViolet;}}.content-text {color: $primaryViolet;}}}}.add-executive-card {width: 100%;height: 100%;border-radius: 2.5rem;background-color: $white;padding: 5.4rem 6.4rem;display: grid;grid-template-rows: 1fr 1.5fr;justify-items: center;align-items: center;.image-profile-upload {position: relative;.delete-button {cursor: pointer;top: 0%;right: 0%;transform: translateX(1rem) translateY(-1rem);position: absolute;background-color: $error;border-radius: 1rem;padding: 1rem 1.2rem;transition: 0.2s all ease-in-out;&:hover {background-color: $errorHover;}.icon {font-size: 1.4rem;color: $white;}}}.upload-profile {cursor: pointer;width: fit-content;height: fit-content;position: relative;input {display: none;}.upload-button {bottom: 0%;right: 0%;transform: translateX(1rem) translateY(1rem);position: absolute;background-color: $primaryViolet;border-radius: 1rem;padding: 1rem;.icon {font-size: 1.4rem;color: $white;}}.profile-image {border-radius: 2rem;width: 14rem;height: 14rem;background-color: $fadedViolet;padding: 2.4rem;img {width: 100%;height: 100%;}}.preview-img {border-radius: 2rem;width: 14rem;height: 14rem;overflow: hidden;img {width: 100%;height: 100%;object-fit: cover;}}}.information {width: 100%;height: 100%;display: flex;flex-direction: column;gap: 3rem;.input {display: flex;gap: 5rem;.input-form {.readonly { background-color: $grey !important }width: 100%;display: flex;flex-direction: column;select,input[type="text"],input[type="tel"] {margin-top: 1rem;padding: 1rem 1.4rem;width: 100%;height: 4rem;border-radius: 0.5rem;border: none;background-color: $primaryGrey;font-family: "Poppins", sans-serif;}input[type="text"]:focus,input[type="tel"]:focus {outline: none;border: 0.1rem solid $primaryViolet;}input::placeholder {font-size: 1.4rem;color: $darkGrey;}select {font-size: 1.4rem;}select:focus {outline: none;border: 0.1rem solid $primaryViolet;}}}.form-button {width: 100%;justify-content: flex-end;display: flex;gap: 1.5rem;}}}}}}
 @media (max-width: 63.5em) {.executive-screen {.body {.first-body-section {column-gap: 2rem;.container {padding: 3.4rem 4.4rem;}.executive-card {grid-template-columns: 0.75fr 1.25fr;}}}}}
 @media (max-width: 40em) {.executive-screen {.body {.first-body-section {.filter-executive {.list-executive-card {height: 72rem;}}.executive-card {display: flex;flex-direction: column;row-gap: 4rem;}}}}}

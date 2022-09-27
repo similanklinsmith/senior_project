@@ -47,6 +47,7 @@
         <div
           class="dropdown__content"
           :class="`${isShowProfile ? 'is-show' : ''}`"
+          @mouseleave="isShowProfile = false"
         >
           <ul>
         <li @click="$router.push({ path: '/setting' })">
