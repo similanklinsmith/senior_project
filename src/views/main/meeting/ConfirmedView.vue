@@ -1,16 +1,64 @@
 <template>
   <div class="to-be-confirmed-body-section">
     <div class="inbox">
-      <div class="search-filter">
-        <div class="input-icon">
-          <i class="icon fa-solid fa-magnifying-glass"></i>
-          <input
-            class="small-text"
-            type="text"
-            placeholder="Search by title"
-            v-model="searchInput"
-          />
+      <div class="filter">
+        <div class="search-filter">
+          <div class="input-icon">
+            <i class="icon fa-solid fa-magnifying-glass"></i>
+            <input
+              class="small-text"
+              type="text"
+              placeholder="Search by title"
+              v-model="searchInput"
+              id="search-input-confirmed"
+              @blur="onBlur"
+              @focus="onFocus"
+            />
+          </div>
         </div>
+        <div class="filter-list" @click="toggleDropdown">
+          <i class="fa-solid fa-filter icon"></i>
+          <div class="alert" v-if="filterDate"></div>
+        </div>
+        <div
+          class="dropdown__content"
+          :class="`${isShowDropdown ? 'is-show' : ''}`"
+        >
+          <ul>
+            <li>
+              <div class="input">
+                <label for="due" class="bold-small-text">Date within</label>
+                <litepie-datepicker
+                  id="due"
+                  as-single
+                  :disable-date="dDate"
+                  :formatter="formatter"
+                  v-model="withInDate"
+                  :style="{ fontSize: '12px !important', marginTop: '1rem' }"
+                />
+              </div>
+            </li>
+            <li>
+              <BaseButton
+                buttonType="common-button"
+                btnText="Search"
+                textColor="#23106D"
+                textHover="#23106D"
+                color="#DBD2FF"
+                hoverColor="#A58EFF"
+                width="100%"
+                @onClick="handleFilterDate"
+              >
+              </BaseButton>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="filter-show">
+        <div class="small-text">
+          <span v-if="filterDate">With in: {{ filterDate }}</span>
+        </div>
+        <div class="small-text">Results: {{ filterByTitle.length }}</div>
       </div>
       <div class="inbox-list">
         <transition-group name="route">
@@ -83,7 +131,16 @@
                 <div class="suggested-time">
                   <div class="bold-content-text">Suggested time</div>
                   <div class="time-slot">
-                    <div class="slot" v-for="slot in bestTimeSlot" :key="slot">
+                    <div
+                      class="slot"
+                      v-for="(slot, index) in bestTimeSlot"
+                      :key="slot"
+                      :style="
+                        index == 0
+                          ? { 'background-color': '#FFCB57 !important' }
+                          : {}
+                      "
+                    >
                       <div class="bold-smallest-text">
                         {{ slot.id }} ({{ slot.eventCount }})
                       </div>
@@ -341,9 +398,17 @@ import {
 } from "@/helpers/formatDateTime";
 import { formatBytes } from "@/helpers/formatFileSize";
 import { mapGetters, mapActions } from "vuex";
+import LitepieDatepicker from "litepie-datepicker";
 export default {
   name: "ConfirmedView",
-  components: { InboxComp, ResultComp, BaseDropZone, BaseButton, VueCal },
+  components: {
+    InboxComp,
+    ResultComp,
+    BaseDropZone,
+    BaseButton,
+    VueCal,
+    LitepieDatepicker,
+  },
   setup() {
     let dropzoneFile = ref("");
     const drop = (e) => {
@@ -356,10 +421,20 @@ export default {
     const removeFile = () => {
       dropzoneFile.value = null;
     };
-    return { dropzoneFile, drop, selectedFile, removeFile };
+    const dDate = (date) => {
+      return date > new Date();
+    };
+    const formatter = ref({
+      date: "YYYY-MM-DD",
+      month: "MMM",
+    });
+    return { dropzoneFile, drop, selectedFile, removeFile, formatter, dDate };
   },
   data() {
     return {
+      isShowDropdown: false,
+      withInDate: "",
+      filterDate: "",
       isLoading: false,
       acceptedArray: [],
       searchInput: "",
@@ -400,9 +475,21 @@ export default {
     },
     filterByTitle() {
       return this.getPollsList.filter((toBeConfirmed) => {
-        return toBeConfirmed.title
-          .toLowerCase()
-          .includes(this.searchInput.toLowerCase());
+        if (this.filterDate) {
+          return (
+            toBeConfirmed.title
+              .toLowerCase()
+              .includes(this.searchInput.toLowerCase()) &&
+            new Date(
+              toBeConfirmed.create_at.split("T")[0]
+            ).toLocaleDateString() ==
+              new Date(this.filterDate).toLocaleDateString()
+          );
+        } else {
+          return toBeConfirmed.title
+            .toLowerCase()
+            .includes(this.searchInput.toLowerCase());
+        }
       });
     },
     titleIsValid() {
@@ -426,6 +513,21 @@ export default {
   },
   methods: {
     ...mapActions(["getMyPolls"]),
+        onFocus() {
+      document.getElementById("search-input-confirmed").placeholder = "Type to find...";
+    },
+    onBlur() {
+      document.getElementById("search-input-confirmed").placeholder = "Search by title";
+    },
+    toggleDropdown() {
+      this.isShowDropdown = !this.isShowDropdown;
+    },
+    handleFilterDate() {
+      this.filterDate =
+        this.withInDate ?? new Date(this.withInDate).toLocaleDateString();
+      this.isShowDropdown = false;
+      this.selectedInbox = null;
+    },
     triggerFillToTime() {
       var bits = this.form.from.split(/[- :]/);
       var date = new Date();
@@ -529,7 +631,14 @@ export default {
                 ".",
             });
           }
-          if ("declined" in this.selectedInbox.slots[slotIndex].responses[0]) {
+        }
+        if ("declined" in this.selectedInbox.slots[slotIndex].responses[0]) {
+          for (
+            let index = 0;
+            index <
+            this.selectedInbox.slots[slotIndex].responses[0].declined.length;
+            index++
+          ) {
             if (
               this.selectedInbox.slots[slotIndex].responses[0].declined.length >
               0
@@ -550,26 +659,34 @@ export default {
               });
             }
           }
-          if (
-            "notResponse" in this.selectedInbox.slots[slotIndex].responses[0]
+        }
+        if ("notResponse" in this.selectedInbox.slots[slotIndex].responses[0]) {
+          for (
+            let index = 0;
+            index <
+            this.selectedInbox.slots[slotIndex].responses[0].notResponse.length;
+            index++
           ) {
             if (
-              this.selectedInbox.slots[slotIndex].responses[0].notResponse
-                .length > 0
+              "notResponse" in this.selectedInbox.slots[slotIndex].responses[0]
             ) {
-              temp2.push({
-                id: this.selectedInbox.slots[slotIndex].responses[0]
-                  .notResponse[index].executive_id,
-                label:
-                  this.selectedInbox.slots[slotIndex].responses[0].notResponse[
-                    index
-                  ].first_name +
-                  " " +
-                  this.selectedInbox.slots[slotIndex].responses[0].notResponse[
-                    index
-                  ].last_name.substr(0, 1) +
-                  ".",
-              });
+              if (
+                this.selectedInbox.slots[slotIndex].responses[0].notResponse
+                  .length > 0
+              ) {
+                temp2.push({
+                  id: this.selectedInbox.slots[slotIndex].responses[0]
+                    .notResponse[index].executive_id,
+                  label:
+                    this.selectedInbox.slots[slotIndex].responses[0]
+                      .notResponse[index].first_name +
+                    " " +
+                    this.selectedInbox.slots[
+                      slotIndex
+                    ].responses[0].notResponse[index].last_name.substr(0, 1) +
+                    ".",
+                });
+              }
             }
           }
         }
@@ -604,7 +721,11 @@ export default {
       if (isTime == false) {
         return date;
       } else {
-        return date.getHours() + ":" + date.getMinutes();
+        return (
+          date.getHours().toString().padStart(2, "0") +
+          ":" +
+          date.getMinutes().toString().padEnd(2, "0")
+        );
       }
     },
     getOverlaps(events) {
@@ -645,10 +766,13 @@ export default {
         }
       }
       const keys = ["id"];
-      const filteredData = results.filter(
-        (value, index, self) =>
-          self.findIndex((v) => keys.every((k) => v[k] === value[k])) === index
-      );
+      const filteredData = results
+        .filter(
+          (value, index, self) =>
+            self.findIndex((v) => keys.every((k) => v[k] === value[k])) ===
+            index
+        )
+        .sort((a, b) => (a.eventCount < b.eventCount ? 1 : -1));
       this.bestTimeSlot = filteredData;
       console.log(this.bestTimeSlot);
     },
@@ -689,6 +813,17 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/colors/webColors.scss";
+ul {
+  width: 100%;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  row-gap: 1rem;
+  li {
+    color: $darkViolet;
+    transition: 0.3s all ease-in-out;
+  }
+}
 .readonly {
   background-color: $grey !important;
 }
@@ -715,7 +850,7 @@ export default {
   position: fixed;
   z-index: 12;
   width: 95% !important;
-  height: 95%;
+  height: fit-content;
   display: grid;
   grid-template-columns: 1.25fr 0.75fr;
   column-gap: 2rem;
@@ -736,6 +871,9 @@ export default {
       align-items: center;
       column-gap: 1rem;
       .time-slot {
+        cursor: grab;
+        overflow-x: scroll;
+        white-space: nowrap;
         display: flex;
         column-gap: 1.6rem;
         .slot {
@@ -757,7 +895,7 @@ export default {
   }
   .second-col {
     width: 100%;
-    height: 68rem;
+    height: 69rem;
     background-color: $white;
     border-radius: 2.5rem;
     padding: 3.6rem 3.2rem;
@@ -950,6 +1088,86 @@ export default {
     display: flex;
     flex-direction: column;
     row-gap: 1rem;
+    position: relative;
+    .filter-show {
+      display: flex;
+      justify-content: space-between;
+      color: $highlightViolet;
+      margin: 0.4rem 0;
+    }
+    .filter {
+      display: flex;
+      column-gap: 0.5rem;
+      .filter-list {
+        min-width: 4rem;
+        min-height: 4rem;
+        background-color: $primaryViolet;
+        border-radius: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: 0.3s all ease-in-out;
+        .alert {
+          transform: translateX(0.4rem) translateY(-0.4rem);
+          top: 0%;
+          right: 0%;
+          min-width: 1rem;
+          min-height: 1rem;
+          position: absolute;
+          border-radius: 50%;
+          background-color: $yellow;
+          outline: 0.2rem solid $white;
+        }
+        .icon {
+          font-size: 1.4rem;
+          color: $white;
+        }
+        &:hover {
+          background-color: $darkViolet;
+        }
+      }
+      .dropdown__content {
+        box-shadow: 0px 0px 5px $fadedViolet;
+        z-index: -1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 3rem;
+        position: absolute;
+        right: 0%;
+        opacity: 0;
+        width: 100%;
+        background-color: $white;
+        padding: 2.8rem;
+        transition: 0.3s all ease-in-out;
+        border-radius: 1.5rem;
+        cursor: auto;
+        &.is-show {
+          transform: translateY(2rem);
+          opacity: 1;
+          z-index: 1;
+          cursor: pointer;
+        }
+        input[type="text"] {
+          padding: 1rem 1.4rem;
+          width: 100%;
+          height: 4rem;
+          border-radius: 0.5rem;
+          border: none;
+          background-color: $primaryGrey;
+          font-family: "Poppins", sans-serif;
+        }
+        input[type="text"]:focus {
+          outline: none;
+          border: 0.1rem solid $primaryViolet;
+        }
+        input::placeholder {
+          font-size: 1.4rem;
+          color: $darkGrey;
+        }
+      }
+    }
     .search-filter {
       position: relative;
       width: 100%;
