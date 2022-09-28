@@ -40,6 +40,8 @@ export default {
           return "sent poll appointment";
         case "beConfirmed":
           return "need to answer poll appointment";
+        case "results":
+          return "see the result of the poll";
         case "replied":
           return "replied to " + this.title;
         default:

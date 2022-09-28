@@ -14,7 +14,7 @@
         &#40;{{
           searchInput != "" || withInDate != ""
             ? filterByTitle.length
-            : cards.length
+            : maximumLength
         }}
         results&#41;
       </div>
@@ -168,6 +168,14 @@ export default {
           .map((item) => {
             return item;
           });
+        return card;
+      }
+      if (this.index == 5) {
+        this.setType('results')
+        this.changeMaximum(this.getterMyPolls);
+        const card = this.getterMyPolls.slice(0, this.upto).map((item) => {
+          return item;
+        });
         return card;
       }
       if (this.index == 6) {
