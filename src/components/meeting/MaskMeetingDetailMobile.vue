@@ -37,7 +37,7 @@ export default {
         case "toBeConfirmed":
           return `sent on ${formatDateTimeDetail(this.dateTime)} by ${this.sender}`;
         case "results":
-          return `completed on ${formatDateTimeDetail(this.dateTime)}`;
+          return `created on ${formatDateTimeDetail(this.dateTime)} by ${this.sender}`;
         case "replied":
           return `sent on ${formatDateTimeDetail(this.dateTime)} by ${this.sender}`;
         default:

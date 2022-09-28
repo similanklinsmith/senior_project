@@ -86,7 +86,7 @@
         >
           <div class="title remark-text">{{ selectedInbox.title }}</div>
           <div class="sent-from smallest-text">
-            completed on {{ formatDateTime(selectedInbox.create_at) }}
+            created on {{ formatDateTime(selectedInbox.create_at) }} by you
           </div>
           <div class="line" />
           <div class="result">
