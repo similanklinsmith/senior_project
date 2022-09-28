@@ -31,271 +31,297 @@
       </div>
     </div>
     <transition name="route">
-      <div class="inbox-detail" v-if="selectedInbox != null">
-        <div class="title remark-text">{{ selectedInbox.title }}</div>
-        <div class="sent-from smallest-text">
-          completed on {{ formatDateTime(selectedInbox.create_at) }}
-        </div>
-        <div class="line"/>
-        <div class="result">
-          <div v-for="slot in selectedInbox.slots" :key="slot.id">
-            <div class="row-header">
-              <div class="bold-content-text">
-                {{ formatDateTimeHeader(slot.date) }}
-              </div>
-              <BaseButton
-                buttonType="common-button"
-                btnText="Show schedule"
-                textColor="white"
-                textHover="white"
-                color="#7452FF"
-                hoverColor="#23106D"
-                width="fit-content"
-                @click="onClickShowSchedule(slot.date, slot.id)"
-              >
-              </BaseButton>
-            </div>
-            <ResultComp
-              v-for="res in slot.responses"
-              :key="res.id"
-              :response="res"
-            />
+      <div class="inbox-detail" v-if="selectedId != null">
+        <div
+          class="inbox-detail-content"
+          v-if="isLoading == false && selectedInbox != null"
+        >
+          <div class="title remark-text">{{ selectedInbox.title }}</div>
+          <div class="sent-from smallest-text">
+            completed on {{ formatDateTime(selectedInbox.create_at) }}
           </div>
-        </div>
-        <teleport to="#portal-target" v-if="isShowSchedule">
-          <div class="modal" @click="onClickCloseSchedule"></div>
-          <div class="container">
-            <div class="first-col">
-              <div class="suggested-time">
-                <div class="bold-content-text">Suggested time</div>
-                <div class="time-slot">
-                  <div class="slot" v-for="slot in bestTimeSlot" :key="slot">
-                    <div class="bold-smallest-text">
-                      {{ slot.id }} ({{ slot.eventCount }})
+          <div class="line" />
+          <div class="result">
+            <div v-for="(slot, index) in selectedInbox.slots" :key="index">
+              <div class="row-header">
+                <div class="bold-content-text">
+                  {{ formatDateTimeHeader(slot.date) }}
+                </div>
+                <div
+                  :style="
+                    'accepted' in slot.responses[0]
+                      ? {}
+                      : { 'pointer-events': 'none', filter: 'grayscale(1)' }
+                  "
+                >
+                  <BaseButton
+                    buttonType="common-button"
+                    btnText="Show schedule"
+                    textColor="white"
+                    textHover="white"
+                    color="#7452FF"
+                    hoverColor="#23106D"
+                    width="fit-content"
+                    @click="
+                      'accepted' in slot.responses[0]
+                        ? onClickShowSchedule(slot.date, index)
+                        : null
+                    "
+                  >
+                  </BaseButton>
+                </div>
+              </div>
+              <div v-for="res in slot.responses" :key="res.id">
+                <ResultComp :response="res" />
+              </div>
+            </div>
+          </div>
+          <teleport to="#portal-target" v-if="isShowSchedule">
+            <div class="modal" @click="onClickCloseSchedule"></div>
+            <div class="container">
+              <div class="first-col">
+                <div class="suggested-time">
+                  <div class="bold-content-text">Suggested time</div>
+                  <div class="time-slot">
+                    <div class="slot" v-for="slot in bestTimeSlot" :key="slot">
+                      <div class="bold-smallest-text">
+                        {{ slot.id }} ({{ slot.eventCount }})
+                      </div>
                     </div>
                   </div>
                 </div>
+                <div class="calendar">
+                  <vue-cal
+                    class="vuecal--violet-theme vuecal--disabled-button"
+                    :selected-date="form.date"
+                    :time-from="0 * 60"
+                    :time-step="30"
+                    active-view="day"
+                    :events="acceptedArray"
+                    :split-days="splitDays"
+                    :sticky-split-labels="stickySplitLabels"
+                    hide-view-selector
+                  >
+                  </vue-cal>
+                </div>
               </div>
-              <div class="calendar">
-                <vue-cal
-                  class="vuecal--violet-theme vuecal--disabled-button"
-                  :selected-date="form.date"
-                  :time-from="0 * 60"
-                  :time-step="30"
-                  active-view="day"
-                  :events="acceptedArray"
-                  :split-days="splitDays"
-                  :sticky-split-labels="stickySplitLabels"
-                  hide-view-selector
-                >
-                </vue-cal>
-              </div>
-            </div>
-            <div class="second-col">
-              <div class="form">
-                <div class="duration-container">
-                  <div class="bold-content-text">Create meeting</div>
-                  <div class="duration bold-small-text">
-                    Required duration
-                    {{
-                      selectedInbox.duration_of_time.toString().split(".")[0]
-                    }}hr
-                    <span
-                      v-if="
-                        selectedInbox.duration_of_time.toString().split('.')[1]
-                      "
-                      >{{
-                        parseInt(
+              <div class="second-col">
+                <div class="form">
+                  <div class="duration-container">
+                    <div class="bold-content-text">Create meeting</div>
+                    <div class="duration bold-small-text">
+                      Required duration
+                      {{
+                        selectedInbox.duration_of_time.toString().split(".")[0]
+                      }}hr
+                      <span
+                        v-if="
                           selectedInbox.duration_of_time
                             .toString()
-                            .split(".")[1]
-                        ) * 6
-                      }}min</span
-                    >
-                  </div>
-                </div>
-                <form @submit.prevent="handleCreateMeeting">
-                  <div class="input-form" id="top">
-                    <label for="title" class="bold-small-text"
-                      >Title<span class="required"
-                        >* {{ errors.title }}</span
-                      ></label
-                    >
-                    <input
-                      class="small-text"
-                      type="text"
-                      placeholder="Title"
-                      id="title"
-                      name="title"
-                    />
-                  </div>
-                  <div class="input-form">
-                    <label for="description" class="bold-small-text"
-                      >Description<span class="required"
-                        >* {{ errors.description }}</span
-                      ></label
-                    >
-                    <textarea
-                      class="small-text"
-                      type="text"
-                      placeholder="Description"
-                      id="description"
-                      name="description"
-                      v-model="form.description"
-                    />
-                  </div>
-                  <div class="row-input">
-                    <div class="input-form">
-                      <label for="date" class="bold-small-text">Date</label>
-                      <input
-                        class="small-text readonly"
-                        type="date"
-                        placeholder="date"
-                        id="date"
-                        name="date"
-                        :value="form.date"
-                        readonly
-                      />
+                            .split('.')[1]
+                        "
+                        >{{
+                          parseInt(
+                            selectedInbox.duration_of_time
+                              .toString()
+                              .split(".")[1]
+                          ) * 6
+                        }}min</span
+                      >
                     </div>
-                    <div class="input-form">
-                      <label for="from" class="bold-small-text"
-                        >From<span class="required"
-                          >* {{ errors.from }}</span
-                        ></label
+                  </div>
+                  <form @submit.prevent="handleCreateMeeting">
+                    <div class="input-form" id="top">
+                      <label for="title" class="bold-small-text"
+                        >Title<span class="required">*</span></label
                       >
                       <input
                         class="small-text"
-                        type="time"
-                        placeholder="HH:MM"
-                        id="from"
-                        name="from"
-                        v-model="form.from"
-                        @change="triggerFillToTime"
+                        type="text"
+                        placeholder="Title"
+                        id="title"
+                        name="title"
                       />
+                      <div class="required bold-small-text">
+                        {{ errors.title }}
+                      </div>
                     </div>
                     <div class="input-form">
-                      <label for="to" class="bold-small-text">To</label>
+                      <label for="description" class="bold-small-text"
+                        >Description<span class="required">*</span></label
+                      >
+                      <textarea
+                        class="small-text"
+                        type="text"
+                        placeholder="Description"
+                        id="description"
+                        name="description"
+                        v-model="form.description"
+                      />
+                      <div class="required bold-small-text">
+                        {{ errors.description }}
+                      </div>
+                    </div>
+                    <div class="row-input">
+                      <div class="input-form">
+                        <label for="date" class="bold-small-text">Date</label>
+                        <input
+                          class="small-text readonly"
+                          type="date"
+                          placeholder="date"
+                          id="date"
+                          name="date"
+                          :value="form.date"
+                          readonly
+                        />
+                      </div>
+                      <div class="input-form">
+                        <label for="from" class="bold-small-text"
+                          >From<span class="required">*</span></label
+                        >
+                        <input
+                          class="small-text"
+                          type="time"
+                          placeholder="HH:MM"
+                          id="from"
+                          name="from"
+                          v-model="form.from"
+                          @change="triggerFillToTime"
+                        />
+                        <div class="required bold-small-text">
+                          {{ errors.from }}
+                        </div>
+                      </div>
+                      <div class="input-form">
+                        <label for="to" class="bold-small-text">To</label>
+                        <input
+                          class="small-text readonly"
+                          type="time"
+                          placeholder="HH:MM"
+                          id="to"
+                          name="to"
+                          v-model="form.to"
+                          readonly
+                        />
+                      </div>
+                    </div>
+                    <div class="input-form">
+                      <label for="location" class="bold-small-text"
+                        >Location<span class="required">*</span></label
+                      >
+                      <select
+                        name="location"
+                        id="location"
+                        v-model="form.location"
+                      >
+                        <option value="">none</option>
+                        <option value="Microsoft Team">Microsoft Teams</option>
+                        <option value="Zoom">Zoom</option>
+                        <option value="WebEx">WebEx</option>
+                        <option value="Google Meet">Google Meet</option>
+                        <option value="Others">Others</option>
+                      </select>
+                      <div class="required bold-small-text">
+                        {{ errors.location }}
+                      </div>
+                    </div>
+                    <div class="input-form" v-if="form.location == 'Others'">
+                      <label for="other" class="bold-small-text"
+                        >Other Location<span class="required">*</span></label
+                      >
                       <input
-                        class="small-text readonly"
-                        type="time"
-                        placeholder="HH:MM"
-                        id="to"
-                        name="to"
-                        v-model="form.to"
-                        readonly
+                        class="small-text"
+                        type="text"
+                        placeholder="room number or any platforms"
+                        id="other"
+                        name="other"
+                        v-model="form.other"
+                      />
+                      <div class="required bold-small-text">
+                        {{ errors.other }}
+                      </div>
+                    </div>
+                    <div class="bold-small-text optional">Optional</div>
+                    <div class="input-form">
+                      <label for="link" class="bold-small-text"
+                        >Meeting Link
+                      </label>
+                      <input
+                        class="small-text"
+                        type="text"
+                        placeholder="www.example-link.com"
+                        id="link"
+                        name="link"
+                        v-model="form.meetingLink"
+                      />
+                      <div class="required bold-small-text">
+                        {{ errors.meetingLink }}
+                      </div>
+                    </div>
+                    <div class="input-form" v-if="!dropzoneFile">
+                      <BaseDropZone
+                        @drop.prevent="drop"
+                        @change="selectedFile"
                       />
                     </div>
-                  </div>
-                  <div class="input-form">
-                    <label for="location" class="bold-small-text"
-                      >Location<span class="required"
-                        >* {{ errors.location }}</span
-                      ></label
-                    >
-                    <select
-                      name="location"
-                      id="location"
-                      v-model="form.location"
-                    >
-                      <option value="">none</option>
-                      <option value="Microsoft Team">Microsoft Teams </option>
-                      <option value="Zoom">Zoom</option>
-                      <option value="WebEx">WebEx</option>
-                      <option value="Google Meet">Google Meet</option>
-                      <option value="Others">Others</option>
-                    </select>
-                  </div>
-                  <div class="input-form" v-if="form.location == 'Others'">
-                    <label for="other" class="bold-small-text"
-                      >Other Location<span class="required"
-                        >* {{ errors.other }}</span
-                      ></label
-                    >
-                    <input
-                      class="small-text"
-                      type="text"
-                      placeholder="room number or any platforms"
-                      id="other"
-                      name="other"
-                      v-model="form.other"
-                    />
-                  </div>
-                  <div class="bold-small-text optional">Optional</div>
-                  <div class="input-form">
-                    <label for="link" class="bold-small-text"
-                      >Meeting Link
-                      <div class="required">
-                        {{ errors.meetingLink }}
-                      </div></label
-                    >
-                    <input
-                      class="small-text"
-                      type="text"
-                      placeholder="www.example-link.com"
-                      id="link"
-                      name="link"
-                      v-model="form.meetingLink"
-                    />
-                  </div>
-                  <div class="input-form" v-if="!dropzoneFile">
-                    <BaseDropZone @drop.prevent="drop" @change="selectedFile" />
-                  </div>
-                  <div class="attachment-download" v-if="dropzoneFile">
-                    <div class="file-section">
-                      <div class="first-section">
-                        <div class="file-icon">
-                          <i class="icon fa-solid fa-file"></i>
-                        </div>
-                        <div class="file-details">
-                          <div class="file-name bold-small-text">
-                            {{
-                              dropzoneFile.name.length >= 10
-                                ? dropzoneFile.name.substring(0, 10) +
-                                  ".." +
-                                  dropzoneFile.name.substring(
-                                    dropzoneFile.name.indexOf("."),
-                                    dropzoneFile.name.length
-                                  )
-                                : dropzoneFile.name
-                            }}
+                    <div class="attachment-download" v-if="dropzoneFile">
+                      <div class="file-section">
+                        <div class="first-section">
+                          <div class="file-icon">
+                            <i class="icon fa-solid fa-file"></i>
                           </div>
-                          <div class="file-size smallest-text">
-                            {{ formatFileSize(dropzoneFile.size) }}
+                          <div class="file-details">
+                            <div class="file-name bold-small-text">
+                              {{
+                                dropzoneFile.name.length >= 10
+                                  ? dropzoneFile.name.substring(0, 10) +
+                                    ".." +
+                                    dropzoneFile.name.substring(
+                                      dropzoneFile.name.indexOf("."),
+                                      dropzoneFile.name.length
+                                    )
+                                  : dropzoneFile.name
+                              }}
+                            </div>
+                            <div class="file-size smallest-text">
+                              {{ formatFileSize(dropzoneFile.size) }}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div class="file-delete" @click="removeFile">
-                        <i class="icon fa-solid fa-trash"></i>
+                        <div class="file-delete" @click="removeFile">
+                          <i class="icon fa-solid fa-trash"></i>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div class="button">
-                    <BaseButton
-                      buttonType="outlined-button"
-                      btnText="Cancel"
-                      textColor="#F33C3C"
-                      textHover="white"
-                      color="#F33C3C"
-                      hoverColor="#F33C3C"
-                      @onClick="onClickCloseSchedule"
-                    />
-                    <BaseButton
-                      buttonType="common-button"
-                      btnText="Create meeting"
-                      textColor="white"
-                      textHover="white"
-                      color="#7452FF"
-                      hoverColor="#23106D"
-                      width="fit-content"
-                      type="submit"
-                    >
-                    </BaseButton>
-                  </div>
-                </form>
+                    <div class="button">
+                      <BaseButton
+                        buttonType="outlined-button"
+                        btnText="Cancel"
+                        textColor="#F33C3C"
+                        textHover="white"
+                        color="#F33C3C"
+                        hoverColor="#F33C3C"
+                        @onClick="onClickCloseSchedule"
+                      />
+                      <BaseButton
+                        buttonType="common-button"
+                        btnText="Create meeting"
+                        textColor="white"
+                        textHover="white"
+                        color="#7452FF"
+                        hoverColor="#23106D"
+                        width="fit-content"
+                        type="submit"
+                      >
+                      </BaseButton>
+                    </div>
+                  </form>
+                </div>
               </div>
             </div>
-          </div>
-        </teleport>
+          </teleport>
+        </div>
+        <div v-else class="remark-text not-found loading">Loading...</div>
       </div>
     </transition>
   </div>
@@ -314,6 +340,7 @@ import {
   formatDateTimeHeader,
 } from "@/helpers/formatDateTime";
 import { formatBytes } from "@/helpers/formatFileSize";
+import { mapGetters, mapActions } from "vuex";
 export default {
   name: "ConfirmedView",
   components: { InboxComp, ResultComp, BaseDropZone, BaseButton, VueCal },
@@ -333,6 +360,7 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
       acceptedArray: [],
       searchInput: "",
       toBeConfirmedList: [],
@@ -351,15 +379,27 @@ export default {
         to: null,
         location: "",
         other: "",
-        meetingLink: null,
+        meetingLink: "",
       },
       errors: {},
-      regex: /^((ftp|http|https):\/\/)?(www.)?(?!.*(ftp|http|https|www.))/,
+      regex: new RegExp(
+        "^(https?:\\/\\/)?" +
+          "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" +
+          "((\\d{1,3}\\.){3}\\d{1,3}))" +
+          "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" +
+          "(\\?[;&a-z\\d%_.~+=-]*)?" +
+          "(\\#[-a-z\\d_]*)?$",
+        "i"
+      ),
     };
   },
   computed: {
+    ...mapGetters(["getterMyPolls", "getterSuccess", "getterFailed"]),
+    getPollsList() {
+      return this.$store.getters.getterMyPolls;
+    },
     filterByTitle() {
-      return this.toBeConfirmedList.filter((toBeConfirmed) => {
+      return this.getPollsList.filter((toBeConfirmed) => {
         return toBeConfirmed.title
           .toLowerCase()
           .includes(this.searchInput.toLowerCase());
@@ -385,6 +425,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions(["getMyPolls"]),
     triggerFillToTime() {
       var bits = this.form.from.split(/[- :]/);
       var date = new Date();
@@ -438,94 +479,123 @@ export default {
     formatFileSize(byte, decimal) {
       return formatBytes(byte, decimal ? decimal : 2);
     },
-    selectInbox(id) {
-      this.selectedInbox = this.toBeConfirmedList.find((toBeConfirmed) => {
-        this.selectedId = id;
-        return toBeConfirmed.id == id;
-      });
+    async selectInbox(id) {
+      this.selectedInbox = null;
+      this.selectedId = id;
+      this.isLoading = true;
+      try {
+        this.selectedInbox = await this.$store.dispatch(
+          "getMyResultDetail",
+          this.selectedId
+        );
+        console.log(this.selectedInbox);
+        this.isLoading = false;
+      } catch (error) {
+        this.isLoading = false;
+      }
     },
-    onClickShowSchedule(date, id) {
+    onClickShowSchedule(date, index) {
       this.acceptedArray = [];
       this.splitArray = [];
       this.isShowSchedule = true;
-      this.form.date = date;
-      let slotIndex = this.selectedInbox.slots.findIndex(
-        (slot) => slot.id == id
-      );
+      this.form.date = date.split("T")[0];
+      let slotIndex = index;
       var temp = [];
       var temp2 = [];
-      for (
-        let index = 0;
-        index <
-        this.selectedInbox.slots[slotIndex].responses[0].accepted.length;
-        index++
-      ) {
-        temp.push(
-          this.selectedInbox.slots[slotIndex].responses[0].accepted[index]
-        );
-        if (
-          this.selectedInbox.slots[slotIndex].responses[0].accepted.length > 0
+      if ("accepted" in this.selectedInbox.slots[slotIndex].responses[0]) {
+        for (
+          let index = 0;
+          index <
+          this.selectedInbox.slots[slotIndex].responses[0].accepted.length;
+          index++
         ) {
-          temp2.push({
-            id: this.selectedInbox.slots[slotIndex].responses[0].accepted[index]
-              .executive_id,
-            label:
-              this.selectedInbox.slots[slotIndex].responses[0].accepted[index]
-                .firstname +
-              " " +
-              this.selectedInbox.slots[slotIndex].responses[0].accepted[
+          temp.push(
+            this.selectedInbox.slots[slotIndex].responses[0].accepted[index]
+          );
+          if (
+            this.selectedInbox.slots[slotIndex].responses[0].accepted.length > 0
+          ) {
+            temp2.push({
+              id: this.selectedInbox.slots[slotIndex].responses[0].accepted[
                 index
-              ].lastname.substr(0, 1) +
-              ".",
-          });
-        }
-        if (
-          this.selectedInbox.slots[slotIndex].responses[0].declined.length > 0
-        ) {
-          temp2.push({
-            id: this.selectedInbox.slots[slotIndex].responses[0].declined[index]
-              .executive_id,
-            label:
-              this.selectedInbox.slots[slotIndex].responses[0].declined[index]
-                .firstname +
-              " " +
-              this.selectedInbox.slots[slotIndex].responses[0].declined[
-                index
-              ].lastname.substr(0, 1) +
-              ".",
-          });
-        }
-        if (
-          this.selectedInbox.slots[slotIndex].responses[0].notResponse.length >
-          0
-        ) {
-          temp2.push({
-            id: this.selectedInbox.slots[slotIndex].responses[0].notResponse[
-              index
-            ].executive_id,
-            label:
-              this.selectedInbox.slots[slotIndex].responses[0].notResponse[
-                index
-              ].firstname +
-              " " +
-              this.selectedInbox.slots[slotIndex].responses[0].notResponse[
-                index
-              ].lastname.substr(0, 1) +
-              ".",
-          });
+              ].executive_id,
+              label:
+                this.selectedInbox.slots[slotIndex].responses[0].accepted[index]
+                  .first_name +
+                " " +
+                this.selectedInbox.slots[slotIndex].responses[0].accepted[
+                  index
+                ].last_name.substr(0, 1) +
+                ".",
+            });
+          }
+          if ("declined" in this.selectedInbox.slots[slotIndex].responses[0]) {
+            if (
+              this.selectedInbox.slots[slotIndex].responses[0].declined.length >
+              0
+            ) {
+              temp2.push({
+                id: this.selectedInbox.slots[slotIndex].responses[0].declined[
+                  index
+                ].executive_id,
+                label:
+                  this.selectedInbox.slots[slotIndex].responses[0].declined[
+                    index
+                  ].first_name +
+                  " " +
+                  this.selectedInbox.slots[slotIndex].responses[0].declined[
+                    index
+                  ].last_name.substr(0, 1) +
+                  ".",
+              });
+            }
+          }
+          if (
+            "notResponse" in this.selectedInbox.slots[slotIndex].responses[0]
+          ) {
+            if (
+              this.selectedInbox.slots[slotIndex].responses[0].notResponse
+                .length > 0
+            ) {
+              temp2.push({
+                id: this.selectedInbox.slots[slotIndex].responses[0]
+                  .notResponse[index].executive_id,
+                label:
+                  this.selectedInbox.slots[slotIndex].responses[0].notResponse[
+                    index
+                  ].first_name +
+                  " " +
+                  this.selectedInbox.slots[slotIndex].responses[0].notResponse[
+                    index
+                  ].last_name.substr(0, 1) +
+                  ".",
+              });
+            }
+          }
         }
       }
+
       for (let index = 0; index < temp.length; index++) {
         for (let i = 0; i < temp[index].periodOfTime.length; i++) {
           this.acceptedArray.push(temp[index].periodOfTime[i]);
         }
       }
+      console.log(this.acceptedArray);
       this.splitDays = temp2;
       this.getOverlaps(this.acceptedArray);
     },
     onClickCloseSchedule() {
       this.removeFile();
       this.isShowSchedule = false;
+      this.form.title = null;
+      this.form.description = null;
+      this.form.date = null;
+      this.form.from = null;
+      this.form.to = null;
+      this.form.location = "";
+      this.form.other = "";
+      this.form.meetingLink = "";
+      this.errors = {};
     },
     getDateObj(s, isTime = false) {
       var bits = s.split(/[- :]/);
@@ -542,31 +612,36 @@ export default {
         return this.getDateObj(a.start) - this.getDateObj(b.start);
       });
       var results = [];
-      for (var i = 0, l = events.length; i < l; i++) {
-        var oEvent = events[i];
-        var nOverlaps = 0;
-        for (var j = 0; j < l; j++) {
-          var oCompareEvent = events[j];
-          if (
-            (oCompareEvent.start <= oEvent.end &&
-              oCompareEvent.end > oEvent.start) ||
-            (oCompareEvent.end <= oEvent.start &&
-              oCompareEvent.start > oEvent.end)
-          ) {
-            nOverlaps++;
+      console.log(events);
+      if (events.length <= 1) {
+        results = events;
+      } else {
+        for (var i = 0, l = events.length; i < l; i++) {
+          var oEvent = events[i];
+          var nOverlaps = 0;
+          for (var j = 0; j < l; j++) {
+            var oCompareEvent = events[j];
+            if (
+              (oCompareEvent.start <= oEvent.end &&
+                oCompareEvent.end > oEvent.start) ||
+              (oCompareEvent.end <= oEvent.start &&
+                oCompareEvent.start > oEvent.end)
+            ) {
+              nOverlaps++;
+            }
           }
-        }
-        if (nOverlaps > 1) {
-          results.push({
-            id:
-              this.getDateObj(oEvent.start, true) +
-              " - " +
-              this.getDateObj(oEvent.end, true),
-            eventCount: nOverlaps,
-            toString: function () {
-              return "[id:" + this.id + ", events:" + this.eventCount + "]";
-            },
-          });
+          if (nOverlaps > 1) {
+            results.push({
+              id:
+                this.getDateObj(oEvent.start, true) +
+                " - " +
+                this.getDateObj(oEvent.end, true),
+              eventCount: nOverlaps,
+              toString: function () {
+                return "[id:" + this.id + ", events:" + this.eventCount + "]";
+              },
+            });
+          }
         }
       }
       const keys = ["id"];
@@ -590,13 +665,14 @@ export default {
       this.locationIsValid
         ? delete this.errors.location
         : (this.errors.location = "Please inform location");
-      console.log("Hi " + this.otherIsValid);
       this.form.location == "Others" && this.otherIsValid
         ? delete this.errors.other
         : (this.errors.other = "Please inform other location");
-      this.form.meetingLink != null && this.isURLValid
-        ? delete this.errors.meetingLink
-        : (this.errors.meetingLink = "Meeting link is invalid");
+      if (this.form.meetingLink != "") {
+        this.isURLValid
+          ? delete this.errors.meetingLink
+          : (this.errors.meetingLink = "Meeting link is invalid");
+      }
       // eslint-disable-next-line
       if (Object.keys(this.errors).length == 0) {
         // create meeting
@@ -605,112 +681,8 @@ export default {
       }
     },
   },
-  mounted() {
-    this.toBeConfirmedList = [
-      {
-        id: 1,
-        title: "Discover what’s happened this week",
-        create_at: "2022-05-15T07:40:32.000Z",
-        duration_of_time: 3.5,
-        slots: [
-          {
-            id: 1,
-            date: "2022-08-25",
-            responses: [
-              {
-                accepted: [
-                  {
-                    executive_id: 1,
-                    title: "Mr",
-                    firstname: "Similan",
-                    lastname: "Klinsmith",
-                    imageProfile: "",
-                    periodOfTime: [
-                      {
-                        id: 109123,
-                        split: 1, // split number must match the executuve_id
-                        start: "2022-08-25 10:30",
-                        end: "2022-08-25 11:30",
-                      },
-                      {
-                        id: 109124,
-                        split: 1, // split number must match the executuve_id
-                        start: "2022-08-25 15:30",
-                        end: "2022-08-25 17:30",
-                      },
-                    ],
-                  },
-                  {
-                    executive_id: 2,
-                    title: "Ms",
-                    firstname: "Praepanwa",
-                    lastname: "Tedprasit",
-                    imageProfile: "",
-                    periodOfTime: [
-                      {
-                        id: 109130,
-                        split: 2, // split number must match the executuve_id
-                        start: "2022-08-25 12:30",
-                        end: "2022-08-25 14:30",
-                      },
-                      {
-                        id: 109131,
-                        split: 2, // split number must match the executuve_id
-                        start: "2022-08-25 16:30",
-                        end: "2022-08-25 18:30",
-                      },
-                    ],
-                  },
-                ],
-                declined: [],
-                notResponse: [],
-              },
-            ],
-          },
-          {
-            id: 2,
-            date: "2022-08-26",
-            responses: [
-              {
-                accepted: [
-                  {
-                    executive_id: 1,
-                    title: "Mr",
-                    firstname: "Similan",
-                    lastname: "Klinsmith",
-                    imageProfile: "",
-                    periodOfTime: [
-                      {
-                        id: 109125,
-                        split: 1, // split number must match the executuve_id
-                        start: "2022-08-26 10:30",
-                        end: "2022-08-26 11:30",
-                      },
-                      {
-                        id: 109126,
-                        split: 1, // split number must match the executuve_id
-                        start: "2022-08-26 15:30",
-                        end: "2022-08-26 17:30",
-                      },
-                    ],
-                  },
-                ],
-                declined: [
-                  {
-                    executive_id: 2,
-                    title: "Ms",
-                    firstname: "Praepanwa",
-                    lastname: "Tedprasit",
-                    imageProfile: "",
-                  },
-                ],
-                notResponse: [],
-              },
-            ],
-          },
-        ],
-      },
-    ];
+  created() {
+    this.getMyPolls();
   },
 };
 </script>
@@ -722,7 +694,7 @@ export default {
 }
 .required {
   color: $error;
-  margin-left: 0.2rem;
+  margin-top: 0.8rem;
   font-size: 1.4rem !important;
 }
 .modal {
@@ -932,7 +904,7 @@ export default {
 .result {
   display: flex;
   flex-direction: column;
-  row-gap: 2rem;
+  row-gap: 3rem;
   height: 50rem;
   overflow: scroll;
   margin: 1rem 0;
@@ -1041,19 +1013,42 @@ export default {
     padding: 5rem 4.4rem;
     display: flex;
     flex-direction: column;
-    overflow: scroll;
+    .not-found {
+      padding: 1.8rem;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 80%;
+      text-align: center;
+      color: $darkGrey;
+    }
+    .loading {
+      animation-name: floating;
+      -webkit-animation-name: floating;
+      animation-duration: 3s;
+      -webkit-animation-duration: 3s;
+      animation-iteration-count: infinite;
+      -webkit-animation-iteration-count: infinite;
+    }
+    .inbox-detail-content {
+      overflow: scroll;
+      .sent-from {
+        color: $darkGrey;
+        span {
+          text-decoration: underline;
+        }
+      }
+      .button {
+        display: flex;
+        justify-content: flex-end;
+      }
+    }
     .line {
       margin: 2.4rem 0;
       width: 100%;
       height: 0.1rem;
       background-color: $grey;
-    }
-    .sent-from {
-      color: $darkGrey;
-    }
-    .button {
-      display: flex;
-      justify-content: flex-end;
     }
   }
 }

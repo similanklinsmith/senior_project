@@ -20,33 +20,38 @@
         <div class="attendees">
           <div class="attendee-img">
             <div
-              v-for="(res, index) in response.accepted.slice(0, 3)"
+              v-for="(res, index) in response.accepted?.slice(0, 3)"
               :key="index"
               class="attendee"
               :style="'background-color:' + colorsList[index] + ';'"
             >
               <div class="small-content" style="color: white">
-                {{ res.firstname.substring(0, 1) }}
+                {{ res.first_name.substring(0, 1) }}
               </div>
             </div>
             <div
               class="attendee"
               :style="'background-color: #C4C4C4'"
-              v-if="response.accepted.length > 3"
+              v-if="response.accepted?.length > 3"
             >
               <div class="small-content" style="color: white">
-                {{ response.accepted.length - 3 }}+
+                {{ response.accepted?.length - 3 }}+
               </div>
             </div>
           </div>
         </div>
         <div
+          :style="
+            'accepted' in response
+              ? {}
+              : { 'pointer-events': 'none', color: '#C4C4C4 !important' }
+          "
           class="number-response small-text"
           @click="
             showAttendees('accepted', response.accepted, response.dateTime)
           "
         >
-          {{ response.accepted.length }} responses
+          {{ "accepted" in response ? response.accepted?.length : 0 }} responses
         </div>
       </div>
       <div class="slot">
@@ -68,33 +73,38 @@
         <div class="attendees">
           <div class="attendee-img">
             <div
-              v-for="(res, index) in response.declined.slice(0, 3)"
+              v-for="(res, index) in response.declined?.slice(0, 3)"
               :key="index"
               class="attendee"
               :style="'background-color:' + colorsList[index] + ';'"
             >
               <div class="small-content" style="color: white">
-                {{ res.firstname.substring(0, 1) }}
+                {{ res.first_name.substring(0, 1) }}
               </div>
             </div>
             <div
               class="attendee"
               :style="'background-color: #C4C4C4'"
-              v-if="response.declined.length > 3"
+              v-if="response.declined?.length > 3"
             >
               <div class="small-content" style="color: white">
-                {{ response.declined.length - 3 }}+
+                {{ response.declined?.length - 3 }}+
               </div>
             </div>
           </div>
         </div>
         <div
+          :style="
+            'declined' in response
+              ? {}
+              : { 'pointer-events': 'none', color: '#C4C4C4 !important' }
+          "
           class="number-response small-text"
           @click="
             showAttendees('declined', response.declined, response.dateTime)
           "
         >
-          {{ response.declined.length }} responses
+          {{ "declined" in response ? response.declined?.length : 0 }} responses
         </div>
       </div>
       <div class="slot">
@@ -113,27 +123,32 @@
         <div class="attendees">
           <div class="attendee-img">
             <div
-              v-for="(res, index) in response.notResponse.slice(0, 3)"
+              v-for="(res, index) in response.notResponse?.slice(0, 3)"
               :key="index"
               class="attendee"
               :style="'background-color:' + colorsList[index] + ';'"
             >
               <div class="small-content" style="color: white">
-                {{ res.firstname.substring(0, 1) }}
+                {{ res.first_name.substring(0, 1) }}
               </div>
             </div>
             <div
               class="attendee"
               :style="'background-color: #C4C4C4'"
-              v-if="response.notResponse.length > 3"
+              v-if="response.notResponse?.length > 3"
             >
               <div class="small-content" style="color: white">
-                {{ response.notResponse.length - 3 }}+
+                {{ response.notResponse?.length - 3 }}+
               </div>
             </div>
           </div>
         </div>
         <div
+          :style="
+            'notResponse' in response
+              ? {}
+              : { 'pointer-events': 'none', color: '#C4C4C4 !important' }
+          "
           class="number-response small-text"
           @click="
             showAttendees(
@@ -143,7 +158,8 @@
             )
           "
         >
-          {{ response.notResponse.length }} responses
+          {{ "notResponse" in response ? response.notResponse?.length : 0 }}
+          responses
         </div>
       </div>
     </div>
@@ -186,14 +202,27 @@
                 :key="attendee.executive_id"
               >
                 <label :for="attendee.executive_id">
-                  <div class="profile-image">
+                  <div
+                    class="profile-image"
+                    v-if="attendee.imageProfile == 'default_profile.png'"
+                  >
                     <img
                       src="@/assets/decorations/sample_profile.png"
                       alt="sample profile illustration"
                     />
                   </div>
-                  {{ attendee.title }}. {{ attendee.firstname }}
-                  {{ attendee.lastname }}</label
+                  <div class="real-profile-image" v-else>
+                    <img
+                      :src="urlImage + '/' + attendee.imageProfile"
+                      alt="sample profile illustration"
+                      @error="
+                        $event.target.src =
+                          'http://www.grand-cordel.com/wp-content/uploads/2015/08/import_placeholder.png'
+                      "
+                    />
+                  </div>
+                  {{ formatTitle(attendee.title) }} {{ attendee.first_name }}
+                  {{ attendee.last_name }}</label
                 >
               </div>
             </transition-group>
@@ -209,12 +238,14 @@
 
 <script>
 import BaseButton from "@/components/UI/BaseButton.vue";
+import { mapGetters, mapActions } from "vuex";
 export default {
   name: "ResultComp",
   components: { BaseButton },
   props: ["response"],
   data() {
     return {
+      urlImage: this.$store.state.imageURL,
       colorsList: ["#23106D", "#7452FF", "#DBD2FF"],
       isShowAttendees: false,
       showAttendeeList: [],
@@ -224,13 +255,14 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(["getterExecutiveTitles"]),
     filterByName() {
       return this.showAttendeeList.filter((attendee) => {
         return (
-          attendee.firstname
+          attendee.first_name
             .toLowerCase()
             .includes(this.searchInput.toLowerCase()) ||
-          attendee.lastname
+          attendee.last_name
             .toLowerCase()
             .includes(this.searchInput.toLowerCase())
         );
@@ -238,6 +270,10 @@ export default {
     },
   },
   methods: {
+    ...mapActions(["getExecutiveTitle"]),
+    formatTitle(str) {
+      return this.getterExecutiveTitles[str];
+    },
     showAttendees(type, attendees, dateTime) {
       this.isShowAttendees = true;
       this.showDateTime = dateTime;
@@ -262,8 +298,8 @@ export default {
       this.showAttendeeList = [];
     },
     onClickShowSchedule() {
-      this.$emit('showSchedule', this.response.dateTime);
-    }
+      this.$emit("showSchedule", this.response.dateTime);
+    },
   },
   mounted() {},
 };
@@ -405,6 +441,17 @@ export default {
           img {
             width: 100%;
             height: 100%;
+          }
+        }
+        .real-profile-image {
+          border-radius: 1rem;
+          width: 5rem;
+          height: 5rem;
+          overflow: hidden;
+          img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
           }
         }
       }
