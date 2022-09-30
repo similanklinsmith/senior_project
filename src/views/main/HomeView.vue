@@ -693,6 +693,7 @@ export default {
         border-radius: 1rem;
         padding: 3.6rem 3.2rem;
         justify-content: space-between;
+        box-shadow: rgb(0 0 0 / 4%) 0px 3px 5px;
       }
       .first-body-section {
         display: flex;
@@ -705,6 +706,7 @@ export default {
             grid-template-rows: repeat(2, 1fr);
             width: 100%;
             height: 45rem;
+            box-shadow: rgb(0 0 0 / 4%) 0px 3px 5px;
             .image {
               display: flex;
               justify-content: center;
@@ -725,6 +727,7 @@ export default {
           }
           .card {
             height: 45rem;
+            box-shadow: rgb(0 0 0 / 4%) 0px 3px 5px;
             .card-content {
               padding: 4.4rem;
             }
@@ -734,6 +737,7 @@ export default {
           min-width: 90%;
           .card {
             height: 45rem;
+            box-shadow: rgb(0 0 0 / 4%) 0px 3px 5px;
           }
         }
       }
