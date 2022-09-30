@@ -301,7 +301,7 @@ export default {
           break;
         case 5:
           this.$router.push({
-            name: "inbox-detail",
+            name: "confirmed-detail",
             params: { type: "results", id: id },
           });
           break;

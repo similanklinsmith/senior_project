@@ -515,4 +515,12 @@ export default {
     }
   }
 }
+@media (max-width: 26.75em) {
+  .pop-up {
+    width: 50rem;
+    .pop-up-content {
+      height: 40rem;
+    }
+  }
+}
 </style>

@@ -89,7 +89,22 @@
             created on {{ formatDateTime(selectedInbox.create_at) }} by you
           </div>
           <div class="line" />
-          <div class="result">
+          <div class="bold-small-text due-date">
+            <span>*</span>This poll meeting will be expired in
+            {{ selectedInbox.slots[0].date.split("T")[0] }}
+            <span v-if="new Date(selectedInbox.slots[0].date) >= new Date()"
+              >({{ expiredCount }} days left)</span
+            >
+            <span v-else>(Already expired)</span>
+          </div>
+          <div
+            class="result"
+            :class="`${
+              new Date(selectedInbox.slots[0].date) < new Date()
+                ? 'expired'
+                : ''
+            }`"
+          >
             <div v-for="(slot, index) in selectedInbox.slots" :key="index">
               <div class="row-header">
                 <div class="bold-content-text">
@@ -446,6 +461,7 @@ export default {
       stickySplitLabels: false,
       bestTimeSlot: [],
       splitDays: [],
+      expiredCount: null,
       form: {
         title: null,
         description: null,
@@ -513,11 +529,22 @@ export default {
   },
   methods: {
     ...mapActions(["getMyPolls"]),
-        onFocus() {
-      document.getElementById("search-input-confirmed").placeholder = "Type to find...";
+    calculateRemainingDay(date) {
+      return Math.round(
+        (new Date(date) - new Date(Date.now())) / (24 * 60 * 60 * 1000)
+      ) < 0
+        ? 0
+        : Math.round(
+            (new Date(date) - new Date(Date.now())) / (24 * 60 * 60 * 1000)
+          );
+    },
+    onFocus() {
+      document.getElementById("search-input-confirmed").placeholder =
+        "Type to find...";
     },
     onBlur() {
-      document.getElementById("search-input-confirmed").placeholder = "Search by title";
+      document.getElementById("search-input-confirmed").placeholder =
+        "Search by title";
     },
     toggleDropdown() {
       this.isShowDropdown = !this.isShowDropdown;
@@ -590,7 +617,9 @@ export default {
           "getMyResultDetail",
           this.selectedId
         );
-        console.log(this.selectedInbox);
+        this.expiredCount = this.calculateRemainingDay(
+          this.selectedInbox.slots[0].date
+        );
         this.isLoading = false;
       } catch (error) {
         this.isLoading = false;
@@ -800,6 +829,18 @@ export default {
       // eslint-disable-next-line
       if (Object.keys(this.errors).length == 0) {
         // create meeting
+        let meeting = {
+          title: this.form.title,
+          description: this.form.description,
+          date: this.form.date,
+          start: this.form.from,
+          end: this.form.to,
+          location: this.form.location,
+        };
+        console.log(
+          "🚀 ~ file: ConfirmedView.vue ~ line 812 ~ handleCreateMeeting ~ meeting",
+          meeting
+        );
       } else {
         location.href = "#top";
       }
@@ -823,6 +864,11 @@ ul {
     color: $darkViolet;
     transition: 0.3s all ease-in-out;
   }
+}
+.expired {
+  filter: grayscale(1);
+  opacity: 0.5;
+  pointer-events: none;
 }
 .readonly {
   background-color: $grey !important;
@@ -1251,6 +1297,13 @@ ul {
     }
     .inbox-detail-content {
       overflow: scroll;
+      .due-date {
+        margin: 2rem 0;
+        color: $primaryViolet;
+        span {
+          color: $error;
+        }
+      }
       .sent-from {
         color: $darkGrey;
         span {

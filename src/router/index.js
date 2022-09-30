@@ -73,6 +73,15 @@ const routes = [
     }
   },
   {
+    path: "/meetings-confirmed/:type/:id",
+    name: "confirmed-detail",
+    component: () =>
+      import("@/views/main/meeting/mobile/ConfirmedViewDetail.vue"),
+    meta: {
+      requiresAuth: true,
+    }
+  },
+  {
     path: "/meetings-replied/:type/:id",
     name: "replied-detail",
     component: () =>
