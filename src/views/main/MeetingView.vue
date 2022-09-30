@@ -3,7 +3,7 @@
     <div class="meeting-screen" v-if="!isMobile">
       <BaseHeader
         :headerText="`Create your own meeting`"
-        :contentText="`You can easily create youe own meeting by clicking “Create meeting”`"
+        :contentText="`You can easily create your own meeting by clicking “Create poll meeting”`"
       >
       </BaseHeader>
       <div class="body">
