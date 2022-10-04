@@ -334,11 +334,12 @@
       </template>
     </MaskMeetingDetailMobile>
   </div>
-  <div v-else class="loading remark-text flex-col-center">Loading...</div>
+  <BaseNotFound v-else :isFailed="isFailed" />
 </template>
 
 <script>
 import MaskMeetingDetailMobile from "@/components/meeting/MaskMeetingDetailMobile.vue";
+import BaseNotFound from "@/components/UI/BaseNotFound.vue";
 import BaseButton from "@/components/UI/BaseButton.vue";
 import BaseDropZone from "@/components/UI/BaseDropZone.vue";
 import ResultComp from "@/components/meeting/ResultComp.vue";
@@ -353,6 +354,7 @@ export default {
   components: {
     MaskMeetingDetailMobile,
     BaseButton,
+    BaseNotFound,
     BaseDropZone,
     ResultComp,
     VueCal,
@@ -376,6 +378,7 @@ export default {
   },
   data() {
     return {
+      isFailed: false,
       isShowCalendar: false,
       isLoading: false,
       acceptedArray: [],
@@ -720,6 +723,7 @@ export default {
         this.isLoading = false;
       } catch (error) {
         this.isLoading = false;
+        this.isFailed = true;
       }
     },
     formatDateTimeHeader(dateTime) {

@@ -56,19 +56,49 @@
       </template>
     </MaskMeetingDetailMobile>
   </div>
-  <div v-else class="loading remark-text flex-col-center">Loading...</div>
+  <BaseNotFound v-else :isFailed="isFailed" />
+  <!-- <div v-else class="remark-text flex-col-center loading-container">
+    <div class="failed flex-col-center" v-if="isFailed">
+      <div class="header-fail">OOPS!</div>
+      <div class="image">
+        <img
+          src="@/assets/decorations/not_found.png"
+          alt="sending illustrations"
+        />
+      </div>
+      We can't seem to find the page you're looking for.
+      <BaseButton
+        buttonType="common-button"
+        btnText="Go back"
+        textColor="white"
+        textHover="white"
+        color="#7452FF"
+        hoverColor="#23106D"
+        width="100%"
+        @onClick="$router.back()"
+      >
+      </BaseButton>
+    </div>
+    <div class="flex-col-center loading" v-else>Loading...</div>
+  </div> -->
 </template>
 
 <script>
 import MaskMeetingDetailMobile from "@/components/meeting/MaskMeetingDetailMobile.vue";
 import BaseButton from "@/components/UI/BaseButton.vue";
+import BaseNotFound from "@/components/UI/BaseNotFound.vue";
 import ResponseComp from "@/components/meeting/ResponseComp.vue";
 import { mapGetters, mapActions } from "vuex";
 import { useRoute } from "vue-router";
 import { formatDateTimeHeader } from "@/helpers/formatDateTime";
 export default {
   name: "BeConfirmedViewDetail",
-  components: { MaskMeetingDetailMobile, ResponseComp, BaseButton },
+  components: {
+    MaskMeetingDetailMobile,
+    ResponseComp,
+    BaseButton,
+    BaseNotFound,
+  },
   setup() {
     const route = useRoute();
     const id = route.params.id;
@@ -77,6 +107,7 @@ export default {
   },
   data() {
     return {
+      isFailed: false,
       isLoading: false,
       inboxDetail: null,
       dataToBe: {},
@@ -118,6 +149,7 @@ export default {
     ...mapActions(["getMyBeConfirmedDetail"]),
     async getBeConfirmedDetail() {
       try {
+        this.isLoading = true;
         this.inboxDetail = await this.$store.dispatch(
           "getMyBeConfirmedDetail",
           this.id
@@ -126,6 +158,8 @@ export default {
         this.isLoading = false;
       } catch (error) {
         this.isLoading = false;
+        this.isFailed = true;
+        console.log(error);
       }
     },
     formatDateTimeHeader(dateTime) {
@@ -188,6 +222,28 @@ export default {
     font-size: 1.6rem !important;
   }
 }
+.loading-container {
+  height: 100vh;
+  .failed {
+    width: 60%;
+    text-align: center;
+    row-gap: 1rem;
+    .header-fail {
+      font-size: 4rem;
+      font-weight: 600;
+      color: $primaryViolet;
+    }
+    .image {
+      width: 20rem;
+      height: 20rem;
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+  }
+}
 .loading {
   height: 100vh;
   color: $highlightViolet;
@@ -198,6 +254,7 @@ export default {
   animation-iteration-count: infinite;
   -webkit-animation-iteration-count: infinite;
 }
+
 .expired {
   filter: grayscale(1);
   opacity: 0.5;

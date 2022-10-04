@@ -129,13 +129,14 @@
       </template>
     </BasePopup>
   </div>
-  <div v-else class="loading remark-text flex-col-center">Loading...</div>
+  <BaseNotFound v-else :isFailed="isFailed" />
 </template>
 
 <script>
 import MaskMeetingDetailMobile from "@/components/meeting/MaskMeetingDetailMobile.vue";
 import BaseAttendeesPopup from "@/components/UI/BaseAttendeesPopup.vue";
 import BaseButton from "@/components/UI/BaseButton.vue";
+import BaseNotFound from "@/components/UI/BaseNotFound.vue";
 import BasePopup from "@/components/UI/BasePopup.vue";
 import { useRoute } from "vue-router";
 import { mapGetters, mapActions } from "vuex";
@@ -145,6 +146,7 @@ export default {
     MaskMeetingDetailMobile,
     BaseAttendeesPopup,
     BaseButton,
+    BaseNotFound,
     BasePopup,
   },
   setup() {
@@ -155,6 +157,7 @@ export default {
   },
   data() {
     return {
+      isFailed: false,
       inboxDetail: null,
       isLoading: false,
       urlImage: this.$store.state.imageURL,
@@ -177,6 +180,7 @@ export default {
         console.log(this.inboxDetail);
         this.isLoading = false;
       } catch (error) {
+        this.isFailed = true;
         this.isLoading = false;
       }
     },

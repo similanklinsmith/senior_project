@@ -60,17 +60,18 @@
       </template>
     </MaskMeetingDetailMobile>
   </div>
-    <div v-else class="loading remark-text flex-col-center">Loading...</div>
+  <BaseNotFound v-else :isFailed="isFailed" />
 </template>
 
 <script>
 import MaskMeetingDetailMobile from "@/components/meeting/MaskMeetingDetailMobile.vue";
+import BaseNotFound from "@/components/UI/BaseNotFound.vue";
 import { mapGetters, mapActions } from "vuex";
 import { useRoute } from "vue-router";
 import { formatDateTimeHeader } from "@/helpers/formatDateTime";
 export default {
   name: "BeConfirmedViewDetail",
-  components: { MaskMeetingDetailMobile },
+  components: { MaskMeetingDetailMobile, BaseNotFound },
   setup() {
     const route = useRoute();
     const id = route.params.id;
@@ -79,6 +80,7 @@ export default {
   },
   data() {
     return {
+      isFailed: false,
       isLoading: false,
       inboxDetail: null,
       dataToBe: {},
@@ -99,6 +101,7 @@ export default {
         this.isLoading = false;
       } catch (error) {
         this.isLoading = false;
+        this.isFailed = true;
       }
     },
     formatDateTimeHeader(dateTime) {
