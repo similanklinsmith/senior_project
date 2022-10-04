@@ -316,7 +316,11 @@
                     </div>
                     <div class="input-form" v-if="form.location != ''">
                       <label for="link" class="bold-small-text"
-                        >Meeting Link<span v-if="form.location != 'Others'" class="required">*</span><span v-else class="optional-field">(Optional)</span>
+                        >Meeting Link<span
+                          v-if="form.location != 'Others'"
+                          class="required"
+                          >*</span
+                        ><span v-else class="optional-field">(Optional)</span>
                       </label>
                       <input
                         class="small-text"
@@ -769,7 +773,18 @@ export default {
       var results = [];
       console.log(events);
       if (events.length <= 1) {
-        results = events;
+        results = [
+          {
+            id:
+              this.getDateObj(events[0].start, true) +
+              " - " +
+              this.getDateObj(events[0].end, true),
+            eventCount: 1,
+            toString: function () {
+              return "[id:" + this.id + ", events:" + this.eventCount + "]";
+            },
+          },
+        ];
       } else {
         for (var i = 0, l = events.length; i < l; i++) {
           var oEvent = events[i];
