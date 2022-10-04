@@ -213,6 +213,7 @@
                         placeholder="Title"
                         id="title"
                         name="title"
+                        v-model.trim="form.title"
                       />
                       <div class="required bold-small-text">
                         {{ errors.title }}
@@ -313,10 +314,9 @@
                         {{ errors.other }}
                       </div>
                     </div>
-                    <div class="bold-small-text optional">Optional</div>
-                    <div class="input-form">
+                    <div class="input-form" v-if="form.location != ''">
                       <label for="link" class="bold-small-text"
-                        >Meeting Link
+                        >Meeting Link<span v-if="form.location != 'Others'" class="required">*</span><span v-else class="optional-field">(Optional)</span>
                       </label>
                       <input
                         class="small-text"
@@ -330,6 +330,7 @@
                         {{ errors.meetingLink }}
                       </div>
                     </div>
+                    <div class="bold-small-text optional">Optional</div>
                     <div class="input-form" v-if="!dropzoneFile">
                       <BaseDropZone
                         @drop.prevent="drop"
@@ -425,7 +426,7 @@ export default {
     LitepieDatepicker,
   },
   setup() {
-    let dropzoneFile = ref("");
+    let dropzoneFile = ref(null);
     const drop = (e) => {
       dropzoneFile.value = e.dataTransfer.files[0];
     };
@@ -469,8 +470,8 @@ export default {
         from: null,
         to: null,
         location: "",
-        other: "",
-        meetingLink: "",
+        other: null,
+        meetingLink: null,
       },
       errors: {},
       regex: new RegExp(
@@ -519,6 +520,9 @@ export default {
     },
     locationIsValid() {
       return !!this.form.location;
+    },
+    meetingLinkIsValid() {
+      return !!this.form.meetingLink;
     },
     otherIsValid() {
       return !!this.form.other;
@@ -739,8 +743,9 @@ export default {
       this.form.from = null;
       this.form.to = null;
       this.form.location = "";
-      this.form.other = "";
-      this.form.meetingLink = "";
+      this.form.other = null;
+      this.form.meetingLink = null;
+      this.dropzoneFile = "";
       this.errors = {};
     },
     getDateObj(s, isTime = false) {
@@ -810,7 +815,7 @@ export default {
         ? delete this.errors.title
         : (this.errors.title = "Please inform title");
       this.descriptionIsValid
-        ? delete this.errors.title
+        ? delete this.errors.description
         : (this.errors.description = "Please inform description");
       this.fromIsValid
         ? delete this.errors.from
@@ -818,14 +823,29 @@ export default {
       this.locationIsValid
         ? delete this.errors.location
         : (this.errors.location = "Please inform location");
-      this.form.location == "Others" && this.otherIsValid
-        ? delete this.errors.other
-        : (this.errors.other = "Please inform other location");
-      if (this.form.meetingLink != "") {
-        this.isURLValid
-          ? delete this.errors.meetingLink
-          : (this.errors.meetingLink = "Meeting link is invalid");
+      if (this.form.location == "Others") {
+        this.otherIsValid
+          ? delete this.errors.other
+          : (this.errors.other = "Please inform other location");
+        if (this.form.meetingLink) {
+          this.isURLValid
+            ? delete this.errors.meetingLink
+            : (this.errors.meetingLink = "URL link is invalid");
+        }
       }
+      if (this.form.location != "Others") {
+        if (this.meetingLinkIsValid) {
+          delete this.errors.meetingLink;
+          this.isURLValid
+            ? delete this.errors.meetingLink
+            : (this.errors.meetingLink = "URL link is invalid");
+        } else {
+          this.errors.meetingLink = "Please inform meeting link";
+        }
+      } else {
+        delete this.errors.meetingLink;
+      }
+      console.log(this.errors);
       // eslint-disable-next-line
       if (Object.keys(this.errors).length == 0) {
         // create meeting
@@ -836,6 +856,9 @@ export default {
           start: this.form.from,
           end: this.form.to,
           location: this.form.location,
+          otherLocation: this.form.other,
+          meetingLink: this.form.meetingLink,
+          file: this.dropzoneFile,
         };
         console.log(
           "🚀 ~ file: ConfirmedView.vue ~ line 812 ~ handleCreateMeeting ~ meeting",
@@ -877,6 +900,9 @@ ul {
   color: $error;
   margin-top: 0.8rem;
   font-size: 1.4rem !important;
+}
+.optional-field {
+  color: $darkGrey;
 }
 .modal {
   width: 100%;
