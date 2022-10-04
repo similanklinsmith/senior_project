@@ -250,6 +250,25 @@
     <BaseAlert v-if="getterFailed" :status="`failed`">
       Poll is failed create
     </BaseAlert>
+      <teleport to="#portal-target" v-if="isLoading">
+        <div class="modal">
+          <div class="pop-up-loading flex-col-center">
+            <div class="flex-col-center">
+              <div class="logo header-text">
+                <span class="primary-violet">M</span>OMENT<span class="yellow">O</span
+                ><span class="faded-violet">.</span>
+              </div>
+              <div class="image">
+                <img
+                  src="@/assets/decorations/sending.png"
+                  alt="sending illustrations"
+                />
+              </div>
+              <div class="remark-text" style="color: white">Sending the poll meeting...</div>
+            </div>
+          </div>
+        </div>
+      </teleport>
   </div>
 </template>
 
@@ -280,6 +299,7 @@ export default {
       isAddAttendees: false,
       tempAttendees: [],
       searchInput: "",
+      isLoading: false,
       form: {
         selectedAttendees: [],
         title: "",
@@ -382,7 +402,8 @@ export default {
           create_at: createTime,
           executive_id: attendees_id,
         };
-        this.$store.dispatch("addPollAppointment", newPoll);
+        this.isLoading = true
+        this.$store.dispatch("addPollAppointment", newPoll).then(() => {this.isLoading = false}).catch((err) => {console.log(err)});
         this.form.title = "";
         this.form.dateSlot = "";
         this.form.duration = "";
@@ -403,7 +424,9 @@ export default {
 .mobile.remark-text{display:none;}
 .input-mobile-button {display: none;order: 3;}
 .required {color: $error;margin-top: 0.8rem;font-size: 1.4rem !important;}
-.modal {width: 100%;height: 100vh;position: fixed;background-color: rgba(24, 24, 26, 0.4);z-index: 11;display: flex;flex-direction: column;align-items: center;justify-content: center;}
+.pop-up-loading {position: fixed;z-index: 12;padding: 2.4rem 1.6rem;color: $darkViolet;.flex-col-center {animation-name: floating;-webkit-animation-name: floating;animation-duration: 2s;-webkit-animation-duration: 2s;animation-iteration-count: infinite;-webkit-animation-iteration-count: infinite;}.logo {.primary-violet {color: $primaryViolet;}.yellow {color: $yellow;}.faded-violet {color: $fadedViolet;}}.image {width: 15rem;height: 15rem;img {width: 100%;height: 100%;}}}
+.loading {animation-name: floating;-webkit-animation-name: floating;animation-duration: 3s;-webkit-animation-duration: 3s;animation-iteration-count: infinite;-webkit-animation-iteration-count: infinite;}
+.modal {.sending{color:$yellow}width: 100%;height: 100vh;position: fixed;background-color: rgba(24, 24, 26, 0.4);z-index: 11;display: flex;flex-direction: column;align-items: center;justify-content: center;}
 .pop-up {top: 50%;left: 50%;transform: translate(-50%, -50%);position: fixed;z-index: 12;border-radius: 2.5rem;display: flex;flex-direction: column;align-items: center;background-color: $white;width: 44rem;padding: 2.4rem 1.6rem;animation-name: appears;animation-duration: 0.5s;animation-iteration-count: 1;.image {transform: translateY(-3.6rem);img {width: 17.5rem;}}.remark-text {width: 100%;color: $primaryViolet;margin-bottom: 1rem;span {color: $darkGrey !important;}}.search-filter {margin-bottom: 1.5rem;position: relative;width: 100%;display: flex;align-items: center;justify-items: center;.input-icon {width: 100%;display: flex;align-items: center;justify-items: center;input[type="text"] {padding: 1rem 1.4rem;width: 100%;height: 4rem;border-radius: 0.5rem;border: none;background-color: $primaryGrey;font-family: "Poppins", sans-serif;}input[type="text"]:focus {outline: none;border: 0.1rem solid $primaryViolet;}input::placeholder {font-size: 1.4rem;color: $darkGrey;}.icon {position: absolute;right: 0;font-size: 1.4rem;margin-right: 1rem;color: $darkGrey;}}}.pop-up-content {display: flex;flex-direction: column;margin-bottom: 1rem;width: 100%;height: 30rem;overflow: scroll;.not-found {display: flex;align-items: center;justify-content: center;color: $darkGrey;height: 100%;}.loading {animation-name: floating;-webkit-animation-name: floating;animation-duration: 3s;-webkit-animation-duration: 3s;animation-iteration-count: infinite;-webkit-animation-iteration-count: infinite;}.list-checkbox {width: 100%;display: flex;flex-direction: column;color: $darkViolet;row-gap: 1.5rem;.executive-checkbox {display: flex;align-items: center;justify-content: space-between;label {cursor: pointer;display: flex;align-items: center;column-gap: 1.5rem;}input[type="checkbox"] {cursor: pointer; border-radius: 0.6rem;width: 2.4rem;height: 2.4rem;-webkit-appearance: none;box-shadow: inset 0 0 0 1px rgba(85, 85, 85, 0.25);}input[type="checkbox"]:checked {background-color: $yellow;}.real-profile-image {border-radius: 1rem;width: 5rem;height: 5rem;background-color: $fadedViolet;overflow: hidden;img {width: 100%;height: 100%;object-fit: cover;}}.profile-image {border-radius: 1rem;width: 5rem;height: 5rem;background-color: $fadedViolet;padding: 0.8rem;img {width: 100%;height: 100%;}}}}}.button-action {width: 100%;row-gap: 1rem;}}
 .first-body-section {padding: 3rem;width: 100%;height: 100%;.card-section {padding: 5rem 4.4rem;width: 100%;height: 100vh;background-color: $white;border-radius: 2.5rem;display: grid;grid-template-columns: 0.5fr 1.5fr;column-gap: 2rem;.add-attendees {width: 100%;height: 100%;display: flex;flex-direction: column;.bold-content-text {margin-bottom: 2rem;}.required-attendees {margin-bottom: 1.4rem;}.selected-attendees {display: flex;flex-direction: column;width: 100%;margin-bottom: 1rem;.selected-attendee {margin-bottom: 1rem;.profile-section {display: flex;width: 100%;column-gap: 0.8rem;.executive-profile {width: 15rem;flex-wrap: wrap !important;align-items: flex-start !important;}.real-profile-image {border-radius: 1rem;width: 3.5rem;height: 3.5rem;background-color: $fadedViolet;overflow: hidden;img {width: 100%;height: 100%;object-fit: cover;}}.profile-image {border-radius: 1rem;width: 3.5rem;height: 3.5rem;background-color: $fadedViolet;margin-right: 0.5rem;text-align: center;padding: 0.2rem;img {width: 100%;height: 100%;}}}}}.action-add {cursor: pointer;display: flex;color: $primaryViolet;align-items: center;column-gap: 0.8rem;transition: 0.2s all ease-in-out;}.action-add:hover {color: $highlightViolet;}}.add-details {width: 100%;height: 100%;display: flex;flex-direction: column;row-gap: 2rem;.input-form-button {width: 100%;display: flex;justify-content: space-between;}.input-form-row {width: 100%;display: flex;column-gap: 2.4rem;.input {width: 100%;}}.input-form {width: 100%;display: flex;flex-direction: column;}select,input[type="text"] {margin-top: 1rem;padding: 1rem 1.4rem;width: 100%;height: 4rem;border-radius: 0.5rem;border: none;background-color: $primaryGrey;font-family: "Poppins", sans-serif;}input[type="text"]:focus {outline: none;border: 0.1rem solid $primaryViolet;}select::placeholder,input::placeholder {font-size: 1.4rem;color: $darkGrey;}select {font-size: 1.4rem;}select:focus {outline: none;border: 0.1rem solid $primaryViolet;}}}}
 @media (max-width: 26.75em) {.pop-up{width:50rem;.pop-up-content{height:40rem}}.mobile.remark-text{color:$darkViolet;display:block;margin:2.4rem 0}input,select {height: 4.8rem !important;}input[type="checkbox"] {height: 2.4rem !important;}.input-mobile-button {display: block;order: 3;}.first-body-section {padding: 0rem;.card-section {display: flex;flex-direction: column;row-gap: 4rem;padding: 8rem 4.4rem;height: fit-content;.add-attendees {order: 2;height: fit-content;.bold-content-text {font-size: 1.6rem;}.selected-attendees {.selected-attendee {.profile-section {.executive-profile {width: fit-content;}}}}}.add-details {height: fit-content;row-gap: 4rem;.input-form-button {display: none;}.input-form-row {flex-direction: column;row-gap: 4rem;}}}}}
