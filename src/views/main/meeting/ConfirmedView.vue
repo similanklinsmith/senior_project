@@ -141,7 +141,7 @@
           </div>
           <teleport to="#portal-target" v-if="isShowSchedule">
             <div class="modal" @click="onClickCloseSchedule"></div>
-            <div class="container">
+            <div class="container-cust">
               <div class="first-col">
                 <div class="suggested-time">
                   <div class="bold-content-text">Suggested time</div>
@@ -864,9 +864,19 @@ export default {
       // eslint-disable-next-line
       if (Object.keys(this.errors).length == 0) {
         // create meeting
+        var currentdate = new Date();
+        var createTime = `${currentdate.getFullYear()}-${(
+          "0" +
+          (currentdate.getMonth() + 1)
+        ).slice(-2)}-${("0" + currentdate.getDate()).slice(
+          -2
+        )} ${currentdate.getHours()}:${("0" + currentdate.getMinutes()).slice(
+          -2
+        )}:${currentdate.getSeconds()}`;
         let meeting = {
           title: this.form.title,
           description: this.form.description,
+          create_at: createTime,
           date: this.form.date,
           start: this.form.from,
           end: this.form.to,
@@ -930,7 +940,7 @@ ul {
   align-items: center;
   justify-content: center;
 }
-.container {
+.container-cust {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
