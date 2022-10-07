@@ -37,7 +37,10 @@
       <div class="inbox-detail" v-if="selectedInbox != null">
         <div class="title remark-text">{{ selectedInbox.title }}</div>
         <div class="sent-from smallest-text">
-          sent on {{ formatDateTime(selectedInbox.time) }} by <span>Katherine Perish</span> &lt;katherine@mail.kmutt.ac.th&gt;
+          sent on {{ formatDateTime(selectedInbox.create_at) }} by
+          <span>{{ selectedInbox.secretary.name }}</span> &lt;{{
+            selectedInbox.secretary.email
+          }}&gt;
         </div>
         <div class="line" />
         <div class="main-details">
@@ -49,36 +52,44 @@
             <div class="bold-small-text">Attendees:</div>
           </div>
           <div class="detail">
-            <div class="small-text">Thu April 11 2022 (11/04/2022)</div>
-            <div class="small-text">10:30 AM - 12:30 PM</div>
-            <div class="small-text">Microsoft Teams</div>
-            <div class="small-text">Miss Katherine Perish</div>
             <div class="small-text">
-              Mr. Similan Klinsmith, Ms. Noparat Prasongdee,
-              <span class="see-more">see more</span>
+              {{ formatDate(selectedInbox.meeting_date) }} ({{
+                formatDateShort(selectedInbox.meeting_date)
+              }})
+            </div>
+            <div class="small-text">
+              {{ formatDateTime(selectedInbox.start, true) }} -
+              {{ formatDateTime(selectedInbox.end, true) }}
+            </div>
+            <div class="small-text">{{ selectedInbox.location }}</div>
+            <div class="small-text">{{ selectedInbox.secretary.name }}</div>
+            <div class="small-text">
+              <span
+                v-for="(attendee, index) in selectedInbox.attendees.slice(
+                  0,
+                  slice
+                )"
+                :key="attendee.id"
+              >
+                {{ attendee.first_name }} {{ attendee.last_name }}
+                <span v-if="index < selectedInbox.attendees.length - 1">,</span>
+              </span>
+              <span
+                class="see-more"
+                v-if="selectedInbox.attendees.length > 3"
+                @click="showAllAttendee"
+                ><span v-if="!isShowMore"
+                  >show more&#40;{{
+                    selectedInbox.attendees.length - 3
+                  }}&#41;</span
+                ><span v-else>show less</span></span
+              >
             </div>
           </div>
         </div>
         <div class="line" />
         <div class="meeting-detail small-text">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Facilisis
-          integer senectus magna turpis. Lorem ipsum dolor sit amet, consectetur
-          adipiscing elit. Facilisis integer senectus magna turpis. Lorem ipsum
-          dolor sit amet, consectetur adipiscing elit. Facilisis integer
-          senectus magna turpis. Lorem ipsum dolor sit amet, consectetur
-          adipiscing elit. Facilisis integer senectus magna turpis. Lorem ipsum
-          dolor sit amet, consectetur adipiscing elit. Facilisis integer
-          senectus magna turpis. Lorem ipsum dolor sit amet, consectetur
-          adipiscing elit. Facilisis integer senectus magna turpis. Lorem ipsum
-          dolor sit amet, consectetur adipiscing elit. Facilisis integer
-          senectus magna turpis. Lorem ipsum dolor sit amet, consectetur
-          adipiscing elit. Facilisis integer senectus magna turpis. Lorem ipsum
-          dolor sit amet, consectetur adipiscing elit. Facilisis integer
-          senectus magna turpis. Lorem ipsum dolor sit amet, consectetur
-          adipiscing elit. Facilisis integer senectus magna turpis. Lorem ipsum
-          dolor sit amet, consectetur adipiscing elit. Facilisis integer
-          senectus magna turpis. Lorem ipsum dolor sit amet, consectetur
-          adipiscing elit. Facilisis integer senectus magna turpis.
+          {{ selectedInbox.description }}
         </div>
         <div class="meeting-link">
           <div class="meeting-link-label">
@@ -89,7 +100,7 @@
           </div>
           <div class="meeting-link-detail">
             <div class="small-text" id="meeting-link-value">
-              www.teams.com/meeting/ASokp98e/Uid1112
+              {{ selectedInbox.meeting_link }}
             </div>
           </div>
         </div>
@@ -104,8 +115,8 @@
                   <i class="icon fa-solid fa-file"></i>
                 </div>
                 <div class="file-details">
-                  <div class="file-name bold-smallest-text">File_name.pdf</div>
-                  <div class="file-size smallest-text">5.28KB</div>
+                  <div class="file-name bold-smallest-text">{{selectedInbox.file.title}}.{{selectedInbox.file.fileType}}</div>
+                  <div class="file-size smallest-text">{{formatFileSize(selectedInbox.file.size)}}</div>
                 </div>
               </div>
               <div class="file-download">
@@ -121,13 +132,22 @@
 
 <script>
 import InboxComp from "@/components/meeting/InboxComp.vue";
-import { formatDateTimeDetail } from "@/helpers/formatDateTime";
+import {
+  formatDateTimeDetail,
+  formatDateTimeHeader,
+  formatDateTimeInbox,
+} from "@/helpers/formatDateTime";
+import {
+  formatBytes
+} from "@/helpers/formatFileSize";
 export default {
   name: "InboxView",
   components: { InboxComp },
   data() {
     return {
       searchInput: "",
+      slice: 3,
+      isShowMore: false,
       toBeConfirmedList: [],
       selectedInbox: null,
       selectedId: null,
@@ -143,14 +163,38 @@ export default {
     },
   },
   methods: {
-    formatDateTime(dateTime) {
-      return formatDateTimeDetail(dateTime);
+    formatFileSize(size) {
+      return formatBytes(size);
+    },
+    formatDateTime(dateTime, isTime) {
+      return formatDateTimeDetail(dateTime, isTime);
+    },
+    formatDate(date) {
+      return formatDateTimeHeader(date);
+    },
+    formatDateShort(date) {
+      return formatDateTimeInbox(date);
+    },
+    showAllAttendee(attendees) {
+      this.isShowMore = !this.isShowMore;
+      this.isShowMore ? (this.slice = attendees.length) : (this.slice = 3);
     },
     selectInbox(id) {
-      this.selectedInbox = this.toBeConfirmedList.find((toBeConfirmed) => {
-        this.selectedId = id;
-        return toBeConfirmed.id == id;
-      });
+      this.selectedId = id;
+      // this.selectedInbox = this.toBeConfirmedList.find((toBeConfirmed) => {
+      //   this.selectedId = id;
+      //   return toBeConfirmed.id == id;
+      // });
+      // try {
+      // this.inboxDetail = await this.$store.dispatch(
+      //   "getMyBeConfirmedDetail",
+      //   this.selectedId
+      // );
+      //   console.log(this.inboxDetail);
+      //   this.isLoading = false;
+      // } catch (error) {
+      //   this.isLoading = false;
+      // }
     },
     copyLink(value) {
       let copyText = document.getElementById(value).innerHTML;
@@ -164,50 +208,107 @@ export default {
     },
   },
   mounted() {
-    this.toBeConfirmedList = [
-      {
-        id: "1",
-        title: "Discover what’s happened this week",
-        content:
-          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-        time: "2022-05-15T07:40:32.000Z",
+    (this.selectedInbox = {
+      id: 1,
+      title: "Discover what’s happened this week",
+      create_at: "2022-05-15T07:40:32.000Z",
+      secretary: {
+        id: "j7aVGmANS2ebgTBNL5ID3C8Q19v2",
+        name: "SIMILAN KLINSMITH",
+        email: "similan.klinsmith@mail.kmutt.ac.th",
       },
-      {
-        id: "2",
-        title: "Let's have meeting",
-        content:
-          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-        time: "2022-05-15T07:40:32.000Z",
+      meeting_date: "2022-10-15T00:00:00.000Z",
+      start: "2022-05-15T10:40:32.000Z",
+      end: "2022-05-15T11:40:32.000Z",
+      location: "Microsoft Team",
+      other_location: null,
+      attendees: [
+        {
+          id: 1,
+          title_code: "AssocProf",
+          first_name: "winter",
+          last_name: "jung",
+          img_profile: "default_profile.png",
+          email: "winter@gmail.com",
+        },
+        {
+          id: 2,
+          title_code: "AssocProf",
+          first_name: "winter",
+          last_name: "jung",
+          img_profile: "default_profile.png",
+          email: "winter@gmail.com",
+        },
+        {
+          id: 4,
+          title_code: "AssocProf",
+          first_name: "minjung",
+          last_name: "kim",
+          img_profile: "default_profile.png",
+          email: "minjung@gmail.com",
+        },
+        {
+          id: 5,
+          title_code: "AssocProf",
+          first_name: "Test",
+          last_name: "Test surname",
+          img_profile: "default_profile.png",
+          email: "test@gmail.com",
+        },
+      ],
+      description:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
+      meeting_link: "www.teams.com/meeting/ASokp98e/Uid1112",
+      file: {
+        title: "filename",
+        fileType: "pdf",
+        size: 120000,
       },
-      {
-        id: "3",
-        title: "Whatcha doin today everyone?",
-        content:
-          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-        time: "2022-05-15T07:40:32.000Z",
-      },
-      {
-        id: "4",
-        title: "Discover what’s happened this week",
-        content:
-          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-        time: "2022-05-15T07:40:32.000Z",
-      },
-      {
-        id: "5",
-        title: "Discover what’s happened this week",
-        content:
-          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-        time: "2022-05-15T07:40:32.000Z",
-      },
-      {
-        id: "6",
-        title: "Discover what’s happened this week",
-        content:
-          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-        time: "2022-05-15T07:40:32.000Z",
-      },
-    ];
+    }),
+      (this.toBeConfirmedList = [
+        {
+          id: "1",
+          title: "Discover what’s happened this week",
+          content:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
+          time: "2022-05-15T07:40:32.000Z",
+        },
+        {
+          id: "2",
+          title: "Let's have meeting",
+          content:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
+          time: "2022-05-15T07:40:32.000Z",
+        },
+        {
+          id: "3",
+          title: "Whatcha doin today everyone?",
+          content:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
+          time: "2022-05-15T07:40:32.000Z",
+        },
+        {
+          id: "4",
+          title: "Discover what’s happened this week",
+          content:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
+          time: "2022-05-15T07:40:32.000Z",
+        },
+        {
+          id: "5",
+          title: "Discover what’s happened this week",
+          content:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
+          time: "2022-05-15T07:40:32.000Z",
+        },
+        {
+          id: "6",
+          title: "Discover what’s happened this week",
+          content:
+            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
+          time: "2022-05-15T07:40:32.000Z",
+        },
+      ]);
   },
 };
 </script>
@@ -311,7 +412,7 @@ export default {
   }
   .inbox-detail {
     width: 100%;
-    height: fit-content;
+    height: 100%;
     background-color: $white;
     border-radius: 2.5rem;
     padding: 5rem 4.4rem;
@@ -451,7 +552,9 @@ export default {
     }
     .sent-from {
       color: $darkGrey;
-      span{text-decoration: underline;}
+      span {
+        text-decoration: underline;
+      }
     }
     .button {
       display: flex;
