@@ -8,7 +8,7 @@
             <input
               class="small-text"
               type="text"
-              placeholder="Search by title"
+              :placeholder="text['confirmed']['placeholder']"
               v-model="searchInput"
               id="search-input-confirmed"
               @blur="onBlur"
@@ -27,7 +27,7 @@
           <ul>
             <li>
               <div class="input">
-                <label for="due" class="bold-small-text">Date within</label>
+                <label for="due" class="bold-small-text">{{text['confirmed']['dateWithin']}}</label>
                 <litepie-datepicker
                   id="due"
                   as-single
@@ -41,7 +41,7 @@
             <li>
               <BaseButton
                 buttonType="common-button"
-                btnText="Search"
+                :btnText="text['confirmed']['search']"
                 textColor="#23106D"
                 textHover="#23106D"
                 color="#DBD2FF"
@@ -56,9 +56,9 @@
       </div>
       <div class="filter-show">
         <div class="small-text">
-          <span v-if="filterDate">With in: {{ filterDate }}</span>
+          <span v-if="filterDate">{{text['confirmed']['within']}}: {{ filterDate }}</span>
         </div>
-        <div class="small-text">Results: {{ filterByTitle.length }}</div>
+        <div class="small-text">{{text['confirmed']['results']}}: {{ filterByTitle.length }}</div>
       </div>
       <div class="inbox-list">
         <transition-group name="route">
@@ -67,13 +67,13 @@
             :key="inbox.id"
             :id="inbox.id"
             :title="inbox.title"
-            :content="inbox.content"
+            :content="text['confirmed']['sentPoll']"
             :time="inbox.create_at"
             :selectedId="selectedId"
             @selectInbox="selectInbox"
           />
           <div v-if="filterByTitle.length == 0" class="remark-text not-found">
-            Not found
+            {{text['confirmed']['notFound']}}
           </div>
         </transition-group>
       </div>
@@ -86,16 +86,16 @@
         >
           <div class="title remark-text">{{ selectedInbox.title }}</div>
           <div class="sent-from smallest-text">
-            created on {{ formatDateTime(selectedInbox.create_at) }} by you
+            {{text['confirmed']['preCreate']}} {{ formatDateTime(selectedInbox.create_at) }} {{text['confirmed']['by']}}
           </div>
           <div class="line" />
           <div class="bold-small-text due-date">
-            <span>*</span>This poll meeting will be expired in
+            <span>*</span>{{text['confirmed']['expired']}}
             {{ selectedInbox.slots[0].date.split("T")[0] }}
             <span v-if="new Date(selectedInbox.slots[0].date) >= new Date()"
-              >({{ expiredCount }} days left)</span
+              >({{ expiredCount }} {{text['confirmed']['postDueDate']}})</span
             >
-            <span v-else>(Already expired)</span>
+            <span v-else>({{text['confirmed']['alreadyExpired']}})</span>
           </div>
           <div
             class="result"
@@ -119,7 +119,7 @@
                 >
                   <BaseButton
                     buttonType="common-button"
-                    btnText="Show schedule"
+                    :btnText="text['confirmed']['showSchedule']"
                     textColor="white"
                     textHover="white"
                     color="#7452FF"
@@ -144,7 +144,7 @@
             <div class="container-cust">
               <div class="first-col">
                 <div class="suggested-time">
-                  <div class="bold-content-text">Suggested time</div>
+                  <div class="bold-content-text">{{text['confirmed']['suggestedTime']}}</div>
                   <div class="time-slot">
                     <div
                       class="slot"
@@ -180,12 +180,12 @@
               <div class="second-col">
                 <div class="form">
                   <div class="duration-container">
-                    <div class="bold-content-text">Create meeting</div>
+                    <div class="bold-content-text">{{text['confirmed']['createMeeting']}}</div>
                     <div class="duration bold-small-text">
-                      Required duration
+                      {{text['confirmed']['duration']}}
                       {{
                         selectedInbox.duration_of_time.toString().split(".")[0]
-                      }}hr
+                      }}{{text['confirmed']['hour']}}
                       <span
                         v-if="
                           selectedInbox.duration_of_time
@@ -198,19 +198,19 @@
                               .toString()
                               .split(".")[1]
                           ) * 6
-                        }}min</span
+                        }}{{text['confirmed']['minute']}}</span
                       >
                     </div>
                   </div>
                   <form @submit.prevent="handleCreateMeeting">
                     <div class="input-form" id="top">
                       <label for="title" class="bold-small-text"
-                        >Title<span class="required">*</span></label
+                        >{{text['confirmed']['title']}}<span class="required">*</span></label
                       >
                       <input
                         class="small-text"
                         type="text"
-                        placeholder="Title"
+                        :placeholder="text['confirmed']['title']"
                         id="title"
                         name="title"
                         v-model.trim="form.title"
@@ -221,12 +221,12 @@
                     </div>
                     <div class="input-form">
                       <label for="description" class="bold-small-text"
-                        >Description<span class="required">*</span></label
+                        >{{text['confirmed']['description']}}<span class="required">*</span></label
                       >
                       <textarea
                         class="small-text"
                         type="text"
-                        placeholder="Description"
+                        :placeholder="text['confirmed']['description']"
                         id="description"
                         name="description"
                         v-model="form.description"
@@ -237,7 +237,7 @@
                     </div>
                     <div class="row-input">
                       <div class="input-form">
-                        <label for="date" class="bold-small-text">Date</label>
+                        <label for="date" class="bold-small-text">{{text['confirmed']['date']}}</label>
                         <input
                           class="small-text readonly"
                           type="date"
@@ -250,7 +250,7 @@
                       </div>
                       <div class="input-form">
                         <label for="from" class="bold-small-text"
-                          >From<span class="required">*</span></label
+                          >{{text['confirmed']['from']}}<span class="required">*</span></label
                         >
                         <input
                           class="small-text"
@@ -266,7 +266,7 @@
                         </div>
                       </div>
                       <div class="input-form">
-                        <label for="to" class="bold-small-text">To</label>
+                        <label for="to" class="bold-small-text">{{text['confirmed']['to']}}</label>
                         <input
                           class="small-text readonly"
                           type="time"
@@ -280,14 +280,14 @@
                     </div>
                     <div class="input-form">
                       <label for="location" class="bold-small-text"
-                        >Location<span class="required">*</span></label
+                        >{{text['confirmed']['location']}}<span class="required">*</span></label
                       >
                       <select
                         name="location"
                         id="location"
                         v-model="form.location"
                       >
-                        <option value="">none</option>
+                        <option value="">{{text['input']['none']}}</option>
                         <option value="Microsoft Team">Microsoft Teams</option>
                         <option value="Zoom">Zoom</option>
                         <option value="WebEx">WebEx</option>
@@ -300,12 +300,12 @@
                     </div>
                     <div class="input-form" v-if="form.location == 'Others'">
                       <label for="other" class="bold-small-text"
-                        >Other Location<span class="required">*</span></label
+                        >{{text['confirmed']['otherLocation']}}<span class="required">*</span></label
                       >
                       <input
                         class="small-text"
                         type="text"
-                        placeholder="room number or any platforms"
+                        :placeholder="text['confirmed']['otherLocationPlaceholder']"
                         id="other"
                         name="other"
                         v-model="form.other"
@@ -316,11 +316,11 @@
                     </div>
                     <div class="input-form" v-if="form.location != ''">
                       <label for="link" class="bold-small-text"
-                        >Meeting Link<span
+                        >{{text['confirmed']['meetingLink']}}<span
                           v-if="form.location != 'Others'"
                           class="required"
                           >*</span
-                        ><span v-else class="optional-field">(Optional)</span>
+                        ><span v-else class="optional-field">({{text['confirmed']['optional']}})</span>
                       </label>
                       <input
                         class="small-text"
@@ -334,7 +334,7 @@
                         {{ errors.meetingLink }}
                       </div>
                     </div>
-                    <div class="bold-small-text optional">Optional</div>
+                    <div class="bold-small-text optional">{{text['confirmed']['optional']}}</div>
                     <div class="input-form" v-if="!dropzoneFile">
                       <BaseDropZone
                         @drop.prevent="drop"
@@ -373,7 +373,7 @@
                     <div class="button">
                       <BaseButton
                         buttonType="outlined-button"
-                        btnText="Cancel"
+                        :btnText="text['confirmed']['cancel']"
                         textColor="#F33C3C"
                         textHover="white"
                         color="#F33C3C"
@@ -382,7 +382,7 @@
                       />
                       <BaseButton
                         buttonType="common-button"
-                        btnText="Create meeting"
+                        :btnText="text['confirmed']['createMeeting']"
                         textColor="white"
                         textHover="white"
                         color="#7452FF"
@@ -398,7 +398,7 @@
             </div>
           </teleport>
         </div>
-        <div v-else class="remark-text not-found loading">Loading...</div>
+        <div v-else class="remark-text not-found loading">{{text['confirmed']['loading']}}</div>
       </div>
     </transition>
   </div>
@@ -452,6 +452,8 @@ export default {
   },
   data() {
     return {
+      text: null,
+      lang: null,
       isShowDropdown: false,
       withInDate: "",
       filterDate: "",
@@ -548,11 +550,11 @@ export default {
     },
     onFocus() {
       document.getElementById("search-input-confirmed").placeholder =
-        "Type to find...";
+        this.text['confirmed']['focusSearch'];
     },
     onBlur() {
       document.getElementById("search-input-confirmed").placeholder =
-        "Search by title";
+        this.text['confirmed']['placeholder'];
     },
     toggleDropdown() {
       this.isShowDropdown = !this.isShowDropdown;
@@ -897,6 +899,14 @@ export default {
   created() {
     this.getMyPolls();
   },
+  beforeMount() {
+    if (this.$cookies.get("lang")) {
+      this.lang = this.$cookies.get("lang");
+    } else {
+      this.lang = "en"
+    }
+    this.text = require(`@/assets/langs/${this.lang}.json`);
+  }
 };
 </script>
 

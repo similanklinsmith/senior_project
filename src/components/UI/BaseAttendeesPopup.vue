@@ -2,7 +2,7 @@
   <teleport to="#portal-target" v-if="isShowAttendees">
     <div class="modal" @click="onClosePopup()"></div>
     <div class="pop-up">
-      <div class="bold-content-text">Attendees</div>
+      <div class="bold-content-text">{{text['sent']['attendees']}}</div>
       <div class="search-filter">
         <div class="input-icon">
           <i class="icon fa-solid fa-magnifying-glass"></i>
@@ -10,7 +10,7 @@
             id="search-input"
             class="small-text"
             type="text"
-            placeholder="Search by name"
+            :placeholder="text['sent']['placeholder']"
             v-model="searchInput"
             @focus="onFocus"
             @blur="onBlur"
@@ -51,7 +51,7 @@
           </transition-group>
         </div>
         <transition v-else name="route">
-          <div class="remark-text not-found">Not Found</div>
+          <div class="remark-text not-found">{{text['sent']['notFound']}}</div>
         </transition>
       </div>
     </div>
@@ -65,6 +65,8 @@ export default {
   emits: ["onClosePopup"],
   data() {
     return {
+      text: null,
+      lang: null,
       urlImage: this.$store.state.imageURL,
       searchInput: "",
     };
@@ -87,10 +89,10 @@ export default {
   methods: {
     ...mapActions(["getExecutiveTitle"]),
     onFocus() {
-      document.getElementById("search-input").placeholder = "Type to find...";
+      document.getElementById("search-input").placeholder = this.text['sent']['focusSearch'];
     },
     onBlur() {
-      document.getElementById("search-input").placeholder = "Search by name";
+      document.getElementById("search-input").placeholder = this.text['sent']['placeholder'];
     },
     onClosePopup() {
       this.searchInput = "";
@@ -107,6 +109,14 @@ export default {
   },
   mounted() {
     this.getExecutiveTitle();
+  },
+  beforeMount() {
+    if (this.$cookies.get("lang")) {
+      this.lang = this.$cookies.get("lang");
+    } else {
+      this.lang = "en";
+    }
+    this.text = require(`@/assets/langs/${this.lang}.json`);
   },
 };
 </script>

@@ -22,7 +22,11 @@ import { formatDateTimeDetail } from "@/helpers/formatDateTime";
 export default {
   name: "MaskMeetingDetailMobile",
   props: ["title", "dateTime", "type", "sender"],
-  methods: {
+  data() {
+    return {
+      text: null,
+      lang: null,
+    }
   },
   computed: {
     formatDateTime(dateTime) {
@@ -33,18 +37,26 @@ export default {
         case "inbox":
           return `sent on ${formatDateTimeDetail(this.dateTime)} by ${this.sender}`;
         case "sent":
-          return `created poll on ${formatDateTimeDetail(this.dateTime)}`;
+          return `${this.text['sent']['sentByYou']} ${formatDateTimeDetail(this.dateTime)}`;
         case "toBeConfirmed":
-          return `sent on ${formatDateTimeDetail(this.dateTime)} by ${this.sender}`;
+          return `${this.text['toBeConfirmed']['sentToBeConfirmed']} ${formatDateTimeDetail(this.dateTime)} ${this.text['toBeConfirmed']['by']} ${this.sender}`;
         case "results":
-          return `created on ${formatDateTimeDetail(this.dateTime)} by ${this.sender}`;
+          return `${this.text['confirmed']['preCreate']} ${formatDateTimeDetail(this.dateTime)} ${this.text['confirmed']['by']} ${this.sender}`;
         case "replied":
-          return `sent on ${formatDateTimeDetail(this.dateTime)} by ${this.sender}`;
+          return `${this.text['replied']['sentOn']} ${formatDateTimeDetail(this.dateTime)} ${this.text['replied']['by']} ${this.sender}`;
         default:
           return "Something went wrong :(";
       }
     },
   },
+  beforeMount() {
+    if (this.$cookies.get("lang")) {
+      this.lang = this.$cookies.get("lang");
+    } else {
+      this.lang = "en";
+    }
+    this.text = require(`@/assets/langs/${this.lang}.json`);
+  }
 };
 </script>
 

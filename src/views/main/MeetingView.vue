@@ -2,14 +2,14 @@
   <div>
     <div class="meeting-screen" v-if="!isMobile">
       <BaseHeader
-        :headerText="`Create your own meeting`"
-        :contentText="`You can easily create your own meeting by clicking “Create poll meeting”`"
+        :headerText="text['meeting']['header']"
+        :contentText="text['meeting']['subHeader']"
       >
       </BaseHeader>
       <div class="body">
         <div class="meeting-nav">
           <BaseButton
-            btnText="Create poll meeting +"
+            :btnText="text['meeting']['createPollMeeting']"
             height="5rem"
             textHover="white"
             color="#7452FF"
@@ -22,7 +22,7 @@
           <BaseButton
             buttonType="navigator-button"
             height="5rem"
-            btnText="Inbox"
+            :btnText="text['meeting']['inbox']"
             textHover="white"
             hoverColor="#23106D"
             @onClick="onClickNav(2)"
@@ -44,7 +44,7 @@
           <BaseButton
             buttonType="navigator-button"
             height="5rem"
-            btnText="Sent"
+            :btnText="text['meeting']['sent']"
             textHover="white"
             hoverColor="#23106D"
             @onClick="onClickNav(3)"
@@ -61,7 +61,7 @@
           <BaseButton
             buttonType="navigator-button"
             height="5rem"
-            btnText="To be confirmed"
+            :btnText="text['meeting']['toBeConfirmed']"
             textHover="white"
             hoverColor="#23106D"
             @onClick="onClickNav(4)"
@@ -76,14 +76,20 @@
             </template>
             <template v-slot:after-icon>
               <div class="badge">
-                <div class="bold-smallest-text">{{$store.state.myBeConfirmeds.length >= 100 ? '99+' : $store.state.myBeConfirmeds.length}}</div>
+                <div class="bold-smallest-text">
+                  {{
+                    $store.state.myBeConfirmeds.length >= 100
+                      ? "99+"
+                      : $store.state.myBeConfirmeds.length
+                  }}
+                </div>
               </div>
             </template>
           </BaseButton>
           <BaseButton
             buttonType="navigator-button"
             height="5rem"
-            btnText="Results"
+            :btnText="text['meeting']['result']"
             textHover="white"
             hoverColor="#23106D"
             @onClick="onClickNav(5)"
@@ -98,14 +104,20 @@
             </template>
             <template v-slot:after-icon>
               <div class="badge">
-                <div class="bold-smallest-text">{{$store.state.myPolls.length >= 100 ? '99+' : $store.state.myPolls.length}}</div>
+                <div class="bold-smallest-text">
+                  {{
+                    $store.state.myPolls.length >= 100
+                      ? "99+"
+                      : $store.state.myPolls.length
+                  }}
+                </div>
               </div>
             </template>
           </BaseButton>
           <BaseButton
             buttonType="navigator-button"
             height="5rem"
-            btnText="Replied"
+            :btnText="text['meeting']['replied']"
             textHover="white"
             hoverColor="#23106D"
             @onClick="onClickNav(6)"
@@ -123,7 +135,7 @@
         <div class="meeting-nav-horizontal">
           <div class="slide">
             <BaseButton
-              btnText="Create poll meeting +"
+              :btnText="text['meeting']['createPollMeeting']"
               height="5rem"
               minWidth="23rem"
               textHover="white"
@@ -140,7 +152,7 @@
               buttonType="navigator-button"
               height="5rem"
               minWidth="23rem"
-              btnText="Inbox"
+              :btnText="text['meeting']['inbox']"
               textHover="white"
               hoverColor="#23106D"
               @onClick="onClickNav(2)"
@@ -163,7 +175,7 @@
               buttonType="navigator-button"
               height="5rem"
               minWidth="23rem"
-              btnText="Sent"
+              :btnText="text['meeting']['sent']"
               textHover="white"
               hoverColor="#23106D"
               @onClick="onClickNav(3)"
@@ -181,7 +193,7 @@
               buttonType="navigator-button"
               height="5rem"
               minWidth="23rem"
-              btnText="To be confirmed"
+              :btnText="text['meeting']['toBeConfirmed']"
               textHover="white"
               hoverColor="#23106D"
               @onClick="onClickNav(4)"
@@ -196,7 +208,13 @@
               </template>
               <template v-slot:after-icon>
                 <div class="badge">
-                  <div class="bold-smallest-text">{{$store.state.myBeConfirmeds.length >= 100 ? '99+' : $store.state.myBeConfirmeds.length}}</div>
+                  <div class="bold-smallest-text">
+                    {{
+                      $store.state.myBeConfirmeds.length >= 100
+                        ? "99+"
+                        : $store.state.myBeConfirmeds.length
+                    }}
+                  </div>
                 </div>
               </template>
             </BaseButton>
@@ -204,7 +222,7 @@
               buttonType="navigator-button"
               height="5rem"
               minWidth="23rem"
-              btnText="Results"
+              :btnText="text['meeting']['result']"
               textHover="white"
               hoverColor="#23106D"
               @onClick="onClickNav(5)"
@@ -227,7 +245,7 @@
               buttonType="navigator-button"
               height="5rem"
               minWidth="23rem"
-              btnText="Replied"
+              :btnText="text['meeting']['replied']"
               textHover="white"
               hoverColor="#23106D"
               @onClick="onClickNav(6)"
@@ -297,61 +315,32 @@ export default {
   },
   data() {
     return {
+      text: null,
+      lang: null,
       isSelected: 1,
       isMobile: false,
       isShowComposeButton: false,
       headerMobile: "",
-      composeButtons: [
-        {
-          id: 1,
-          icon: "fa-solid fa-plus",
-          tooltip: "Create poll meeting",
-        },
-        {
-          id: 2,
-          icon: "fa-solid fa-inbox",
-          tooltip: "Inbox",
-        },
-        {
-          id: 3,
-          icon: "fa-solid fa-paper-plane",
-          tooltip: "Sent",
-        },
-        {
-          id: 4,
-          icon: "fa-solid fa-clipboard-list",
-          tooltip: "To be confirmed",
-        },
-        {
-          id: 5,
-          icon: "fa-solid fa-square-check",
-          tooltip: "Results",
-        },
-        {
-          id: 6,
-          icon: "fa-solid fa-reply",
-          tooltip: "Replied",
-        },
-      ],
+      composeButtons: null,
     };
   },
   computed: {
     showHeaderMobile() {
       switch (parseInt(this.isSelected)) {
         case 1:
-          return "Create Meeting";
+          return this.text["home"]["createMeeting"];
         case 2:
-          return "Inbox";
+          return this.text["meeting"]["inbox"];
         case 3:
-          return "Sent";
+          return this.text["meeting"]["sent"];
         case 4:
-          return "To be confirmed";
+          return this.text["meeting"]["toBeConfirmed"];
         case 5:
-          return "Results";
+          return this.text["meeting"]["result"];
         case 6:
-          return "Replied";
+          return this.text["meeting"]["replied"];
         default:
-          return "Create Meeting";
+          return this.text["home"]["createMeeting"];
       }
     },
   },
@@ -384,6 +373,46 @@ export default {
     this.showHeaderMobile;
     this.onResize();
     window.addEventListener("resize", this.onResize, { passive: true });
+  },
+  beforeMount() {
+    if (this.$cookies.get("lang")) {
+      this.lang = this.$cookies.get("lang");
+    } else {
+      this.lang = "en";
+    }
+    this.text = require(`@/assets/langs/${this.lang}.json`);
+    this.composeButtons = [
+      {
+        id: 1,
+        icon: "fa-solid fa-plus",
+        tooltip: this.text["home"]["createMeeting"],
+      },
+      {
+        id: 2,
+        icon: "fa-solid fa-inbox",
+        tooltip: this.text["meeting"]["inbox"],
+      },
+      {
+        id: 3,
+        icon: "fa-solid fa-paper-plane",
+        tooltip: this.text["meeting"]["sent"],
+      },
+      {
+        id: 4,
+        icon: "fa-solid fa-clipboard-list",
+        tooltip: this.text["meeting"]["toBeConfirmed"],
+      },
+      {
+        id: 5,
+        icon: "fa-solid fa-square-check",
+        tooltip: this.text["meeting"]["result"],
+      },
+      {
+        id: 6,
+        icon: "fa-solid fa-reply",
+        tooltip: this.text["meeting"]["replied"],
+      },
+    ];
   },
 };
 </script>

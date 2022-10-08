@@ -8,13 +8,13 @@
     >
       <template v-slot:detail-slot>
         <div class="expired-date">
-          <span>*</span>This form will be expired in
+          <span>*</span>{{ text["toBeConfirmed"]["dueDate"] }}
           {{ inboxDetail.due_date_time.split("T")[0] }}
           <span v-if="new Date(inboxDetail.due_date_time) >= new Date()"
-            >({{ calculateRemainingDay(inboxDetail.due_date_time) }} days
-            left)</span
+            >({{ calculateRemainingDay(inboxDetail.due_date_time) }} {{text["toBeConfirmed"]["postDueDate"]}}
+            )</span
           >
-          <span v-else>(Already expired)</span>
+          <span v-else>({{text["toBeConfirmed"]["alreadyExpired"]}})</span>
         </div>
         <div
           class="response"
@@ -44,7 +44,7 @@
         <BaseButton
           v-if="responseAll"
           buttonType="common-button"
-          btnText="Confirm response"
+          :btnText="text['toBeConfirmed']['confirm']"
           textColor="white"
           textHover="white"
           color="#7452FF"
@@ -57,30 +57,6 @@
     </MaskMeetingDetailMobile>
   </div>
   <BaseNotFound v-else :isFailed="isFailed" />
-  <!-- <div v-else class="remark-text flex-col-center loading-container">
-    <div class="failed flex-col-center" v-if="isFailed">
-      <div class="header-fail">OOPS!</div>
-      <div class="image">
-        <img
-          src="@/assets/decorations/not_found.png"
-          alt="sending illustrations"
-        />
-      </div>
-      We can't seem to find the page you're looking for.
-      <BaseButton
-        buttonType="common-button"
-        btnText="Go back"
-        textColor="white"
-        textHover="white"
-        color="#7452FF"
-        hoverColor="#23106D"
-        width="100%"
-        @onClick="$router.back()"
-      >
-      </BaseButton>
-    </div>
-    <div class="flex-col-center loading" v-else>Loading...</div>
-  </div> -->
 </template>
 
 <script>
@@ -107,6 +83,8 @@ export default {
   },
   data() {
     return {
+      text: null,
+      lang: null,
       isFailed: false,
       isLoading: false,
       inboxDetail: null,
@@ -211,6 +189,14 @@ export default {
     console.log(`This is params type: ${this.type}`);
     this.getBeConfirmedDetail();
     this.dataToBe.id = parseInt(this.id);
+  },
+  beforeMount() {
+    if (this.$cookies.get("lang")) {
+      this.lang = this.$cookies.get("lang");
+    } else {
+      this.lang = "en";
+    }
+    this.text = require(`@/assets/langs/${this.lang}.json`);
   },
 };
 </script>

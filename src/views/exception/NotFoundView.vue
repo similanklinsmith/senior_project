@@ -12,13 +12,13 @@
           src="@/assets/decorations/not_found.png"
           alt="not found illustration"
         />
-        <div class="big-header-text">Opps!</div>
+        <div class="big-header-text">{{text["notFound"]["header"]}}</div>
         <div class="remark-text">
-          We can’t seem to find the page you’re looking for.
+          {{text["notFound"]["subHeader"]}}
         </div>
         <BaseButton
           buttonType="common-button"
-          btnText="Back to home"
+          :btnText="text['notFound']['backHome']"
           textColor="white"
           textHover="white"
           color="#7452FF"
@@ -36,6 +36,20 @@ import BaseButton from "@/components/UI/BaseButton.vue";
 export default {
   components: { BaseButton },
   name: "NotFound",
+  data() {
+    return {
+      text: null,
+      lang: null,
+    }
+  },
+  beforeMount() {
+    if (this.$cookies.get("lang")) {
+      this.lang = this.$cookies.get("lang");
+    } else {
+      this.lang = "en";
+    }
+    this.text = require(`@/assets/langs/${this.lang}.json`);
+  },
 };
 </script>
 

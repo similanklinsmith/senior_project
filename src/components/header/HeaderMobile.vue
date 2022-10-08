@@ -36,7 +36,7 @@
         @click="toggleCloseNav"
       >
         <i class="icon fa-solid fa-house"></i>
-        <div class="button-text bold-content-text">home</div>
+        <div class="button-text bold-content-text">{{text['navigators']['home']}}</div>
       </router-link>
       <router-link
         to="/calendar"
@@ -45,7 +45,7 @@
         @click="toggleCloseNav"
       >
         <i class="icon fa-solid fa-calendar"></i>
-        <div class="button-text bold-content-text">calendar</div>
+        <div class="button-text bold-content-text">{{text['navigators']['calendar']}}</div>
       </router-link>
       <router-link
         to="/executives-management"
@@ -54,7 +54,7 @@
         @click="toggleCloseNav"
       >
         <i class="icon fa-solid fa-user-group"></i>
-        <div class="button-text bold-content-text">executives</div>
+        <div class="button-text bold-content-text">{{text['navigators']['executive']}}</div>
       </router-link>
       <router-link
         to="/meetings-management"
@@ -63,7 +63,7 @@
         @click="toggleCloseNav"
       >
         <i class="icon fa-solid fa-check-to-slot"></i>
-        <div class="button-text bold-content-text">meetings</div>
+        <div class="button-text bold-content-text">{{text['navigators']['meeting']}}</div>
       </router-link>
       <router-link
         to="/setting"
@@ -72,12 +72,12 @@
         @click="toggleCloseNav"
       >
         <i class="icon fa-solid fa-gear"></i>
-        <div class="button-text bold-content-text">setting</div>
+        <div class="button-text bold-content-text">{{text['navigators']['setting']}}</div>
       </router-link>
       <div class="sign-out">
         <BaseButton
           buttonType="outlined-button"
-          btnText="Sign out"
+          :btnText="text['authentication']['signOut']"
           textColor="#7452FF"
           textHover="white"
           color="#7452FF"
@@ -112,6 +112,8 @@ export default {
   props: ["isToggled"],
   data() {
     return {
+      text: null,
+      lang: null,
       user: "",
       email: "",
       isShowProfile: false,
@@ -125,6 +127,14 @@ export default {
   created() {this.getProfileImage();},
   mounted() {
     if (localStorage.getItem("user")) {this.user = `${jwtDecrypt(localStorage.getItem("user")).name}`;this.email = `${jwtDecrypt(localStorage.getItem("user")).email}`}
+  },
+  beforeMount() {
+    if (this.$cookies.get("lang")) {
+      this.lang = this.$cookies.get("lang");
+    } else {
+      this.lang = "en";
+    }
+    this.text = require(`@/assets/langs/${this.lang}.json`);
   },
 };
 </script>

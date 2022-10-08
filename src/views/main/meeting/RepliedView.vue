@@ -9,7 +9,7 @@
               id="search-input-replied"
               class="small-text"
               type="text"
-              placeholder="Search by title"
+              :placeholder="text['replied']['placeholder']"
               v-model="searchInput"
               @focus="onFocus"
               @blur="onBlur"
@@ -27,7 +27,7 @@
           <ul>
             <li>
               <div class="input">
-                <label for="due" class="bold-small-text">Date within</label>
+                <label for="due" class="bold-small-text">{{text['replied']['dateWithin']}}</label>
                 <litepie-datepicker
                   id="due"
                   as-single
@@ -41,7 +41,7 @@
             <li>
               <BaseButton
                 buttonType="common-button"
-                btnText="Search"
+                :btnText="text['replied']['search']"
                 textColor="#23106D"
                 textHover="#23106D"
                 color="#DBD2FF"
@@ -56,9 +56,9 @@
       </div>
       <div class="filter-show">
         <div class="small-text">
-          <span v-if="filterDate">With in: {{ filterDate }}</span>
+          <span v-if="filterDate">{{text['replied']['within']}}: {{ filterDate }}</span>
         </div>
-        <div class="small-text">Results: {{ filterByTitle.length }}</div>
+        <div class="small-text">{{text['replied']['results']}}: {{ filterByTitle.length }}</div>
       </div>
       <div class="inbox-list">
         <transition-group name="route">
@@ -67,13 +67,13 @@
             :key="inbox.id"
             :id="inbox.id"
             :title="inbox.title"
-            :content="'Reply to ' + inbox.title"
+            :content="text['replied']['sentPoll'] + inbox.title"
             :time="inbox.create_at"
             :selectedId="selectedId"
             @selectInbox="selectInbox"
           />
           <div v-if="filterByTitle.length == 0" class="remark-text not-found">
-            Not found
+            {{text['replied']['notFound']}}
           </div>
         </transition-group>
       </div>
@@ -87,7 +87,7 @@
           >
             <div class="title remark-text">{{ inboxDetail.title }}</div>
             <div class="sent-from smallest-text">
-              sent on {{ formatDateTime(inboxDetail.create_at) }} by
+              {{text['replied']['sentOn']}} {{ formatDateTime(inboxDetail.create_at) }} {{text['replied']['by']}}
               <span>{{ inboxDetail.secretary.name }}</span>
               &lt;{{ inboxDetail.secretary.email }}&gt;
             </div>
@@ -101,10 +101,10 @@
                 <div>
                   <div class="name bold-content-text">
                     {{ executive.first_name }} {{ executive.last_name }}
-                    <span>(required)</span>
+                    <span>({{text['replied']['required']}})</span>
                   </div>
                   <div class="bold-smallest-text label-text">
-                    Preferred-timeslots
+                    {{text['replied']['preferTimeslot']}}
                   </div>
                 </div>
                 <div
@@ -121,7 +121,7 @@
                     "
                   >
                     {{ formatDateTimeHeader(response.date) }}
-                    <span v-if="response.is_accept == '0'">(Declined)</span>
+                    <span v-if="response.is_accept == '0'">({{text['replied']['declined']}})</span>
                   </div>
                   <div class="slots" v-if="response.is_accept != '0'">
                     <div
@@ -130,9 +130,9 @@
                       :key="time"
                     >
                       <div class="bold-smallest-text">
-                        From {{ time.from.split(":")[0] }}:{{
+                        {{text['replied']['from']}} {{ time.from.split(":")[0] }}:{{
                           time.from.split(":")[1]
-                        }}, End with {{ time.to.split(":")[0] }}:{{
+                        }}, {{text['replied']['end']}} {{ time.to.split(":")[0] }}:{{
                           time.to.split(":")[1]
                         }}
                       </div>
@@ -142,7 +142,7 @@
               </div>
             </div>
           </div>
-          <div v-if="isLoading" class="remark-text not-found loading">Loading...</div>
+          <div v-if="isLoading" class="remark-text not-found loading">{{text['replied']['loading']}}</div>
         </div>
       </div>
     </transition>
@@ -177,6 +177,8 @@ export default {
   },
   data() {
     return {
+      text: null,
+      lang: null,
       searchInput: "",
       isShowDropdown: false,
       withInDate: "",
@@ -217,10 +219,10 @@ export default {
       this.isShowDropdown = !this.isShowDropdown;
     },
     onFocus() {
-      document.getElementById("search-input-replied").placeholder = "Type to find...";
+      document.getElementById("search-input-replied").placeholder = this.text['replied']['focusSearch'];
     },
     onBlur() {
-      document.getElementById("search-input-replied").placeholder = "Search by title";
+      document.getElementById("search-input-replied").placeholder = this.text['replied']['placeholder'];
     },
     handleFilterDate() {
       this.filterDate =
@@ -261,6 +263,14 @@ export default {
   created() {
     this.getMyReplies();
   },
+  beforeMount() {
+    if (this.$cookies.get("lang")) {
+      this.lang = this.$cookies.get("lang");
+    } else {
+      this.lang = "en"
+    }
+    this.text = require(`@/assets/langs/${this.lang}.json`);
+  }
 };
 </script>
 

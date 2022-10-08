@@ -64,7 +64,7 @@
         <div class="date header-text">21</div>
       </div>
       <div class="time flex-col-center">
-        <div class="common-text">start-end time</div>
+        <div class="common-text">{{text['home']['start-end']}}</div>
         <div class="content-text">
           <i class="icon fa-regular fa-clock"></i>{{ startTime }} -
           {{ endTime }}
@@ -76,11 +76,11 @@
         <div class="additional-detail">
           <div class="small-text" v-if="file">
             <i class="icon fa-regular fa-file"></i
-            ><span class="attached-file">attached file</span>
+            ><span class="attached-file">{{text['home']['file']}}</span>
           </div>
           <div class="small-text" v-if="link">
             <i class="icon fa-solid fa-link"></i
-            ><span class="attached-link">attached link</span>
+            ><span class="attached-link">{{text['home']['link']}}</span>
           </div>
           <div class="attendees">
             <i class="icon fa-regular fa-user"></i>
@@ -109,7 +109,7 @@
     </div>
     <div class="btnAction" @click="btnAction">
       <div class="small-text">
-        show details<i class="icon fa-solid fa-circle-arrow-right"></i>
+        {{text['home']['showDetail']}}<i class="icon fa-solid fa-circle-arrow-right"></i>
       </div>
     </div>
   </div>
@@ -131,6 +131,8 @@ export default {
   ],
   data() {
     return {
+      text: null,
+      lang: null,
       urlImage: this.$store.state.imageURL,
       colorsList: ["#23106D", "#7452FF", "#DBD2FF", "#F4F4F4", "#23106D"],
     };
@@ -140,6 +142,14 @@ export default {
       console.log("go to inbox with id");
     },
   },
+  beforeMount() {
+    if (this.$cookies.get("lang")) {
+      this.lang = this.$cookies.get("lang");
+    } else {
+      this.lang = "en";
+    }
+    this.text = require(`@/assets/langs/${this.lang}.json`);
+  }
 };
 </script>
 

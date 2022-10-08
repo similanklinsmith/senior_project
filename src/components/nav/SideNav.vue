@@ -14,11 +14,11 @@
       </div>
       <router-link to="/" class="button" aria-label="home">
         <i class="icon fa-solid fa-house"></i>
-        <div class="button-text bold-small-text">home</div>
+        <div class="button-text bold-small-text">{{text['navigators']['home']}}</div>
       </router-link>
       <router-link to="/calendar" class="button" aria-label="calendar">
         <i class="icon fa-solid fa-calendar"></i>
-        <div class="button-text bold-small-text">calendar</div>
+        <div class="button-text bold-small-text">{{text['navigators']['calendar']}}</div>
       </router-link>
       <router-link
         to="/executives-management"
@@ -26,7 +26,7 @@
         aria-label="executives"
       >
         <i class="icon fa-solid fa-user-group"></i>
-        <div class="button-text bold-small-text">executives</div>
+        <div class="button-text bold-small-text">{{text['navigators']['executive']}}</div>
       </router-link>
       <router-link
         to="/meetings-management"
@@ -34,11 +34,11 @@
         aria-label="meetings"
       >
         <i class="icon fa-solid fa-check-to-slot"></i>
-        <div class="button-text bold-small-text">meetings</div>
+        <div class="button-text bold-small-text">{{text['navigators']['meeting']}}</div>
       </router-link>
       <router-link to="/setting" class="button" aria-label="setting">
         <i class="icon fa-solid fa-gear"></i>
-        <div class="button-text bold-small-text">setting</div>
+        <div class="button-text bold-small-text">{{text['navigators']['setting']}}</div>
       </router-link>
       <div class="asset-image" v-if="isToggled">
         <img
@@ -60,9 +60,23 @@ export default {
   name: "SideNav",
   props: ["isToggled"],
   emits: ["toggleSidebar"],
+  data() {
+    return {
+      text: null,
+      lang: null
+    }
+  },
   methods: {
     toggleSidebar() {this.$emit("toggleSidebar");},
   },
+  beforeMount() {
+    if (this.$cookies.get("lang")) {
+      this.lang = this.$cookies.get("lang");
+    } else {
+      this.lang = "en"
+    }
+    this.text = require(`@/assets/langs/${this.lang}.json`);
+  }
 };
 </script>
 

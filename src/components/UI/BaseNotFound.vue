@@ -7,11 +7,11 @@
           alt="sending illustrations"
         />
       </div>
-      <div class="header-fail">OOPS!</div>
-      We can't seem to find the page you're looking for.
+      <div class="header-fail">{{text['notFound']['header']}}</div>
+      {{text['notFound']['subHeader']}}
         <BaseButton
           buttonType="common-button"
-          btnText="Go back"
+          :btnText="text['notFound']['back']"
           textColor="white"
           textHover="white"
           color="#7452FF"
@@ -20,7 +20,7 @@
           @onClick="$router.back()"
         />
     </div>
-    <div class="flex-col-center loading" v-else>Loading...</div>
+    <div class="flex-col-center loading" v-else>{{text['notFound']['loading']}}</div>
   </div>
 </template>
 
@@ -30,6 +30,20 @@ export default {
   name: "BaseNotFound",
   components: { BaseButton },
   props: ["isFailed"],
+  data() {
+    return {
+      text: null,
+      lang: null,
+    }
+  },
+  beforeMount() {
+    if (this.$cookies.get("lang")) {
+      this.lang = this.$cookies.get("lang");
+    } else {
+      this.lang = "en";
+    }
+    this.text = require(`@/assets/langs/${this.lang}.json`);
+  },
 };
 </script>
 

@@ -10,7 +10,7 @@
       <BaseButton
         v-if="maximum != length"
         buttonType="common-button"
-        btnText="Load more"
+        :btnText="text['sent']['loadMore']"
         textColor="white"
         textHover="white"
         color="#7452FF"
@@ -49,6 +49,8 @@ export default {
 
   data() {
     return {
+      text: null,
+      lang: null,
       isMobile: false,
     };
   },
@@ -76,6 +78,14 @@ export default {
     loadMore() {
       this.$emit("loadMore");
     },
+  },
+  beforeMount() {
+    if (this.$cookies.get("lang")) {
+      this.lang = this.$cookies.get("lang");
+    } else {
+      this.lang = "en";
+    }
+    this.text = require(`@/assets/langs/${this.lang}.json`);
   },
 };
 </script>

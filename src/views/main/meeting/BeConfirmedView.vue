@@ -9,7 +9,7 @@
               id="search-input-be-confirmed"
               class="small-text"
               type="text"
-              placeholder="Search by title"
+              :placeholder="text['toBeConfirmed']['placeholder']"
               v-model="searchInput"
               @focus="onFocus"
               @blur="onBlur"
@@ -27,7 +27,7 @@
           <ul>
             <li>
               <div class="input">
-                <label for="due" class="bold-small-text">Date within</label>
+                <label for="due" class="bold-small-text">{{text['toBeConfirmed']['dateWithin']}}</label>
                 <litepie-datepicker
                   id="due"
                   as-single
@@ -41,7 +41,7 @@
             <li>
               <BaseButton
                 buttonType="common-button"
-                btnText="Search"
+                :btnText="text['toBeConfirmed']['search']"
                 textColor="#23106D"
                 textHover="#23106D"
                 color="#DBD2FF"
@@ -56,9 +56,9 @@
       </div>
       <div class="filter-show">
         <div class="small-text">
-          <span v-if="filterDate">With in: {{ filterDate }}</span>
+          <span v-if="filterDate">{{text['toBeConfirmed']['within']}}: {{ filterDate }}</span>
         </div>
-        <div class="small-text">Results: {{ filterByTitle.length }}</div>
+        <div class="small-text">{{text['toBeConfirmed']['results']}}: {{ filterByTitle.length }}</div>
       </div>
       <div class="inbox-list">
         <transition-group name="route">
@@ -67,13 +67,13 @@
             :key="inbox.id"
             :id="inbox.id"
             :title="inbox.title"
-            :content="'need to answer poll appointment'"
+            :content="text['toBeConfirmed']['sentPoll']"
             :time="inbox.create_at"
             :selectedId="selectedId"
             @selectInbox="selectInbox"
           />
           <div v-if="filterByTitle.length == 0" class="remark-text not-found">
-            Not found
+            {{text['toBeConfirmed']['notFound']}}
           </div>
         </transition-group>
       </div>
@@ -87,19 +87,18 @@
           >
             <div class="title remark-text">{{ inboxDetail.title }}</div>
             <div class="sent-from smallest-text">
-              sent on {{ formatDateTime(inboxDetail.create_at) }} by
+              {{text['toBeConfirmed']['sentToBeConfirmed']}} {{ formatDateTime(inboxDetail.create_at) }} {{text['toBeConfirmed']['by']}}
               <span>{{ inboxDetail.secretary.name }}</span>
               &lt;{{ inboxDetail.secretary.email }}&gt;
             </div>
             <div class="line"></div>
             <div class="bold-small-text due-date">
-              <span>*</span>This form will be expired in
+              <span>*</span>{{text['toBeConfirmed']['dueDate']}}
               {{ inboxDetail.due_date_time.split("T")[0] }}
               <span v-if="new Date(inboxDetail.due_date_time) >= new Date()"
-                >({{ calculateRemainingDay(inboxDetail.due_date_time) }} days
-                left)</span
+                >({{ calculateRemainingDay(inboxDetail.due_date_time) }} {{text['toBeConfirmed']['postDueDate']}})</span
               >
-              <span v-else>(Already expired)</span>
+              <span v-else>({{text['toBeConfirmed']['alreadyExpired']}})</span>
             </div>
             <div
               class="response"
@@ -132,7 +131,7 @@
               <BaseButton
                 v-if="responseAll"
                 buttonType="common-button"
-                btnText="Confirm response"
+                :btnText="text['toBeConfirmed']['confirm']"
                 textColor="white"
                 textHover="white"
                 color="#7452FF"
@@ -143,15 +142,15 @@
               </BaseButton>
             </div>
           </div>
-          <div v-else class="remark-text not-found loading">Loading...</div>
+          <div v-else class="remark-text not-found loading">{{text['toBeConfirmed']['loading']}}</div>
         </div>
       </div>
     </transition>
     <BaseAlert v-if="getterSuccess" :status="`success`">
-      Answer is succesfully sent
+      {{text['toBeConfirmed']['succces']}}
     </BaseAlert>
     <BaseAlert v-if="getterFailed" :status="`failed`">
-      Answer is failed to sent
+      {{text['toBeConfirmed']['failed']}}
     </BaseAlert>
   </div>
 </template>
@@ -187,11 +186,13 @@ export default {
     });
     return {
       formatter,
-      dDate
+      dDate,
     };
   },
   data() {
     return {
+      text: null,
+      lang: null,
       searchInput: "",
       isShowDropdown: false,
       withInDate: "",
@@ -265,10 +266,12 @@ export default {
   methods: {
     ...mapActions(["getMyBeConfirmeds", "getMyBeConfirmedDetail"]),
     onFocus() {
-      document.getElementById("search-input-be-confirmed").placeholder = "Type to find...";
+      document.getElementById("search-input-be-confirmed").placeholder =
+        this.text['toBeConfirmed']['focusSearch'];
     },
     onBlur() {
-      document.getElementById("search-input-be-confirmed").placeholder = "Search by title";
+      document.getElementById("search-input-be-confirmed").placeholder =
+        this.text['toBeConfirmed']['placeholder'];
     },
     toggleDropdown() {
       this.isShowDropdown = !this.isShowDropdown;
@@ -342,6 +345,14 @@ export default {
   },
   created() {
     this.getMyBeConfirmeds();
+  },
+  beforeMount() {
+    if (this.$cookies.get("lang")) {
+      this.lang = this.$cookies.get("lang");
+    } else {
+      this.lang = "en";
+    }
+    this.text = require(`@/assets/langs/${this.lang}.json`);
   },
 };
 </script>

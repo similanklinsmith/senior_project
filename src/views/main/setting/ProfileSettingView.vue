@@ -22,10 +22,10 @@
       </div>
     </div>
     <div class="last-col-left" v-if="!isEdit">
-      <div class="content-text title">Official Information</div>
+      <div class="content-text title">{{text['profileSetting']['information']}}</div>
       <div class="email">
         <div class="label bold-content-text">
-          Display name
+          {{text['profileSetting']['disName']}}
           <div @click="copyLink('name-value')">
             <i class="icon fa-regular fa-copy"></i>
           </div>
@@ -34,7 +34,7 @@
       </div>
       <div class="email">
         <div class="label bold-content-text">
-          Email
+          {{text['profileSetting']['email']}}
           <div @click="copyLink('email-value')">
             <i class="icon fa-regular fa-copy"></i>
           </div>
@@ -45,7 +45,7 @@
       </div>
       <div class="phone">
         <div class="label bold-content-text">
-          Phone number
+          {{text['profileSetting']['phone']}}
           <div @click="copyLink('phone-value')">
             <i class="icon fa-regular fa-copy"></i>
           </div>
@@ -57,7 +57,7 @@
       <div class="group-button">
         <BaseButton
           buttonType="outlined-button"
-          btnText="Profile setting"
+          :btnText="text['profileSetting']['microsoftBtn']"
           textColor="#7452FF"
           textHover="white"
           color="#7452FF"
@@ -71,7 +71,7 @@
         </BaseButton>
         <BaseButton
           buttonType="common-button"
-          btnText="Edit profile"
+          :btnText="text['profileSetting']['editBtn']"
           textColor="white"
           textHover="white"
           color="#7452FF"
@@ -87,9 +87,9 @@
     </div>
     <div class="last-col-left is_edit" v-else>
       <div class="input-form">
-        <label for="title" class="bold-small-text">Title</label>
+        <label for="title" class="bold-small-text">{{text['profileSetting']['title']}}</label>
         <select name="title" id="title" v-model="form.title">
-          <option value="">none</option>
+          <option value="">{{text['input']['none']}}</option>
           <option
             v-for="(title, index) in getterExecutiveTitles"
             :key="title"
@@ -100,11 +100,11 @@
         </select>
       </div>
       <div class="input-form">
-        <label for="name" class="bold-small-text">Display name</label>
+        <label for="name" class="bold-small-text">{{text['profileSetting']['disName']}}</label>
         <input
           class="small-text readonly"
           type="text"
-          placeholder="Name"
+          :placeholder="text['profileSetting']['disName']"
           id="name"
           name="name"
           :value="form.name"
@@ -112,7 +112,7 @@
         />
       </div>
       <div class="input-form">
-        <label for="email" class="bold-small-text">Email</label>
+        <label for="email" class="bold-small-text">{{text['profileSetting']['email']}}</label>
         <input
           class="small-text readonly"
           type="text"
@@ -124,7 +124,7 @@
         />
       </div>
       <div class="input-form">
-        <label for="phone" class="bold-small-text">Phone number</label>
+        <label for="phone" class="bold-small-text">{{text['profileSetting']['phone']}}</label>
         <input
           class="small-text"
           type="tel"
@@ -137,7 +137,7 @@
       <div class="group-button" style="width: 80%">
         <BaseButton
           buttonType="outlined-button"
-          btnText="Cancel"
+          :btnText="text['profileSetting']['cancel']"
           textColor="#F33C3C"
           textHover="white"
           color="#F33C3C"
@@ -148,7 +148,7 @@
         </BaseButton>
         <BaseButton
           buttonType="common-button"
-          btnText="Confirm Edit"
+          :btnText="text['profileSetting']['confirm']"
           textColor="white"
           textHover="white"
           color="#7452FF"
@@ -173,6 +173,8 @@ export default {
   },
   data() {
     return {
+      text: null,
+      lang: null,
       isEdit: false,
       secretaryId: null,
       form: {
@@ -210,6 +212,14 @@ export default {
       this.secretaryId = `${jwtDecrypt(localStorage.getItem("user")).user_id}`;
     }
   },
+  beforeMount() {
+    if (this.$cookies.get("lang")) {
+      this.lang = this.$cookies.get("lang");
+    } else {
+      this.lang = "en"
+    }
+    this.text = require(`@/assets/langs/${this.lang}.json`);
+  }
 };
 </script>
 

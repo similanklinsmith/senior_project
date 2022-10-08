@@ -7,7 +7,7 @@
       </div>
       <BaseButton
         buttonType="outlined-button"
-        btnText="Sign in"
+        :btnText="text['authentication']['signIn']"
         textColor="#7452FF"
         textHover="white"
         color="#7452FF"
@@ -83,7 +83,7 @@
         <div class="or thin-content-text">or continue with</div>
         <BaseButton
           buttonType="outlined-button"
-          btnText="Sign in with Microsoft"
+          :btnText="text['authentication']['signInMicrosoft']"
           textColor="#7452FF"
           textHover="white"
           color="#7452FF"
@@ -102,13 +102,13 @@
       :image="require(`@/assets/decorations/delete_executive.png`)"
     >
       <template v-slot:popupContent>
-        We apologize for the inconvenience due to disruption. Please try again.
+        {{text['authentication']['error']}}
         [Error: {{ statusCode }}]
       </template>
       <template v-slot:buttons>
         <BaseButton
           buttonType="common-button"
-          btnText="Close"
+          :btnText="text['authentication']['close']"
           textColor="white"
           textHover="white"
           color="#F33C3C"
@@ -132,6 +132,8 @@ export default {
   name: "SignInView",
   data() {
     return {
+      text: null,
+      lang: null,
       isSignIn: true,
       isShowPopup: false,
       form: {
@@ -259,6 +261,14 @@ export default {
       return !!this.form.password;
     },
   },
+  beforeMount() {
+    if (this.$cookies.get("lang")) {
+      this.lang = this.$cookies.get("lang");
+    } else {
+      this.lang = "en"
+    }
+    this.text = require(`@/assets/langs/${this.lang}.json`);
+  }
 };
 </script>
 

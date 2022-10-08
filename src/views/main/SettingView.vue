@@ -1,8 +1,8 @@
 <template>
   <div class="setting-screen">
     <BaseHeader
-      :headerText="`Personal Settings & Helps`"
-      :contentText="`Complete and Update your profile, Appearances, and click for Helps`"
+      :headerText="text['setting']['header']"
+      :contentText="text['setting']['subHeader']"
     >
     </BaseHeader>
     <div class="body">
@@ -11,7 +11,7 @@
         <AppearanceSettingView v-if="selectedMenu == 2" />
         <HelpSettingView v-if="selectedMenu == 3" />
         <div class="right-side">
-          <div class="content-text title">Personal Settings &amp; Helps</div>
+          <div class="content-text title">{{ text["setting"]["header"] }}</div>
           <div class="menus" v-for="(menu, index) in menus" :key="menu.id">
             <div class="menu" @click="onClickMenu(menu.id)">
               <div
@@ -20,7 +20,7 @@
                   selectedMenu == menu.id ? { backgroundColor: '#7452FF' } : {}
                 "
               >
-                <i :class="menu.icon"></i>
+                <i :class="menu.icon"></i><i class="flag flag-united-states"></i>
               </div>
               <div class="content">
                 <div
@@ -70,33 +70,13 @@ export default {
   name: "SettingView",
   data() {
     return {
+      text: null,
+      lang: null,
       isShowComposeButton: false,
       user: null,
       selectedMenu: 1,
       isMobile: false,
-      menus: [
-        {
-          id: 1,
-          header: "Account Settings",
-          tooltip: "Account Settings",
-          detail: "Personal Information",
-          icon: "fa-solid fa-user",
-        },
-        {
-          id: 2,
-          header: "Appearances",
-          tooltip: "Appearances",
-          detail: "Dark and Light Mode",
-          icon: "fa-solid fa-wand-magic-sparkles",
-        },
-        {
-          id: 3,
-          header: "Helps & Instructions",
-          tooltip: "Helps & Instructions",
-          detail: "FAQ and Instructions",
-          icon: "fa-solid fa-info",
-        },
-      ],
+      menus: null,
     };
   },
   methods: {
@@ -119,6 +99,37 @@ export default {
     if (localStorage.getItem("setting_menu")) {
       this.selectedMenu = localStorage.getItem("setting_menu");
     }
+    this.menus = [
+      {
+        id: 1,
+        header: this.text["setting"]["accountHeader"],
+        tooltip: this.text["setting"]["accountHeader"],
+        detail: this.text["setting"]["accountSubHeader"],
+        icon: "fa-solid fa-user",
+      },
+      {
+        id: 2,
+        header: this.text["setting"]["appearanceHeader"],
+        tooltip: this.text["setting"]["appearanceHeader"],
+        detail: this.text["setting"]["appearanceSubHeader"],
+        icon: "fa-solid fa-wand-magic-sparkles",
+      },
+      {
+        id: 3,
+        header: this.text["setting"]["helpHeader"],
+        tooltip: this.text["setting"]["helpHeader"],
+        detail: this.text["setting"]["helpSubHeader"],
+        icon: "fa-solid fa-info",
+      },
+    ];
+  },
+  beforeMount() {
+    if (this.$cookies.get("lang")) {
+      this.lang = this.$cookies.get("lang");
+    } else {
+      this.lang = "en";
+    }
+    this.text = require(`@/assets/langs/${this.lang}.json`);
   },
 };
 </script>

@@ -1,17 +1,17 @@
 <template>
   <div class="home">
     <BaseHeader
-      :headerText="`Remaining Meetings`"
-      :contentText="`This screen show overall of meeting and the executives who you take a responsibility.`"
+      :headerText="`${text['home']['header']}`"
+      :contentText="`${text['home']['subHeader']}`"
     >
     </BaseHeader>
     <div class="body">
       <div class="mention">
         <div class="welcome">
           <div class="say-hi">
-            Hi, <span>{{ user }}</span>
+            {{text['home']['greeting']}}, <span>{{ user }}</span>
           </div>
-          <div class="num-mention">You have 2 meetings today</div>
+          <div class="num-mention">{{text['home']['preNumMeeting']}} 2 {{text['home']['postNumMeeting']}}</div>
         </div>
         <div class="profile-image" v-if="$store.state.myProfilePic">
           <img
@@ -32,7 +32,7 @@
       </div>
       <div class="first-body-section grid">
           <div class="create-meeting-card">
-            <div class="remark-text">Start meetings</div>
+            <div class="remark-text">{{text['home']['startMeeting']}}</div>
             <div class="card">
               <div class="image">
                 <img
@@ -42,12 +42,12 @@
               </div>
               <div class="card-content">
                 <div class="remark-text">
-                  Let’s create meeting schedule right now!
+                  {{text['home']['letCreateMeeting']}}
                 </div>
                 <BaseButton
                   class="mobile-button"
                   buttonType="common-button"
-                  btnText="Create meeting"
+                  :btnText="text['home']['createMeeting']"
                   textColor="#18181A"
                   textHover="white"
                   color="white"
@@ -63,10 +63,10 @@
             </div>
           </div>
           <div class="executives-card">
-            <div class="remark-text">Executives</div>
+            <div class="remark-text">{{text['home']['executives']}}</div>
             <div class="card">
               <div class="card-content">
-                <div class="remark-text">Your Executives</div>
+                <div class="remark-text">{{text['home']['yourExecutive']}}</div>
                 <div class="executives" v-if="getExecutivesList.length != 0">
                   <div
                     v-for="(executive, index) in getExecutivesList"
@@ -124,12 +124,12 @@
                   </div>
                 </div>
                 <div v-else class="no-executive bold-small-text">
-                  There is not executive
+                  {{text['home']['noExecutive']}}
                 </div>
                 <div class="executive-buttons">
                   <BaseButton
                     buttonType="common-button"
-                    btnText="Add executive"
+                    :btnText="text['home']['addExecutive']"
                     textColor="white"
                     textHover="white"
                     color="#7452FF"
@@ -145,7 +145,7 @@
                   >
                   <BaseButton
                     buttonType="outlined-button"
-                    btnText="Show all"
+                    :btnText="text['home']['showExecutive']"
                     textColor="#7452FF"
                     textHover="white"
                     color="#7452FF"
@@ -165,7 +165,7 @@
             </div>
           </div>
           <div class="calendar-card">
-            <div class="remark-text">Calendar</div>
+            <div class="remark-text">{{text['home']['calendar']}}</div>
             <div class="card">
               <vue-cal
                 class="vuecal--date-picker vuecal--violet-theme"
@@ -182,9 +182,9 @@
       </div>
       <div class="second-body-section">
         <div class="title-section">
-          <div class="remark-text">Incoming meetings</div>
+          <div class="remark-text">{{text['home']['incomingMeeting']}}</div>
           <div class="common-text">
-            See all meetings<i class="icon fa-solid fa-chevron-right"></i>
+            {{text['home']['seeAllMeeting']}}<i class="icon fa-solid fa-chevron-right"></i>
           </div>
         </div>
         <div class="incoming-meetings">
@@ -214,7 +214,7 @@
         <div class="mobile-see remark-text">
           <BaseButton
             buttonType="common-button"
-            btnText="See all meetings"
+            :btnText="text['home']['seeAllMeeting']"
             textColor="#7452FF"
             textHover="white"
             color="#DBD2FF"
@@ -245,6 +245,8 @@ export default {
   name: "HomeView",
   data() {
     return {
+      text: null,
+      lang: null,
       profileImage: null,
       user: "",
       urlImage: this.$store.state.imageURL,
@@ -340,6 +342,10 @@ export default {
       "getExecutivePosition",
       "getProfileImage",
     ]),
+    changeLanguage() {
+      this.lang = this.$cookies.set("lang", "th");
+      window.location.reload()
+    },
     navToCreateMeeting() {
       localStorage.setItem("index", 1);
       this.$router.push({ path: "/meetings-management" });
@@ -374,6 +380,14 @@ export default {
       `;
     }
   },
+  beforeMount() {
+    if (this.$cookies.get("lang")) {
+      this.lang = this.$cookies.get("lang");
+    } else {
+      this.lang = "en"
+    }
+    this.text = require(`@/assets/langs/${this.lang}.json`);
+  }
 };
 </script>
 <style lang="scss" scoped>

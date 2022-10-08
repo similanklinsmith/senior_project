@@ -1,12 +1,12 @@
 <template>
   <div>
     <div class="first-body-section">
-      <div class="mobile remark-text">Create meeting</div>
+      <div class="mobile remark-text">{{text['meeting']['header']}}</div>
       <div class="card-section">
         <div class="input-mobile-button">
           <BaseButton
             buttonType="common-button"
-            btnText="Send Poll"
+            :btnText="text['createPoll']['mobileSend']"
             textColor="white"
             textHover="white"
             color="#7452FF"
@@ -18,10 +18,10 @@
         </div>
         <div class="add-attendees">
           <div class="bold-content-text">
-            Add attendees<span class="required">*</span>
+            {{text['createPoll']['addAttendee']}}<span class="required">*</span>
             <div class="bold-small-text required">{{ errors.attendees }}</div>
           </div>
-          <div class="small-text required-attendees">Required attendees</div>
+          <div class="small-text required-attendees">{{text['createPoll']['requiredAttendee']}}</div>
           <div class="selected-attendees">
             <div
               class="selected-attendee"
@@ -60,18 +60,18 @@
           </div>
           <div class="action-add" @click="isAddAttendees = true">
             <i class="fa-solid fa-user-plus"></i>
-            <div class="small-text">Add required attendees</div>
+            <div class="small-text">{{text['createPoll']['addRequiredAttendee']}}</div>
           </div>
         </div>
         <form @submit.prevent="handleSendPoll" class="add-details">
           <div class="input-form">
             <label for="title" class="bold-small-text"
-              >Title<span class="required">*</span></label
+              >{{text['createPoll']['title']}}<span class="required">*</span></label
             >
             <input
               class="small-text"
               type="text"
-              placeholder="Title"
+              :placeholder="text['createPoll']['title']"
               id="title"
               name="title"
               v-model="form.title"
@@ -81,7 +81,7 @@
           <div class="input-form-row">
             <div class="input">
               <label for="date" class="bold-small-text"
-                >Date Slot<span class="required"
+                >{{text['createPoll']['dateSlot']}}<span class="required"
                   >*</span
                 ></label
               >
@@ -99,12 +99,12 @@
             </div>
             <div class="input">
               <label for="duration" class="bold-small-text"
-                >Durations of meeting<span class="required"
+                >{{text['createPoll']['duration']}}<span class="required"
                   >*</span
                 ></label
               >
               <select name="duration" id="duration" v-model="form.duration">
-                <option value="">none</option>
+                <option value="">{{text['input']['none']}}</option>
                 <option value="1">1 hour</option>
                 <option value="1.5">1.5 hour</option>
                 <option value="2">2 hours</option>
@@ -124,7 +124,7 @@
           <div class="input-form-row" v-if="form.dateSlot">
             <div class="input">
               <label for="due" class="bold-small-text"
-                >Due Date<span class="required"
+                >{{text['createPoll']['dueDate']}}<span class="required"
                   >*</span
                 ></label
               >
@@ -144,7 +144,7 @@
             <div></div>
             <BaseButton
               buttonType="common-button"
-              btnText="Send Poll"
+              :btnText="text['createPoll']['mobileSend']"
               textColor="white"
               textHover="white"
               color="#7452FF"
@@ -162,14 +162,14 @@
       </transition>
       <transition name="route" appear>
         <div class="pop-up">
-          <div class="remark-text">Required attendees</div>
+          <div class="remark-text">{{text['createPoll']['requiredAttendee']}}</div>
           <div class="search-filter">
             <div class="input-icon">
               <i class="icon fa-solid fa-magnifying-glass"></i>
               <input
                 class="small-text"
                 type="text"
-                placeholder="Search by name"
+                :placeholder="text['createPoll']['searchName']"
                 v-model="searchInput"
               />
             </div>
@@ -179,7 +179,7 @@
               v-if="getterLoadingStatus"
               class="remark-text not-found loading"
             >
-              Loading...
+              {{text['createPoll']['loading']}}
             </div>
             <div
               class="list-checkbox content-text"
@@ -225,13 +225,13 @@
               </transition-group>
             </div>
             <transition v-else name="route">
-              <div class="remark-text not-found">Not Found</div>
+              <div class="remark-text not-found">{{text['createPoll']['notFound']}}</div>
             </transition>
           </div>
           <div class="button-action">
             <BaseButton
               buttonType="common-button"
-              btnText="Confirm"
+              :btnText="text['createPoll']['confirm']"
               textColor="white"
               textHover="white"
               color="#7452FF"
@@ -245,10 +245,10 @@
       </transition>
     </teleport>
     <BaseAlert v-if="getterSuccess" :status="`success`">
-      Poll is succesfully created
+      {{text['createPoll']['success']}}
     </BaseAlert>
     <BaseAlert v-if="getterFailed" :status="`failed`">
-      Poll is failed create
+      {{text['createPoll']['failed']}}
     </BaseAlert>
       <teleport to="#portal-target" v-if="isLoading">
         <div class="modal">
@@ -264,7 +264,7 @@
                   alt="sending illustrations"
                 />
               </div>
-              <div class="remark-text" style="color: white">Sending the poll meeting...</div>
+              <div class="remark-text" style="color: white">{{text['createPoll']['sending']}}</div>
             </div>
           </div>
         </div>
@@ -295,6 +295,8 @@ export default {
   },
   data() {
     return {
+      text: null,
+      lang: null,
       urlImage: this.$store.state.imageURL,
       isAddAttendees: false,
       tempAttendees: [],
@@ -416,6 +418,14 @@ export default {
     this.getExecutives();
     this.getExecutiveTitle();
   },
+  beforeMount() {
+    if (this.$cookies.get("lang")) {
+      this.lang = this.$cookies.get("lang");
+    } else {
+      this.lang = "en"
+    }
+    this.text = require(`@/assets/langs/${this.lang}.json`);
+  }
 };
 </script>
 

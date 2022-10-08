@@ -4,7 +4,7 @@
       <div class="slot">
         <BaseButton
           buttonType="common-button"
-          btnText="Accepted"
+          :btnText="text['confirmed']['accepted']"
           textColor="white"
           textHover="white"
           color="#39CF5A"
@@ -51,13 +51,13 @@
             showAttendees('accepted', response.accepted, response.dateTime)
           "
         >
-          {{ "accepted" in response ? response.accepted?.length : 0 }} responses
+          {{ "accepted" in response ? response.accepted?.length : 0 }} {{text['confirmed']['responses']}}
         </div>
       </div>
       <div class="slot">
         <BaseButton
           buttonType="common-button"
-          btnText="Declined"
+          :btnText="text['confirmed']['declined']"
           textColor="white"
           textHover="white"
           color="#F33C3C"
@@ -104,13 +104,13 @@
             showAttendees('declined', response.declined, response.dateTime)
           "
         >
-          {{ "declined" in response ? response.declined?.length : 0 }} responses
+          {{ "declined" in response ? response.declined?.length : 0 }} {{text['confirmed']['responses']}}
         </div>
       </div>
       <div class="slot">
         <BaseButton
           buttonType="common-button"
-          btnText="Not response"
+          :btnText="text['confirmed']['notResponse']"
           textColor="white"
           textHover="white"
           color="#C4C4C4"
@@ -159,7 +159,7 @@
           "
         >
           {{ "notResponse" in response ? response.notResponse?.length : 0 }}
-          responses
+          {{text['confirmed']['responses']}}
         </div>
       </div>
     </div>
@@ -170,14 +170,14 @@
         <div
           class="bold-small-text"
           :style="
-            label == 'Accepted'
+            label == text['confirmed']['accepted']
               ? { color: '#39CF5A' }
-              : label == 'Declined'
+              : label == text['confirmed']['declined']
               ? { color: '#F33C3C' }
               : { color: '#C4C4C4' }
           "
         >
-          {{ label }}<span> ({{ showAttendeeList.length }} responses)</span>
+          {{ label }}<span> ({{ showAttendeeList.length }} {{text['confirmed']['responses']}})</span>
         </div>
         <div class="search-filter">
           <div class="input-icon">
@@ -185,7 +185,7 @@
             <input
               class="small-text"
               type="text"
-              placeholder="Search by name"
+              :placeholder="text['confirmed']['placeholderName']"
               v-model="searchInput"
             />
           </div>
@@ -228,7 +228,7 @@
             </transition-group>
           </div>
           <transition v-else name="route">
-            <div class="remark-text not-found">Not Found</div>
+            <div class="remark-text not-found">{{text['confirmed']['notFound']}}</div>
           </transition>
         </div>
       </div>
@@ -245,6 +245,8 @@ export default {
   props: ["response"],
   data() {
     return {
+      text: null,
+      lang: null,
       urlImage: this.$store.state.imageURL,
       colorsList: ["#23106D", "#7452FF", "#DBD2FF"],
       isShowAttendees: false,
@@ -279,13 +281,13 @@ export default {
       this.showDateTime = dateTime;
       switch (type) {
         case "accepted":
-          this.label = "Accepted";
+          this.label = this.text['confirmed']['accepted'];
           break;
         case "declined":
-          this.label = "Declined";
+          this.label = this.text['confirmed']['declined'];
           break;
         case "not-response":
-          this.label = "Not response";
+          this.label = this.text['confirmed']['notResponse'];
           break;
         default:
           this.label = "Error";
@@ -301,7 +303,14 @@ export default {
       this.$emit("showSchedule", this.response.dateTime);
     },
   },
-  mounted() {},
+  beforeMount() {
+    if (this.$cookies.get("lang")) {
+      this.lang = this.$cookies.get("lang");
+    } else {
+      this.lang = "en"
+    }
+    this.text = require(`@/assets/langs/${this.lang}.json`);
+  }
 };
 </script>
 

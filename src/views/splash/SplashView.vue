@@ -11,7 +11,7 @@
           alt="splash illustrations"
         />
       </div>
-      <div class="remark-text">just a moment...</div>
+      <div class="remark-text">{{text['splash']['wait']}}</div>
     </div>
   </div>
 </template>
@@ -20,6 +20,8 @@
 export default {
   data() {
     return {
+      text: null,
+      lang: null,
       isLoaded: false,
     };
   },
@@ -34,6 +36,14 @@ export default {
     closeModal() {
       this.$emit("closeModal");
     },
+  },
+  beforeMount() {
+    if (this.$cookies.get("lang")) {
+      this.lang = this.$cookies.get("lang");
+    } else {
+      this.lang = "en";
+    }
+    this.text = require(`@/assets/langs/${this.lang}.json`);
   },
 };
 </script>

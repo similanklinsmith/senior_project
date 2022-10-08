@@ -5,7 +5,7 @@
     </transition>
     <transition name="route" appear>
       <div class="pop-up">
-        <div class="remark-text">My Executives</div>
+        <div class="remark-text">{{text['executive']['headerTab']}}</div>
         <div class="search-filter">
           <div class="input-icon">
             <i class="icon fa-solid fa-magnifying-glass"></i>
@@ -13,7 +13,7 @@
               id="search-input"
               class="small-text"
               type="text"
-              placeholder="Search by name"
+              :placeholder="text['executive']['placeholder']"
               v-model="searchInput"
               @focus="onFocus"
               @blur="onBlur"
@@ -22,7 +22,7 @@
         </div>
         <div class="pop-up-content">
           <div v-if="getterLoadingStatus" class="remark-text not-found loading">
-            Loading...
+            {{text['executive']['loading']}}
           </div>
           <div
             class="list-checkbox content-text"
@@ -68,7 +68,7 @@
             </transition-group>
           </div>
           <transition v-else name="route">
-            <div class="remark-text not-found">Not Found</div>
+            <div class="remark-text not-found">{{text['executive']['notFound']}}</div>
           </transition>
         </div>
       </div>
@@ -83,6 +83,8 @@ export default {
   emits: ["onClickCloseSearch", "onClickSelectExecutive"],
   data() {
     return {
+      text: null,
+      lang: null,
       urlImage: this.$store.state.imageURL,
       searchInput: "",
       selectedExecutive: [],
@@ -110,10 +112,10 @@ export default {
   methods: {
     ...mapActions(["getExecutiveTitle", "getExecutivePosition"]),
     onFocus() {
-      document.getElementById("search-input").placeholder = "Type to find...";
+      document.getElementById("search-input").placeholder = this.text['executive']['focusSearch'];
     },
     onBlur() {
-      document.getElementById("search-input").placeholder = "Search by name";
+      document.getElementById("search-input").placeholder = this.text['executive']['placeholder'];
     },
     formatTitle(str) {
       return this.getterExecutiveTitles[str];
@@ -132,6 +134,14 @@ export default {
     this.getExecutiveTitle();
     this.getExecutivePosition();
   },
+  beforeMount() {
+    if (this.$cookies.get("lang")) {
+      this.lang = this.$cookies.get("lang");
+    } else {
+      this.lang = "en"
+    }
+    this.text = require(`@/assets/langs/${this.lang}.json`);
+  }
 };
 </script>
 

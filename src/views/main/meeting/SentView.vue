@@ -9,7 +9,7 @@
               id="search-input-sent"
               class="small-text"
               type="text"
-              placeholder="Search by title"
+              :placeholder="text['sent']['placeholder']"
               v-model="searchInput"
               @focus="onFocus"
               @blur="onBlur"
@@ -27,7 +27,7 @@
           <ul>
             <li>
               <div class="input">
-                <label for="due" class="bold-small-text">Date within</label>
+                <label for="due" class="bold-small-text">{{text['sent']['dateWithin']}}</label>
                 <litepie-datepicker
                   id="due"
                   as-single
@@ -41,7 +41,7 @@
             <li>
               <BaseButton
                 buttonType="common-button"
-                btnText="Search"
+                :btnText="text['sent']['search']"
                 textColor="#23106D"
                 textHover="#23106D"
                 color="#DBD2FF"
@@ -56,9 +56,9 @@
       </div>
       <div class="filter-show">
         <div class="small-text">
-          <span v-if="filterDate">With in: {{ filterDate }}</span>
+          <span v-if="filterDate">{{text['sent']['within']}}: {{ filterDate }}</span>
         </div>
-        <div class="small-text">Results: {{ filterByTitle.length }}</div>
+        <div class="small-text">{{text['sent']['results']}}: {{ filterByTitle.length }}</div>
       </div>
       <div class="inbox-list">
         <transition-group name="route">
@@ -68,12 +68,12 @@
             :id="inbox.id"
             :title="inbox.title"
             :time="inbox.create_at"
-            :content="'sent poll appointment'"
+            :content="text['sent']['sentPoll']"
             :selectedId="selectedId"
             @selectInbox="selectInbox"
           />
           <div v-if="filterByTitle.length == 0" class="remark-text not-found">
-            Not found
+            {{text['sent']['notFound']}}
           </div>
         </transition-group>
       </div>
@@ -87,13 +87,13 @@
           >
             <div class="title remark-text">{{ selectedInbox.title }}</div>
             <div class="sent-from smallest-text">
-              has already sent by you on
+              {{text['sent']['sentByYou']}}
               {{ formatDateTime(selectedInbox.create_at) }}
             </div>
             <div class="line"></div>
             <div class="content">
               <div class="attendees">
-                <div class="bold-small-text">Attendees:</div>
+                <div class="bold-small-text">{{text['sent']['attendees']}}:</div>
                 <div
                   class="small-text attendee-list"
                   v-for="(attendee, index) in selectedInbox.attendees.slice(
@@ -112,22 +112,22 @@
                   v-if="selectedInbox.attendees.length > 2"
                   @click="showAllAttendee"
                   ><div v-if="!isShowMore">
-                    show more &#40;{{ selectedInbox.attendees.length - 2 }}&#41;
+                    {{text['sent']['showMore']}} &#40;{{ selectedInbox.attendees.length - 2 }}&#41;
                   </div>
-                  <div v-else>show less</div></span
+                  <div v-else>{{text['sent']['showLess']}}</div></span
                 >
               </div>
               <div class="time-slots">
-                <div class="bold-small-text faded">Timeslots</div>
+                <div class="bold-small-text faded">{{text['sent']['timeSlot']}}</div>
                 <div class="slot">
                   <div class="start">
-                    <div class="bold-small-text">Start Date:</div>
+                    <div class="bold-small-text">{{text['sent']['startDate']}}:</div>
                     <div class="small-text">
                       {{ selectedInbox.start_date.split("T")[0] }}
                     </div>
                   </div>
                   <div class="end">
-                    <div class="bold-small-text">End Date:</div>
+                    <div class="bold-small-text">{{text['sent']['endDate']}}:</div>
                     <div class="small-text">
                       {{ selectedInbox.end_date.split("T")[0] }}
                     </div>
@@ -135,21 +135,21 @@
                 </div>
               </div>
               <div class="duration">
-                <div class="bold-small-text">Durations of meeting:</div>
+                <div class="bold-small-text">{{text['sent']['duration']}}:</div>
                 <div class="small-text">
-                  {{ selectedInbox.duration_of_time.toString().split(".")[0] }}hr
-                  <span v-if="selectedInbox.duration_of_time.toString().split('.')[1]">{{ selectedInbox.duration_of_time.toString().split(".")[1]*6 }}min</span>
+                  {{ selectedInbox.duration_of_time.toString().split(".")[0] }} {{text['sent']['hour']}}
+                  <span v-if="selectedInbox.duration_of_time.toString().split('.')[1]">{{ selectedInbox.duration_of_time.toString().split(".")[1]*6 }} {{text['sent']['minute']}}</span>
                 </div>
               </div>
               <div class="due-date">
-                <div class="bold-small-text">Due Date:</div>
+                <div class="bold-small-text">{{text['sent']['dueDate']}}:</div>
                 <div class="small-text">
                   {{ selectedInbox.due_date_time.split("T")[0] }}
                   <div class="remaining-day">
                     &#40;{{
                       calculateRemainingDay(selectedInbox.due_date_time)
                     }}
-                    days remaining&#41;
+                    {{text['sent']['dayRemain']}}&#41;
                   </div>
                 </div>
               </div>
@@ -160,7 +160,7 @@
             >
               <BaseButton
                 buttonType="common-button"
-                btnText="Delete Poll"
+                :btnText="text['sent']['deletePoll']"
                 textColor="white"
                 textHover="white"
                 color="#F33C3C"
@@ -171,7 +171,7 @@
               </BaseButton>
             </div>
           </div>
-          <div v-else class="remark-text not-found loading">Loading...</div>
+          <div v-else class="remark-text not-found loading">{{text['sent']['loading']}}</div>
         </div>
       </div>
     </transition>
@@ -181,15 +181,15 @@
       :image="require(`@/assets/decorations/delete_executive.png`)"
     >
       <template v-slot:popupContent>
-        This Poll(<span :style="{ color: '#C4C4C4 !important' }">{{
+        {{text['sent']['prePopupText']}}(<span :style="{ color: '#C4C4C4 !important' }">{{
           selectedInbox.title
         }}</span
-        >) will be deleted immediately after confirming!
+        >) {{text['sent']['postPopupText']}}
       </template>
       <template v-slot:buttons>
         <BaseButton
           buttonType="common-button"
-          btnText="Confirm delete"
+          :btnText="text['sent']['confirmDelete']"
           textColor="white"
           textHover="white"
           color="#F33C3C"
@@ -200,7 +200,7 @@
         </BaseButton>
         <BaseButton
           buttonType="outlined-button"
-          btnText="Cancel"
+          :btnText="text['sent']['cancel']"
           textColor="#F33C3C"
           textHover="white"
           color="#F33C3C"
@@ -212,10 +212,10 @@
       </template>
     </BasePopup>
     <BaseAlert v-if="getterSuccess" :status="`success`">
-      Poll is succesfully deleted
+      {{text['sent']['success']}}
     </BaseAlert>
     <BaseAlert v-if="getterFailed" :status="`failed`">
-      Poll is failed to delete
+      {{text['sent']['failed']}}
     </BaseAlert>
   </div>
 </template>
@@ -254,6 +254,8 @@ export default {
   },
   data() {
     return {
+      text: null,
+      lang: null,
       searchInput: "",
       selectedInbox: null,
       selectedId: null,
@@ -300,10 +302,10 @@ export default {
   methods: {
     ...mapActions(["getMyPolls", "getMyPollDetail", "getExecutiveTitle"]),
     onFocus() {
-      document.getElementById("search-input-sent").placeholder = "Type to find...";
+      document.getElementById("search-input-sent").placeholder = this.text['sent']['focusSearch'];
     },
     onBlur() {
-      document.getElementById("search-input-sent").placeholder = "Search by title";
+      document.getElementById("search-input-sent").placeholder = this.text['sent']['placeholder'];
     },
     toggleDropdown() {
       this.isShowDropdown = !this.isShowDropdown;
@@ -376,6 +378,14 @@ export default {
     this.getMyPolls();
     this.getExecutiveTitle();
   },
+  beforeMount() {
+    if (this.$cookies.get("lang")) {
+      this.lang = this.$cookies.get("lang");
+    } else {
+      this.lang = "en"
+    }
+    this.text = require(`@/assets/langs/${this.lang}.json`);
+  }
 };
 </script>
 

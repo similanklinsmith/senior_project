@@ -5,10 +5,10 @@
         <div class="input-icon">
           <i class="icon fa-solid fa-magnifying-glass"></i>
           <input
-            id="search-input"
+            id="search-input-inbox"
             class="small-text"
             type="text"
-            placeholder="Search by title"
+            :placeholder="text['inbox']['placeholder']"
             v-model="searchInput"
             @focus="onFocus"
             @blur="onBlur"
@@ -115,8 +115,14 @@
                   <i class="icon fa-solid fa-file"></i>
                 </div>
                 <div class="file-details">
-                  <div class="file-name bold-smallest-text">{{selectedInbox.file.title}}.{{selectedInbox.file.fileType}}</div>
-                  <div class="file-size smallest-text">{{formatFileSize(selectedInbox.file.size)}}</div>
+                  <div class="file-name bold-smallest-text">
+                    {{ selectedInbox.file.title }}.{{
+                      selectedInbox.file.fileType
+                    }}
+                  </div>
+                  <div class="file-size smallest-text">
+                    {{ formatFileSize(selectedInbox.file.size) }}
+                  </div>
                 </div>
               </div>
               <div class="file-download">
@@ -137,14 +143,14 @@ import {
   formatDateTimeHeader,
   formatDateTimeInbox,
 } from "@/helpers/formatDateTime";
-import {
-  formatBytes
-} from "@/helpers/formatFileSize";
+import { formatBytes } from "@/helpers/formatFileSize";
 export default {
   name: "InboxView",
   components: { InboxComp },
   data() {
     return {
+      text: null,
+      lang: null,
       searchInput: "",
       slice: 3,
       isShowMore: false,
@@ -201,10 +207,10 @@ export default {
       navigator.clipboard.writeText(copyText);
     },
     onFocus() {
-      document.getElementById("search-input").placeholder = "Type to find...";
+      document.getElementById("search-input-inbox").placeholder = this.text['inbox']['focusSearch'];
     },
     onBlur() {
-      document.getElementById("search-input").placeholder = "Search by title";
+      document.getElementById("search-input-inbox").placeholder = this.text['inbox']['placeholder'];
     },
   },
   mounted() {
@@ -309,6 +315,14 @@ export default {
           time: "2022-05-15T07:40:32.000Z",
         },
       ]);
+  },
+  beforeMount() {
+    if (this.$cookies.get("lang")) {
+      this.lang = this.$cookies.get("lang");
+    } else {
+      this.lang = "en";
+    }
+    this.text = require(`@/assets/langs/${this.lang}.json`);
   },
 };
 </script>

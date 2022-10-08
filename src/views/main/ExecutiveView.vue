@@ -1,13 +1,13 @@
 <template>
   <div class="executive-screen">
     <BaseHeader
-      :headerText="`Overall Executives`"
-      :contentText="`This screen has features to show, add, edit, and delete your executives`"
+      :headerText="text['executive']['header']"
+      :contentText="text['executive']['subHeader']"
     >
       <BaseButton
         class="laptop"
         buttonType="common-button"
-        btnText="Add executive +"
+        :btnText="text['executive']['addExecutive']"
         textColor="#23106D"
         textHover="white"
         color="#DBD2FF"
@@ -27,7 +27,7 @@
                 id="search-input-executive"
                 class="small-text"
                 type="text"
-                placeholder="Search by name"
+                :placeholder="text['executive']['placeholder']"
                 v-model="searchInput"
                 @focus="onFocus"
                 @blur="onBlur"
@@ -59,14 +59,14 @@
                 v-if="filterByName.length == 0"
                 class="remark-text not-found"
               >
-                Not found
+                {{text['executive']['notFound']}}
               </div>
             </transition-group>
             <div
               v-if="getterLoadingStatus"
               class="remark-text not-found loading"
             >
-              Loading...
+              {{text['executive']['loading']}}
             </div>
           </div>
         </div>
@@ -89,18 +89,18 @@
                   <div class="icon-container">
                     <i class="icon fa-solid fa-pencil"></i>
                   </div>
-                  <div class="thin-content-text">Edit profile</div>
+                  <div class="thin-content-text">{{text['executive']['editDropdown']}}</div>
                 </li>
                 <li><div class="line" /></li>
                 <li class="red-color" @click="isShowPopup = true">
                   <div class="icon-container-red">
                     <i class="icon fa-solid fa-user-minus"></i>
                   </div>
-                  <div class="thin-content-text">Delete executive</div>
+                  <div class="thin-content-text">{{text['executive']['deleteDropdown']}}</div>
                 </li>
               </ul>
             </div>
-            <div v-if="isLoading" class="remark-text loading">Loading...</div>
+            <div v-if="isLoading" class="remark-text loading">{{text['executive']['loading']}}</div>
             <div class="executive-card grid" v-if="isLoading == false">
               <div class="left-side">
                 <div
@@ -134,10 +134,10 @@
                 </div>
               </div>
               <div class="right-side">
-                <div class="content-text title">Official Information</div>
+                <div class="content-text title">{{text['executive']['information']}}</div>
                 <div class="email">
                   <div class="label bold-content-text">
-                    Email
+                    {{text['executive']['email']}}
                     <div @click="copyLink('email-value')">
                       <i class="icon fa-regular fa-copy"></i>
                     </div>
@@ -148,7 +148,7 @@
                 </div>
                 <div class="phone">
                   <div class="label bold-content-text">
-                    Phone number
+                    {{text['executive']['phone']}}
                     <div @click="copyLink('phone-value')">
                       <i class="icon fa-regular fa-copy"></i>
                     </div>
@@ -159,7 +159,7 @@
                 </div>
                 <div class="secretary">
                   <div class="label bold-content-text">
-                    Report to
+                    {{text['executive']['reportTo']}}
                     <div @click="copyLink('secretary-value')">
                       <i class="icon fa-regular fa-copy"></i>
                     </div>
@@ -251,12 +251,12 @@
               <div class="input">
                 <div class="input-form">
                   <label for="title" class="bold-small-text"
-                    >Title<span class="required"
+                    >{{text['executive']['title']}}<span class="required"
                       >*</span
                     ></label
                   >
                   <select name="title" id="title" v-model="form.title">
-                    <option value="">none</option>
+                    <option value="">{{text['input']['none']}}</option>
                     <option
                       v-for="(title, index) in getterExecutiveTitles"
                       :key="title"
@@ -269,14 +269,14 @@
                 </div>
                 <div class="input-form">
                   <label for="name" class="bold-small-text"
-                    >Name<span class="required"
+                    >{{text['executive']['name']}}<span class="required"
                       >*</span
                     ></label
                   >
                   <input
                     class="small-text"
                     type="text"
-                    placeholder="Name"
+                    :placeholder="text['executive']['name']"
                     id="name"
                     name="name"
                     @keydown.space.prevent
@@ -288,14 +288,14 @@
               <div class="input">
                 <div class="input-form">
                   <label for="surname" class="bold-small-text"
-                    >Surname<span class="required"
+                    >{{text['executive']['surname']}}<span class="required"
                       >*</span
                     ></label
                   >
                   <input
                     class="small-text"
                     type="text"
-                    placeholder="Surname"
+                    :placeholder="text['executive']['surname']"
                     id="surname"
                     name="surname"
                     @keydown.space.prevent
@@ -305,12 +305,12 @@
                 </div>
                 <div class="input-form">
                   <label for="position" class="bold-small-text"
-                    >Position<span class="required"
+                    >{{text['executive']['position']}}<span class="required"
                       >*</span
                     ></label
                   >
                   <select name="position" id="position" v-model="form.position">
-                    <option value="">none</option>
+                    <option value="">{{text['input']['none']}}</option>
                     <option
                       v-for="(position, index) in getterExecutivePositions"
                       :key="position"
@@ -325,14 +325,14 @@
               <div class="input">
                 <div class="input-form">
                   <label for="email" class="bold-small-text"
-                    >Email<span class="required"
+                    >{{text['executive']['email']}}<span class="required"
                       >*</span
                     ></label
                   >
                   <input
                     class="small-text"
                     type="text"
-                    placeholder="Email"
+                    :placeholder="text['executive']['email']"
                     id="email"
                     name="email"
                     @keydown.space.prevent
@@ -342,7 +342,7 @@
                 </div>
                 <div class="input-form">
                   <label for="phone-number" class="bold-small-text"
-                    >Phone number<span class="required"
+                    >{{text['executive']['phone']}}<span class="required"
                       >*</span
                     ></label
                   >
@@ -361,7 +361,7 @@
               <div class="input">
                 <div class="input-form">
                   <label for="secretary" class="bold-small-text"
-                    >Report to</label
+                    >{{text['executive']['reportTo']}}</label
                   >
                   <input
                     class="small-text readonly"
@@ -379,7 +379,7 @@
                 <BaseButton
                   v-if="getExecutivesList.length != 0"
                   buttonType="outlined-button"
-                  btnText="Cancel"
+                  :btnText="text['executive']['cancel']"
                   textColor="#F33C3C"
                   textHover="white"
                   color="#F33C3C"
@@ -390,7 +390,7 @@
                 <div v-else :style="{ width: '100%' }"></div>
                 <BaseButton
                   buttonType="common-button"
-                  btnText="Create executive"
+                  :btnText="text['executive']['createExecutive']"
                   textColor="white"
                   textHover="white"
                   color="#7452FF"
@@ -401,7 +401,7 @@
                 </BaseButton>
                 <BaseButton
                   buttonType="common-button"
-                  btnText="Edit executive"
+                  :btnText="text['executive']['editDropdown']"
                   textColor="white"
                   textHover="white"
                   color="#7452FF"
@@ -422,15 +422,15 @@
       :image="require(`@/assets/decorations/delete_executive.png`)"
     >
       <template v-slot:popupContent>
-        This executive(<span :style="{ color: '#C4C4C4 !important' }">{{
+        {{text['executive']['preDeleteText']}}(<span :style="{ color: '#C4C4C4 !important' }">{{
           selectedExecutive.first_name
         }}</span
-        >) will be deleted immediately after confirming!
+        >) {{text['executive']['postDeleteText']}}
       </template>
       <template v-slot:buttons>
         <BaseButton
           buttonType="common-button"
-          btnText="Confirm delete"
+          :btnText="text['executive']['confirmDelete']"
           textColor="white"
           textHover="white"
           color="#F33C3C"
@@ -441,7 +441,7 @@
         </BaseButton>
         <BaseButton
           buttonType="outlined-button"
-          btnText="Cancel"
+          :btnText="text['executive']['cancel']"
           textColor="#F33C3C"
           textHover="white"
           color="#F33C3C"
@@ -458,13 +458,12 @@
       :image="require(`@/assets/decorations/not_found.png`)"
     >
       <template v-slot:popupContent>
-        Sorry, the file size of image exceeds maximum file-size(1MB). 
-        Please choose another pretty one.
+        {{text['executive']['fileSizeError']}}
       </template>
       <template v-slot:buttons>
         <BaseButton
           buttonType="common-button"
-          btnText="Ah, Okay"
+          :btnText="text['executive']['okay']"
           textColor="white"
           textHover="white"
           color="#F33C3C"
@@ -476,7 +475,7 @@
       </template>
     </BasePopup>
     <BaseAlert v-if="getterFailed" :status="`failed`">
-      Your actions are not executed properly
+      {{text['executive']['errorAction']}}
     </BaseAlert>
     <BaseExecutivesPopup
       :executives="getExecutivesList"
@@ -525,6 +524,8 @@ export default {
   props: ["isAdd", "showIndex"],
   data() {
     return {
+      text: null,
+      lang: null,
       isSearchMobile: false,
       urlImage: this.$store.state.imageURL,
       isLoading: false,
@@ -610,8 +611,8 @@ export default {
       "getExecutiveTitle",
       "getExecutivePosition",
     ]),
-    onFocus() {document.getElementById("search-input-executive").placeholder = "Type to find...";},
-    onBlur() {document.getElementById("search-input-executive").placeholder = "Search by name";},
+    onFocus() {document.getElementById("search-input-executive").placeholder = this.text['executive']['focusSearch'];},
+    onBlur() {document.getElementById("search-input-executive").placeholder = this.text['executive']['placeholder'];},
     formatPhoneNumber(str) {
       let cleaned = ("" + str).replace(/\D/g, "");
       let match = cleaned.length == 10 ? cleaned.match(/^(\d{3})(\d{3})(\d{4})$/) : cleaned.match(/^(\d{2})(\d{3})(\d{4})$/);
@@ -836,6 +837,14 @@ export default {
     window.onscroll = () => {this.isShowDropdown = false;};
     this.isAddExecutive = this.isAdd ? true : this.isAddExecutive;
   },
+  beforeMount() {
+    if (this.$cookies.get("lang")) {
+      this.lang = this.$cookies.get("lang");
+    } else {
+      this.lang = "en"
+    }
+    this.text = require(`@/assets/langs/${this.lang}.json`);
+  }
 };
 </script>
 <style lang="scss" scoped>

@@ -56,19 +56,20 @@ export default {
   data() {
     return {
       isToggled: false,
+      text: null
     };
   },
   computed: {
     getHeaderText() {
       switch (this.$route.name) {
         case "home":
-          return "Meeting Overview";
+          return this.text['home']['headerTab'];
         case "executive":
-          return "My executives";
+          return this.text['executive']['headerTab'];
         case "meeting":
-          return "My meetings";
+          return this.text['meeting']['headerTab'];
         case "setting":
-          return "My personal setting";
+          return this.text['setting']['headerTab'];
         default:
           return "Meeting Overview";
       }
@@ -87,6 +88,10 @@ export default {
   mounted() {
     this.$store.state.getAuth = getAuth();
     let htmlElement = document.documentElement;
+    if (!this.$cookies.get("lang")) {
+      this.$cookies.set("lang",'en');
+    }
+    this.text = require(`@/assets/langs/${this.$cookies.get("lang")}.json`);
     let theme = this.$cookies.get("mode");
     if (theme === "dark") {
       htmlElement.setAttribute("theme", "dark");

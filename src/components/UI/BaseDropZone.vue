@@ -7,9 +7,9 @@
     :class="{ 'active-dropzone': active }"
     class="dropzone"
   >
-    <span class="small-text">Drag or Drop File</span>
-    <span class="smallest-text">OR</span>
-    <label for="dropzoneFile" class="small-text">Select File</label>
+    <span class="small-text">{{text['confirmed']['dragDrop']}}</span>
+    <span class="smallest-text">{{text['confirmed']['or']}}</span>
+    <label for="dropzoneFile" class="small-text">{{text['confirmed']['selectFile']}}</label>
     <input type="file" id="dropzoneFile" class="dropzoneFile" />
   </div>
 </template>
@@ -24,6 +24,20 @@ export default {
     };
     return { active, toggleActive };
   },
+  data() {
+    return {
+      text: null,
+      lang: null,
+    }
+  },
+  beforeMount() {
+    if (this.$cookies.get("lang")) {
+      this.lang = this.$cookies.get("lang");
+    } else {
+      this.lang = "en"
+    }
+    this.text = require(`@/assets/langs/${this.lang}.json`);
+  }
 };
 </script>
 <style scoped lang="scss">

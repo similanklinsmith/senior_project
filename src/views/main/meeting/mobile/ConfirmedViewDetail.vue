@@ -8,12 +8,12 @@
     >
       <template v-slot:detail-slot>
         <div class="bold-small-text due-date">
-          <span>*</span>This poll meeting will be expired in
+          <span>*</span>{{text['confirmed']['expired']}}
           {{ inboxDetail.slots[0].date.split("T")[0] }}
           <span v-if="new Date(inboxDetail.slots[0].date) >= new Date()"
-            >({{ expiredCount }} days left)</span
+            >({{ expiredCount }} {{text['confirmed']['postDueDate']}})</span
           >
-          <span v-else>(Already expired)</span>
+          <span v-else>({{text['confirmed']['alreadyExpired']}})</span>
         </div>
         <div
           class="result"
@@ -35,7 +35,7 @@
               >
                 <BaseButton
                   buttonType="common-button"
-                  btnText="Show schedule"
+                  :btnText="text['confirmed']['showSchedule']"
                   textColor="white"
                   textHover="white"
                   color="#7452FF"
@@ -60,7 +60,7 @@
           <div class="container">
             <div class="first-col">
               <div class="suggested-time">
-                <div class="bold-content-text">Suggested time</div>
+                <div class="bold-content-text">{{text['confirmed']['suggestedTime']}}</div>
                 <div class="time-slot">
                   <div
                     class="slot"
@@ -95,7 +95,7 @@
               <BaseButton
                 v-if="isShowCalendar"
                 buttonType="common-button"
-                btnText="Close calendar"
+                :btnText="text['confirmed']['closeCalendar']"
                 textColor="white"
                 textHover="white"
                 color="#F33C3C"
@@ -110,7 +110,7 @@
               <BaseButton
                 v-else
                 buttonType="common-button"
-                btnText="Show calendar"
+                :btnText="text['confirmed']['showCalendar']"
                 textColor="#7452FF"
                 textHover="white"
                 color="#DBD2FF"
@@ -126,12 +126,12 @@
             <div class="second-col" v-if="isShowCalendar == false">
               <div class="form">
                 <div class="duration-container">
-                  <div class="bold-content-text">Create meeting</div>
+                  <div class="bold-content-text">{{text['confirmed']['createMeeting']}}</div>
                   <div class="duration bold-small-text">
-                    Required duration
+                    {{text['confirmed']['duration']}}
                     {{
                       inboxDetail.duration_of_time.toString().split(".")[0]
-                    }}hr
+                    }}{{text['confirmed']['hour']}}
                     <span
                       v-if="
                         inboxDetail.duration_of_time.toString().split('.')[1]
@@ -140,19 +140,19 @@
                         parseInt(
                           inboxDetail.duration_of_time.toString().split(".")[1]
                         ) * 6
-                      }}min</span
+                      }}{{text['confirmed']['minute']}}</span
                     >
                   </div>
                 </div>
                 <form @submit.prevent="handleCreateMeeting">
                   <div class="input-form" id="top">
                     <label for="title" class="bold-small-text"
-                      >Title<span class="required">*</span></label
+                      >{{text['confirmed']['title']}}<span class="required">*</span></label
                     >
                     <input
                       class="small-text"
                       type="text"
-                      placeholder="Title"
+                      :placeholder="text['confirmed']['title']"
                       id="title"
                       name="title"
                       v-model.trim="form.title"
@@ -163,12 +163,12 @@
                   </div>
                   <div class="input-form">
                     <label for="description" class="bold-small-text"
-                      >Description<span class="required">*</span></label
+                      >{{text['confirmed']['description']}}<span class="required">*</span></label
                     >
                     <textarea
                       class="small-text"
                       type="text"
-                      placeholder="Description"
+                      :placeholder="text['confirmed']['description']"
                       id="description"
                       name="description"
                       v-model="form.description"
@@ -179,11 +179,11 @@
                   </div>
                   <div class="row-input">
                     <div class="input-form">
-                      <label for="date" class="bold-small-text">Date</label>
+                      <label for="date" class="bold-small-text">{{text['confirmed']['date']}}</label>
                       <input
                         class="small-text readonly"
                         type="date"
-                        placeholder="date"
+                        :placeholder="text['confirmed']['date']"
                         id="date"
                         name="date"
                         :value="form.date"
@@ -192,7 +192,7 @@
                     </div>
                     <div class="input-form">
                       <label for="from" class="bold-small-text"
-                        >From<span class="required">*</span></label
+                        >{{text['confirmed']['from']}}<span class="required">*</span></label
                       >
                       <input
                         class="small-text"
@@ -208,7 +208,7 @@
                       </div>
                     </div>
                     <div class="input-form">
-                      <label for="to" class="bold-small-text">To</label>
+                      <label for="to" class="bold-small-text">{{text['confirmed']['to']}}</label>
                       <input
                         class="small-text readonly"
                         type="time"
@@ -222,14 +222,14 @@
                   </div>
                   <div class="input-form">
                     <label for="location" class="bold-small-text"
-                      >Location<span class="required">*</span></label
+                      >{{text['confirmed']['location']}}<span class="required">*</span></label
                     >
                     <select
                       name="location"
                       id="location"
                       v-model="form.location"
                     >
-                      <option value="">none</option>
+                      <option value="">{{text['input']['none']}}</option>
                       <option value="Microsoft Team">Microsoft Teams</option>
                       <option value="Zoom">Zoom</option>
                       <option value="WebEx">WebEx</option>
@@ -242,12 +242,12 @@
                   </div>
                   <div class="input-form" v-if="form.location == 'Others'">
                     <label for="other" class="bold-small-text"
-                      >Other Location<span class="required">*</span></label
+                      >{{text['confirmed']['otherLocation']}}<span class="required">*</span></label
                     >
                     <input
                       class="small-text"
                       type="text"
-                      placeholder="room number or any platforms"
+                      :placeholder="text['confirmed']['otherLocationPlaceholder']"
                       id="other"
                       name="other"
                       v-model="form.other"
@@ -258,11 +258,11 @@
                   </div>
                   <div class="input-form" v-if="form.location != ''">
                     <label for="link" class="bold-small-text"
-                      >Meeting Link<span
+                      >{{text['confirmed']['meetingLink']}}<span
                         v-if="form.location != 'Others'"
                         class="required"
                         >*</span
-                      ><span v-else class="optional-field">(Optional)</span>
+                      ><span v-else class="optional-field">({{text['confirmed']['optional']}})</span>
                     </label>
                     <input
                       class="small-text"
@@ -276,7 +276,7 @@
                       {{ errors.meetingLink }}
                     </div>
                   </div>
-                  <div class="bold-small-text optional">Optional</div>
+                  <div class="bold-small-text optional">{{text['confirmed']['optional']}}</div>
                   <div class="input-form" v-if="!dropzoneFile">
                     <BaseDropZone @drop.prevent="drop" @change="selectedFile" />
                   </div>
@@ -312,7 +312,7 @@
                   <div class="button">
                     <BaseButton
                       buttonType="outlined-button"
-                      btnText="Cancel"
+                      :btnText="text['confirmed']['cancel']"
                       textColor="#F33C3C"
                       textHover="white"
                       color="#F33C3C"
@@ -321,7 +321,7 @@
                     />
                     <BaseButton
                       buttonType="common-button"
-                      btnText="Create meeting"
+                      :btnText="text['confirmed']['createMeeting']"
                       textColor="white"
                       textHover="white"
                       color="#7452FF"
@@ -383,6 +383,8 @@ export default {
   },
   data() {
     return {
+      text: null,
+      lang: null,
       isFailed: false,
       isShowCalendar: false,
       isLoading: false,
@@ -772,6 +774,14 @@ export default {
     console.log(`This is params id: ${this.id}`);
     console.log(`This is params type: ${this.type}`);
     this.getConfirmedDetail();
+  },
+  beforeMount() {
+    if (this.$cookies.get("lang")) {
+      this.lang = this.$cookies.get("lang");
+    } else {
+      this.lang = "en";
+    }
+    this.text = require(`@/assets/langs/${this.lang}.json`);
   },
 };
 </script>

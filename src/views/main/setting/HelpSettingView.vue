@@ -1,6 +1,6 @@
 <template>
   <div class="left-side">
-    <div class="content-text title">Need answers? Find them here...</div>
+    <div class="content-text title">{{ text["help"]["help"] }}</div>
     <div class="search-input">
       <div class="input-icon">
         <i class="icon fa-solid fa-magnifying-glass"></i>
@@ -8,7 +8,7 @@
           id="search-input-help"
           class="small-text"
           type="text"
-          placeholder="Search anything... "
+          :placeholder="text['help']['placeholder']"
           v-model="searchInput"
           @focus="onFocus"
           @blur="onBlur"
@@ -43,7 +43,7 @@
         </div>
 
         <div v-else class="not-found flex-col-center remark-text">
-          Not Found
+          {{ text["help"]["notFound"] }}
         </div>
       </transition-group>
     </div>
@@ -55,60 +55,12 @@ export default {
   name: "HelpSettingView",
   data() {
     return {
+      text: null,
+      lang: null,
       indexFormerShow: null,
       searchInput: "",
       isToggled: true,
-      faq: [
-        {
-          id: 1,
-          question: "What is it for?",
-          answer:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus.",
-          isSelected: false,
-        },
-        {
-          id: 2,
-          question: "How do I register?",
-          answer:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus.",
-          isSelected: false,
-        },
-        {
-          id: 3,
-          question: "How to add executive?",
-          answer:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus.",
-          isSelected: false,
-        },
-        {
-          id: 4,
-          question: "How to create meeting poll appointment?",
-          answer:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus.",
-          isSelected: false,
-        },
-        {
-          id: 5,
-          question: "How to delete meeting poll appointment?",
-          answer:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus.",
-          isSelected: false,
-        },
-        {
-          id: 6,
-          question: "How to select free time-slot?",
-          answer:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus.",
-          isSelected: false,
-        },
-        {
-          id: 7,
-          question: "How to create meeting?",
-          answer:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus.",
-          isSelected: false,
-        },
-      ],
+      faq: null
     };
   },
   methods: {
@@ -117,10 +69,12 @@ export default {
       navigator.clipboard.writeText(copyText);
     },
     onFocus() {
-      document.getElementById("search-input-help").placeholder = "Type to find...";
+      document.getElementById("search-input-help").placeholder =
+        this.text["help"]["focusSearch"];
     },
     onBlur() {
-      document.getElementById("search-input-help").placeholder = "Search by name";
+      document.getElementById("search-input-help").placeholder =
+        this.text["help"]["placeholder"];
     },
     handleClick(index) {
       this.searchInput != ""
@@ -150,6 +104,65 @@ export default {
           .includes(this.searchInput.toLowerCase());
       });
     },
+  },
+  beforeMount() {
+    if (this.$cookies.get("lang")) {
+      this.lang = this.$cookies.get("lang");
+    } else {
+      this.lang = "en";
+    }
+    this.text = require(`@/assets/langs/${this.lang}.json`);
+    this.faq = [
+      {
+        id: 1,
+        question: this.text['help']['q1'],
+        answer:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus.",
+        isSelected: false,
+      },
+      {
+        id: 2,
+        question: this.text['help']['q2'],
+        answer:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus.",
+        isSelected: false,
+      },
+      {
+        id: 3,
+        question: this.text['help']['q3'],
+        answer:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus.",
+        isSelected: false,
+      },
+      {
+        id: 4,
+        question: this.text['help']['q4'],
+        answer:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus.",
+        isSelected: false,
+      },
+      {
+        id: 5,
+        question: this.text['help']['q5'],
+        answer:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus.",
+        isSelected: false,
+      },
+      {
+        id: 6,
+        question: this.text['help']['q6'],
+        answer:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus.",
+        isSelected: false,
+      },
+      {
+        id: 7,
+        question: this.text['help']['q7'],
+        answer:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus.",
+        isSelected: false,
+      },
+    ];
   },
 };
 </script>

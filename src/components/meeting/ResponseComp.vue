@@ -3,12 +3,12 @@
     <div class="executive-response">
       <div class="executive-name bold-small-text">
         {{ executive.first_name }} {{ executive.last_name }}
-        <span class="desktop">(required)</span>
+        <span class="desktop">({{text['toBeConfirmed']['required']}})</span>
         <span class="mobile">*</span>
       </div>
       <div class="buttons">
         <BaseButton
-          btnText="Accept"
+          :btnText="text['toBeConfirmed']['accept']"
           textHover="white"
           color="#39CF5A"
           hoverColor="#2eba4c"
@@ -23,7 +23,7 @@
           </template>
         </BaseButton>
         <BaseButton
-          btnText="Decline"
+          :btnText="text['toBeConfirmed']['decline']"
           textHover="white"
           color="#F33C3C"
           hoverColor="#d93333"
@@ -40,15 +40,15 @@
       </div>
     </div>
     <div class="add-time-slot" v-if="isAccept">
-      <div class="bold-smallest-text label-text">Preferred-timeslots</div>
+      <div class="bold-smallest-text label-text">{{text['toBeConfirmed']['prefer']}}</div>
       <div class="show-time-slot" v-for="time in timeSlots" :key="time">
         <div class="bold-smallest-text">
-          From {{ time.from }}, End with {{ time.to }}
+          {{text['toBeConfirmed']['from']}} {{ time.from }}, {{text['toBeConfirmed']['end']}} {{ time.to }}
         </div>
       </div>
       <BaseButton
         buttonType="texted-button"
-        btnText="Add/Delete Timeslot"
+        :btnText="text['toBeConfirmed']['actionBtn']"
         textColor="#7452FF"
         textHover="#23106D"
         fontSize="1.4rem"
@@ -63,16 +63,16 @@
       <div class="modal"></div>
       <div class="pop-up">
         <div class="top-container">
-          <div class="title remark-text">Timeslots</div>
+          <div class="title remark-text">{{text['toBeConfirmed']['timeslots']}}</div>
           <div class="duration bold-small-text">
-            Required duration {{ duration.toString().split(".")[0] }}hr
-          <span v-if="duration.toString().split('.')[1]">{{ duration.toString().split('.')[1]*6 }}min</span>
+            {{text['toBeConfirmed']['requiredDuration']}} {{ duration.toString().split(".")[0] }}{{text['toBeConfirmed']['hour']}}
+          <span v-if="duration.toString().split('.')[1]">{{ duration.toString().split('.')[1]*6 }}{{text['toBeConfirmed']['minute']}}</span>
         </div>
         </div>
         <div class="form">
           <div class="input-form">
             <label for="date" class="bold-small-text"
-              >Date <span class="gray-format">(mm/dd/yyyy)</span></label
+              >{{text['toBeConfirmed']['date']}} <span class="gray-format">(mm/dd/yyyy)</span></label
             >
             <input
               class="small-text readonly"
@@ -86,7 +86,7 @@
           </div>
           <div class="input-form">
             <label for="from" class="bold-small-text"
-              >From<span class="required"
+              >{{text['toBeConfirmed']['from']}}<span class="required"
                 >* {{ errors.from }} {{ errors.interval }}</span
               ></label
             >
@@ -101,7 +101,7 @@
             />
           </div>
           <div class="input-form">
-            <label for="to" class="bold-small-text">To</label>
+            <label for="to" class="bold-small-text">{{text['toBeConfirmed']['to']}}</label>
             <input
               class="small-text readonly"
               type="time"
@@ -114,7 +114,7 @@
           </div>
           <BaseButton
             buttonType="common-button"
-            btnText="Add"
+            :btnText="text['toBeConfirmed']['add']"
             textColor="white"
             textHover="white"
             color="#7452FF"
@@ -144,12 +144,12 @@
               <div class="column">
                 <div class="bold-small-text">{{ dateTimeHeader }}</div>
                 <div class="small-text">
-                  From {{ slot.from }} to {{ slot.to }}
+                  {{text['toBeConfirmed']['from']}} {{ slot.from }} {{text['toBeConfirmed']['to']}} {{ slot.to }}
                 </div>
               </div>
               <BaseButton
                 buttonType="common-button"
-                btnText="Delete"
+                :btnText="text['toBeConfirmed']['delete']"
                 textColor="white"
                 textHover="white"
                 color="#F33C3C"
@@ -169,7 +169,7 @@
         <div class="confirm-button">
           <BaseButton
             buttonType="common-button"
-            btnText="Confirm"
+            :btnText="text['toBeConfirmed']['confirmTimeslot']"
             textColor="white"
             textHover="white"
             color="#7452FF"
@@ -195,6 +195,8 @@ export default {
   props: ["executive", "date", "duration", "dateTimeHeader"],
   data() {
     return {
+      text: null,
+      lang: null,
       isAddTimeSlot: false,
       isAccept: false,
       isDecline: false,
@@ -392,6 +394,14 @@ export default {
     deleteTimeSlot(index) {
       this.selectTimeSlots.splice(index, 1);
     },
+  },
+  beforeMount() {
+    if (this.$cookies.get("lang")) {
+      this.lang = this.$cookies.get("lang");
+    } else {
+      this.lang = "en";
+    }
+    this.text = require(`@/assets/langs/${this.lang}.json`);
   },
 };
 </script>

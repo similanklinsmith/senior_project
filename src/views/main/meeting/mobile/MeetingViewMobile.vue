@@ -16,7 +16,7 @@
             ? filterByTitle.length
             : maximumLength
         }}
-        results&#41;
+        {{text['sent']['results']}}&#41;
       </div>
     </div>
     <div class="body">
@@ -28,7 +28,7 @@
               id="search-input-mobile"
               class="small-text"
               type="text"
-              placeholder="Search by title"
+              :placeholder="text['sent']['placeholder']"
               v-model="searchInput"
               @focus="onFocus"
               @blur="onBlur"
@@ -46,7 +46,7 @@
           <ul>
             <li>
               <div class="input">
-                <label for="due" class="bold-small-text">Date within</label>
+                <label for="due" class="bold-small-text">{{text['sent']['dateWithin']}}</label>
                 <litepie-datepicker
                   id="due"
                   as-single
@@ -60,7 +60,7 @@
             <li>
               <BaseButton
                 buttonType="common-button"
-                btnText="Search"
+                :btnText="text['sent']['search']"
                 textColor="#23106D"
                 textHover="#23106D"
                 color="#DBD2FF"
@@ -93,7 +93,7 @@
               @handleClick="onNav"
             />
             <div class="remark-text not-found" v-if="filterByTitle.length == 0">
-              Not Found
+              {{text['sent']['notFound']}}
             </div>
           </transition-group>
         </BaseInifniteScroll>
@@ -133,6 +133,8 @@ export default {
   },
   data() {
     return {
+      text: null,
+      lang: null,
       loading: false,
       upto: 10,
       searchInput: "",
@@ -341,10 +343,10 @@ export default {
       }, 800);
     },
     onFocus() {
-      document.getElementById("search-input-mobile").placeholder = "Type to find...";
+      document.getElementById("search-input-mobile").placeholder = this.text['sent']['focusSearch'];
     },
     onBlur() {
-      document.getElementById("search-input-mobile").placeholder = "Search by title";
+      document.getElementById("search-input-mobile").placeholder = this.text['sent']['placeholder'];
     },
     toggleDropdown() {
       this.isShowDropdown = !this.isShowDropdown;
@@ -378,6 +380,14 @@ export default {
   },
   mounted() {
     this.cards;
+  },
+  beforeMount() {
+    if (this.$cookies.get("lang")) {
+      this.lang = this.$cookies.get("lang");
+    } else {
+      this.lang = "en";
+    }
+    this.text = require(`@/assets/langs/${this.lang}.json`);
   },
 };
 </script>
@@ -482,7 +492,7 @@ export default {
         list-style: none;
         display: flex;
         flex-direction: column;
-        row-gap: 2.8rem;
+        row-gap: 1.5rem;
         li {
           color: $darkViolet;
           transition: 0.3s all ease-in-out;

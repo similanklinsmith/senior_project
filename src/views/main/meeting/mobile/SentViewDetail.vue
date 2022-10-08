@@ -9,14 +9,13 @@
       {{ inboxDetail }}
       <template v-slot:detail-slot>
         <div class="expired-date">
-          <span>*</span>This form will be expired in
+          <span>*</span>{{text['sent']['expiredForm']}}
           {{ inboxDetail.due_date_time.split("T")[0] }}
           <span
-            >({{ calculateRemainingDay(inboxDetail.due_date_time) }} days
-            left)</span
+            >({{ calculateRemainingDay(inboxDetail.due_date_time) }} {{text['sent']['postDueDate']}})</span
           >
         </div>
-        <div class="timeSlot-label">Timeslots</div>
+        <div class="timeSlot-label">{{text['sent']['timeslots']}}</div>
         <div class="timeSlot">
           <div class="label-header">
             <i class="fa-regular fa-calendar"></i>
@@ -24,20 +23,20 @@
           </div>
           <div class="detail">
             <div>
-              From {{ inboxDetail.start_date.split("T")[0] }} to
+              {{text['sent']['from']}} {{ inboxDetail.start_date.split("T")[0] }} {{text['sent']['to']}}
               {{ inboxDetail.end_date.split("T")[0] }}
             </div>
             <div>
-              {{ inboxDetail.duration_of_time.toString().split(".")[0] }}hr
+              {{ inboxDetail.duration_of_time.toString().split(".")[0] }}{{text['sent']['hour']}}
               <span v-if="inboxDetail.duration_of_time.toString().split('.')[1]"
                 >{{
                   inboxDetail.duration_of_time.toString().split(".")[1] * 6
-                }}min</span
+                }}{{text['sent']['min']}}</span
               >
             </div>
           </div>
         </div>
-        <div class="attendees-label">Attendees</div>
+        <div class="attendees-label">{{text['sent']['attendees']}}</div>
         <div class="attendees" @click="showAllAttendee">
           <div
             class="attendee"
@@ -76,7 +75,7 @@
         >
           <BaseButton
             buttonType="common-button"
-            btnText="Delete Poll"
+            :btnText="text['sent']['deletePoll']"
             textColor="white"
             textHover="white"
             color="#F33C3C"
@@ -98,15 +97,15 @@
       :image="require(`@/assets/decorations/delete_executive.png`)"
     >
       <template v-slot:popupContent>
-        This Poll(<span :style="{ color: '#C4C4C4 !important' }">{{
+        {{text['sent']['prePopupText']}}(<span :style="{ color: '#C4C4C4 !important' }">{{
           inboxDetail.title
         }}</span
-        >) will be deleted immediately after confirming!
+        >) {{text['sent']['postPopupText']}}
       </template>
       <template v-slot:buttons>
         <BaseButton
           buttonType="common-button"
-          btnText="Confirm delete"
+          :btnText="text['sent']['confirmDelete']"
           textColor="white"
           textHover="white"
           color="#F33C3C"
@@ -117,7 +116,7 @@
         </BaseButton>
         <BaseButton
           buttonType="outlined-button"
-          btnText="Cancel"
+          :btnText="text['sent']['cancel']"
           textColor="#F33C3C"
           textHover="white"
           color="#F33C3C"
@@ -157,6 +156,8 @@ export default {
   },
   data() {
     return {
+      text: null,
+      lang: null,
       isFailed: false,
       inboxDetail: null,
       isLoading: false,
@@ -213,6 +214,14 @@ export default {
     this.getPollDetail();
     // GET by /:{type}/:{id}
     // Ex. /inbox/1
+  },
+  beforeMount() {
+    if (this.$cookies.get("lang")) {
+      this.lang = this.$cookies.get("lang");
+    } else {
+      this.lang = "en";
+    }
+    this.text = require(`@/assets/langs/${this.lang}.json`);
   },
 };
 </script>

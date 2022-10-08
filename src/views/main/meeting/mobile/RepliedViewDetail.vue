@@ -19,9 +19,9 @@
             <div>
               <div class="name remark-text">
                 {{ executive.first_name }} {{ executive.last_name }}
-                <span>(required)</span>
+                <span>({{text['replied']['required']}})</span>
               </div>
-              <div class="bold-small-text label-text">Preferred-timeslots</div>
+              <div class="bold-small-text label-text">{{text['replied']['preferTimeslot']}}</div>
             </div>
             <div
               v-for="(response, index) in executive.responses"
@@ -37,7 +37,7 @@
                 "
               >
                 {{ formatDateTimeHeader(response.date) }}
-                <span v-if="response.is_accept != '1'">(Declined)</span>
+                <span v-if="response.is_accept != '1'">({{text['replied']['declined']}})</span>
               </div>
               <div class="slots" v-if="response.is_accept != '0'">
                 <div
@@ -46,9 +46,9 @@
                   :key="time"
                 >
                   <div class="bold-content-text">
-                    From {{ time.from.split(":")[0] }}:{{
+                    {{text['replied']['from']}} {{ time.from.split(":")[0] }}:{{
                       time.from.split(":")[1]
-                    }}, End with {{ time.to.split(":")[0] }}:{{
+                    }}, {{text['replied']['end']}} {{ time.to.split(":")[0] }}:{{
                       time.to.split(":")[1]
                     }}
                   </div>
@@ -80,6 +80,8 @@ export default {
   },
   data() {
     return {
+      text: null,
+      lang: null,
       isFailed: false,
       isLoading: false,
       inboxDetail: null,
@@ -112,6 +114,14 @@ export default {
     console.log(`This is params id: ${this.id}`);
     console.log(`This is params type: ${this.type}`);
     this.getReplyDetail();
+  },
+  beforeMount() {
+    if (this.$cookies.get("lang")) {
+      this.lang = this.$cookies.get("lang");
+    } else {
+      this.lang = "en";
+    }
+    this.text = require(`@/assets/langs/${this.lang}.json`);
   },
 };
 </script>
