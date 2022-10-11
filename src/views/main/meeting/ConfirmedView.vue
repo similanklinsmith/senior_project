@@ -669,7 +669,6 @@ export default {
       this.selectedInbox = null;
       this.selectedId = id;
       this.isLoading = true;
-      try {
         this.selectedInbox = await this.$store.dispatch(
           "getMyResultDetail",
           this.selectedId
@@ -680,10 +679,6 @@ export default {
           );
         }
         this.isLoading = false;
-      } catch (error) {
-        console.log(error);
-        this.isLoading = false;
-      }
     },
     onClickShowSchedule(date, index) {
       this.acceptedArray = [];
@@ -936,10 +931,7 @@ export default {
           location: this.form.location == 'Others' ? this.form.other : this.form.location,
           meetingLink: this.form.meetingLink,
         };
-        console.log(
-          "🚀 ~ file: ConfirmedView.vue ~ line 812 ~ handleCreateMeeting ~ meeting",
-          meeting
-        );
+        console.log(meeting);
         await this.$store.dispatch("createMeeting", {
           newMeeting: meeting,
           file: this.dropzoneFile ? this.dropzoneFile : null,

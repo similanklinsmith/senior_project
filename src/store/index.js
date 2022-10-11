@@ -44,6 +44,7 @@ export default createStore({
     // result lists
     myResultDetailURL: `${BASE_URL}/getResult`,
     createMeetingURL: `${BASE_URL}/createMeeting`,
+    fileURL: `${BASE_URL}/fileUpload`,
     myResultDetail: null,
 
     // replied lists
@@ -525,52 +526,40 @@ export default createStore({
       }
     },
     async createMeeting(context, payload) {
-      console.log(context);
-      console.log(payload.file.name);
-      // try {
-      //   const formData = new FormData();
-      //   formData.append("files", payload.file);
-      //   const fileResponse =
-      //     payload.file == null
-      //       ? null
-      //       : await customAxios.instance.post(
-      //         // fileURL,
-      //         formData);
-      //   try {
-      //     const newMeeting = payload.newMeeting;
-      //     newMeeting["file"] =
-      //     fileResponse == null ? null : fileResponse.data.file;
-      //     const response = await customAxios.instance.post(
-      //       this.state.createMeetingURL,
-      //       newMeeting,
-      //       {
-      //         headers: authHeader(),
-      //       }
-      //     );
-      //     context.commit("CREATE_MEETING", response.data.data);
-      //     context.commit("GET_SUCCESS", true);
-      //     setTimeout(() => context.commit("GET_SUCCESS", false), 3000);
-      //   } catch (error) {
-      //     console.log(error.response.status);
-      //     if (error.response.status == 401) {
-      //       context.commit("GET_FAILED", true);
-      //       setTimeout(
-      //         () => (
-      //           context.commit("GET_FAILED", false),
-      //           signOut(this.state.getAuth).then(() => {
-      //             router.push("/sign-in");
-      //           }),
-      //           this.dispatch("auth/logout")
-      //         ),
-      //         3000
-      //       );
-      //     }
-      //     setTimeout(() => context.commit("GET_FAILED", false), 3000);
-      //   }
-      // } catch (error) {
-      //   console.log(error.response);
-      //   setTimeout(() => context.commit("GET_FAILED", false), 2500);
-      // }
+      console.log(payload.file);
+      console.log(payload.newMeeting);
+      try {
+        const formData = new FormData();
+        formData.append("files", payload.file);
+        const fileResponse =
+          payload.file == null
+            ? null
+            : await customAxios.instance.post(
+              this.state.fileURL,
+              formData);
+        // try {
+        //   const newMeeting = payload.newMeeting;
+        //   newMeeting["file"] =
+        //   fileResponse == null ? null : fileResponse.data.file;
+        //   console.log(newMeeting);
+        //   const response = await customAxios.instance.post(
+        //     this.state.createMeetingURL,
+        //     newMeeting,
+        //     {
+        //       headers: authHeader(),
+        //     }
+        //   );
+        //   context.commit("CREATE_MEETING", response.data.data);
+        //   context.commit("GET_SUCCESS", true);
+        //   setTimeout(() => context.commit("GET_SUCCESS", false), 3000);
+        // } catch (error) {
+        //   console.log(error.response);
+        //   setTimeout(() => context.commit("GET_FAILED", false), 3000);
+        // }
+      } catch (error) {
+        console.log(error.response);
+        setTimeout(() => context.commit("GET_FAILED", false), 2500);
+      }
     },
   },
   getters: {
