@@ -196,6 +196,8 @@
         "optional": "Optional",
         "cancel": "Cancel",
         "loading": "Loading...",
+        "succces": "Meeting is succesfully created",
+        "failed": "Meeting is failed to create",
         "accepted": "Accepted",
         "declined": "Declined",
         "notResponse": "Not response",
@@ -286,6 +288,7 @@
         "subHeader": "We can’t seem to find the page you’re looking for.",
         "backHome": "Back to home",
         "back": "Go back",
-        "loading": "Loading..."
+        "loading": "Loading...",
+        "errorGetData": "Error Occurred. Cannot proceed any further."
     }
 }

@@ -27,7 +27,9 @@
           <ul>
             <li>
               <div class="input">
-                <label for="due" class="bold-small-text">{{text['replied']['dateWithin']}}</label>
+                <label for="due" class="bold-small-text">{{
+                  text["replied"]["dateWithin"]
+                }}</label>
                 <litepie-datepicker
                   id="due"
                   as-single
@@ -56,9 +58,13 @@
       </div>
       <div class="filter-show">
         <div class="small-text">
-          <span v-if="filterDate">{{text['replied']['within']}}: {{ filterDate }}</span>
+          <span v-if="filterDate"
+            >{{ text["replied"]["within"] }}: {{ filterDate }}</span
+          >
         </div>
-        <div class="small-text">{{text['replied']['results']}}: {{ filterByTitle.length }}</div>
+        <div class="small-text">
+          {{ text["replied"]["results"] }}: {{ filterByTitle.length }}
+        </div>
       </div>
       <div class="inbox-list">
         <transition-group name="route">
@@ -73,7 +79,7 @@
             @selectInbox="selectInbox"
           />
           <div v-if="filterByTitle.length == 0" class="remark-text not-found">
-            {{text['replied']['notFound']}}
+            {{ text["replied"]["notFound"] }}
           </div>
         </transition-group>
       </div>
@@ -87,7 +93,9 @@
           >
             <div class="title remark-text">{{ inboxDetail.title }}</div>
             <div class="sent-from smallest-text">
-              {{text['replied']['sentOn']}} {{ formatDateTime(inboxDetail.create_at) }} {{text['replied']['by']}}
+              {{ text["replied"]["sentOn"] }}
+              {{ formatDateTime(inboxDetail.create_at) }}
+              {{ text["replied"]["by"] }}
               <span>{{ inboxDetail.secretary.name }}</span>
               &lt;{{ inboxDetail.secretary.email }}&gt;
             </div>
@@ -101,10 +109,10 @@
                 <div>
                   <div class="name bold-content-text">
                     {{ executive.first_name }} {{ executive.last_name }}
-                    <span>({{text['replied']['required']}})</span>
+                    <span>({{ text["replied"]["required"] }})</span>
                   </div>
                   <div class="bold-smallest-text label-text">
-                    {{text['replied']['preferTimeslot']}}
+                    {{ text["replied"]["preferTimeslot"] }}
                   </div>
                 </div>
                 <div
@@ -121,7 +129,9 @@
                     "
                   >
                     {{ formatDateTimeHeader(response.date) }}
-                    <span v-if="response.is_accept == '0'">({{text['replied']['declined']}})</span>
+                    <span v-if="response.is_accept == '0'"
+                      >({{ text["replied"]["declined"] }})</span
+                    >
                   </div>
                   <div class="slots" v-if="response.is_accept != '0'">
                     <div
@@ -130,11 +140,11 @@
                       :key="time"
                     >
                       <div class="bold-smallest-text">
-                        {{text['replied']['from']}} {{ time.from.split(":")[0] }}:{{
+                        {{ text["replied"]["from"] }}
+                        {{ time.from.split(":")[0] }}:{{
                           time.from.split(":")[1]
-                        }}, {{text['replied']['end']}} {{ time.to.split(":")[0] }}:{{
-                          time.to.split(":")[1]
-                        }}
+                        }}, {{ text["replied"]["end"] }}
+                        {{ time.to.split(":")[0] }}:{{ time.to.split(":")[1] }}
                       </div>
                     </div>
                   </div>
@@ -142,7 +152,18 @@
               </div>
             </div>
           </div>
-          <div v-if="isLoading" class="remark-text not-found loading">{{text['replied']['loading']}}</div>
+          <div
+            v-else-if="isLoading == true && inboxDetail == null"
+            class="remark-text not-found loading"
+          >
+            {{ text["replied"]["loading"] }}
+          </div>
+          <div
+            v-else-if="isLoading == false && inboxDetail == null"
+            class="remark-text not-found"
+          >
+            {{ text["notFound"]["errorGetData"] }}
+          </div>
         </div>
       </div>
     </transition>
@@ -172,7 +193,7 @@ export default {
     });
     return {
       formatter,
-      dDate
+      dDate,
     };
   },
   data() {
@@ -219,10 +240,12 @@ export default {
       this.isShowDropdown = !this.isShowDropdown;
     },
     onFocus() {
-      document.getElementById("search-input-replied").placeholder = this.text['replied']['focusSearch'];
+      document.getElementById("search-input-replied").placeholder =
+        this.text["replied"]["focusSearch"];
     },
     onBlur() {
-      document.getElementById("search-input-replied").placeholder = this.text['replied']['placeholder'];
+      document.getElementById("search-input-replied").placeholder =
+        this.text["replied"]["placeholder"];
     },
     handleFilterDate() {
       this.filterDate =
@@ -267,10 +290,10 @@ export default {
     if (this.$cookies.get("lang")) {
       this.lang = this.$cookies.get("lang");
     } else {
-      this.lang = "en"
+      this.lang = "en";
     }
     this.text = require(`@/assets/langs/${this.lang}.json`);
-  }
+  },
 };
 </script>
 

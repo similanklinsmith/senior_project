@@ -8,12 +8,12 @@
     >
       <template v-slot:detail-slot>
         <div class="bold-small-text due-date">
-          <span>*</span>{{text['confirmed']['expired']}}
+          <span>*</span>{{ text["confirmed"]["expired"] }}
           {{ inboxDetail.slots[0].date.split("T")[0] }}
           <span v-if="new Date(inboxDetail.slots[0].date) >= new Date()"
-            >({{ expiredCount }} {{text['confirmed']['postDueDate']}})</span
+            >({{ expiredCount }} {{ text["confirmed"]["postDueDate"] }})</span
           >
-          <span v-else>({{text['confirmed']['alreadyExpired']}})</span>
+          <span v-else>({{ text["confirmed"]["alreadyExpired"] }})</span>
         </div>
         <div
           class="result"
@@ -60,7 +60,9 @@
           <div class="container">
             <div class="first-col">
               <div class="suggested-time">
-                <div class="bold-content-text">{{text['confirmed']['suggestedTime']}}</div>
+                <div class="bold-content-text">
+                  {{ text["confirmed"]["suggestedTime"] }}
+                </div>
                 <div class="time-slot">
                   <div
                     class="slot"
@@ -126,12 +128,13 @@
             <div class="second-col" v-if="isShowCalendar == false">
               <div class="form">
                 <div class="duration-container">
-                  <div class="bold-content-text">{{text['confirmed']['createMeeting']}}</div>
+                  <div class="bold-content-text">
+                    {{ text["confirmed"]["createMeeting"] }}
+                  </div>
                   <div class="duration bold-small-text">
-                    {{text['confirmed']['duration']}}
-                    {{
-                      inboxDetail.duration_of_time.toString().split(".")[0]
-                    }}{{text['confirmed']['hour']}}
+                    {{ text["confirmed"]["duration"] }}
+                    {{ inboxDetail.duration_of_time.toString().split(".")[0]
+                    }}{{ text["confirmed"]["hour"] }}
                     <span
                       v-if="
                         inboxDetail.duration_of_time.toString().split('.')[1]
@@ -140,14 +143,15 @@
                         parseInt(
                           inboxDetail.duration_of_time.toString().split(".")[1]
                         ) * 6
-                      }}{{text['confirmed']['minute']}}</span
+                      }}{{ text["confirmed"]["minute"] }}</span
                     >
                   </div>
                 </div>
                 <form @submit.prevent="handleCreateMeeting">
                   <div class="input-form" id="top">
                     <label for="title" class="bold-small-text"
-                      >{{text['confirmed']['title']}}<span class="required">*</span></label
+                      >{{ text["confirmed"]["title"]
+                      }}<span class="required">*</span></label
                     >
                     <input
                       class="small-text"
@@ -163,7 +167,8 @@
                   </div>
                   <div class="input-form">
                     <label for="description" class="bold-small-text"
-                      >{{text['confirmed']['description']}}<span class="required">*</span></label
+                      >{{ text["confirmed"]["description"]
+                      }}<span class="required">*</span></label
                     >
                     <textarea
                       class="small-text"
@@ -179,7 +184,9 @@
                   </div>
                   <div class="row-input">
                     <div class="input-form">
-                      <label for="date" class="bold-small-text">{{text['confirmed']['date']}}</label>
+                      <label for="date" class="bold-small-text">{{
+                        text["confirmed"]["date"]
+                      }}</label>
                       <input
                         class="small-text readonly"
                         type="date"
@@ -192,7 +199,8 @@
                     </div>
                     <div class="input-form">
                       <label for="from" class="bold-small-text"
-                        >{{text['confirmed']['from']}}<span class="required">*</span></label
+                        >{{ text["confirmed"]["from"]
+                        }}<span class="required">*</span></label
                       >
                       <input
                         class="small-text"
@@ -208,7 +216,9 @@
                       </div>
                     </div>
                     <div class="input-form">
-                      <label for="to" class="bold-small-text">{{text['confirmed']['to']}}</label>
+                      <label for="to" class="bold-small-text">{{
+                        text["confirmed"]["to"]
+                      }}</label>
                       <input
                         class="small-text readonly"
                         type="time"
@@ -222,14 +232,15 @@
                   </div>
                   <div class="input-form">
                     <label for="location" class="bold-small-text"
-                      >{{text['confirmed']['location']}}<span class="required">*</span></label
+                      >{{ text["confirmed"]["location"]
+                      }}<span class="required">*</span></label
                     >
                     <select
                       name="location"
                       id="location"
                       v-model="form.location"
                     >
-                      <option value="">{{text['input']['none']}}</option>
+                      <option value="">{{ text["input"]["none"] }}</option>
                       <option value="Microsoft Team">Microsoft Teams</option>
                       <option value="Zoom">Zoom</option>
                       <option value="WebEx">WebEx</option>
@@ -242,12 +253,15 @@
                   </div>
                   <div class="input-form" v-if="form.location == 'Others'">
                     <label for="other" class="bold-small-text"
-                      >{{text['confirmed']['otherLocation']}}<span class="required">*</span></label
+                      >{{ text["confirmed"]["otherLocation"]
+                      }}<span class="required">*</span></label
                     >
                     <input
                       class="small-text"
                       type="text"
-                      :placeholder="text['confirmed']['otherLocationPlaceholder']"
+                      :placeholder="
+                        text['confirmed']['otherLocationPlaceholder']
+                      "
                       id="other"
                       name="other"
                       v-model="form.other"
@@ -258,11 +272,12 @@
                   </div>
                   <div class="input-form" v-if="form.location != ''">
                     <label for="link" class="bold-small-text"
-                      >{{text['confirmed']['meetingLink']}}<span
-                        v-if="form.location != 'Others'"
-                        class="required"
+                      >{{ text["confirmed"]["meetingLink"]
+                      }}<span v-if="form.location != 'Others'" class="required"
                         >*</span
-                      ><span v-else class="optional-field">({{text['confirmed']['optional']}})</span>
+                      ><span v-else class="optional-field"
+                        >({{ text["confirmed"]["optional"] }})</span
+                      >
                     </label>
                     <input
                       class="small-text"
@@ -276,7 +291,9 @@
                       {{ errors.meetingLink }}
                     </div>
                   </div>
-                  <div class="bold-small-text optional">{{text['confirmed']['optional']}}</div>
+                  <div class="bold-small-text optional">
+                    {{ text["confirmed"]["optional"] }}
+                  </div>
                   <div class="input-form" v-if="!dropzoneFile">
                     <BaseDropZone @drop.prevent="drop" @change="selectedFile" />
                   </div>
@@ -693,7 +710,7 @@ export default {
       this.bestTimeSlot = filteredData;
       console.log(this.bestTimeSlot);
     },
-    handleCreateMeeting() {
+    async handleCreateMeeting() {
       this.titleIsValid
         ? delete this.errors.title
         : (this.errors.title = "Please inform title");
@@ -741,30 +758,32 @@ export default {
           location: this.form.location,
           otherLocation: this.form.other,
           meetingLink: this.form.meetingLink,
-          file: this.dropzoneFile,
         };
         console.log(
           "🚀 ~ file: ConfirmedView.vue ~ line 812 ~ handleCreateMeeting ~ meeting",
           meeting
         );
+        await this.$store.dispatch("createMeeting", {
+          newMeeting: meeting,
+          file: this.dropzoneFile ? this.dropzoneFile : null,
+        });
+        this.onClickCloseSchedule();
       } else {
         location.href = "#top";
       }
     },
     async getConfirmedDetail() {
-      try {
-        this.inboxDetail = await this.$store.dispatch(
-          "getMyResultDetail",
-          this.id
-        );
-        this.expiredCount = this.calculateRemainingDay(
+      this.inboxDetail = await this.$store.dispatch(
+        "getMyResultDetail",
+        this.id
+      );
+      this.isLoading = false;
+      this.inboxDetail == null
+        ? (this.isFailed = true)
+        : (this.isFailed = false),
+        (this.expiredCount = this.calculateRemainingDay(
           this.inboxDetail.slots[0].date
-        );
-        this.isLoading = false;
-      } catch (error) {
-        this.isLoading = false;
-        this.isFailed = true;
-      }
+        ));
     },
     formatDateTimeHeader(dateTime) {
       return formatDateTimeHeader(dateTime);
@@ -905,6 +924,7 @@ export default {
       display: flex;
       row-gap: 1.5rem;
       align-items: center;
+      margin: 1.6rem 0rem;
       .file-section {
         display: flex;
         justify-content: space-between;

@@ -94,17 +94,12 @@ export default {
   methods: {
     ...mapActions(["getMyReplyDetail"]),
     async getReplyDetail() {
-      try {
         this.inboxDetail = await this.$store.dispatch(
           "getMyReplyDetail",
           this.id
         );
-        console.log(this.inboxDetail);
+        this.inboxDetail == null ? this.isFailed = true : this.isFailed = false;
         this.isLoading = false;
-      } catch (error) {
-        this.isLoading = false;
-        this.isFailed = true;
-      }
     },
     formatDateTimeHeader(dateTime) {
       return formatDateTimeHeader(dateTime);

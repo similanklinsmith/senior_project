@@ -27,7 +27,9 @@
           <ul>
             <li>
               <div class="input">
-                <label for="due" class="bold-small-text">{{text['toBeConfirmed']['dateWithin']}}</label>
+                <label for="due" class="bold-small-text">{{
+                  text["toBeConfirmed"]["dateWithin"]
+                }}</label>
                 <litepie-datepicker
                   id="due"
                   as-single
@@ -56,9 +58,13 @@
       </div>
       <div class="filter-show">
         <div class="small-text">
-          <span v-if="filterDate">{{text['toBeConfirmed']['within']}}: {{ filterDate }}</span>
+          <span v-if="filterDate"
+            >{{ text["toBeConfirmed"]["within"] }}: {{ filterDate }}</span
+          >
         </div>
-        <div class="small-text">{{text['toBeConfirmed']['results']}}: {{ filterByTitle.length }}</div>
+        <div class="small-text">
+          {{ text["toBeConfirmed"]["results"] }}: {{ filterByTitle.length }}
+        </div>
       </div>
       <div class="inbox-list">
         <transition-group name="route">
@@ -73,7 +79,7 @@
             @selectInbox="selectInbox"
           />
           <div v-if="filterByTitle.length == 0" class="remark-text not-found">
-            {{text['toBeConfirmed']['notFound']}}
+            {{ text["toBeConfirmed"]["notFound"] }}
           </div>
         </transition-group>
       </div>
@@ -87,18 +93,23 @@
           >
             <div class="title remark-text">{{ inboxDetail.title }}</div>
             <div class="sent-from smallest-text">
-              {{text['toBeConfirmed']['sentToBeConfirmed']}} {{ formatDateTime(inboxDetail.create_at) }} {{text['toBeConfirmed']['by']}}
+              {{ text["toBeConfirmed"]["sentToBeConfirmed"] }}
+              {{ formatDateTime(inboxDetail.create_at) }}
+              {{ text["toBeConfirmed"]["by"] }}
               <span>{{ inboxDetail.secretary.name }}</span>
               &lt;{{ inboxDetail.secretary.email }}&gt;
             </div>
             <div class="line"></div>
             <div class="bold-small-text due-date">
-              <span>*</span>{{text['toBeConfirmed']['dueDate']}}
+              <span>*</span>{{ text["toBeConfirmed"]["dueDate"] }}
               {{ inboxDetail.due_date_time.split("T")[0] }}
               <span v-if="new Date(inboxDetail.due_date_time) >= new Date()"
-                >({{ calculateRemainingDay(inboxDetail.due_date_time) }} {{text['toBeConfirmed']['postDueDate']}})</span
+                >({{ calculateRemainingDay(inboxDetail.due_date_time) }}
+                {{ text["toBeConfirmed"]["postDueDate"] }})</span
               >
-              <span v-else>({{text['toBeConfirmed']['alreadyExpired']}})</span>
+              <span v-else
+                >({{ text["toBeConfirmed"]["alreadyExpired"] }})</span
+              >
             </div>
             <div
               class="response"
@@ -142,15 +153,26 @@
               </BaseButton>
             </div>
           </div>
-          <div v-else class="remark-text not-found loading">{{text['toBeConfirmed']['loading']}}</div>
+          <div
+            v-else-if="isLoading == true && inboxDetail == null"
+            class="remark-text not-found loading"
+          >
+            {{ text["toBeConfirmed"]["loading"] }}
+          </div>
+          <div
+            v-else-if="isLoading == false && inboxDetail == null"
+            class="remark-text not-found"
+          >
+            {{ text["notFound"]["errorGetData"] }}
+          </div>
         </div>
       </div>
     </transition>
     <BaseAlert v-if="getterSuccess" :status="`success`">
-      {{text['toBeConfirmed']['succces']}}
+      {{ text["toBeConfirmed"]["succces"] }}
     </BaseAlert>
     <BaseAlert v-if="getterFailed" :status="`failed`">
-      {{text['toBeConfirmed']['failed']}}
+      {{ text["toBeConfirmed"]["failed"] }}
     </BaseAlert>
   </div>
 </template>
@@ -267,11 +289,11 @@ export default {
     ...mapActions(["getMyBeConfirmeds", "getMyBeConfirmedDetail"]),
     onFocus() {
       document.getElementById("search-input-be-confirmed").placeholder =
-        this.text['toBeConfirmed']['focusSearch'];
+        this.text["toBeConfirmed"]["focusSearch"];
     },
     onBlur() {
       document.getElementById("search-input-be-confirmed").placeholder =
-        this.text['toBeConfirmed']['placeholder'];
+        this.text["toBeConfirmed"]["placeholder"];
     },
     toggleDropdown() {
       this.isShowDropdown = !this.isShowDropdown;

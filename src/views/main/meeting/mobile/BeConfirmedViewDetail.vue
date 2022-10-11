@@ -126,19 +126,13 @@ export default {
   methods: {
     ...mapActions(["getMyBeConfirmedDetail"]),
     async getBeConfirmedDetail() {
-      try {
         this.isLoading = true;
         this.inboxDetail = await this.$store.dispatch(
           "getMyBeConfirmedDetail",
           this.id
         );
-        console.log(this.inboxDetail);
+        this.inboxDetail == null ? this.isFailed = true : this.isFailed = false;
         this.isLoading = false;
-      } catch (error) {
-        this.isLoading = false;
-        this.isFailed = true;
-        console.log(error);
-      }
     },
     formatDateTimeHeader(dateTime) {
       return formatDateTimeHeader(dateTime);

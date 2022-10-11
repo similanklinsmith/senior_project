@@ -27,7 +27,9 @@
           <ul>
             <li>
               <div class="input">
-                <label for="due" class="bold-small-text">{{text['sent']['dateWithin']}}</label>
+                <label for="due" class="bold-small-text">{{
+                  text["sent"]["dateWithin"]
+                }}</label>
                 <litepie-datepicker
                   id="due"
                   as-single
@@ -56,9 +58,13 @@
       </div>
       <div class="filter-show">
         <div class="small-text">
-          <span v-if="filterDate">{{text['sent']['within']}}: {{ filterDate }}</span>
+          <span v-if="filterDate"
+            >{{ text["sent"]["within"] }}: {{ filterDate }}</span
+          >
         </div>
-        <div class="small-text">{{text['sent']['results']}}: {{ filterByTitle.length }}</div>
+        <div class="small-text">
+          {{ text["sent"]["results"] }}: {{ filterByTitle.length }}
+        </div>
       </div>
       <div class="inbox-list">
         <transition-group name="route">
@@ -73,7 +79,7 @@
             @selectInbox="selectInbox"
           />
           <div v-if="filterByTitle.length == 0" class="remark-text not-found">
-            {{text['sent']['notFound']}}
+            {{ text["sent"]["notFound"] }}
           </div>
         </transition-group>
       </div>
@@ -87,13 +93,15 @@
           >
             <div class="title remark-text">{{ selectedInbox.title }}</div>
             <div class="sent-from smallest-text">
-              {{text['sent']['sentByYou']}}
+              {{ text["sent"]["sentByYou"] }}
               {{ formatDateTime(selectedInbox.create_at) }}
             </div>
             <div class="line"></div>
             <div class="content">
               <div class="attendees">
-                <div class="bold-small-text">{{text['sent']['attendees']}}:</div>
+                <div class="bold-small-text">
+                  {{ text["sent"]["attendees"] }}:
+                </div>
                 <div
                   class="small-text attendee-list"
                   v-for="(attendee, index) in selectedInbox.attendees.slice(
@@ -112,22 +120,30 @@
                   v-if="selectedInbox.attendees.length > 2"
                   @click="showAllAttendee"
                   ><div v-if="!isShowMore">
-                    {{text['sent']['showMore']}} &#40;{{ selectedInbox.attendees.length - 2 }}&#41;
+                    {{ text["sent"]["showMore"] }} &#40;{{
+                      selectedInbox.attendees.length - 2
+                    }}&#41;
                   </div>
-                  <div v-else>{{text['sent']['showLess']}}</div></span
+                  <div v-else>{{ text["sent"]["showLess"] }}</div></span
                 >
               </div>
               <div class="time-slots">
-                <div class="bold-small-text faded">{{text['sent']['timeSlot']}}</div>
+                <div class="bold-small-text faded">
+                  {{ text["sent"]["timeSlot"] }}
+                </div>
                 <div class="slot">
                   <div class="start">
-                    <div class="bold-small-text">{{text['sent']['startDate']}}:</div>
+                    <div class="bold-small-text">
+                      {{ text["sent"]["startDate"] }}:
+                    </div>
                     <div class="small-text">
                       {{ selectedInbox.start_date.split("T")[0] }}
                     </div>
                   </div>
                   <div class="end">
-                    <div class="bold-small-text">{{text['sent']['endDate']}}:</div>
+                    <div class="bold-small-text">
+                      {{ text["sent"]["endDate"] }}:
+                    </div>
                     <div class="small-text">
                       {{ selectedInbox.end_date.split("T")[0] }}
                     </div>
@@ -135,21 +151,35 @@
                 </div>
               </div>
               <div class="duration">
-                <div class="bold-small-text">{{text['sent']['duration']}}:</div>
+                <div class="bold-small-text">
+                  {{ text["sent"]["duration"] }}:
+                </div>
                 <div class="small-text">
-                  {{ selectedInbox.duration_of_time.toString().split(".")[0] }} {{text['sent']['hour']}}
-                  <span v-if="selectedInbox.duration_of_time.toString().split('.')[1]">{{ selectedInbox.duration_of_time.toString().split(".")[1]*6 }} {{text['sent']['minute']}}</span>
+                  {{ selectedInbox.duration_of_time.toString().split(".")[0] }}
+                  {{ text["sent"]["hour"] }}
+                  <span
+                    v-if="
+                      selectedInbox.duration_of_time.toString().split('.')[1]
+                    "
+                    >{{
+                      selectedInbox.duration_of_time.toString().split(".")[1] *
+                      6
+                    }}
+                    {{ text["sent"]["minute"] }}</span
+                  >
                 </div>
               </div>
               <div class="due-date">
-                <div class="bold-small-text">{{text['sent']['dueDate']}}:</div>
+                <div class="bold-small-text">
+                  {{ text["sent"]["dueDate"] }}:
+                </div>
                 <div class="small-text">
                   {{ selectedInbox.due_date_time.split("T")[0] }}
                   <div class="remaining-day">
                     &#40;{{
                       calculateRemainingDay(selectedInbox.due_date_time)
                     }}
-                    {{text['sent']['dayRemain']}}&#41;
+                    {{ text["sent"]["dayRemain"] }}&#41;
                   </div>
                 </div>
               </div>
@@ -171,7 +201,18 @@
               </BaseButton>
             </div>
           </div>
-          <div v-else class="remark-text not-found loading">{{text['sent']['loading']}}</div>
+          <div
+            v-else-if="isLoading == true && selectedInbox == null"
+            class="remark-text not-found loading"
+          >
+            {{ text["sent"]["loading"] }}
+          </div>
+          <div
+            v-else-if="isLoading == false && selectedInbox == null"
+            class="remark-text not-found"
+          >
+            {{ text["notFound"]["errorGetData"] }}
+          </div>
         </div>
       </div>
     </transition>
@@ -181,10 +222,10 @@
       :image="require(`@/assets/decorations/delete_executive.png`)"
     >
       <template v-slot:popupContent>
-        {{text['sent']['prePopupText']}}(<span :style="{ color: '#C4C4C4 !important' }">{{
-          selectedInbox.title
-        }}</span
-        >) {{text['sent']['postPopupText']}}
+        {{ text["sent"]["prePopupText"] }}(<span
+          :style="{ color: '#C4C4C4 !important' }"
+          >{{ selectedInbox.title }}</span
+        >) {{ text["sent"]["postPopupText"] }}
       </template>
       <template v-slot:buttons>
         <BaseButton
@@ -212,10 +253,10 @@
       </template>
     </BasePopup>
     <BaseAlert v-if="getterSuccess" :status="`success`">
-      {{text['sent']['success']}}
+      {{ text["sent"]["success"] }}
     </BaseAlert>
     <BaseAlert v-if="getterFailed" :status="`failed`">
-      {{text['sent']['failed']}}
+      {{ text["sent"]["failed"] }}
     </BaseAlert>
   </div>
 </template>
@@ -302,10 +343,12 @@ export default {
   methods: {
     ...mapActions(["getMyPolls", "getMyPollDetail", "getExecutiveTitle"]),
     onFocus() {
-      document.getElementById("search-input-sent").placeholder = this.text['sent']['focusSearch'];
+      document.getElementById("search-input-sent").placeholder =
+        this.text["sent"]["focusSearch"];
     },
     onBlur() {
-      document.getElementById("search-input-sent").placeholder = this.text['sent']['placeholder'];
+      document.getElementById("search-input-sent").placeholder =
+        this.text["sent"]["placeholder"];
     },
     toggleDropdown() {
       this.isShowDropdown = !this.isShowDropdown;
@@ -382,10 +425,10 @@ export default {
     if (this.$cookies.get("lang")) {
       this.lang = this.$cookies.get("lang");
     } else {
-      this.lang = "en"
+      this.lang = "en";
     }
     this.text = require(`@/assets/langs/${this.lang}.json`);
-  }
+  },
 };
 </script>
 

@@ -173,17 +173,12 @@ export default {
   methods: {
     ...mapActions(["getMyPollDetail", "getExecutiveTitle"]),
     async getPollDetail() {
-      try {
         this.inboxDetail = await this.$store.dispatch(
           "getMyPollDetail",
           this.id
         );
-        console.log(this.inboxDetail);
+        this.inboxDetail == null ? this.isFailed = true : this.isFailed = false;
         this.isLoading = false;
-      } catch (error) {
-        this.isFailed = true;
-        this.isLoading = false;
-      }
     },
     async deletePollAppointment(id) {
       await this.$store.dispatch("deletePollAppointment", id);
