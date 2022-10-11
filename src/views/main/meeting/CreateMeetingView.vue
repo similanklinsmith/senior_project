@@ -405,7 +405,7 @@ export default {
           executive_id: attendees_id,
         };
         this.isLoading = true
-        this.$store.dispatch("addPollAppointment", newPoll).then(() => {this.isLoading = false}).catch((err) => {console.log(err)});
+        this.$store.dispatch("addPollAppointment", newPoll).then(() => {this.isLoading = false}).catch((err) => {console.log(err), this.isLoading = false});
         this.form.title = "";
         this.form.dateSlot = "";
         this.form.duration = "";

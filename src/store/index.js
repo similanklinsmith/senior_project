@@ -43,6 +43,7 @@ export default createStore({
 
     // result lists
     myResultDetailURL: `${BASE_URL}/getResult`,
+    createMeetingURL: `${BASE_URL}/createMeeting`,
     myResultDetail: null,
 
     // replied lists
@@ -135,6 +136,12 @@ export default createStore({
     GET_MY_RESULT_DETAIL(state, resultDetail) {
       state.myResultDetail = resultDetail;
     },
+    CREATE_MEETING(state, data) {
+      const index = state.myPolls.findIndex((list) => list.id == data.id);
+      if (index !== -1) {
+        state.myPolls.splice(index, 1);
+      }
+    },
     GET_MY_REPLIES(state, replies) {
       state.myReplies = replies;
     },
@@ -150,13 +157,7 @@ export default createStore({
         });
         context.commit("GET_PROFILE", data.data.data);
       } catch (error) {
-        console.log(error.response.status);
-        if (error.response.status == 401) {
-          signOut(this.state.getAuth).then(() => {
-            router.push("/sign-in");
-          });
-          this.dispatch("auth/logout");
-        }
+        console.log(error.response);
       }
     },
     async getProfileImage(context) {
@@ -252,13 +253,7 @@ export default createStore({
         context.commit("GET_LOADING_STATUS", false);
       } catch (error) {
         context.commit("GET_LOADING_STATUS", false);
-        console.log(error.response.status);
-        if (error.response.status == 401) {
-          signOut(this.state.getAuth).then(() => {
-            router.push("/sign-in");
-          });
-          this.dispatch("auth/logout");
-        }
+        console.log(error.response);
       }
     },
     async addExecutive(context, payload) {
@@ -282,37 +277,11 @@ export default createStore({
           );
           context.commit("ADD_EXECUTIVES", response.data.data);
         } catch (error) {
-          console.log(error.response.status);
-          if (error.response.status == 401) {
-            context.commit("GET_FAILED", true);
-            setTimeout(
-              () => (
-                context.commit("GET_FAILED", false),
-                signOut(this.state.getAuth).then(() => {
-                  router.push("/sign-in");
-                }),
-                this.dispatch("auth/logout")
-              ),
-              3000
-            );
-          }
+          console.log(error.response);
           setTimeout(() => context.commit("GET_FAILED", false), 3000);
         }
       } catch (error) {
-        console.log(error.response.status);
-        if (error.response.status == 401) {
-          context.commit("GET_FAILED", true);
-          setTimeout(
-            () => (
-              context.commit("GET_FAILED", false),
-              signOut(this.state.getAuth).then(() => {
-                router.push("/sign-in");
-              }),
-              this.dispatch("auth/logout")
-            ),
-            2500
-          );
-        }
+        console.log(error.response);
         setTimeout(() => context.commit("GET_FAILED", false), 2500);
       }
     },
@@ -347,30 +316,11 @@ export default createStore({
           context.commit("GET_LOADING_STATUS", false);
         } catch (error) {
           context.commit("GET_LOADING_STATUS", false);
-          console.log(error.response.status);
-          if (error.response.status == 401) {
-            signOut(this.state.getAuth).then(() => {
-              router.replace("/sign-in");
-            }),
-              this.dispatch("auth/logout");
-          }
+          console.log(error.response);
         }
       } catch (error) {
-        console.log(error.response.status);
+        console.log(error.response);
         context.commit("GET_FAILED", true);
-        if (error.response.status == 401) {
-          context.commit("GET_FAILED", true);
-          setTimeout(
-            () => (
-              context.commit("GET_FAILED", false),
-              signOut(this.state.getAuth).then(() => {
-                router.replace("/sign-in");
-              }),
-              this.dispatch("auth/logout")
-            ),
-            2500
-          );
-        }
         setTimeout(
           () => (
             context.commit("GET_FAILED", false),
@@ -390,20 +340,7 @@ export default createStore({
         );
         context.commit("DELETE_MY_EXECUTIVE", id);
       } catch (error) {
-        console.log(error.response.status);
-        if (error.response.status == 401) {
-          context.commit("GET_FAILED", true);
-          setTimeout(
-            () => (
-              context.commit("GET_FAILED", false),
-              signOut(this.state.getAuth).then(() => {
-                router.replace("/sign-in");
-              }),
-              this.dispatch("auth/logout")
-            ),
-            2500
-          );
-        }
+        console.log(error.response);
         setTimeout(() => context.commit("GET_FAILED", false), 2500);
       }
     },
@@ -423,13 +360,7 @@ export default createStore({
         context.commit("GET_LOADING_STATUS", false);
       } catch (error) {
         context.commit("GET_LOADING_STATUS", false);
-        console.log(error.response.status);
-        if (error.response.status == 401) {
-          signOut(this.state.getAuth).then(() => {
-            router.replace("/sign-in");
-          });
-          this.dispatch("auth/logout");
-        }
+        console.log(error.response);
       }
     },
     async getMyPollDetail(context, id) {
@@ -447,13 +378,7 @@ export default createStore({
         return data.data.data;
       } catch (error) {
         context.commit("GET_LOADING_STATUS", false);
-        console.log(error.response.status);
-        if (error.response.status == 401) {
-          signOut(this.state.getAuth).then(() => {
-            router.replace("/sign-in");
-          });
-          this.dispatch("auth/logout");
-        }
+        console.log(error.response);
       }
     },
     async addPollAppointment(context, payload) {
@@ -470,20 +395,8 @@ export default createStore({
         context.commit("GET_SUCCESS", true);
         setTimeout(() => context.commit("GET_SUCCESS", false), 3000);
       } catch (error) {
-        console.log(error.response.status);
-        if (error.response.status == 401) {
-          context.commit("GET_FAILED", true);
-          setTimeout(
-            () => (
-              context.commit("GET_FAILED", false),
-              signOut(this.state.getAuth).then(() => {
-                router.replace("/sign-in");
-              }),
-              this.dispatch("auth/logout")
-            ),
-            2500
-          );
-        }
+        console.log(error.response);
+        context.commit("GET_FAILED", true);
         setTimeout(() => context.commit("GET_FAILED", false), 2500);
       }
     },
@@ -500,20 +413,7 @@ export default createStore({
         context.commit("GET_SUCCESS", true);
         setTimeout(() => context.commit("GET_SUCCESS", false), 3000);
       } catch (error) {
-        console.log(error.response.status);
-        if (error.response.status == 401) {
-          context.commit("GET_FAILED", true);
-          setTimeout(
-            () => (
-              context.commit("GET_FAILED", false),
-              signOut(this.state.getAuth).then(() => {
-                router.replace("/sign-in");
-              }),
-              this.dispatch("auth/logout")
-            ),
-            2500
-          );
-        }
+        console.log(error.response);
         setTimeout(() => context.commit("GET_FAILED", false), 2500);
       }
     },
@@ -535,13 +435,7 @@ export default createStore({
         context.commit("GET_LOADING_STATUS", false);
       } catch (error) {
         context.commit("GET_LOADING_STATUS", false);
-        console.log(error.response.status);
-        if (error.response.status == 401) {
-          signOut(this.state.getAuth).then(() => {
-            router.replace("/sign-in");
-          });
-          this.dispatch("auth/logout");
-        }
+        console.log(error.response);
       }
     },
     async getMyBeConfirmedDetail(context, id) {
@@ -559,12 +453,6 @@ export default createStore({
       } catch (error) {
         context.commit("GET_LOADING_STATUS", false);
         console.log(error);
-        if (error.response.status == 401) {
-          signOut(this.state.getAuth).then(() => {
-            router.replace("/sign-in");
-          });
-          this.dispatch("auth/logout");
-        }
       }
     },
     async replyToBeConfirmed(context, payload) {
@@ -580,20 +468,7 @@ export default createStore({
         context.commit("GET_SUCCESS", true);
         setTimeout(() => context.commit("GET_SUCCESS", false), 3000);
       } catch (error) {
-        console.log(error.response.status);
-        if (error.response.status == 401) {
-          context.commit("GET_FAILED", true);
-          setTimeout(
-            () => (
-              context.commit("GET_FAILED", false),
-              signOut(this.state.getAuth).then(() => {
-                router.replace("/sign-in");
-              }),
-              this.dispatch("auth/logout")
-            ),
-            2500
-          );
-        }
+        console.log(error.response);
         setTimeout(() => context.commit("GET_FAILED", false), 2500);
       }
     },
@@ -612,12 +487,6 @@ export default createStore({
       } catch (error) {
         context.commit("GET_LOADING_STATUS", false);
         console.log(error);
-        if (error.response.status == 401) {
-          signOut(this.state.getAuth).then(() => {
-            router.replace("/sign-in");
-          });
-          this.dispatch("auth/logout");
-        }
       }
     },
     async getMyReplies(context) {
@@ -635,13 +504,7 @@ export default createStore({
         context.commit("GET_LOADING_STATUS", false);
       } catch (error) {
         context.commit("GET_LOADING_STATUS", false);
-        console.log(error.response.status);
-        if (error.response.status == 401) {
-          signOut(this.state.getAuth).then(() => {
-            router.replace("/sign-in");
-          });
-          this.dispatch("auth/logout");
-        }
+        console.log(error.response);
       }
     },
     async getMyReplyDetail(context, id) {
@@ -659,13 +522,55 @@ export default createStore({
       } catch (error) {
         context.commit("GET_LOADING_STATUS", false);
         console.log(error);
-        if (error.response.status == 401) {
-          signOut(this.state.getAuth).then(() => {
-            router.replace("/sign-in");
-          });
-          this.dispatch("auth/logout");
-        }
       }
+    },
+    async createMeeting(context, payload) {
+      console.log(context);
+      console.log(payload.file.name);
+      // try {
+      //   const formData = new FormData();
+      //   formData.append("files", payload.file);
+      //   const fileResponse =
+      //     payload.file == null
+      //       ? null
+      //       : await customAxios.instance.post(
+      //         // fileURL,
+      //         formData);
+      //   try {
+      //     const newMeeting = payload.newMeeting;
+      //     newMeeting["file"] =
+      //     fileResponse == null ? null : fileResponse.data.file;
+      //     const response = await customAxios.instance.post(
+      //       this.state.createMeetingURL,
+      //       newMeeting,
+      //       {
+      //         headers: authHeader(),
+      //       }
+      //     );
+      //     context.commit("CREATE_MEETING", response.data.data);
+      //     context.commit("GET_SUCCESS", true);
+      //     setTimeout(() => context.commit("GET_SUCCESS", false), 3000);
+      //   } catch (error) {
+      //     console.log(error.response.status);
+      //     if (error.response.status == 401) {
+      //       context.commit("GET_FAILED", true);
+      //       setTimeout(
+      //         () => (
+      //           context.commit("GET_FAILED", false),
+      //           signOut(this.state.getAuth).then(() => {
+      //             router.push("/sign-in");
+      //           }),
+      //           this.dispatch("auth/logout")
+      //         ),
+      //         3000
+      //       );
+      //     }
+      //     setTimeout(() => context.commit("GET_FAILED", false), 3000);
+      //   }
+      // } catch (error) {
+      //   console.log(error.response);
+      //   setTimeout(() => context.commit("GET_FAILED", false), 2500);
+      // }
     },
   },
   getters: {
