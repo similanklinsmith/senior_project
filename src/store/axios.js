@@ -32,9 +32,9 @@ instance.interceptors.response.use(
       VueCookies.set("idToken", data.id_token);
       localStorage.setItem("user", data.id_token);
     }
-    if (error.response.status == 404) {
-      router.push({ name: "NotFound" });
-    }
+    // if (error.response.status == 404) {
+    //   router.push({ name: "NotFound" });
+    // }
   }
 );
 
