@@ -24,7 +24,7 @@
           <div v-for="(slot, index) in inboxDetail.slots" :key="index">
             <div class="row-header">
               <div class="bold-content-text">
-                {{ formatDateTimeHeader(slot.date) }}
+                {{ formatDateTimeHeader(slot.date, lang) }}
               </div>
               <div
                 :style="
@@ -755,8 +755,7 @@ export default {
           date: this.form.date,
           start: this.form.from,
           end: this.form.to,
-          location: this.form.location,
-          otherLocation: this.form.other,
+          location: this.form.location == 'Others' ? this.form.other : this.form.location,
           meetingLink: this.form.meetingLink,
         };
         console.log(
@@ -785,8 +784,8 @@ export default {
           this.inboxDetail.slots[0].date
         ));
     },
-    formatDateTimeHeader(dateTime) {
-      return formatDateTimeHeader(dateTime);
+    formatDateTimeHeader(dateTime, lang) {
+      return formatDateTimeHeader(dateTime, lang);
     },
   },
   created() {

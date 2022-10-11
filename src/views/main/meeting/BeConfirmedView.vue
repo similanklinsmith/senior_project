@@ -125,7 +125,7 @@
                 :key="index"
               >
                 <div class="day bold-content-text">
-                  {{ formatDateTimeHeader(periodOfTime.date) }}
+                  {{ formatDateTimeHeader(periodOfTime.date, lang) }}
                 </div>
                 <ResponseComp
                   @onResponse="handleResponse"
@@ -134,7 +134,7 @@
                   :executive="executive"
                   :date="periodOfTime.date"
                   :duration="inboxDetail.duration_of_time"
-                  :dateTimeHeader="formatDateTimeHeader(periodOfTime.date)"
+                  :dateTimeHeader="formatDateTimeHeader(periodOfTime.date, lang)"
                 />
               </div>
             </div>
@@ -346,8 +346,8 @@ export default {
     formatDateTime(dateTime) {
       return formatDateTimeDetail(dateTime);
     },
-    formatDateTimeHeader(dateTime) {
-      return formatDateTimeHeader(dateTime);
+    formatDateTimeHeader(dateTime, lang) {
+      return formatDateTimeHeader(dateTime, lang);
     },
     async selectInbox(id) {
       this.dataToBe.id = id;

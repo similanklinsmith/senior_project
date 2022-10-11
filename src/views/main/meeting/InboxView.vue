@@ -53,7 +53,7 @@
           </div>
           <div class="detail">
             <div class="small-text">
-              {{ formatDate(selectedInbox.meeting_date) }} ({{
+              {{ formatDate(selectedInbox.meeting_date, lang) }} ({{
                 formatDateShort(selectedInbox.meeting_date)
               }})
             </div>
@@ -175,8 +175,8 @@ export default {
     formatDateTime(dateTime, isTime) {
       return formatDateTimeDetail(dateTime, isTime);
     },
-    formatDate(date) {
-      return formatDateTimeHeader(date);
+    formatDate(date, lang) {
+      return formatDateTimeHeader(date, lang);
     },
     formatDateShort(date) {
       return formatDateTimeInbox(date);

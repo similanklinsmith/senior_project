@@ -116,7 +116,7 @@
             <div v-for="(slot, index) in selectedInbox.slots" :key="index">
               <div class="row-header">
                 <div class="bold-content-text">
-                  {{ formatDateTimeHeader(slot.date) }}
+                  {{ formatDateTimeHeader(slot.date, lang) }}
                 </div>
                 <div
                   :style="
@@ -659,8 +659,8 @@ export default {
     formatDateTime(dateTime) {
       return formatDateTimeDetail(dateTime);
     },
-    formatDateTimeHeader(dateTime) {
-      return formatDateTimeHeader(dateTime);
+    formatDateTimeHeader(dateTime, lang) {
+      return formatDateTimeHeader(dateTime, lang);
     },
     formatFileSize(byte, decimal) {
       return formatBytes(byte, decimal ? decimal : 2);
@@ -933,8 +933,7 @@ export default {
           date: this.form.date,
           start: this.form.from,
           end: this.form.to,
-          location: this.form.location,
-          otherLocation: this.form.other,
+          location: this.form.location == 'Others' ? this.form.other : this.form.location,
           meetingLink: this.form.meetingLink,
         };
         console.log(
@@ -1417,6 +1416,7 @@ ul {
       .due-date {
         margin: 2rem 0;
         color: $primaryViolet;
+        line-height: 1.6;
         span {
           color: $error;
         }

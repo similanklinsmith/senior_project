@@ -36,7 +36,7 @@
                     : { color: '#F33C3C' }
                 "
               >
-                {{ formatDateTimeHeader(response.date) }}
+                {{ formatDateTimeHeader(response.date, lang) }}
                 <span v-if="response.is_accept != '1'">({{text['replied']['declined']}})</span>
               </div>
               <div class="slots" v-if="response.is_accept != '0'">
@@ -101,8 +101,8 @@ export default {
         this.inboxDetail == null ? this.isFailed = true : this.isFailed = false;
         this.isLoading = false;
     },
-    formatDateTimeHeader(dateTime) {
-      return formatDateTimeHeader(dateTime);
+    formatDateTimeHeader(dateTime, lang) {
+      return formatDateTimeHeader(dateTime, lang);
     },
   },
   created() {

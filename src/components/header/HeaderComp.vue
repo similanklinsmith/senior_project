@@ -173,9 +173,11 @@ export default {
       window.location.reload();
     },
     toggleProfileDropdown() {
+      this.isShowLang = false;
       this.isShowProfile = !this.isShowProfile;
     },
     toggleLanguageDropdown() {
+      this.isShowProfile = false;
       this.isShowLang = !this.isShowLang;
     },
     onFocus() {

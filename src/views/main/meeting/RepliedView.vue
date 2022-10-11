@@ -128,7 +128,7 @@
                         : { color: '#F33C3C' }
                     "
                   >
-                    {{ formatDateTimeHeader(response.date) }}
+                    {{ formatDateTimeHeader(response.date, lang) }}
                     <span v-if="response.is_accept == '0'"
                       >({{ text["replied"]["declined"] }})</span
                     >
@@ -265,8 +265,8 @@ export default {
     formatDateTime(dateTime) {
       return formatDateTimeDetail(dateTime);
     },
-    formatDateTimeHeader(dateTime) {
-      return formatDateTimeHeader(dateTime);
+    formatDateTimeHeader(dateTime, lang) {
+      return formatDateTimeHeader(dateTime, lang);
     },
     async selectInbox(id) {
       this.selectedId = id;
