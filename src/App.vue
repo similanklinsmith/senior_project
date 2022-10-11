@@ -15,7 +15,7 @@
           <i class="icon fa-solid fa-bars-staggered"></i>
         </div>
         <div class="last-section">
-          <div class="remark-text">Meeting Overview</div>
+          <div class="remark-text">{{getHeaderText}}</div>
           <div class="notification">
             <div class="alert-circle">2</div>
             <i class="icon fa-solid fa-bell"></i>
