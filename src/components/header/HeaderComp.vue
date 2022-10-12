@@ -141,20 +141,7 @@ export default {
       isShowProfile: false,
       isShowList: false,
       inputSearch: "",
-      searchList: [
-        {
-          id: 1,
-          title: "Executive management",
-          path: "/executives-management",
-        },
-        { id: 2, title: "Create poll meeting", path: "/meetings-management" },
-        { id: 3, title: "Inbox", path: "/meetings-management" },
-        { id: 4, title: "Sent", path: "/meetings-management" },
-        { id: 5, title: "Poll", path: "/meetings-management" },
-        { id: 6, title: "Result of poll", path: "/meetings-management" },
-        { id: 6, title: "Replied", path: "/meetings-management" },
-        { id: 6, title: "Personal setting", path: "/setting" },
-      ],
+      searchList: null,
     };
   },
   computed: {
@@ -246,6 +233,16 @@ export default {
       this.lang = "en";
     }
     this.text = require(`@/assets/langs/${this.lang}.json`);
+    this.searchList = [
+        { id: 1, title: this.text['headerComp']['1'], path: "/executives-management",},
+        { id: 2, title: this.text['headerComp']['2'], path: "/meetings-management" },
+        { id: 3, title: this.text['headerComp']['3'], path: "/meetings-management" },
+        { id: 4, title: this.text['headerComp']['4'], path: "/meetings-management" },
+        { id: 5, title: this.text['headerComp']['5'], path: "/meetings-management" },
+        { id: 6, title: this.text['headerComp']['6'], path: "/meetings-management" },
+        { id: 7, title: this.text['headerComp']['7'], path: "/meetings-management" },
+        { id: 8, title: this.text['headerComp']['8'], path: "/setting" },
+    ]
   },
 };
 </script>

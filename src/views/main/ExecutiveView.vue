@@ -710,35 +710,35 @@ export default {
     async handleChangeExecutive() {
       this.titleIsValid
         ? delete this.errors.title
-        : (this.errors.title = "Please select title");
+        : (this.errors.title = this.text['errors']['titleCode']);
       this.firstnameIsValid
         ? delete this.errors.firstname
-        : (this.errors.firstname = "Please inform firstname");
+        : (this.errors.firstname = this.text['errors']['name']);
       this.lastnameIsValid
         ? delete this.errors.lastname
-        : (this.errors.lastname = "Please inform lastname");
+        : (this.errors.lastname = this.text['errors']['lastname']);
       this.positionIsValid
         ? delete this.errors.position
-        : (this.errors.position = "Please select position");
+        : (this.errors.position = this.text['errors']['position']);
       this.emailIsValid
         ? delete this.errors.email
-        : (this.errors.email = "Please inform email");
+        : (this.errors.email = this.text['errors']['email']);
       if (this.telIsValid) {
         delete this.errors.tel;
         if (this.telPatternIsValid) {
           delete this.errors.tel;
         } else {
-          this.errors.tel = "Phone number is not valid";
+          this.errors.tel = this.text['errors']['phoneNotValid'];
         }
       } else {
-        this.errors.tel = "Please inform phone number";
+        this.errors.tel = this.text['errors']['phone'];
       }
       this.checkUniqueEmail == false
         ? delete this.errors.uniqueEmail
-        : (this.errors.uniqueEmail = "This email has already registered");
+        : (this.errors.uniqueEmail = this.text['errors']['emailNotUnique']);
       this.checkUniqueTel == false
         ? delete this.errors.uniqueTel
-        : (this.errors.uniqueTel = "This phone number has already registered");
+        : (this.errors.uniqueTel = this.text['errors']['phoneNotUnique']);
       if (Object.keys(this.errors).length == 0) {
         const newExecutive = {
           title_code: this.form.title,

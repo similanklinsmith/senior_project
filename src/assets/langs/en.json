@@ -261,12 +261,19 @@
         "focusSearch": "Type to find...",
         "notFound": "Not Found",
         "q1": "What is it for?",
+        "a1": "For the facts that there are many problems that KMUTT's secretaries are facing hardships in finding free timeslot to hold the meeting among KMUTT's executives such as too many channels to contact among secretaries, complicated to find the free time of them to hold the meeting. For these reasons, the objectives of Momento are not only bringing facilitate finding the right time to schedule a meeting of KMUTT's executives for related secretaries but also increases the efficiency of scheduling into a system.",
         "q2": "How do I register?",
+        "a2": "Registration Momento does not have the feature to register. Hence, you need to directly contact the Computer Center of KMUTT for adding your email for signing in to Momento.",
         "q3": "How to add executive?",
+        "a3": "Go to 'executives' > 'Add executive +' for adding the executives to whom you are accountable.",
         "q4": "How to create meeting poll appointment?",
+        "a4": "Go to 'meetings' > 'Create poll meeting +' for creating the poll meeting. After that, the email will automatically be sent to the related secretaries.",
         "q5": "How to delete meeting poll appointment?",
+        "a5": "Go to 'meetings' > 'Sent' > choose the poll meeting that you would like to delete (You .are able to delete the poll meeting if the due date has not yet been reached.) > click 'Delete poll' then the poll will disappear.",
         "q6": "How to select free time-slot?",
-        "q7": "How to create meeting?"
+        "a6": "Go to 'meetings' > 'To be confirmed' > choose the poll that you would like to reply. If you click 'Accept', it will show the popup informing free time slots.",
+        "q7": "How to create meeting?",
+        "a7": "Go to 'meeting' > 'Results' > choose the poll that you would like to hold a meeting > click 'Show schedule' inform needed information > click 'Create meeting'. After that, the email will automatically be sent to the related secretaries."
     },
     "authentication": {
         "viewProfile": "view my profile",
@@ -290,5 +297,41 @@
         "back": "Go back",
         "loading": "Loading...",
         "errorGetData": "Error Occurred. Cannot proceed any further."
+    },
+    "errors": {
+        "titleCode": "Please select title",
+        "name": "Please inform firstname",
+        "lastname": "Please inform lastname",
+        "position": "Please select position",
+        "email": "Please inform email",
+        "emailNotUnique": "This email has already registered",
+        "phone": "Please inform phone number",
+        "phoneNotValid": "Phone number is not valid",
+        "phoneNotUnique": "This phone number has already registered",
+        "title": "Please inform title",
+        "attendee": "Please select attendees",
+        "dateSlot": "Please select date slot",
+        "duration": "Please select durations",
+        "dueDate": "Please select due date",
+        "fromTime": "Please choose",
+        "interval": "NOT be greater than end time",
+        "overlap": "This time is overlapping, try again",
+        "timeDuration": "The duration of time is not correct",
+        "description": "Please inform description",
+        "location": "Please select location",
+        "otherLocation": "Please inform other location",
+        "urlNotValid": "URL link is invalid",
+        "url": "Please inform meeting link",
+        "fileSize": "Exceeding maximum file size is 30MB, try again"
+    },
+    "headerComp": {
+        "1": "Executive management",
+        "2": "Create poll meeting",
+        "3": "Inbox",
+        "4": "Sent",
+        "5": "Poll",
+        "6": "Result of poll",
+        "7": "Replied",
+        "8": "Personal setting"
     }
 }

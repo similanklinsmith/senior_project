@@ -116,50 +116,43 @@ export default {
       {
         id: 1,
         question: this.text['help']['q1'],
-        answer:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus.",
+        answer: this.text['help']['a1'],
         isSelected: false,
       },
       {
         id: 2,
         question: this.text['help']['q2'],
-        answer:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus.",
+        answer: this.text['help']['a2'],
         isSelected: false,
       },
       {
         id: 3,
         question: this.text['help']['q3'],
-        answer:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus.",
+        answer: this.text['help']['a3'],
         isSelected: false,
       },
       {
         id: 4,
         question: this.text['help']['q4'],
-        answer:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus.",
+        answer: this.text['help']['a4'],
         isSelected: false,
       },
       {
         id: 5,
         question: this.text['help']['q5'],
-        answer:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus.",
+        answer: this.text['help']['a5'],
         isSelected: false,
       },
       {
         id: 6,
         question: this.text['help']['q6'],
-        answer:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus.",
+        answer: this.text['help']['a6'],
         isSelected: false,
       },
       {
         id: 7,
         question: this.text['help']['q7'],
-        answer:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Turpis dui nulla tempor risus sapien lectus.",
+        answer: this.text['help']['a7'],
         isSelected: false,
       },
     ];

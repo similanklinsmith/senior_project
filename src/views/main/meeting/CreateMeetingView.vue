@@ -370,17 +370,17 @@ export default {
     handleSendPoll() {
       this.titleIsValid
         ? delete this.errors.title
-        : (this.errors.title = "Please inform title");
+        : (this.errors.title = this.text['errors']['title']);
       this.attendeesIsValid
         ? delete this.errors.attendees
-        : (this.errors.attendees = "Please select attendees");
+        : (this.errors.attendees = this.text['errors']['attendee']);
       this.dateSlotIsValid
         ? delete this.errors.dateSlot
-        : (this.errors.dateSlot = "Please select date slot");
-      if(this.dueDateIsValid){delete this.errors.dueDate; if(this.dueDateLessIsValid){delete this.errors.dueDate}else{this.errors.dueDate="Due date cannot be exceeded date slot"}}else{this.errors.dueDate="Please select due date"}
+        : (this.errors.dateSlot = this.text['errors']['dateSlot']);
+      if(this.dueDateIsValid){delete this.errors.dueDate; if(this.dueDateLessIsValid){delete this.errors.dueDate}else{this.errors.dueDate="Due date cannot be exceeded date slot"}}else{this.errors.dueDate=this.text['errors']['dueDate']}
       this.durationIsValid
         ? delete this.errors.duration
-        : (this.errors.duration = "Please select durations");
+        : (this.errors.duration = this.text['errors']['duration']);
       if (Object.keys(this.errors).length == 0) {
         let dateSlots = this.form.dateSlot.split(" ~ ");
         let attendees_id = this.form.selectedAttendees.map((attendee) => {

@@ -372,14 +372,14 @@ export default {
       this.fromTimeIsValid
         ? (delete this.errors.from, this.IntervalTimeIsValid)
           ? delete this.errors.interval
-          : (this.errors.interval = "NOT be greater than end time")
-        : (this.errors.from = "Please choose");
+          : (this.errors.interval = this.text['errors']['interval'])
+        : (this.errors.from = this.text['errors']['fromTime']);
       this.getOverlaps
         ? delete this.errors.overlap
-        : (this.errors.overlap = "This time is overlapping");
+        : (this.errors.overlap = this.text['errors']['overlap']);
       this.durationTimeIsValid
         ? delete this.errors.duration
-        : (this.errors.duration = "The duration of time is not correct");
+        : (this.errors.duration = this.text['errors']['timeDuration']);
       if (Object.keys(this.errors).length == 0) {
         var selectedTime = {
           from: this.timeSlot.from,

@@ -22,8 +22,8 @@
             :key="inbox.id"
             :id="inbox.id"
             :title="inbox.title"
-            :content="inbox.content"
-            :time="inbox.time"
+            :content="inbox.meeting_detail"
+            :time="inbox.created_at"
             :selectedId="selectedId"
             @selectInbox="selectInbox"
           />
@@ -37,7 +37,7 @@
       <div class="inbox-detail" v-if="selectedInbox != null">
         <div class="title remark-text">{{ selectedInbox.title }}</div>
         <div class="sent-from smallest-text">
-          sent on {{ formatDateTime(selectedInbox.create_at) }} by
+          sent on {{ formatDateTime(selectedInbox.created_at) }} by
           <span>{{ selectedInbox.secretary.name }}</span> &lt;{{
             selectedInbox.secretary.email
           }}&gt;
@@ -58,8 +58,8 @@
               }})
             </div>
             <div class="small-text">
-              {{ formatDateTime(selectedInbox.start, true) }} -
-              {{ formatDateTime(selectedInbox.end, true) }}
+              {{ formatDateTime(selectedInbox.meeting_start, true) }} -
+              {{ formatDateTime(selectedInbox.meeting_end, true) }}
             </div>
             <div class="small-text">{{ selectedInbox.location }}</div>
             <div class="small-text">{{ selectedInbox.secretary.name }}</div>
@@ -89,7 +89,7 @@
         </div>
         <div class="line" />
         <div class="meeting-detail small-text">
-          {{ selectedInbox.description }}
+          {{ selectedInbox.meeting_detail }}
         </div>
         <div class="meeting-link">
           <div class="meeting-link-label">
@@ -100,7 +100,8 @@
           </div>
           <div class="meeting-link-detail">
             <div class="small-text" id="meeting-link-value">
-              {{ selectedInbox.meeting_link }}
+              <span v-if="selectedInbox.attached_link">{{ selectedInbox.attached_link }}</span>
+              <span v-else>-</span>
             </div>
           </div>
         </div>
@@ -108,7 +109,7 @@
           <div class="attachment-file-label bold-small-text">
             Attachment File
           </div>
-          <div class="attachment-download">
+          <div class="attachment-download" v-if="selectedInbox.attached_file">
             <div class="file-section">
               <div class="first-section">
                 <div class="file-icon">
@@ -116,12 +117,13 @@
                 </div>
                 <div class="file-details">
                   <div class="file-name bold-smallest-text">
-                    {{ selectedInbox.file.title }}.{{
+                    {{ selectedInbox.attached_file }}
+                    <!-- .{{
                       selectedInbox.file.fileType
-                    }}
+                    }} -->
                   </div>
                   <div class="file-size smallest-text">
-                    {{ formatFileSize(selectedInbox.file.size) }}
+                    <!-- {{ formatFileSize(selectedInbox.file.size) }} -->
                   </div>
                 </div>
               </div>
@@ -130,6 +132,7 @@
               </div>
             </div>
           </div>
+          <div v-else>-</div>
         </div>
       </div>
     </transition>
@@ -207,112 +210,92 @@ export default {
       navigator.clipboard.writeText(copyText);
     },
     onFocus() {
-      document.getElementById("search-input-inbox").placeholder = this.text['inbox']['focusSearch'];
+      document.getElementById("search-input-inbox").placeholder =
+        this.text["inbox"]["focusSearch"];
     },
     onBlur() {
-      document.getElementById("search-input-inbox").placeholder = this.text['inbox']['placeholder'];
+      document.getElementById("search-input-inbox").placeholder =
+        this.text["inbox"]["placeholder"];
     },
   },
   mounted() {
     (this.selectedInbox = {
-      id: 1,
-      title: "Discover what’s happened this week",
-      create_at: "2022-05-15T07:40:32.000Z",
+      id: 2,
+      title: "เทสสร้าง meet ล่าสุด",
+      created_at: "2022-10-16T22:00:34.000Z",
+      meeting_detail: "This is desc",
+      attached_link: null,
+      attached_file: "1665471724458.pdf",
+      meeting_date: "2022-10-18T00:00:00.000Z",
+      meeting_start: "1970-01-01T18:30:00.000Z",
+      meeting_end: "1970-01-01T20:30:00.000Z",
+      location: "CB2301",
       secretary: {
-        id: "j7aVGmANS2ebgTBNL5ID3C8Q19v2",
-        name: "SIMILAN KLINSMITH",
-        email: "similan.klinsmith@mail.kmutt.ac.th",
+        id: "3GDeLQBYBTam3k1XjoZL1EX65HV2",
+        name: "PRAEPANWA TEDPRASIT",
+        email: "praepanwa.phaeng@mail.kmutt.ac.th",
       },
-      meeting_date: "2022-10-15T00:00:00.000Z",
-      start: "2022-05-15T10:40:32.000Z",
-      end: "2022-05-15T11:40:32.000Z",
-      location: "Microsoft Team",
-      other_location: null,
       attendees: [
         {
           id: 1,
-          title_code: "AssocProf",
-          first_name: "winter",
-          last_name: "jung",
+          title_code: "AsstProfDr",
+          first_name: "Karina",
+          last_name: "Rocketpuncher",
           img_profile: "default_profile.png",
-          email: "winter@gmail.com",
+          email: "katarina@kmutt.ac.th",
         },
         {
           id: 2,
-          title_code: "AssocProf",
-          first_name: "winter",
-          last_name: "jung",
+          title_code: "AssocProfDr",
+          first_name: "Ningning",
+          last_name: "EDHacker",
           img_profile: "default_profile.png",
-          email: "winter@gmail.com",
-        },
-        {
-          id: 4,
-          title_code: "AssocProf",
-          first_name: "minjung",
-          last_name: "kim",
-          img_profile: "default_profile.png",
-          email: "minjung@gmail.com",
-        },
-        {
-          id: 5,
-          title_code: "AssocProf",
-          first_name: "Test",
-          last_name: "Test surname",
-          img_profile: "default_profile.png",
-          email: "test@gmail.com",
+          email: "ningning@kmutt.ac.th",
         },
       ],
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-      meeting_link: "www.teams.com/meeting/ASokp98e/Uid1112",
-      file: {
-        title: "filename",
-        fileType: "pdf",
-        size: 120000,
-      },
     }),
       (this.toBeConfirmedList = [
         {
-          id: "1",
+          id: 1,
           title: "Discover what’s happened this week",
-          content:
+          meeting_detail:
             "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-          time: "2022-05-15T07:40:32.000Z",
+          created_at: "2022-10-16T22:00:34.000Z",
         },
         {
-          id: "2",
+          id: 2,
           title: "Let's have meeting",
-          content:
+          meeting_detail:
             "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-          time: "2022-05-15T07:40:32.000Z",
+          created_at: "2022-10-16T22:00:34.000Z",
         },
         {
-          id: "3",
+          id: 3,
           title: "Whatcha doin today everyone?",
-          content:
+          meeting_detail:
             "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-          time: "2022-05-15T07:40:32.000Z",
+          created_at: "2022-10-16T22:00:34.000Z",
         },
         {
-          id: "4",
+          id: 4,
           title: "Discover what’s happened this week",
-          content:
+          meeting_detail:
             "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-          time: "2022-05-15T07:40:32.000Z",
+          created_at: "2022-10-16T22:00:34.000Z",
         },
         {
-          id: "5",
+          id: 5,
           title: "Discover what’s happened this week",
-          content:
+          meeting_detail:
             "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-          time: "2022-05-15T07:40:32.000Z",
+          created_at: "2022-05-15T07:40:32.000Z",
         },
         {
-          id: "6",
+          id: 6,
           title: "Discover what’s happened this week",
-          content:
+          meeting_detail:
             "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-          time: "2022-05-15T07:40:32.000Z",
+          created_at: "2022-05-15T07:40:32.000Z",
         },
       ]);
   },

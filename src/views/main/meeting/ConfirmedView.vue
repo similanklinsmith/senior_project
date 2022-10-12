@@ -904,24 +904,24 @@ export default {
     async handleCreateMeeting() {
       this.titleIsValid
         ? delete this.errors.title
-        : (this.errors.title = "Please inform title");
+        : (this.errors.title = this.text['errors']['title']);
       this.descriptionIsValid
         ? delete this.errors.description
-        : (this.errors.description = "Please inform description");
+        : (this.errors.description = this.text['errors']['description']);
       this.fromIsValid
         ? delete this.errors.from
-        : (this.errors.from = "Please choose");
+        : (this.errors.from = this.text['errors']['fromTime']);
       this.locationIsValid
         ? delete this.errors.location
-        : (this.errors.location = "Please inform location");
+        : (this.errors.location = this.text['errors']['location']);
       if (this.form.location == "Others") {
         this.otherIsValid
           ? delete this.errors.other
-          : (this.errors.other = "Please inform other location");
+          : (this.errors.other = this.text['errors']['otherLocation']);
         if (this.form.meetingLink) {
           this.isURLValid
             ? delete this.errors.meetingLink
-            : (this.errors.meetingLink = "URL link is invalid");
+            : (this.errors.meetingLink = this.text['errors']['urlNotValid']);
         }
       }
       if (this.form.location != "Others") {
@@ -929,9 +929,9 @@ export default {
           delete this.errors.meetingLink;
           this.isURLValid
             ? delete this.errors.meetingLink
-            : (this.errors.meetingLink = "URL link is invalid");
+            : (this.errors.meetingLink = this.text['errors']['urlNotValid']);
         } else {
-          this.errors.meetingLink = "Please inform meeting link";
+          this.errors.meetingLink = this.text['errors']['url'];
         }
       } else {
         delete this.errors.meetingLink;
@@ -939,7 +939,7 @@ export default {
       if (this.dropzoneFile) {
         this.isFileSizeValid
           ? delete this.errors.fileSize
-          : (this.errors.fileSize = "Exceeding maximum file size is 30MB");
+          : (this.errors.fileSize = this.text['errors']['fileSize']);
       } else {
         delete this.errors.fileSize;
       }
