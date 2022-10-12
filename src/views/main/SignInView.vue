@@ -2,8 +2,7 @@
   <div class="sign-in-screen">
     <div class="header">
       <div class="logo-text">
-        <span class="primaryViolet">M</span>OMENT<span class="yellow">O</span
-        ><span class="fadedViolet">.</span>
+        <img src="@/assets/images/logo_text.png" alt="logo momento">
       </div>
       <div class="language" @click="changeLanguage">
         <div class="language-text">
@@ -61,7 +60,7 @@
           </template>
         </BaseButton>
         <div class="small-text information">
-          {{text['authentication']['information']}} <span>{{text['authentication']['contact']}}</span>
+          {{text['authentication']['information']}} <span><a href="https://cc.kmutt.ac.th/catalog.html" target="_blank">{{text['authentication']['contact']}}</a></span>
         </div>
       </div>
     </div>
@@ -175,19 +174,6 @@ export default {
         });
     },
   },
-  computed: {
-    emailIsValid() {
-      return (
-        !!this.form.email &&
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/.test(
-          this.form.email
-        )
-      );
-    },
-    passwordIsValid() {
-      return !!this.form.password;
-    },
-  },
   beforeMount() {
     if (this.$cookies.get("lang")) {
       this.lang = this.$cookies.get("lang");
@@ -201,223 +187,10 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/colors/webColors.scss";
-.required {
-  color: $error;
-  margin-left: 0.2rem;
-  font-size: 1.4rem !important;
-}
-.sign-in-screen {
-  width: 100%;
-  height: 100vh;
-  background-color: var(--bgHeaderComp);
-  display: flex;
-  flex-direction: column;
-  position: fixed;
-  overflow-y: scroll;
-  .before-signin,
-  .information {
-    line-height: 1.6 !important;
-  }
-  .information {
-    background-color: $primaryGrey;
-    padding: 2rem;
-    border-radius: 1rem;
-    span {
-      font-weight: 600;
-      color: $primaryViolet;
-      text-decoration: underline;
-      cursor: pointer;
-    }
-  }
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 4.8rem 7.2rem;
-    .language {
-      margin-left: 3rem;
-      position: relative;
-      cursor: pointer;
-      padding: 0 1rem;
-      height: 3.5rem;
-      background-color: $fadedViolet;
-      border-radius: 1rem;
-      transition: 0.2s all ease-in-out;
-      .language-text {
-        display: flex;
-        justify-content: space-evenly;
-        align-items: center;
-        height: 100%;
-        color: $white;
-      }
-      &:hover {
-        background-color: $highlightViolet;
-      }
-    }
-    .logo-text {
-      font-size: 3.6rem;
-      font-weight: 600;
-      color: var(--headerSignin);
-    }
-    .group-button {
-      display: flex;
-      column-gap: 1rem;
-    }
-    .primaryViolet {
-      color: $primaryViolet;
-    }
-    .yellow {
-      color: $yellow;
-    }
-    .fadedViolet {
-      color: $fadedViolet;
-    }
-  }
-  .body {
-    width: 100%;
-    height: fit-content;
-    display: grid;
-    grid-template-columns: 1.25fr 0.75fr;
-    padding: 0 7.2rem;
-    .first-section {
-      display: flex;
-      justify-content: center;
-      animation-name: appearsBottom;
-      animation-duration: 0.75s;
-      animation-iteration-count: 1;
-      .display-text {
-        display: flex;
-        flex-direction: column;
-        row-gap: 1.6rem;
-        & {
-          transform: translateY(3rem);
-          position: absolute;
-          z-index: 1;
-        }
-        .first {
-          transform: translateX(-10rem);
-          color: var(--headerSignin);
-        }
-        .second {
-          .violet {
-            color: $primaryViolet;
-          }
-          .yellow {
-            color: $yellow;
-          }
-        }
-      }
-      .lottie {
-        width: 60rem;
-        height: 60rem;
-      }
-    }
-    .second-section {
-      display: flex;
-      flex-direction: column;
-      row-gap: 2.5rem;
-      padding: 4.8rem 2rem;
-      width: 90%;
-      animation-name: appearsBottom;
-      animation-duration: 0.85s;
-      animation-iteration-count: 1;
-      .first-row {
-        display: flex;
-        flex-direction: column;
-        row-gap: 0.5rem;
-        margin-bottom: 3.6rem;
-        .thin-content-text {
-          color: $darkGrey;
-        }
-        .header-text {
-          span {
-            color: $primaryViolet;
-          }
-        }
-      }
-      .sign-in-form {
-        display: flex;
-        flex-direction: column;
-        row-gap: 2.5rem;
-      }
-    }
-  }
-}
-@media (max-width: 70em) {
-  .sign-in-screen {
-    .body {
-      grid-template-columns: 1.1fr 0.9fr;
-      .first-section {
-        .lottie {
-          width: 45rem;
-          height: 45rem;
-        }
-      }
-      .second-section {
-        .or::before,
-        .or::after {
-          letter-spacing: -10%;
-          content: "______";
-        }
-      }
-    }
-  }
-}
-@media (max-width: 63.5em) {
-  .sign-in-screen {
-    .body {
-      grid-template-columns: 1fr 1fr;
-      .first-section {
-        .lottie {
-          width: 40rem;
-          height: 40rem;
-          margin-top: 5rem;
-        }
-        .display-text {
-          .first {
-            transform: translateX(-5rem);
-          }
-        }
-      }
-      .second-section {
-        width: 100%;
-        padding: 4.8rem 0rem;
-      }
-    }
-  }
-}
-@media (max-width: 48em) {
-  .sign-in-screen {
-    .body {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      row-gap: 4.8rem;
-      .first-section {
-        width: 100%;
-        .lottie {
-          margin-top: 2rem;
-        }
-      }
-      .second-section {
-        width: 70%;
-        padding: 4.8rem 0rem;
-      }
-    }
-  }
-}
-@media (max-width: 26.75em) {
-  .sign-in-screen {
-    .header {
-      padding: 4.8rem 3.2rem;
-    }
-    .body {
-      .second-section {
-        width: 100%;
-        padding: 4.8rem 0rem;
-      }
-    }
-  }
-}
+.required {color: $error;margin-left: 0.2rem;font-size: 1.4rem !important;}
+.sign-in-screen {width: 100%;height: 100vh;background-color: var(--bgHeaderComp);display: flex;flex-direction: column;position: fixed;overflow-y: scroll;.before-signin,.information {line-height: 1.6 !important;}.information {background-color: $primaryGrey;padding: 2rem;border-radius: 1rem;span {font-weight: 600;color: $primaryViolet;text-decoration: underline;cursor: pointer;transition: 0.2s all ease-in-out;&:hover {color: $darkViolet;}}}.header {display: flex;justify-content: space-between;align-items: center;padding: 4.8rem 7.2rem;.language {position: relative;cursor: pointer;padding: 0 1rem;height: 3.5rem;background-color: $fadedViolet;border-radius: 1rem;transition: 0.2s all ease-in-out;.language-text {display: flex;justify-content: space-evenly;align-items: center;height: 100%;color: $white;}&:hover {background-color: $highlightViolet;}}.logo-text {font-size: 3.6rem;font-weight: 600;color: var(--headerSignin);img {height: 5.2rem;}}}.body {width: 100%;height: fit-content;display: grid;grid-template-columns: 1.25fr 0.75fr;padding: 0 7.2rem;.first-section {display: flex;justify-content: center;animation-name: appearsBottom;animation-duration: 0.75s;animation-iteration-count: 1;.display-text {display: flex;flex-direction: column;row-gap: 1.6rem;& {transform: translateY(3rem);position: absolute;z-index: 1;}.first {transform: translateX(-10rem);color: var(--headerSignin);}.second {.violet {color: $primaryViolet;}.yellow {color: $yellow;}}}.lottie {width: 60rem;height: 60rem;}}.second-section {display: flex;flex-direction: column;row-gap: 2.5rem;padding: 4.8rem 2rem;width: 90%;animation-name: appearsBottom;animation-duration: 0.85s;animation-iteration-count: 1;.first-row {display: flex;flex-direction: column;row-gap: 0.5rem;margin-bottom: 3.6rem;.thin-content-text {color: $darkGrey;}.header-text {span {color: $primaryViolet;}}}.sign-in-form {display: flex;flex-direction: column;row-gap: 2.5rem;}}}}
+@media (max-width: 70em) {.sign-in-screen {.body {grid-template-columns: 1.1fr 0.9fr;.first-section {.lottie {width: 45rem;height: 45rem;}}.second-section {.or::before,.or::after {letter-spacing: -10%;content: "______";}}}}}
+@media (max-width: 63.5em) {.sign-in-screen {.body {grid-template-columns: 1fr 1fr;.first-section {.lottie {width: 40rem;height: 40rem;margin-top: 5rem;}.display-text {.first {transform: translateX(-5rem);}}}.second-section {width: 100%;padding: 4.8rem 0rem;}}}}
+@media (max-width: 48em) {.sign-in-screen {.body {display: flex;flex-direction: column;justify-content: center;align-items: center;row-gap: 4.8rem;.first-section {width: 100%;.lottie {margin-top: 2rem;}}.second-section {width: 70%;padding: 4.8rem 0rem;}}}}
+@media (max-width: 26.75em) {.sign-in-screen {.header {padding: 4.8rem 3.2rem;}.body {.second-section {width: 100%;padding: 4.8rem 0rem;}}}}
 </style>

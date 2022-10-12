@@ -338,7 +338,7 @@
                     @keydown.space.prevent
                     v-model.trim="form.email"
                   />
-                  <div class="bold-small-text required">{{ errors.email }} {{ errors.uniqueEmail }}</div>
+                  <div class="bold-small-text required">{{ errors.email }} {{errors.emailCorrect}} {{ errors.uniqueEmail }}</div>
                 </div>
                 <div class="input-form">
                   <label for="phone-number" class="bold-small-text"
@@ -579,6 +579,7 @@ export default {
     lastnameIsValid() {return !!this.form.lastname;},
     positionIsValid() {return !!this.form.position;},
     emailIsValid() {return !!this.form.email;},
+    emailIsCorrect() {return /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/.test(this.form.email)},
     telIsValid() {return !!this.form.tel;},
     telPatternIsValid() {return (!!this.form.tel.match(/^[0-9]+$/) && !!(this.form.tel.length == 10 || this.form.tel.length == 9));},
     checkUniqueEmail() {
@@ -720,9 +721,16 @@ export default {
       this.positionIsValid
         ? delete this.errors.position
         : (this.errors.position = this.text['errors']['position']);
-      this.emailIsValid
-        ? delete this.errors.email
-        : (this.errors.email = this.text['errors']['email']);
+      if (this.emailIsValid) {
+        delete this.errors.email;
+        if (this.emailIsCorrect) {
+          delete this.errors.emailCorrect;
+        } else {
+          this.errors.emailCorrect = this.text['errors']['emailIsNotValid'];
+        }
+      } else {
+        this.errors.email = this.text['errors']['email']
+      }
       if (this.telIsValid) {
         delete this.errors.tel;
         if (this.telPatternIsValid) {

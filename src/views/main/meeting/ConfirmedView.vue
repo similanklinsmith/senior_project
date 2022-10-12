@@ -964,10 +964,8 @@ export default {
           date: this.form.date,
           start: this.form.from,
           end: this.form.to,
-          location:
-            this.form.location == "Others"
-              ? this.form.other
-              : this.form.location,
+          location: this.form.location,
+          otherLocation: this.form.other,
           meetingLink: this.form.meetingLink,
         };
         console.log(meeting);

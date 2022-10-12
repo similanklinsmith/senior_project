@@ -308,6 +308,7 @@
         "lastname": "Please inform lastname",
         "position": "Please select position",
         "email": "Please inform email",
+        "emailIsNotValid": "Email is not valid",
         "emailNotUnique": "This email has already registered",
         "phone": "Please inform phone number",
         "phoneNotValid": "Phone number is not valid",
