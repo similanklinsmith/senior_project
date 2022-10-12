@@ -326,6 +326,9 @@
                       </div>
                     </div>
                   </div>
+                  <div class="required bold-small-text">
+                    {{ errors.fileSize }}
+                  </div>
                   <div class="button">
                     <BaseButton
                       buttonType="outlined-button"
@@ -355,6 +358,28 @@
         </teleport>
       </template>
     </MaskMeetingDetailMobile>
+    <teleport to="#portal-target">
+      <div class="modal-loading" v-if="isLoadingSend">
+        <div class="pop-up-loading flex-col-center">
+          <div class="flex-col-center">
+            <div class="logo header-text">
+              <span class="primary-violet">M</span>OMENT<span class="yellow"
+                >O</span
+              ><span class="faded-violet">.</span>
+            </div>
+            <div class="image">
+              <img
+                src="@/assets/decorations/sending.png"
+                alt="sending illustrations"
+              />
+            </div>
+            <div class="remark-text" style="color: white">
+              {{ text["createPoll"]["sending"] }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </teleport>
   </div>
   <BaseNotFound v-else :isFailed="isFailed" />
 </template>
@@ -405,6 +430,7 @@ export default {
       isFailed: false,
       isShowCalendar: false,
       isLoading: false,
+      isLoadingSend: false,
       acceptedArray: [],
       toBeConfirmedList: [],
       inboxDetail: null,
@@ -459,6 +485,9 @@ export default {
     },
     isURLValid() {
       return this.regex.test(this.form.meetingLink);
+    },
+    isFileSizeValid() {
+      return this.dropzoneFile.size < 30000000;
     },
   },
   methods: {
@@ -745,28 +774,52 @@ export default {
       } else {
         delete this.errors.meetingLink;
       }
+      if (this.dropzoneFile) {
+        this.isFileSizeValid
+          ? delete this.errors.fileSize
+          : (this.errors.fileSize = "Exceeding maximum file size is 30MB");
+      } else {
+        delete this.errors.fileSize;
+      }
       console.log(this.errors);
       // eslint-disable-next-line
       if (Object.keys(this.errors).length == 0) {
         // create meeting
+        var currentdate = new Date();
+        var createTime = `${currentdate.getFullYear()}-${(
+          "0" +
+          (currentdate.getMonth() + 1)
+        ).slice(-2)}-${("0" + currentdate.getDate()).slice(
+          -2
+        )} ${currentdate.getHours()}:${("0" + currentdate.getMinutes()).slice(
+          -2
+        )}:${currentdate.getSeconds()}`;
         let meeting = {
+          id: this.id,
           title: this.form.title,
           description: this.form.description,
+          create_at: createTime,
           date: this.form.date,
           start: this.form.from,
           end: this.form.to,
-          location: this.form.location == 'Others' ? this.form.other : this.form.location,
+          location:
+            this.form.location == "Others"
+              ? this.form.other
+              : this.form.location,
           meetingLink: this.form.meetingLink,
         };
-        console.log(
-          "🚀 ~ file: ConfirmedView.vue ~ line 812 ~ handleCreateMeeting ~ meeting",
-          meeting
-        );
-        await this.$store.dispatch("createMeeting", {
-          newMeeting: meeting,
-          file: this.dropzoneFile ? this.dropzoneFile : null,
-        });
+        console.log(meeting);
+        this.isLoadingSend = true;
+        await this.$store
+          .dispatch("createMeeting", {
+            newMeeting: meeting,
+            file: this.dropzoneFile ? this.dropzoneFile : null,
+          })
+          .then(() => {
+            this.isLoadingSend = false;
+          });
         this.onClickCloseSchedule();
+        this.$router.go(-1);
       } else {
         location.href = "#top";
       }
@@ -819,7 +872,8 @@ export default {
   margin-top: 0.8rem;
   font-size: 1.4rem !important;
 }
-.modal {
+.modal,
+.modal-loading {
   width: 100%;
   height: 100vh;
   position: fixed;
@@ -829,6 +883,58 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+.modal-loading {
+  z-index: 15 !important;
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  background-color: rgba(24, 24, 26, 0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  .pop-up-loading {
+    position: fixed;
+    z-index: 12;
+    padding: 2.4rem 1.6rem;
+    color: $darkViolet;
+    .flex-col-center {
+      animation-name: floating;
+      -webkit-animation-name: floating;
+      animation-duration: 2s;
+      -webkit-animation-duration: 2s;
+      animation-iteration-count: infinite;
+      -webkit-animation-iteration-count: infinite;
+    }
+    .logo {
+      .primary-violet {
+        color: $primaryViolet;
+      }
+      .yellow {
+        color: $yellow;
+      }
+      .faded-violet {
+        color: $fadedViolet;
+      }
+    }
+    .image {
+      width: 15rem;
+      height: 15rem;
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+  .loading {
+    animation-name: floating;
+    -webkit-animation-name: floating;
+    animation-duration: 3s;
+    -webkit-animation-duration: 3s;
+    animation-iteration-count: infinite;
+    -webkit-animation-iteration-count: infinite;
+  }
 }
 .container {
   margin: 5rem 5%;

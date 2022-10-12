@@ -44,7 +44,7 @@ export default createStore({
     // result lists
     myResultDetailURL: `${BASE_URL}/getResult`,
     createMeetingURL: `${BASE_URL}/createMeeting`,
-    fileURL: `${BASE_URL}/fileUpload`,
+    fileURL: `${BASE_URL}/file`,
     myResultDetail: null,
 
     // replied lists
@@ -530,32 +530,32 @@ export default createStore({
       console.log(payload.newMeeting);
       try {
         const formData = new FormData();
-        formData.append("files", payload.file);
+        formData.append("file", payload.file);
         const fileResponse =
           payload.file == null
             ? null
             : await customAxios.instance.post(
               this.state.fileURL,
               formData);
-        // try {
-        //   const newMeeting = payload.newMeeting;
-        //   newMeeting["file"] =
-        //   fileResponse == null ? null : fileResponse.data.file;
-        //   console.log(newMeeting);
-        //   const response = await customAxios.instance.post(
-        //     this.state.createMeetingURL,
-        //     newMeeting,
-        //     {
-        //       headers: authHeader(),
-        //     }
-        //   );
-        //   context.commit("CREATE_MEETING", response.data.data);
-        //   context.commit("GET_SUCCESS", true);
-        //   setTimeout(() => context.commit("GET_SUCCESS", false), 3000);
-        // } catch (error) {
-        //   console.log(error.response);
-        //   setTimeout(() => context.commit("GET_FAILED", false), 3000);
-        // }
+        try {
+          const newMeeting = payload.newMeeting;
+          newMeeting["file"] =
+          fileResponse == null ? null : fileResponse.data.file_name;
+          console.log(newMeeting);
+          const response = await customAxios.instance.post(
+            this.state.createMeetingURL,
+            newMeeting,
+            {
+              headers: authHeader(),
+            }
+          );
+          context.commit("CREATE_MEETING", response.data.data);
+          context.commit("GET_SUCCESS", true);
+          setTimeout(() => context.commit("GET_SUCCESS", false), 3000);
+        } catch (error) {
+          console.log(error.response);
+          setTimeout(() => context.commit("GET_FAILED", false), 3000);
+        }
       } catch (error) {
         console.log(error.response);
         setTimeout(() => context.commit("GET_FAILED", false), 2500);

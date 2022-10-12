@@ -398,6 +398,9 @@
                         </div>
                       </div>
                     </div>
+                    <div class="required bold-small-text">
+                      {{ errors.fileSize }}
+                    </div>
                     <div class="button">
                       <BaseButton
                         buttonType="outlined-button"
@@ -446,6 +449,28 @@
     <BaseAlert v-if="getterFailed" :status="`failed`">
       {{ text["confirmed"]["failed"] }}
     </BaseAlert>
+    <teleport to="#portal-target">
+      <div class="modal-loading" v-if="isLoadingSend">
+        <div class="pop-up-loading flex-col-center">
+          <div class="flex-col-center">
+            <div class="logo header-text">
+              <span class="primary-violet">M</span>OMENT<span class="yellow"
+                >O</span
+              ><span class="faded-violet">.</span>
+            </div>
+            <div class="image">
+              <img
+                src="@/assets/decorations/sending.png"
+                alt="sending illustrations"
+              />
+            </div>
+            <div class="remark-text" style="color: white">
+              {{ text["createPoll"]["sending"] }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </teleport>
   </div>
 </template>
 
@@ -483,7 +508,7 @@ export default {
     };
     const selectedFile = () => {
       dropzoneFile.value = document.querySelector(".dropzoneFile").files[0];
-      console.log(dropzoneFile);
+      console.log(dropzoneFile.value);
     };
     const removeFile = () => {
       dropzoneFile.value = null;
@@ -505,6 +530,7 @@ export default {
       withInDate: "",
       filterDate: "",
       isLoading: false,
+      isLoadingSend: false,
       acceptedArray: [],
       searchInput: "",
       toBeConfirmedList: [],
@@ -582,6 +608,9 @@ export default {
     },
     isURLValid() {
       return this.regex.test(this.form.meetingLink);
+    },
+    isFileSizeValid() {
+      return this.dropzoneFile.size < 30000000;
     },
   },
   methods: {
@@ -669,16 +698,16 @@ export default {
       this.selectedInbox = null;
       this.selectedId = id;
       this.isLoading = true;
-        this.selectedInbox = await this.$store.dispatch(
-          "getMyResultDetail",
-          this.selectedId
+      this.selectedInbox = await this.$store.dispatch(
+        "getMyResultDetail",
+        this.selectedId
+      );
+      if (this.selectedInbox) {
+        this.expiredCount = this.calculateRemainingDay(
+          this.selectedInbox.slots[0].date
         );
-        if (this.selectedInbox) {
-          this.expiredCount = this.calculateRemainingDay(
-            this.selectedInbox.slots[0].date
-          );
-        }
-        this.isLoading = false;
+      }
+      this.isLoading = false;
     },
     onClickShowSchedule(date, index) {
       this.acceptedArray = [];
@@ -907,6 +936,13 @@ export default {
       } else {
         delete this.errors.meetingLink;
       }
+      if (this.dropzoneFile) {
+        this.isFileSizeValid
+          ? delete this.errors.fileSize
+          : (this.errors.fileSize = "Exceeding maximum file size is 30MB");
+      } else {
+        delete this.errors.fileSize;
+      }
       console.log(this.errors);
       // eslint-disable-next-line
       if (Object.keys(this.errors).length == 0) {
@@ -928,14 +964,22 @@ export default {
           date: this.form.date,
           start: this.form.from,
           end: this.form.to,
-          location: this.form.location == 'Others' ? this.form.other : this.form.location,
+          location:
+            this.form.location == "Others"
+              ? this.form.other
+              : this.form.location,
           meetingLink: this.form.meetingLink,
         };
         console.log(meeting);
-        await this.$store.dispatch("createMeeting", {
-          newMeeting: meeting,
-          file: this.dropzoneFile ? this.dropzoneFile : null,
-        });
+        this.isLoadingSend = true;
+        await this.$store
+          .dispatch("createMeeting", {
+            newMeeting: meeting,
+            file: this.dropzoneFile ? this.dropzoneFile : null,
+          })
+          .then(() => {
+            this.isLoadingSend = false;
+          });
         this.onClickCloseSchedule();
       } else {
         location.href = "#top";
@@ -985,7 +1029,8 @@ ul {
 .optional-field {
   color: $darkGrey;
 }
-.modal {
+.modal,
+.modal-loading {
   width: 100%;
   height: 100vh;
   position: fixed;
@@ -995,6 +1040,58 @@ ul {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+.modal-loading {
+  z-index: 15 !important;
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  background-color: rgba(24, 24, 26, 0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  .pop-up-loading {
+    position: fixed;
+    z-index: 12;
+    padding: 2.4rem 1.6rem;
+    color: $darkViolet;
+    .flex-col-center {
+      animation-name: floating;
+      -webkit-animation-name: floating;
+      animation-duration: 2s;
+      -webkit-animation-duration: 2s;
+      animation-iteration-count: infinite;
+      -webkit-animation-iteration-count: infinite;
+    }
+    .logo {
+      .primary-violet {
+        color: $primaryViolet;
+      }
+      .yellow {
+        color: $yellow;
+      }
+      .faded-violet {
+        color: $fadedViolet;
+      }
+    }
+    .image {
+      width: 15rem;
+      height: 15rem;
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+  .loading {
+    animation-name: floating;
+    -webkit-animation-name: floating;
+    animation-duration: 3s;
+    -webkit-animation-duration: 3s;
+    animation-iteration-count: infinite;
+    -webkit-animation-iteration-count: infinite;
+  }
 }
 .container-cust {
   top: 50%;
@@ -1091,7 +1188,7 @@ ul {
       display: flex;
       row-gap: 1.5rem;
       align-items: center;
-      margin: 1.6rem 0rem;
+      margin: 1.6rem 0rem 1rem 0rem;
       .file-section {
         display: flex;
         justify-content: space-between;
