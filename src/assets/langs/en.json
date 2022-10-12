@@ -89,7 +89,23 @@
     },
     "inbox": {
         "placeholder": "Search by title",
-        "focusSearch": "type to find..."
+        "focusSearch": "type to find...",
+        "dateWithin": "Date within",
+        "search": "Search",
+        "within": "With in",
+        "results": "Results",
+        "notFound": "Not Found",
+        "showMore": "show more",
+        "showLess": "show less",
+        "sent": "Sent on",
+        "by": "by",
+        "date": "Date",
+        "start": "Start at",
+        "location": "Location",
+        "organizer": "Organizer",
+        "attendee": "Attendees",
+        "meetingLink": "Meeting Link",
+        "attachedFile": "Attachment File"
     },
     "sent": {
         "placeholder": "Search by title",

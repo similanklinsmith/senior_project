@@ -28,7 +28,7 @@
             @selectInbox="selectInbox"
           />
           <div v-if="filterByTitle.length == 0" class="remark-text not-found">
-            Not found
+            {{ text['inbox']['notFound'] }}
           </div>
         </transition-group>
       </div>
@@ -37,7 +37,7 @@
       <div class="inbox-detail" v-if="selectedInbox != null">
         <div class="title remark-text">{{ selectedInbox.title }}</div>
         <div class="sent-from smallest-text">
-          sent on {{ formatDateTime(selectedInbox.created_at) }} by
+          {{ text['inbox']['sent'] }} {{ formatDateTime(selectedInbox.created_at) }} {{ text['inbox']['by'] }}
           <span>{{ selectedInbox.secretary.name }}</span> &lt;{{
             selectedInbox.secretary.email
           }}&gt;
@@ -45,11 +45,11 @@
         <div class="line" />
         <div class="main-details">
           <div class="label-header">
-            <div class="bold-small-text">Date:</div>
-            <div class="bold-small-text">Start at:</div>
-            <div class="bold-small-text">Location:</div>
-            <div class="bold-small-text">Organizer:</div>
-            <div class="bold-small-text">Attendees:</div>
+            <div class="bold-small-text">{{ text['inbox']['date'] }}:</div>
+            <div class="bold-small-text">{{ text['inbox']['start'] }}:</div>
+            <div class="bold-small-text">{{ text['inbox']['location'] }}:</div>
+            <div class="bold-small-text">{{ text['inbox']['organizer'] }}:</div>
+            <div class="bold-small-text">{{ text['inbox']['attendee'] }}:</div>
           </div>
           <div class="detail">
             <div class="small-text">
@@ -71,6 +71,7 @@
                 )"
                 :key="attendee.id"
               >
+                {{ formatTitle(attendee.title_code) }}
                 {{ attendee.first_name }} {{ attendee.last_name }}
                 <span v-if="index < selectedInbox.attendees.length - 1">,</span>
               </span>
@@ -79,10 +80,10 @@
                 v-if="selectedInbox.attendees.length > 3"
                 @click="showAllAttendee"
                 ><span v-if="!isShowMore"
-                  >show more&#40;{{
+                  >{{ text['inbox']['showMore'] }}&#40;{{
                     selectedInbox.attendees.length - 3
                   }}&#41;</span
-                ><span v-else>show less</span></span
+                ><span v-else>{{ text['inbox']['showLess'] }}</span></span
               >
             </div>
           </div>
@@ -93,23 +94,29 @@
         </div>
         <div class="meeting-link">
           <div class="meeting-link-label">
-            <div class="bold-small-text">Meeting Link</div>
+            <div class="bold-small-text">{{ text['inbox']['meetingLink'] }}</div>
             <div @click="copyLink('meeting-link-value')">
               <i class="icon fa-regular fa-copy"></i>
             </div>
           </div>
           <div class="meeting-link-detail">
             <div class="small-text" id="meeting-link-value">
-              <span v-if="selectedInbox.attached_link">{{ selectedInbox.attached_link }}</span>
+              <span v-if="selectedInbox.attached_link">{{
+                selectedInbox.attached_link
+              }}</span>
               <span v-else>-</span>
             </div>
           </div>
         </div>
         <div class="attachment-file">
           <div class="attachment-file-label bold-small-text">
-            Attachment File
+            {{ text['inbox']['attachedFile'] }}
           </div>
-          <div class="attachment-download" v-if="selectedInbox.attached_file">
+          <div
+            class="attachment-download"
+            v-if="selectedInbox.attached_file"
+            @click="downloadFile(selectedInbox.attached_file)"
+          >
             <div class="file-section">
               <div class="first-section">
                 <div class="file-icon">
@@ -118,9 +125,6 @@
                 <div class="file-details">
                   <div class="file-name bold-smallest-text">
                     {{ selectedInbox.attached_file }}
-                    <!-- .{{
-                      selectedInbox.file.fileType
-                    }} -->
                   </div>
                   <div class="file-size smallest-text">
                     <!-- {{ formatFileSize(selectedInbox.file.size) }} -->
@@ -128,7 +132,7 @@
                 </div>
               </div>
               <div class="file-download">
-                <i class="icon fa-solid fa-caret-down"></i>
+                <i class="fa-solid fa-circle-down icon"></i>
               </div>
             </div>
           </div>
@@ -141,6 +145,7 @@
 
 <script>
 import InboxComp from "@/components/meeting/InboxComp.vue";
+import { mapGetters, mapActions } from "vuex";
 import {
   formatDateTimeDetail,
   formatDateTimeHeader,
@@ -163,15 +168,35 @@ export default {
     };
   },
   computed: {
+    ...mapGetters([
+      "getterMyInboxes",
+      "getterMyInboxDetail",
+      "getterExecutiveTitles",
+      "getterSuccess",
+      "getterFailed",
+    ]),
+    getInboxesList() {
+      return this.$store.getters.getterMyInboxes;
+    },
     filterByTitle() {
-      return this.toBeConfirmedList.filter((toBeConfirmed) => {
-        return toBeConfirmed.title
+      return this.getInboxesList.filter((inbox) => {
+        return inbox.title
           .toLowerCase()
           .includes(this.searchInput.toLowerCase());
       });
     },
   },
   methods: {
+    ...mapActions([
+      "getMyInboxes",
+      "getMyInboxDetail",
+      "getExecutiveTitle",
+      "downloadWithAxios",
+    ]),
+    downloadFile(name) {
+      console.log(name);
+      this.$store.dispatch("downloadWithAxios", name);
+    },
     formatFileSize(size) {
       return formatBytes(size);
     },
@@ -184,26 +209,29 @@ export default {
     formatDateShort(date) {
       return formatDateTimeInbox(date);
     },
+    formatTitle(str) {
+      return this.getterExecutiveTitles[str];
+    },
     showAllAttendee(attendees) {
       this.isShowMore = !this.isShowMore;
       this.isShowMore ? (this.slice = attendees.length) : (this.slice = 3);
     },
-    selectInbox(id) {
+    async selectInbox(id) {
       this.selectedId = id;
-      // this.selectedInbox = this.toBeConfirmedList.find((toBeConfirmed) => {
-      //   this.selectedId = id;
-      //   return toBeConfirmed.id == id;
-      // });
-      // try {
-      // this.inboxDetail = await this.$store.dispatch(
-      //   "getMyBeConfirmedDetail",
-      //   this.selectedId
-      // );
-      //   console.log(this.inboxDetail);
-      //   this.isLoading = false;
-      // } catch (error) {
-      //   this.isLoading = false;
-      // }
+      this.selectedInbox = null;
+      this.isShowMore = false;
+      this.slice = 3;
+      this.isLoading = true;
+      try {
+        this.selectedInbox = await this.$store.dispatch(
+          "getMyInboxDetail",
+          this.selectedId
+        );
+        console.log(this.selectedInbox);
+        this.isLoading = false;
+      } catch (error) {
+        this.isLoading = false;
+      }
     },
     copyLink(value) {
       let copyText = document.getElementById(value).innerHTML;
@@ -218,86 +246,9 @@ export default {
         this.text["inbox"]["placeholder"];
     },
   },
-  mounted() {
-    (this.selectedInbox = {
-      id: 2,
-      title: "เทสสร้าง meet ล่าสุด",
-      created_at: "2022-10-16T22:00:34.000Z",
-      meeting_detail: "This is desc",
-      attached_link: null,
-      attached_file: "1665471724458.pdf",
-      meeting_date: "2022-10-18T00:00:00.000Z",
-      meeting_start: "1970-01-01T18:30:00.000Z",
-      meeting_end: "1970-01-01T20:30:00.000Z",
-      location: "CB2301",
-      secretary: {
-        id: "3GDeLQBYBTam3k1XjoZL1EX65HV2",
-        name: "PRAEPANWA TEDPRASIT",
-        email: "praepanwa.phaeng@mail.kmutt.ac.th",
-      },
-      attendees: [
-        {
-          id: 1,
-          title_code: "AsstProfDr",
-          first_name: "Karina",
-          last_name: "Rocketpuncher",
-          img_profile: "default_profile.png",
-          email: "katarina@kmutt.ac.th",
-        },
-        {
-          id: 2,
-          title_code: "AssocProfDr",
-          first_name: "Ningning",
-          last_name: "EDHacker",
-          img_profile: "default_profile.png",
-          email: "ningning@kmutt.ac.th",
-        },
-      ],
-    }),
-      (this.toBeConfirmedList = [
-        {
-          id: 1,
-          title: "Discover what’s happened this week",
-          meeting_detail:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-          created_at: "2022-10-16T22:00:34.000Z",
-        },
-        {
-          id: 2,
-          title: "Let's have meeting",
-          meeting_detail:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-          created_at: "2022-10-16T22:00:34.000Z",
-        },
-        {
-          id: 3,
-          title: "Whatcha doin today everyone?",
-          meeting_detail:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-          created_at: "2022-10-16T22:00:34.000Z",
-        },
-        {
-          id: 4,
-          title: "Discover what’s happened this week",
-          meeting_detail:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-          created_at: "2022-10-16T22:00:34.000Z",
-        },
-        {
-          id: 5,
-          title: "Discover what’s happened this week",
-          meeting_detail:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-          created_at: "2022-05-15T07:40:32.000Z",
-        },
-        {
-          id: 6,
-          title: "Discover what’s happened this week",
-          meeting_detail:
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum fuga perspiciatis esse consequatur sequi consequuntur!",
-          created_at: "2022-05-15T07:40:32.000Z",
-        },
-      ]);
+  created() {
+    this.getMyInboxes();
+    this.getExecutiveTitle();
   },
   beforeMount() {
     if (this.$cookies.get("lang")) {
@@ -424,7 +375,7 @@ export default {
     }
     .main-details {
       display: grid;
-      grid-template-columns: 0.15fr 0.85fr;
+      grid-template-columns: 0.2fr 0.8fr;
       .label-header,
       .detail {
         display: flex;
@@ -509,6 +460,13 @@ export default {
         row-gap: 1.5rem;
         align-items: center;
         cursor: pointer;
+        transition: 0.3s all ease-in-out;
+        &:hover {
+          background-color: $fadedViolet;
+          .file-download {
+            color: $primaryViolet !important;
+          }
+        }
         .file-section {
           display: flex;
           justify-content: space-between;
@@ -543,6 +501,7 @@ export default {
           .file-download {
             font-size: 1.4rem;
             color: $darkGrey;
+            transition: 0.3s all ease-in-out;
           }
         }
       }

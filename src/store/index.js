@@ -53,6 +53,12 @@ export default createStore({
     myReplies: [],
     myReplyDetail: null,
 
+    // inbox lists
+    myInboxURL: `${BASE_URL}/allmeeting`,
+    myInboxDetailURL: `${BASE_URL}/meeting`,
+    myInboxes: [],
+    myInboxDetail: null,
+
     loadingStatus: false,
     success: false,
     failed: false,
@@ -148,6 +154,12 @@ export default createStore({
     },
     GET_MY_REPLY_DETAIL(state, replyDetail) {
       state.myReplyDetail = replyDetail;
+    },
+    GET_MY_INBOXES(state, inboxes) {
+      state.myInboxes = inboxes;
+    },
+    GET_MY_INBOX_DETAIL(state, inboxDetail) {
+      state.myInboxDetail = inboxDetail;
     },
   },
   actions: {
@@ -534,13 +546,11 @@ export default createStore({
         const fileResponse =
           payload.file == null
             ? null
-            : await customAxios.instance.post(
-              this.state.fileURL,
-              formData);
+            : await customAxios.instance.post(this.state.fileURL, formData);
         try {
           const newMeeting = payload.newMeeting;
           newMeeting["file"] =
-          fileResponse == null ? null : fileResponse.data.file_name;
+            fileResponse == null ? null : fileResponse.data.file_name;
           console.log(newMeeting);
           const response = await customAxios.instance.post(
             this.state.createMeetingURL,
@@ -560,6 +570,58 @@ export default createStore({
         console.log(error.response);
         setTimeout(() => context.commit("GET_FAILED", false), 2500);
       }
+    },
+    async getMyInboxes(context) {
+      context.commit("GET_LOADING_STATUS", true);
+      try {
+        const data = await customAxios.instance.get(this.state.myInboxURL, {
+          headers: authHeader(),
+        });
+        context.commit(
+          "GET_MY_INBOXES",
+          data.data.data.sort((a, b) => {
+            return new Date(b.created_at) - new Date(a.created_at);
+          })
+        );
+        context.commit("GET_LOADING_STATUS", false);
+      } catch (error) {
+        context.commit("GET_LOADING_STATUS", false);
+        console.log(error.response);
+      }
+    },
+    async getMyInboxDetail(context, id) {
+      context.commit("GET_LOADING_STATUS", true);
+      try {
+        const data = await customAxios.instance.get(
+          this.state.myInboxDetailURL + "/" + id,
+          {
+            headers: authHeader(),
+          }
+        );
+        context.commit("GET_MY_INBOX_DETAIL", data.data.data);
+        context.commit("GET_LOADING_STATUS", false);
+        return data.data.data;
+      } catch (error) {
+        context.commit("GET_LOADING_STATUS", false);
+        console.log(error);
+      }
+    },
+    downloadWithAxios(_, payload) {
+      customAxios.instance
+        .get(this.state.fileURL + "/" + payload, {
+          headers: authHeader(),
+          responseType: "blob",
+        })
+        .then((response) => {
+          console.log(response);
+          var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+          var fileLink = document.createElement("a");
+          fileLink.href = fileURL;
+          fileLink.setAttribute("download", payload);
+          document.body.appendChild(fileLink);
+          fileLink.click();
+        })
+        .catch(() => console.log("error occured"));
     },
   },
   getters: {
@@ -605,6 +667,12 @@ export default createStore({
     },
     getterMyReplyDetail(state) {
       return state.myReplyDetail;
+    },
+    getterMyInboxes(state) {
+      return state.myInboxes;
+    },
+    getterMyInboxDetail(state) {
+      return state.myInboxDetail;
     },
   },
   modules: { auth },

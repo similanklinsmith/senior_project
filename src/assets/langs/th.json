@@ -89,7 +89,23 @@
     },
     "inbox": {
         "placeholder": "ค้นหาด้วยชื่อเรื่อง",
-        "focusSearch": "พิมพ์เพื่อค้นหา..."
+        "focusSearch": "พิมพ์เพื่อค้นหา...",
+        "dateWithin": "ภายในวันที่",
+        "search": "ค้นหา",
+        "within": "วันที่",
+        "results": "ผลลัพธ์",
+        "notFound": "ไม่พบการค้นหา",
+        "showMore": "แสดงเพิ่มเติม",
+        "showLess": "แสดงน้อยลง",
+        "sent": "ส่งเมื่อ",
+        "by": "โดย",
+        "date": "วันที่",
+        "start": "เริ่ม",
+        "location": "สถานที่",
+        "organizer": "ผู้จัด",
+        "attendee": "ผู้เข้าร่วมประชุม",
+        "meetingLink": "ลิงก์ในการประชุม",
+        "attachedFile": "ไฟล์ที่แนบ"
     },
     "sent": {
         "placeholder": "ค้นหาด้วยชื่อเรื่อง",
