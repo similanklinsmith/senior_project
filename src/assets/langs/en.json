@@ -282,7 +282,11 @@
         "signIn": "Sign in",
         "signInMicrosoft": "Sign in with Microsoft",
         "error": "We apologize for the inconvenience due to disruption. Please try again.",
-        "close": "Close"
+        "close": "Close",
+        "welcome": "Welcome to ",
+        "caption": "We provide facility for you to find the time slot to schedule the meeting",
+        "information": "For now, you are only able to use only KMUTT's secretaries microsoft account to sign in. If you do not have permission please contact to Computer Center of KMUTT",
+        "contact": "Contact now"
     },
     "input": {
         "none": "none"

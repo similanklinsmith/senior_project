@@ -5,19 +5,22 @@
         <span class="primaryViolet">M</span>OMENT<span class="yellow">O</span
         ><span class="fadedViolet">.</span>
       </div>
-      <BaseButton
-        buttonType="outlined-button"
-        :btnText="text['authentication']['signIn']"
-        textColor="#7452FF"
-        textHover="white"
-        color="#7452FF"
-        hoverColor="#23106D"
-        @onClick="signInWithMicrosoft"
-      >
-        <template v-slot:before-icon>
-          <i class="fa-regular fa-user"></i>
-        </template>
-      </BaseButton>
+      <div class="language" @click="changeLanguage">
+        <div class="language-text">
+          <div class="bold-small-text" v-if="lang == 'th'">
+            <span :style="lang == 'th' ? { color: '#23106D' } : {}">{{
+              lang.toUpperCase()
+            }}</span>
+            | EN
+          </div>
+          <div class="bold-small-text" v-else>
+            <span :style="lang == 'en' ? { color: '#23106D' } : {}">{{
+              lang.toUpperCase()
+            }}</span>
+            | TH
+          </div>
+        </div>
+      </div>
     </div>
     <div class="body">
       <div class="first-section">
@@ -38,49 +41,12 @@
         ></lottie-player>
       </div>
       <div class="second-section">
-        <form @submit.prevent="handleSignIn" class="sign-in-form">
-          <div class="input-form">
-            <label for="email" class="bold-small-text"
-              >Email<span class="required">* {{ errors.email }} </span></label
-            >
-            <input
-              class="small-text"
-              type="text"
-              placeholder="Email"
-              id="email"
-              name="email"
-              v-model="form.email"
-            />
+        <div class="first-row">
+          <div class="header-text">{{text['authentication']['welcome']}} <span>MOMENT<span :style="{color: '#FFCB57'}">O</span><span :style="{color: '#DBD2FF'}">.</span></span></div>
+          <div class="thin-content-text before-signin">
+            {{text['authentication']['caption']}}
           </div>
-          <div class="input-form">
-            <label for="password" class="bold-small-text"
-              >Password<span class="required"
-                >* {{ errors.password }}</span
-              ></label
-            >
-            <input
-              class="small-text"
-              type="password"
-              placeholder="Password"
-              id="password"
-              name="password"
-              v-model="form.password"
-            />
-          </div>
-          <div class="required" v-if="notFound">{{ notFound }}</div>
-          <div class="forget-password bold-small-text">Forget password?</div>
-          <BaseButton
-            buttonType="common-button"
-            btnText="Sign in"
-            textColor="white"
-            textHover="white"
-            color="#7452FF"
-            hoverColor="#23106D"
-            type="submit"
-          >
-          </BaseButton>
-        </form>
-        <div class="or thin-content-text">or continue with</div>
+        </div>
         <BaseButton
           buttonType="outlined-button"
           :btnText="text['authentication']['signInMicrosoft']"
@@ -94,6 +60,9 @@
             <i class="fa-brands fa-windows"></i>
           </template>
         </BaseButton>
+        <div class="small-text information">
+          {{text['authentication']['information']}} <span>{{text['authentication']['contact']}}</span>
+        </div>
       </div>
     </div>
     <BasePopup
@@ -102,7 +71,7 @@
       :image="require(`@/assets/decorations/delete_executive.png`)"
     >
       <template v-slot:popupContent>
-        {{text['authentication']['error']}}
+        {{ text["authentication"]["error"] }}
         [Error: {{ statusCode }}]
       </template>
       <template v-slot:buttons>
@@ -146,6 +115,14 @@ export default {
     };
   },
   methods: {
+    changeLanguage() {
+      if (this.lang == "en") {
+        this.$cookies.set("lang", "th");
+      } else {
+        this.$cookies.set("lang", "en");
+      }
+      window.location.reload();
+    },
     signInWithMicrosoft() {
       const provider = new OAuthProvider("microsoft.com");
       const auth = getAuth();
@@ -165,34 +142,16 @@ export default {
           axios
             .post(`${BASE_URL}/filterPermission`, jsonEmail)
             .then(() => {
-              // console.log(
-              //   "🚀 ~ file: SignInView.vue ~ line 143 ~ .then ~ result",
-              //   result
-              // );
               const credential = OAuthProvider.credentialFromResult(result);
-              // console.log(
-              //   "🚀 ~ file: SignInView.vue ~ line 155 ~ .then ~ credential",
-              //   credential
-              // );
               const accessToken = credential.accessToken;
-              // const idToken = credential.idToken;
-              // console.log("------ACCESS TOKEN------");
-              // console.log(accessToken);
               localStorage.setItem("accessToken", accessToken);
-              // console.log("------ID TOKEN------");
-              // console.log(idToken);
               this.$cookies.set(
                 "refreshToken",
                 result.user.stsTokenManager.refreshToken
               );
-              // console.log("------GET ID TOKEN--------");
               getAuth()
                 .currentUser.getIdToken()
                 .then((result) => {
-                  // console.log(
-                  //   "🚀 ~ file: SignInView.vue ~ line 160 ~ getAuth ~ result",
-                  //   result
-                  // );
                   localStorage.setItem("user", result);
                   this.$cookies.set("idToken", result);
                 });
@@ -215,38 +174,6 @@ export default {
           this.statusCode = error;
         });
     },
-    handleSignIn() {
-      // this.emailIsValid
-      //   ? delete this.errors.email
-      //   : (this.errors.email = "Please inform e-mail correctly");
-      // this.passwordIsValid
-      //   ? delete this.errors.password
-      //   : (this.errors.password = "Please inform password correctly");
-      // if (Object.keys(this.errors).length == 0) {
-      //   let user = {
-      //     email: this.form.email,
-      //     password: this.form.password,
-      //   };
-      //   this.loading = true;
-      //   this.$store.dispatch("auth/login", user).then(
-      //     () => {
-      //       this.notFound = "";
-      //       this.$router.push("/");
-      //     },
-      //     (err) => {
-      //       this.isShowPopup = true;
-      //       this.form.password = "";
-      //       console.log(err.response.status);
-      //       if (err.response.status == 403 || err.response.status == 404) {
-      //         this.notFound = "Email or Password is invalid";
-      //       } else {
-      //         this.isShowPopup = true;
-      //         this.statusCode = err.response.status;
-      //       }
-      //     }
-      //   );
-      // }
-    },
   },
   computed: {
     emailIsValid() {
@@ -265,10 +192,10 @@ export default {
     if (this.$cookies.get("lang")) {
       this.lang = this.$cookies.get("lang");
     } else {
-      this.lang = "en"
+      this.lang = "en";
     }
     this.text = require(`@/assets/langs/${this.lang}.json`);
-  }
+  },
 };
 </script>
 
@@ -287,11 +214,46 @@ export default {
   flex-direction: column;
   position: fixed;
   overflow-y: scroll;
+  .before-signin,
+  .information {
+    line-height: 1.6 !important;
+  }
+  .information {
+    background-color: $primaryGrey;
+    padding: 2rem;
+    border-radius: 1rem;
+    span {
+      font-weight: 600;
+      color: $primaryViolet;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
   .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 4.8rem 7.2rem;
+    .language {
+      margin-left: 3rem;
+      position: relative;
+      cursor: pointer;
+      padding: 0 1rem;
+      height: 3.5rem;
+      background-color: $fadedViolet;
+      border-radius: 1rem;
+      transition: 0.2s all ease-in-out;
+      .language-text {
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        height: 100%;
+        color: $white;
+      }
+      &:hover {
+        background-color: $highlightViolet;
+      }
+    }
     .logo-text {
       font-size: 3.6rem;
       font-weight: 600;
@@ -320,7 +282,9 @@ export default {
     .first-section {
       display: flex;
       justify-content: center;
-      animation-name: appearsBottom;animation-duration: 0.75s;animation-iteration-count: 1;
+      animation-name: appearsBottom;
+      animation-duration: 0.75s;
+      animation-iteration-count: 1;
       .display-text {
         display: flex;
         flex-direction: column;
@@ -354,57 +318,27 @@ export default {
       row-gap: 2.5rem;
       padding: 4.8rem 2rem;
       width: 90%;
-      animation-name: appearsBottom;animation-duration: 0.85s;animation-iteration-count: 1;
+      animation-name: appearsBottom;
+      animation-duration: 0.85s;
+      animation-iteration-count: 1;
+      .first-row {
+        display: flex;
+        flex-direction: column;
+        row-gap: 0.5rem;
+        margin-bottom: 3.6rem;
+        .thin-content-text {
+          color: $darkGrey;
+        }
+        .header-text {
+          span {
+            color: $primaryViolet;
+          }
+        }
+      }
       .sign-in-form {
         display: flex;
         flex-direction: column;
         row-gap: 2.5rem;
-      }
-      .input-form {
-        display: flex;
-        flex-direction: column;
-        label {
-          color: var(--headerSignin);
-        }
-        input[type="text"],
-        input[type="password"] {
-          margin-top: 1rem;
-          padding: 1rem 1.4rem;
-          height: 4rem;
-          border-radius: 0.5rem;
-          border: none;
-          background-color: $primaryGrey;
-          font-family: "Poppins", sans-serif;
-        }
-        input[type="text"]:focus,
-        input[type="password"]:focus {
-          outline: none;
-          border: 0.1rem solid $primaryViolet;
-        }
-        input::placeholder {
-          font-size: 1.4rem;
-          color: $darkGrey;
-        }
-      }
-      .forget-password {
-        text-align: right;
-        cursor: pointer;
-        transition: all 0.2s ease-in-out;
-        color: var(--headerSignin);
-      }
-      .forget-password:hover {
-        color: $primaryViolet;
-      }
-      .or {
-        color: $darkGrey;
-        width: 100%;
-        text-align: center;
-        font-family: "Lato", sans-serif;
-      }
-      .or::before,
-      .or::after {
-        letter-spacing: -10%;
-        content: "______________";
       }
     }
   }
@@ -474,10 +408,10 @@ export default {
   }
 }
 @media (max-width: 26.75em) {
-  input {
-    height: 4.8rem !important;
-  }
   .sign-in-screen {
+    .header {
+      padding: 4.8rem 3.2rem;
+    }
     .body {
       .second-section {
         width: 100%;
