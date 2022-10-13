@@ -281,6 +281,7 @@
                     name="name"
                     @keydown.space.prevent
                     v-model.trim="form.firstname"
+                    maxlength="100"
                   />
                   <div class="bold-small-text required">{{ errors.firstname }}</div>
                 </div>
@@ -300,6 +301,7 @@
                     name="surname"
                     @keydown.space.prevent
                     v-model.trim="form.lastname"
+                    maxlength="100"
                   />
                   <div class="bold-small-text required">{{ errors.lastname }}</div>
                 </div>
@@ -337,6 +339,7 @@
                     name="email"
                     @keydown.space.prevent
                     v-model.trim="form.email"
+                    maxlength="80"
                   />
                   <div class="bold-small-text required">{{ errors.email }} {{errors.emailCorrect}} {{ errors.uniqueEmail }}</div>
                 </div>
@@ -354,6 +357,7 @@
                     name="phone-number"
                     @keydown.space.prevent
                     v-model.trim="form.tel"
+                    maxlength="10"
                   />
                   <div class="bold-small-text required">{{ errors.tel }} {{ errors.uniqueTel}} </div>
                 </div>

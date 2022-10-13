@@ -75,6 +75,7 @@
               id="title"
               name="title"
               v-model="form.title"
+              maxlength="200"
             />
             <div class="bold-small-text required">{{ errors.title }}</div>
           </div>

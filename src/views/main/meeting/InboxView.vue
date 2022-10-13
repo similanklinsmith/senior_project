@@ -23,120 +23,151 @@
             :id="inbox.id"
             :title="inbox.title"
             :content="inbox.meeting_detail"
-            :time="inbox.created_at"
+            :time="inbox.create_at"
             :selectedId="selectedId"
             @selectInbox="selectInbox"
           />
           <div v-if="filterByTitle.length == 0" class="remark-text not-found">
-            {{ text['inbox']['notFound'] }}
+            {{ text["inbox"]["notFound"] }}
           </div>
         </transition-group>
       </div>
     </div>
     <transition name="route">
-      <div class="inbox-detail" v-if="selectedInbox != null">
-        <div class="title remark-text">{{ selectedInbox.title }}</div>
-        <div class="sent-from smallest-text">
-          {{ text['inbox']['sent'] }} {{ formatDateTime(selectedInbox.created_at) }} {{ text['inbox']['by'] }}
-          <span>{{ selectedInbox.secretary.name }}</span> &lt;{{
-            selectedInbox.secretary.email
-          }}&gt;
-        </div>
-        <div class="line" />
-        <div class="main-details">
-          <div class="label-header">
-            <div class="bold-small-text">{{ text['inbox']['date'] }}:</div>
-            <div class="bold-small-text">{{ text['inbox']['start'] }}:</div>
-            <div class="bold-small-text">{{ text['inbox']['location'] }}:</div>
-            <div class="bold-small-text">{{ text['inbox']['organizer'] }}:</div>
-            <div class="bold-small-text">{{ text['inbox']['attendee'] }}:</div>
-          </div>
-          <div class="detail">
-            <div class="small-text">
-              {{ formatDate(selectedInbox.meeting_date, lang) }} ({{
-                formatDateShort(selectedInbox.meeting_date)
-              }})
+      <div v-if="selectedId != null">
+        <div class="inbox-detail">
+          <div
+            class="inbox-detail-content"
+            v-if="isLoading == false && selectedInbox != null"
+          >
+            <div class="title remark-text">{{ selectedInbox.title }}</div>
+            <div class="sent-from smallest-text">
+              {{ text["inbox"]["sent"] }}
+              {{ formatDateTime(selectedInbox.create_at) }}
+              {{ text["inbox"]["by"] }}
+              <span>{{ selectedInbox.secretary.name }}</span> &lt;{{
+                selectedInbox.secretary.email
+              }}&gt;
             </div>
-            <div class="small-text">
-              {{ formatDateTime(selectedInbox.meeting_start, true) }} -
-              {{ formatDateTime(selectedInbox.meeting_end, true) }}
+            <div class="line" />
+            <div class="main-details">
+              <div class="label-header">
+                <div class="bold-small-text">{{ text["inbox"]["date"] }}:</div>
+                <div class="bold-small-text">{{ text["inbox"]["start"] }}:</div>
+                <div class="bold-small-text">
+                  {{ text["inbox"]["location"] }}:
+                </div>
+                <div class="bold-small-text">
+                  {{ text["inbox"]["organizer"] }}:
+                </div>
+                <div class="bold-small-text">
+                  {{ text["inbox"]["attendee"] }}:
+                </div>
+              </div>
+              <div class="detail">
+                <div class="small-text">
+                  {{ formatDate(selectedInbox.meeting_date, lang) }} ({{
+                    formatDateShort(selectedInbox.meeting_date)
+                  }})
+                </div>
+                <div class="small-text">
+                  {{ formatDateTime(selectedInbox.meeting_start, true) }} -
+                  {{ formatDateTime(selectedInbox.meeting_end, true) }}
+                </div>
+                <div class="small-text">{{ selectedInbox.location }}</div>
+                <div class="small-text">{{ selectedInbox.secretary.name }}</div>
+                <div class="small-text">
+                  <span
+                    v-for="(attendee, index) in selectedInbox.attendees.slice(
+                      0,
+                      slice
+                    )"
+                    :key="attendee.id"
+                  >
+                    {{ formatTitle(attendee.executive.title_code) }}
+                    {{ attendee.executive.first_name }} {{ attendee.executive.last_name }}
+                    <span v-if="index < selectedInbox.attendees.length - 1"
+                      >,</span
+                    >
+                  </span>
+                  <span
+                    class="see-more"
+                    v-if="selectedInbox.attendees.length > 3"
+                    @click="showAllAttendee"
+                    ><span v-if="!isShowMore"
+                      >{{ text["inbox"]["showMore"] }}&#40;{{
+                        selectedInbox.attendees.length - 3
+                      }}&#41;</span
+                    ><span v-else>{{ text["inbox"]["showLess"] }}</span></span
+                  >
+                </div>
+              </div>
             </div>
-            <div class="small-text">{{ selectedInbox.location }}</div>
-            <div class="small-text">{{ selectedInbox.secretary.name }}</div>
-            <div class="small-text">
-              <span
-                v-for="(attendee, index) in selectedInbox.attendees.slice(
-                  0,
-                  slice
-                )"
-                :key="attendee.id"
+            <div class="line" />
+            <div class="meeting-detail small-text">
+              {{ selectedInbox.meeting_detail }}
+            </div>
+            <div class="meeting-link">
+              <div class="meeting-link-label">
+                <div class="bold-small-text">
+                  {{ text["inbox"]["meetingLink"] }}
+                </div>
+                <div @click="copyLink('meeting-link-value')">
+                  <i class="icon fa-regular fa-copy"></i>
+                </div>
+              </div>
+              <div class="meeting-link-detail">
+                <div class="small-text" id="meeting-link-value">
+                  <span v-if="selectedInbox.attached_link">{{
+                    selectedInbox.attached_link
+                  }}</span>
+                  <span v-else class="grey">-ไม่มีลิงก์การประชุม-</span>
+                </div>
+              </div>
+            </div>
+            <div class="attachment-file">
+              <div class="attachment-file-label bold-small-text">
+                {{ text["inbox"]["attachedFile"] }}
+              </div>
+              <div
+                class="attachment-download"
+                v-if="selectedInbox.attached_file"
+                @click="downloadFile(selectedInbox.attached_file)"
               >
-                {{ formatTitle(attendee.title_code) }}
-                {{ attendee.first_name }} {{ attendee.last_name }}
-                <span v-if="index < selectedInbox.attendees.length - 1">,</span>
-              </span>
-              <span
-                class="see-more"
-                v-if="selectedInbox.attendees.length > 3"
-                @click="showAllAttendee"
-                ><span v-if="!isShowMore"
-                  >{{ text['inbox']['showMore'] }}&#40;{{
-                    selectedInbox.attendees.length - 3
-                  }}&#41;</span
-                ><span v-else>{{ text['inbox']['showLess'] }}</span></span
-              >
+                <div class="file-section">
+                  <div class="first-section">
+                    <div class="file-icon">
+                      <i class="icon fa-solid fa-file"></i>
+                    </div>
+                    <div class="file-details">
+                      <div class="file-name bold-smallest-text">
+                        {{ selectedInbox.attached_file }}
+                      </div>
+                      <div class="file-size smallest-text">
+                        <!-- {{ formatFileSize(selectedInbox.file.size) }} -->
+                      </div>
+                    </div>
+                  </div>
+                  <div class="file-download">
+                    <i class="fa-solid fa-circle-down icon"></i>
+                  </div>
+                </div>
+              </div>
+              <div v-else class='grey'>-ไม่มีไฟล์การประชุม-</div>
             </div>
-          </div>
-        </div>
-        <div class="line" />
-        <div class="meeting-detail small-text">
-          {{ selectedInbox.meeting_detail }}
-        </div>
-        <div class="meeting-link">
-          <div class="meeting-link-label">
-            <div class="bold-small-text">{{ text['inbox']['meetingLink'] }}</div>
-            <div @click="copyLink('meeting-link-value')">
-              <i class="icon fa-regular fa-copy"></i>
-            </div>
-          </div>
-          <div class="meeting-link-detail">
-            <div class="small-text" id="meeting-link-value">
-              <span v-if="selectedInbox.attached_link">{{
-                selectedInbox.attached_link
-              }}</span>
-              <span v-else>-</span>
-            </div>
-          </div>
-        </div>
-        <div class="attachment-file">
-          <div class="attachment-file-label bold-small-text">
-            {{ text['inbox']['attachedFile'] }}
           </div>
           <div
-            class="attachment-download"
-            v-if="selectedInbox.attached_file"
-            @click="downloadFile(selectedInbox.attached_file)"
+            v-else-if="isLoading == true && selectedInbox == null"
+            class="remark-text not-found loading"
           >
-            <div class="file-section">
-              <div class="first-section">
-                <div class="file-icon">
-                  <i class="icon fa-solid fa-file"></i>
-                </div>
-                <div class="file-details">
-                  <div class="file-name bold-smallest-text">
-                    {{ selectedInbox.attached_file }}
-                  </div>
-                  <div class="file-size smallest-text">
-                    <!-- {{ formatFileSize(selectedInbox.file.size) }} -->
-                  </div>
-                </div>
-              </div>
-              <div class="file-download">
-                <i class="fa-solid fa-circle-down icon"></i>
-              </div>
-            </div>
+            {{ text["inbox"]["loading"] }}
           </div>
-          <div v-else>-</div>
+          <div
+            v-else-if="isLoading == false && selectedInbox == null"
+            class="remark-text not-found"
+          >
+            {{ text["notFound"]["errorGetData"] }}
+          </div>
         </div>
       </div>
     </transition>
@@ -157,6 +188,7 @@ export default {
   components: { InboxComp },
   data() {
     return {
+      isLoading: false,
       text: null,
       lang: null,
       searchInput: "",
@@ -194,7 +226,6 @@ export default {
       "downloadWithAxios",
     ]),
     downloadFile(name) {
-      console.log(name);
       this.$store.dispatch("downloadWithAxios", name);
     },
     formatFileSize(size) {
@@ -227,7 +258,6 @@ export default {
           "getMyInboxDetail",
           this.selectedId
         );
-        console.log(this.selectedInbox);
         this.isLoading = false;
       } catch (error) {
         this.isLoading = false;
@@ -263,6 +293,9 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/colors/webColors.scss";
+.grey {
+  color: $grey;
+}
 .response {
   display: flex;
   flex-direction: column;
@@ -366,7 +399,27 @@ export default {
     padding: 5rem 4.4rem;
     display: flex;
     flex-direction: column;
-    overflow: scroll;
+    .not-found {
+      padding: 1.8rem;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 80%;
+      text-align: center;
+      color: $darkGrey;
+    }
+    .loading {
+      animation-name: floating;
+      -webkit-animation-name: floating;
+      animation-duration: 3s;
+      -webkit-animation-duration: 3s;
+      animation-iteration-count: infinite;
+      -webkit-animation-iteration-count: infinite;
+    }
+    .inbox-detail-content {
+      overflow: scroll;
+    }
     .line {
       width: 100%;
       height: 0.1rem;

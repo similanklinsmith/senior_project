@@ -1,119 +1,136 @@
 <template>
-  <MaskMeetingDetailMobile
-    :title="`[Firebase] Client access to your Realtime Database 'flutter2-f80d0-
-        default-rtdb is expiring soon`"
-    :dateTime="'2022-05-15T07:40:32.000Z'"
-    :type="type"
-    :sender="'Katherine Perish'"
-  >
-    <template v-slot:detail-slot>
-      <div class="main-details">
-        <div class="label-header">
-          <i class="fa-regular fa-calendar"></i>
-          <i class="fa-regular fa-clock"></i>
-          <i class="fa-solid fa-location-dot"></i>
-          <i class="fa-regular fa-user"></i>
+  <div v-if="!isLoading && inboxDetail != null">
+    <MaskMeetingDetailMobile
+      :title="inboxDetail.title"
+      :dateTime="inboxDetail.create_at"
+      :type="type"
+      :sender="inboxDetail.secretary.name"
+    >
+      <template v-slot:detail-slot>
+        <div class="main-details">
+          <div class="label-header">
+            <i class="fa-regular fa-calendar"></i>
+            <i class="fa-regular fa-clock"></i>
+            <i class="fa-solid fa-location-dot"></i>
+            <i class="fa-regular fa-user"></i>
+          </div>
+          <div class="detail">
+            <div>
+              {{ formatDate(inboxDetail.meeting_date, lang) }}
+              ({{ formatDateShort(inboxDetail.meeting_date) }})
+            </div>
+            <div>
+              {{ formatDateTime(inboxDetail.meeting_start, true) }} -
+              {{ formatDateTime(inboxDetail.meeting_end, true) }}
+            </div>
+            <div>{{ inboxDetail.location }}</div>
+            <div>{{ inboxDetail.secretary.name }}</div>
+          </div>
         </div>
-        <div class="detail">
-          <div>Thu April 11 2022 (11/04/2022)</div>
-          <div>10:30 AM - 12:30 PM</div>
-          <div>Microsoft Teams</div>
-          <div>Miss Katherine Perish</div>
-        </div>
-      </div>
-      <div class="attendees-label">Attendees</div>
-      <div class="attendees" @click="isShowAttendees = true">
-        <div
-          class="attendee"
-          v-for="attendee in attendees.slice(0, 5)"
-          :key="attendee"
-        >
+        <div class="attendees-label">{{ text["inbox"]["attendee"] }}</div>
+        <div class="attendees" @click="isShowAttendees = true">
           <div
-            class="profile-image"
-            v-if="attendee.image == 'default_profile.png'"
+            class="attendee"
+            v-for="attendee in inboxDetail.attendees.slice(0, 5)"
+            :key="attendee"
           >
-            <img
-              src="@/assets/decorations/sample_profile.png"
-              alt="sample profile illustration"
-            />
-          </div>
-          <div class="real-profile-image" v-else>
-            <img
-              :src="urlImage + '/' + attendee.image"
-              alt="sample profile illustration"
-              @error="
-                $event.target.src =
-                  'http://www.grand-cordel.com/wp-content/uploads/2015/08/import_placeholder.png'
-              "
-            />
-          </div>
-        </div>
-        <div class="attendee-more" v-if="attendees.length > 5">
-          <div class="remark-text">+{{ attendees.length - 5 }}</div>
-        </div>
-      </div>
-      <div class="description">
-        <i class="fa-solid fa-align-left icon"></i>
-        <div class="description-content">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Facilisis
-          integer senectus magna turpis. Lorem ipsum dolor sit amet, consectetur
-          adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing
-          elit. Facilisis integer senectus magna turpis. Lorem ipsum dolor sit
-          amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet,
-          consectetur adipiscing elit. Facilisis integer senectus magna turpis.
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum
-          dolor sit amet, consectetur adipiscing elit. Facilisis integer
-          senectus magna turpis. Lorem ipsum dolor sit amet, consectetur
-          adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing
-          elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          Facilisis integer senectus magna turpis. Lorem ipsum dolor sit amet,
-          consectetur adipiscing elit.
-        </div>
-      </div>
-      <div class="meeting-label">Meeting link</div>
-      <div class="meeting-link" @click="copyLink('meeting-link-value')">
-        <div class="meeting-link-text" id="meeting-link-value">
-          www.teams.com/meeting/ASokp98e/Uid1112www.teams.com/meeting/ASokp98e/Uid1112ddddddd
-        </div>
-        <div class="copy-icon">
-          <i class="icon fa-regular fa-copy"></i>
-        </div>
-      </div>
-      <div class="attachment-file">
-        <div class="attachment-file-label">Attachment File</div>
-        <div class="attachment-download">
-          <div class="file-section">
-            <div class="first-section">
-              <div class="file-icon">
-                <i class="icon fa-solid fa-file"></i>
-              </div>
-              <div class="file-details">
-                <div class="file-name">File_name.pdf</div>
-                <div class="file-size">5.28KB</div>
-              </div>
+            <div
+              class="profile-image"
+              v-if="attendee.image == 'default_profile.png'"
+            >
+              <img
+                src="@/assets/decorations/sample_profile.png"
+                alt="sample profile illustration"
+              />
             </div>
-            <div class="file-download">
-              <i class="icon fa-solid fa-caret-down"></i>
+            <div class="real-profile-image" v-else>
+              <img
+                :src="urlImage + '/' + attendee.executive.image"
+                alt="sample profile illustration"
+                @error="
+                  $event.target.src =
+                    'http://www.grand-cordel.com/wp-content/uploads/2015/08/import_placeholder.png'
+                "
+              />
+            </div>
+          </div>
+          <div class="attendee-more" v-if="inboxDetail.attendees.length > 5">
+            <div class="remark-text">
+              +{{ inboxDetail.attendees.length - 5 }}
             </div>
           </div>
         </div>
-      </div>
-      <BaseAttendeesPopup
-        :attendees="attendees"
-        :isShowAttendees="isShowAttendees"
-        @onClosePopup="isShowAttendees = false"
-      />
-    </template>
-  </MaskMeetingDetailMobile>
+        <div class="description">
+          <i class="fa-solid fa-align-left icon"></i>
+          <div class="description-content">
+            {{ inboxDetail.meeting_detail }}
+          </div>
+        </div>
+        <div class="meeting-label">{{ text["inbox"]["meetingLink"] }}</div>
+        <div
+          v-if="inboxDetail.attached_link"
+          class="meeting-link"
+          @click="copyLink('meeting-link-value')"
+        >
+          <div class="meeting-link-text" id="meeting-link-value">
+            {{ inboxDetail.attached_link }}
+          </div>
+          <div class="copy-icon">
+            <i class="icon fa-regular fa-copy"></i>
+          </div>
+        </div>
+        <div v-else class="content-text grey">{{ text["inbox"]["noLink"] }}</div>
+        <div class="attachment-file">
+          <div class="attachment-file-label">
+            {{ text["inbox"]["attachedFile"] }}
+          </div>
+          <div
+            class="attachment-download"
+            v-if="inboxDetail.attached_file"
+            @click="downloadFile(selectedInbox.attached_file)"
+          >
+            <div class="file-section">
+              <div class="first-section">
+                <div class="file-icon">
+                  <i class="icon fa-solid fa-file"></i>
+                </div>
+                <div class="file-details">
+                  <div class="file-name">{{ inboxDetail.attached_file }}</div>
+                  <!-- <div class="file-size">5.28KB</div> -->
+                </div>
+              </div>
+              <div class="file-download">
+                <i class="fa-solid fa-circle-down icon"></i>
+              </div>
+            </div>
+          </div>
+          <div v-else class="content-text grey">{{ text["inbox"]["noFile"] }}</div>
+        </div>
+        <BaseAttendeesPopup
+          :attendees="inboxDetail.attendees"
+          :isShowAttendees="isShowAttendees"
+          @onClosePopup="isShowAttendees = false"
+        />
+      </template>
+    </MaskMeetingDetailMobile>
+  </div>
+  <BaseNotFound v-else :isFailed="isFailed" />
 </template>
 
 <script>
 import MaskMeetingDetailMobile from "@/components/meeting/MaskMeetingDetailMobile.vue";
 import BaseAttendeesPopup from "@/components/UI/BaseAttendeesPopup.vue";
+import BaseNotFound from "@/components/UI/BaseNotFound.vue";
+import {
+  formatDateTimeDetail,
+  formatDateTimeHeader,
+  formatDateTimeInbox,
+} from "@/helpers/formatDateTime";
 import { useRoute } from "vue-router";
+import { mapGetters, mapActions } from "vuex";
 export default {
   name: "InboxViewDetail",
-  components: { MaskMeetingDetailMobile, BaseAttendeesPopup },
+  components: { MaskMeetingDetailMobile, BaseAttendeesPopup, BaseNotFound },
   setup() {
     const route = useRoute();
     const id = route.params.id;
@@ -122,93 +139,67 @@ export default {
   },
   data() {
     return {
+      text: null,
+      lang: null,
+      isFailed: false,
+      inboxDetail: null,
+      isLoading: false,
       urlImage: this.$store.state.imageURL,
       searchInput: "",
       isShowAttendees: false,
-      attendees: [
-        {
-          id: 1,
-          title: "Mr",
-          firstname: "Similan",
-          lastname: "Klinsmith",
-          image: "default_profile.png",
-        },
-        {
-          id: 2,
-          title: "Ms",
-          firstname: "Noparat",
-          lastname: "Prasongdee",
-          image: "default_profile.png",
-        },
-        {
-          id: 3,
-          title: "Ms",
-          firstname: "Praepanwa",
-          lastname: "Tedprasit",
-          image: "default_profile.png",
-        },
-        {
-          id: 4,
-          title: "Ms",
-          firstname: "Natcha",
-          lastname: "Phannoi",
-          image: "default_profile.png",
-        },
-        {
-          id: 5,
-          title: "Ms",
-          firstname: "Nattakorn",
-          lastname: "Lertsakornprasert",
-          image: "default_profile.png",
-        },
-        {
-          id: 6,
-          title: "Mr",
-          firstname: "Jiraphat",
-          lastname: "Poolprapha",
-          image: "default_profile.png",
-        },
-        {
-          id: 7,
-          title: "Ms",
-          firstname: "Sunanta",
-          lastname: "Sighka",
-          image: "default_profile.png",
-        },
-        {
-          id: 8,
-          title: "Ms",
-          firstname: "Apisara",
-          lastname: "Ngakor",
-          image: "default_profile.png",
-        },
-        {
-          id: 9,
-          title: "Ms",
-          firstname: "Nattanunkorn",
-          lastname: "Boonsawat",
-          image: "default_profile.png",
-        },
-      ],
     };
   },
+  computed: {
+    ...mapGetters(["getterMyInboxDetail"]),
+  },
   methods: {
+    ...mapActions(["getMyInboxDetail", "downloadWithAxios"]),
+    downloadFile(name) {
+      this.$store.dispatch("downloadWithAxios", name);
+    },
     copyLink(value) {
       let copyText = document.getElementById(value).innerHTML;
       navigator.clipboard.writeText(copyText);
     },
+    formatDateTime(dateTime, isTime) {
+      return formatDateTimeDetail(dateTime, isTime);
+    },
+    formatDate(date, lang) {
+      return formatDateTimeHeader(date, lang);
+    },
+    formatDateShort(date) {
+      return formatDateTimeInbox(date);
+    },
+    async getInboxDetail() {
+      this.inboxDetail = await this.$store.dispatch(
+        "getMyInboxDetail",
+        this.id
+      );
+      this.inboxDetail == null
+        ? (this.isFailed = true)
+        : (this.isFailed = false);
+      this.isLoading = false;
+    },
   },
-  mounted() {
-    console.log(`This is params id: ${this.id}`);
-    console.log(`This is params type: ${this.type}`);
-    // GET by /:{type}/:{id}
-    // Ex. /inbox/1
+  created() {
+    this.getInboxDetail();
+  },
+  beforeMount() {
+    if (this.$cookies.get("lang")) {
+      this.lang = this.$cookies.get("lang");
+    } else {
+      this.lang = "en";
+    }
+    this.text = require(`@/assets/langs/${this.lang}.json`);
   },
 };
 </script>
 
 <style lang="scss" scoped>
 @import "@/assets/colors/webColors.scss";
+.grey {
+  color: $grey;
+}
 .date-time,
 .attendees-label {
   color: $darkGrey;
@@ -267,7 +258,7 @@ export default {
     color: $primaryViolet;
   }
   .description-content {
-    height: 40rem;
+    max-height: 40rem;
     overflow: scroll;
   }
   .description-content::-webkit-scrollbar {

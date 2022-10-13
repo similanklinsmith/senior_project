@@ -160,6 +160,7 @@
                       id="title"
                       name="title"
                       v-model.trim="form.title"
+                      maxlength="200"
                     />
                     <div class="required bold-small-text">
                       {{ errors.title }}
@@ -265,6 +266,7 @@
                       id="other"
                       name="other"
                       v-model="form.other"
+                      maxlength="200"
                     />
                     <div class="required bold-small-text">
                       {{ errors.other }}
@@ -286,6 +288,7 @@
                       id="link"
                       name="link"
                       v-model="form.meetingLink"
+                      maxlength="200"
                     />
                     <div class="required bold-small-text">
                       {{ errors.meetingLink }}
@@ -416,7 +419,6 @@ export default {
     };
     const selectedFile = () => {
       dropzoneFile.value = document.querySelector(".dropzoneFile").files[0];
-      console.log(dropzoneFile);
     };
     const removeFile = () => {
       dropzoneFile.value = null;
@@ -648,7 +650,6 @@ export default {
           this.acceptedArray.push(temp[index].periodOfTime[i]);
         }
       }
-      console.log(this.acceptedArray);
       this.splitDays = temp2;
       this.getOverlaps(this.acceptedArray);
     },
@@ -685,7 +686,6 @@ export default {
         return this.getDateObj(a.start) - this.getDateObj(b.start);
       });
       var results = [];
-      console.log(events);
       if (events.length <= 1) {
         results = [
           {
@@ -737,7 +737,6 @@ export default {
         )
         .sort((a, b) => (a.eventCount < b.eventCount ? 1 : -1));
       this.bestTimeSlot = filteredData;
-      console.log(this.bestTimeSlot);
     },
     async handleCreateMeeting() {
       this.titleIsValid
@@ -784,7 +783,6 @@ export default {
       console.log(this.errors);
       // eslint-disable-next-line
       if (Object.keys(this.errors).length == 0) {
-        // create meeting
         var currentdate = new Date();
         var createTime = `${currentdate.getFullYear()}-${(
           "0" +
@@ -806,7 +804,6 @@ export default {
           otherLocation: this.form.other,
           meetingLink: this.form.meetingLink,
         };
-        console.log(meeting);
         this.isLoadingSend = true;
         await this.$store
           .dispatch("createMeeting", {
@@ -840,8 +837,6 @@ export default {
     },
   },
   created() {
-    console.log(`This is params id: ${this.id}`);
-    console.log(`This is params type: ${this.type}`);
     this.getConfirmedDetail();
   },
   beforeMount() {
@@ -857,344 +852,19 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/colors/webColors.scss";
-@media (min-width: 27em) {
-  .expired-date {
-    font-size: 1.6rem !important;
-  }
-}
-.readonly {
-  background-color: $grey !important;
-}
-.required {
-  color: $error;
-  margin-top: 0.8rem;
-  font-size: 1.4rem !important;
-}
-.modal,
-.modal-loading {
-  width: 100%;
-  height: 100vh;
-  position: fixed;
-  background-color: rgba(24, 24, 26, 0.4);
-  z-index: 11;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-.modal-loading {
-  z-index: 15 !important;
-  width: 100%;
-  height: 100vh;
-  position: fixed;
-  background-color: rgba(24, 24, 26, 0.4);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  .pop-up-loading {
-    position: fixed;
-    z-index: 12;
-    padding: 2.4rem 1.6rem;
-    color: $darkViolet;
-    .flex-col-center {
-      animation-name: floating;
-      -webkit-animation-name: floating;
-      animation-duration: 2s;
-      -webkit-animation-duration: 2s;
-      animation-iteration-count: infinite;
-      -webkit-animation-iteration-count: infinite;
-    }
-    .logo {
-      .primary-violet {
-        color: $primaryViolet;
-      }
-      .yellow {
-        color: $yellow;
-      }
-      .faded-violet {
-        color: $fadedViolet;
-      }
-    }
-    .image {
-      width: 15rem;
-      height: 15rem;
-      img {
-        width: 100%;
-        height: 100%;
-      }
-    }
-  }
-  .loading {
-    animation-name: floating;
-    -webkit-animation-name: floating;
-    animation-duration: 3s;
-    -webkit-animation-duration: 3s;
-    animation-iteration-count: infinite;
-    -webkit-animation-iteration-count: infinite;
-  }
-}
-.container {
-  margin: 5rem 5%;
-  position: fixed;
-  z-index: 12;
-  width: 90% !important;
-  height: 90% !important;
-  overflow-y: scroll;
-  display: flex;
-  flex-direction: column;
-  row-gap: 2rem;
-  animation-name: appears;
-  animation-duration: 0.5s;
-  animation-iteration-count: 1;
-  .first-col {
-    display: flex;
-    flex-direction: column;
-    row-gap: 2rem;
-    .suggested-time {
-      width: 100%;
-      height: 7.4rem;
-      background-color: $white;
-      border-radius: 2rem;
-      display: flex;
-      padding: 1rem 3.6rem;
-      align-items: center;
-      column-gap: 1rem;
-      .time-slot {
-        cursor: grab;
-        overflow-x: scroll;
-        white-space: nowrap;
-        display: flex;
-        column-gap: 1.6rem;
-        .slot {
-          width: fit-content;
-          background-color: $primaryViolet;
-          padding: 1rem 2rem;
-          color: $white;
-          border-radius: 1rem;
-        }
-      }
-    }
-    .calendar {
-      width: 100%;
-      height: 90rem;
-      overflow: scroll;
-      background-color: $white;
-      border-radius: 2rem;
-    }
-  }
-  .second-col {
-    width: 100%;
-    height: 80%;
-    background-color: $white;
-    border-radius: 2.5rem;
-    padding: 3.6rem 3.2rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    .form {
-      width: 100%;
-      overflow-y: scroll;
-      .optional {
-        margin-top: 3.6rem;
-        background-color: $bgColor;
-        color: $highlightViolet;
-        border-radius: 1.4rem;
-        padding: 0.6rem 1.2rem;
-        width: fit-content;
-      }
-      .duration-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        .bold-content-text {
-          color: $primaryViolet;
-        }
-        .duration {
-          width: fit-content;
-          background-color: $fadedYellow;
-          padding: 1rem 1.4rem;
-          border-radius: 1.6rem;
-          color: $yellow;
-        }
-      }
-    }
-    .attachment-download {
-      width: 25rem;
-      border-radius: 0.5rem;
-      padding: 1rem 1.4rem;
-      background-color: $primaryGrey;
-      display: flex;
-      row-gap: 1.5rem;
-      align-items: center;
-      margin: 1.6rem 0rem;
-      .file-section {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        column-gap: 2rem;
-        width: 100%;
-        .first-section {
-          display: flex;
-          column-gap: 1rem;
-          align-items: center;
-          .file-icon {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 4rem;
-            height: 4rem;
-            border-radius: 0.5rem;
-            background-color: $white;
-            color: $primaryViolet;
-            font-size: 1.6rem;
-          }
-          .file-details {
-            display: flex;
-            flex-direction: column;
-            .file-name {
-              color: $darkViolet;
-            }
-            .file-size {
-              color: $darkGrey;
-            }
-          }
-        }
-        .file-delete {
-          cursor: pointer;
-          font-size: 1.6rem;
-          color: $darkGrey;
-          transition: all ease-in-out 0.2s;
-          &:hover {
-            color: $error;
-          }
-        }
-      }
-    }
-    .button {
-      margin-top: 1.8rem;
-      display: flex;
-      justify-content: flex-end;
-      width: 100%;
-      column-gap: 1rem;
-    }
-    .row-input {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      width: 100%;
-      .input-form {
-        margin: 0rem;
-      }
-    }
-    .input-form {
-      display: flex;
-      flex-direction: column;
-      margin: 1.6rem 0rem;
-      select {
-        font-size: 1.4rem;
-      }
-      select,
-      input {
-        margin-top: 1rem;
-        padding: 1rem 1.4rem;
-        height: 4rem;
-        border-radius: 0.5rem;
-        border: none;
-        background-color: $primaryGrey;
-        font-family: "Poppins", sans-serif;
-      }
-      textarea {
-        margin-top: 1rem;
-        padding: 1rem 1.4rem;
-        height: 12rem;
-        border-radius: 0.5rem;
-        border: none;
-        background-color: $primaryGrey;
-        font-family: "Poppins", sans-serif;
-        resize: none;
-      }
-      select:focus,
-      input:focus,
-      textarea:focus {
-        outline: none;
-        border: 0.1rem solid $primaryViolet;
-      }
-      select::placeholder,
-      input::placeholder,
-      textarea::placeholder {
-        font-size: 1.4rem;
-        color: $darkGrey;
-      }
-    }
-  }
-}
-.due-date {
-  margin: 2rem 0;
-  color: $primaryViolet;
-  span {
-    color: $error;
-  }
-}
-.loading {
-  height: 100vh;
-  color: $highlightViolet;
-  animation-name: floating;
-  -webkit-animation-name: floating;
-  animation-duration: 3s;
-  -webkit-animation-duration: 3s;
-  animation-iteration-count: infinite;
-  -webkit-animation-iteration-count: infinite;
-}
-.expired {
-  filter: grayscale(1);
-  opacity: 0.5;
-  pointer-events: none;
-}
-.expired-date {
-  font-size: 2rem;
-  font-weight: 500;
-  color: $primaryViolet;
-  line-height: 1.6;
-  span {
-    color: $error;
-  }
-}
-.result {
-  display: flex;
-  flex-direction: column;
-  row-gap: 3rem;
-  height: 100%;
-  overflow: scroll;
-  margin: 1rem 0;
-  padding: 0 1rem;
-  .row-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    .bold-content-text {
-      color: $darkViolet;
-      margin-bottom: 2rem;
-    }
-  }
-}
-.result::-webkit-scrollbar {
-  display: block !important;
-  -ms-overflow-style: auto !important;
-  scrollbar-width: auto !important;
-  background-color: transparent;
-  width: 1rem;
-}
-.result::-webkit-scrollbar-track {
-  margin: 1rem;
-  border-radius: 0.5rem;
-}
-.result::-webkit-scrollbar-thumb {
-  background-color: $grey;
-  border-radius: 0.5rem;
-  transition: all 0.2s ease-in-out;
-}
-.result::-webkit-scrollbar-thumb:hover {
-  background-color: $darkGrey;
-}
+@media (min-width: 27em) {.expired-date {font-size: 1.6rem !important;}}
+.readonly {background-color: $grey !important;}
+.required {color: $error;margin-top: 0.8rem;font-size: 1.4rem !important;}
+.modal,.modal-loading {width: 100%;height: 100vh;position: fixed;background-color: rgba(24, 24, 26, 0.4);z-index: 11;display: flex;flex-direction: column;align-items: center;justify-content: center;}
+.modal-loading {z-index: 15 !important;width: 100%;height: 100vh;position: fixed;background-color: rgba(24, 24, 26, 0.4);display: flex;flex-direction: column;align-items: center;justify-content: center;.pop-up-loading {position: fixed;z-index: 12;padding: 2.4rem 1.6rem;color: $darkViolet;.flex-col-center {animation-name: floating;-webkit-animation-name: floating;animation-duration: 2s;-webkit-animation-duration: 2s;animation-iteration-count: infinite;-webkit-animation-iteration-count: infinite;}.logo {.primary-violet {color: $primaryViolet;}.yellow {color: $yellow;}.faded-violet {color: $fadedViolet;}}.image {width: 15rem;height: 15rem;img {width: 100%;height: 100%;}}}.loading {animation-name: floating;-webkit-animation-name: floating;animation-duration: 3s;-webkit-animation-duration: 3s;animation-iteration-count: infinite;-webkit-animation-iteration-count: infinite;}}
+.container {margin: 5rem 5%;position: fixed;z-index: 12;width: 90% !important;height: 90% !important;overflow-y: scroll;display: flex;flex-direction: column;row-gap: 2rem;animation-name: appears;animation-duration: 0.5s;animation-iteration-count: 1;.first-col {display: flex;flex-direction: column;row-gap: 2rem;.suggested-time {width: 100%;height: 7.4rem;background-color: $white;border-radius: 2rem;display: flex;padding: 1rem 3.6rem;align-items: center;column-gap: 1rem;.time-slot {cursor: grab;overflow-x: scroll;white-space: nowrap;display: flex;column-gap: 1.6rem;.slot {width: fit-content;background-color: $primaryViolet;padding: 1rem 2rem;color: $white;border-radius: 1rem;}}}.calendar {width: 100%;height: 90rem;overflow: scroll;background-color: $white;border-radius: 2rem;}}.second-col {width: 100%;height: 80%;background-color: $white;border-radius: 2.5rem;padding: 3.6rem 3.2rem;display: flex;flex-direction: column;justify-content: center;.form {width: 100%;overflow-y: scroll;.optional {margin-top: 3.6rem;background-color: $bgColor;color: $highlightViolet;border-radius: 1.4rem;padding: 0.6rem 1.2rem;width: fit-content;}.duration-container {display: flex;justify-content: space-between;align-items: center;.bold-content-text {color: $primaryViolet;}.duration {width: fit-content;background-color: $fadedYellow;padding: 1rem 1.4rem;border-radius: 1.6rem;color: $yellow;}}}.attachment-download {width: 25rem;border-radius: 0.5rem;padding: 1rem 1.4rem;background-color: $primaryGrey;display: flex;row-gap: 1.5rem;align-items: center;margin: 1.6rem 0rem;.file-section {display: flex;justify-content: space-between;align-items: center;column-gap: 2rem;width: 100%;.first-section {display: flex;column-gap: 1rem;align-items: center;.file-icon {display: flex;justify-content: center;align-items: center;width: 4rem;height: 4rem;border-radius: 0.5rem;background-color: $white;color: $primaryViolet;font-size: 1.6rem;}.file-details {display: flex;flex-direction: column;.file-name {color: $darkViolet;}.file-size {color: $darkGrey;}}}.file-delete {cursor: pointer;font-size: 1.6rem;color: $darkGrey;transition: all ease-in-out 0.2s;&:hover {color: $error;}}}}.button {margin-top: 1.8rem;display: flex;justify-content: flex-end;width: 100%;column-gap: 1rem;}.row-input {display: flex;flex-wrap: wrap;justify-content: space-between;width: 100%;.input-form {margin: 0rem;}}.input-form {display: flex;flex-direction: column;margin: 1.6rem 0rem;select {font-size: 1.4rem;}select,input {margin-top: 1rem;padding: 1rem 1.4rem;height: 4rem;border-radius: 0.5rem;border: none;background-color: $primaryGrey;font-family: "Poppins", sans-serif;}textarea {margin-top: 1rem;padding: 1rem 1.4rem;height: 12rem;border-radius: 0.5rem;border: none;background-color: $primaryGrey;font-family: "Poppins", sans-serif;resize: none;}select:focus,input:focus,textarea:focus {outline: none;border: 0.1rem solid $primaryViolet;}select::placeholder,input::placeholder,textarea::placeholder {font-size: 1.4rem;color: $darkGrey;}}}}
+.due-date {margin: 2rem 0;color: $primaryViolet;span {color: $error;}}
+.loading {height: 100vh;color: $highlightViolet;animation-name: floating;-webkit-animation-name: floating;animation-duration: 3s;-webkit-animation-duration: 3s;animation-iteration-count: infinite;-webkit-animation-iteration-count: infinite;}
+.expired {filter: grayscale(1);opacity: 0.5;pointer-events: none;}
+.expired-date {font-size: 2rem;font-weight: 500;color: $primaryViolet;line-height: 1.6;span {color: $error;}}
+.result {display: flex;flex-direction: column;row-gap: 3rem;height: 100%;overflow: scroll;margin: 1rem 0;padding: 0 1rem;.row-header {display: flex;align-items: center;justify-content: space-between;.bold-content-text {color: $darkViolet;margin-bottom: 2rem;}}}
+.result::-webkit-scrollbar {display: block !important;-ms-overflow-style: auto !important;scrollbar-width: auto !important;background-color: transparent;width: 1rem;}
+.result::-webkit-scrollbar-track {margin: 1rem;border-radius: 0.5rem;}
+.result::-webkit-scrollbar-thumb {background-color: $grey;border-radius: 0.5rem;transition: all 0.2s ease-in-out;}
+.result::-webkit-scrollbar-thumb:hover {background-color: $darkGrey;}
 </style>

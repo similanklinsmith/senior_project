@@ -2,14 +2,6 @@
   <div class="meeting-mobile-screen">
     <div class="header">
       <div class="remark-text">{{ header }}</div>
-      <!-- <div class="result content-text">
-        &#40;{{
-          searchInput != "" || withInDate != ""
-            ? filterByTitle.length
-            : getPollsList.length
-        }}
-        results&#41;
-      </div> -->
       <div class="result content-text">
         &#40;{{
           searchInput != "" || withInDate != ""
@@ -74,7 +66,6 @@
         </div>
       </div>
       <div class="inbox-body">
-        <!-- :maximum="getPollsList.length" -->
         <BaseInifniteScroll
           :showLoading="loading"
           @loadMore="loadMore()"
@@ -87,7 +78,7 @@
               :key="inbox.id"
               :title="inbox.title"
               :time="inbox.create_at"
-              :content="inbox.content"
+              :content="inbox.meeting_detail"
               :id="inbox.id"
               :type="type"
               @handleClick="onNav"
@@ -152,8 +143,16 @@ export default {
     limitScrollItems: 10,
   },
   computed: {
-    ...mapGetters(["getterMyPolls", "getterMyBeConfirmeds", "getterMyReplies"]),
+    ...mapGetters(["getterMyInboxes", "getterMyPolls", "getterMyBeConfirmeds", "getterMyReplies"]),
     cards() {
+      if (this.index == 2) {
+        this.setType('inbox')
+        this.changeMaximum(this.getterMyInboxes);
+        const card = this.getterMyInboxes.slice(0, this.upto).map((item) => {
+          return item;
+        });
+        return card;
+      }
       if (this.index == 3) {
         this.setType('sent')
         this.changeMaximum(this.getterMyPolls);
@@ -190,50 +189,7 @@ export default {
       }
       return [];
     },
-    getPollsList() {
-      return this.$store.getters.getterMyPolls;
-    },
-    getBeConfirmedList() {
-      return this.$store.getters.getterMyBeConfirmeds;
-    },
     filterByTitle() {
-      //   if (this.searchInput != "") {
-      //     return this.getPollsList.filter((toBeConfirmed) => {
-      //       if (this.filterDate) {
-      //         return (
-      //           toBeConfirmed.title
-      //             .toLowerCase()
-      //             .includes(this.searchInput.toLowerCase()) &&
-      //           new Date(
-      //             toBeConfirmed.create_at.split("T")[0]
-      //           ).toLocaleDateString() ==
-      //             new Date(this.filterDate).toLocaleDateString()
-      //         );
-      //       } else {
-      //         return toBeConfirmed.title
-      //           .toLowerCase()
-      //           .includes(this.searchInput.toLowerCase());
-      //       }
-      //     });
-      //   } else {
-      //     return this.cards.filter((toBeConfirmed) => {
-      //       if (this.filterDate) {
-      //         return (
-      //           toBeConfirmed.title
-      //             .toLowerCase()
-      //             .includes(this.searchInput.toLowerCase()) &&
-      //           new Date(
-      //             toBeConfirmed.create_at.split("T")[0]
-      //           ).toLocaleDateString() ==
-      //             new Date(this.filterDate).toLocaleDateString()
-      //         );
-      //       } else {
-      //         return toBeConfirmed.title
-      //           .toLowerCase()
-      //           .includes(this.searchInput.toLowerCase());
-      //       }
-      //     });
-      //   }
       if (this.searchInput != "") {
         return this.cards.filter((toBeConfirmed) => {
           if (this.filterDate) {
@@ -274,7 +230,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["getMyPolls", "getMyBeConfirmeds", "getMyReplies"]),
+    ...mapActions(["getMyInboxes", "getMyPolls", "getMyBeConfirmeds", "getMyReplies"]),
     changeMaximum(data) {
       this.maximumLength = data.length;
     },
@@ -377,6 +333,7 @@ export default {
     this.getMyPolls();
     this.getMyBeConfirmeds();
     this.getMyReplies();
+    this.getMyInboxes();
   },
   mounted() {
     this.cards;

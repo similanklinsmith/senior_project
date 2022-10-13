@@ -95,6 +95,7 @@
         "within": "With in",
         "results": "Results",
         "notFound": "Not Found",
+        "loading": "Loading...",
         "showMore": "show more",
         "showLess": "show less",
         "sent": "Sent on",
@@ -105,7 +106,9 @@
         "organizer": "Organizer",
         "attendee": "Attendees",
         "meetingLink": "Meeting Link",
-        "attachedFile": "Attachment File"
+        "attachedFile": "Attachment File",
+        "noLink": "-No meeting link-",
+        "noFile": "-No meeting file-"
     },
     "sent": {
         "placeholder": "Search by title",

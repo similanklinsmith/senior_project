@@ -156,7 +156,6 @@ export default {
             (slot) => slot.date == answer.timeSlot[0].date
           );
           if (indexDate != -1) {
-            console.log(answer.timeSlot[0].preferredTime);
             this.response[index].timeSlot[indexDate].preferredTime =
               answer.timeSlot[0].preferredTime;
           } else {
@@ -179,8 +178,6 @@ export default {
     },
   },
   created() {
-    console.log(`This is params id: ${this.id}`);
-    console.log(`This is params type: ${this.type}`);
     this.getBeConfirmedDetail();
     this.dataToBe.id = parseInt(this.id);
   },
@@ -197,89 +194,14 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/colors/webColors.scss";
-@media (min-width: 27em) {
-  .expired-date {
-    font-size: 1.6rem !important;
-  }
-}
-.loading-container {
-  height: 100vh;
-  .failed {
-    width: 60%;
-    text-align: center;
-    row-gap: 1rem;
-    .header-fail {
-      font-size: 4rem;
-      font-weight: 600;
-      color: $primaryViolet;
-    }
-    .image {
-      width: 20rem;
-      height: 20rem;
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-      }
-    }
-  }
-}
-.loading {
-  height: 100vh;
-  color: $highlightViolet;
-  animation-name: floating;
-  -webkit-animation-name: floating;
-  animation-duration: 3s;
-  -webkit-animation-duration: 3s;
-  animation-iteration-count: infinite;
-  -webkit-animation-iteration-count: infinite;
-}
-
-.expired {
-  filter: grayscale(1);
-  opacity: 0.5;
-  pointer-events: none;
-}
-.expired-date {
-  font-size: 2rem;
-  font-weight: 500;
-  color: $primaryViolet;
-  line-height: 1.6;
-  span {
-    color: $error;
-  }
-}
-.response {
-  display: flex;
-  flex-direction: column;
-  row-gap: 1rem;
-  height: 100%;
-  overflow: scroll;
-  margin: 1rem 0;
-  .response-container {
-    margin: 2.5rem 0;
-    .day {
-      color: $darkViolet;
-    }
-  }
-}
-.response::-webkit-scrollbar {
-  display: block !important;
-  -ms-overflow-style: auto !important;
-  scrollbar-width: auto !important;
-  background-color: transparent;
-  width: 1rem;
-}
-.response::-webkit-scrollbar-track {
-  margin: 1rem;
-  border-radius: 0.5rem;
-}
-.response::-webkit-scrollbar-thumb {
-  background-color: $grey;
-  border-radius: 0.5rem;
-  transition: all 0.2s ease-in-out;
-}
-.response::-webkit-scrollbar-thumb:hover {
-  background-color: $darkGrey;
-}
+@media (min-width: 27em) {.expired-date {font-size: 1.6rem !important;}}
+.loading-container {height: 100vh;.failed {width: 60%;text-align: center;row-gap: 1rem;.header-fail {font-size: 4rem;font-weight: 600;color: $primaryViolet;}.image {width: 20rem;height: 20rem;img {width: 100%;height: 100%;object-fit: contain;}}}}
+.loading {height: 100vh;color: $highlightViolet;animation-name: floating;-webkit-animation-name: floating;animation-duration: 3s;-webkit-animation-duration: 3s;animation-iteration-count: infinite;-webkit-animation-iteration-count: infinite;}
+.expired {filter: grayscale(1);opacity: 0.5;pointer-events: none;}
+.expired-date {font-size: 2rem;font-weight: 500;color: $primaryViolet;line-height: 1.6;span {color: $error;}}
+.response {display: flex;flex-direction: column;row-gap: 1rem;height: 100%;overflow: scroll;margin: 1rem 0;.response-container {margin: 2.5rem 0;.day {color: $darkViolet;}}}
+.response::-webkit-scrollbar {display: block !important;-ms-overflow-style: auto !important;scrollbar-width: auto !important;background-color: transparent;width: 1rem;}
+.response::-webkit-scrollbar-track {margin: 1rem;border-radius: 0.5rem;}
+.response::-webkit-scrollbar-thumb {background-color: $grey;border-radius: 0.5rem;transition: all 0.2s ease-in-out;}
+.response::-webkit-scrollbar-thumb:hover {background-color: $darkGrey;}
 </style>

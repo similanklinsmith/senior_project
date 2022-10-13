@@ -168,10 +168,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getterMyPollDetail", "getterExecutiveTitles"]),
+    ...mapGetters(["getterMyPollDetail"]),
   },
   methods: {
-    ...mapActions(["getMyPollDetail", "getExecutiveTitle"]),
+    ...mapActions(["getMyPollDetail"]),
     async getPollDetail() {
         this.inboxDetail = await this.$store.dispatch(
           "getMyPollDetail",
@@ -204,11 +204,7 @@ export default {
     },
   },
   mounted() {
-    console.log(`This is params id: ${this.id}`);
-    console.log(`This is params type: ${this.type}`);
     this.getPollDetail();
-    // GET by /:{type}/:{id}
-    // Ex. /inbox/1
   },
   beforeMount() {
     if (this.$cookies.get("lang")) {

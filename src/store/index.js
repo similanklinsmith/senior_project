@@ -321,10 +321,6 @@ export default createStore({
               headers: authHeader(),
             }
           );
-          console.log(response.status);
-          if (response.status == 400) {
-            console.log("need to login");
-          }
           context.commit("UPDATE_MY_EXECUTIVE", response.data.data);
           context.commit("GET_LOADING_STATUS", false);
         } catch (error) {
@@ -538,8 +534,6 @@ export default createStore({
       }
     },
     async createMeeting(context, payload) {
-      console.log(payload.file);
-      console.log(payload.newMeeting);
       try {
         const formData = new FormData();
         formData.append("file", payload.file);
@@ -551,7 +545,6 @@ export default createStore({
           const newMeeting = payload.newMeeting;
           newMeeting["file"] =
             fileResponse == null ? null : fileResponse.data.file_name;
-          console.log(newMeeting);
           const response = await customAxios.instance.post(
             this.state.createMeetingURL,
             newMeeting,

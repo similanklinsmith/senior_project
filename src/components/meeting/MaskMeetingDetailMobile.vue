@@ -35,7 +35,7 @@ export default {
     dateTimeDesc() {
       switch (this.type) {
         case "inbox":
-          return `sent on ${formatDateTimeDetail(this.dateTime)} by ${this.sender}`;
+          return `${this.text['inbox']['sent']} ${formatDateTimeDetail(this.dateTime)} ${this.text['inbox']['by']} ${this.sender}`;
         case "sent":
           return `${this.text['sent']['sentByYou']} ${formatDateTimeDetail(this.dateTime)}`;
         case "toBeConfirmed":

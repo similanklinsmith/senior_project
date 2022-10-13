@@ -106,8 +106,6 @@ export default {
     },
   },
   created() {
-    console.log(`This is params id: ${this.id}`);
-    console.log(`This is params type: ${this.type}`);
     this.getReplyDetail();
   },
   beforeMount() {
