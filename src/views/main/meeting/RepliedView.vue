@@ -253,15 +253,6 @@ export default {
       this.isShowDropdown = false;
       this.selectedInbox = null;
     },
-    calculateRemainingDay(date) {
-      return Math.round(
-        (new Date(date) - new Date(Date.now())) / (24 * 60 * 60 * 1000)
-      ) < 0
-        ? 0
-        : Math.round(
-            (new Date(date) - new Date(Date.now())) / (24 * 60 * 60 * 1000)
-          );
-    },
     formatDateTime(dateTime) {
       return formatDateTimeDetail(dateTime);
     },
