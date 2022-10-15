@@ -973,6 +973,8 @@ export default {
           })
           .then(() => {
             this.isLoadingSend = false;
+            this.selectedInbox = null;
+            this.selectedId = null;
           });
         this.onClickCloseSchedule();
       } else {

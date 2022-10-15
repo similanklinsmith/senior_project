@@ -573,7 +573,7 @@ export default createStore({
         context.commit(
           "GET_MY_INBOXES",
           data.data.data.sort((a, b) => {
-            return new Date(b.created_at) - new Date(a.created_at);
+            return new Date(b.create_at) - new Date(a.create_at);
           })
         );
         context.commit("GET_LOADING_STATUS", false);

@@ -21,14 +21,6 @@ const routes = [
     meta: {
       requiresAuth: true,
     },
-    // beforeEnter: (to, from, next) => {
-    //   const loggedIn = localStorage.getItem("user");
-    //   if (loggedIn) {
-    //     next();
-    //   } else {
-    //     next("/sign-in");
-    //   }
-    // },
   },
   {
     path: "/calendar",

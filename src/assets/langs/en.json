@@ -315,8 +315,11 @@
     },
     "notFound": {
         "header": "Opps!",
+        "header2": "Need to sign in again",
         "subHeader": "We can’t seem to find the page you’re looking for.",
+        "subHeader2": "You will be redirected to Sign in page.",
         "backHome": "Back to home",
+        "backSigin": "OK, get it!",
         "back": "Go back",
         "loading": "Loading...",
         "errorGetData": "Error Occurred. Cannot proceed any further."
