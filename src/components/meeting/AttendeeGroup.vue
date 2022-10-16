@@ -1,15 +1,16 @@
 <template>
   <div class="meeting">
-    <div class="mobile-meeting-card">
+    <div class="mobile-meeting-card" @click="btnAction">
       <div class="first-section">
         <div class="remark-text">{{ title }}</div>
         <div class="date-time">
           <div class="time">
-            <i class="icon fa-regular fa-clock"></i>{{ startTime }} -
-            {{ endTime }}
+            <i class="icon fa-regular fa-clock"></i
+            >{{ formatDateTime(startTime, true) }} -
+            {{ formatDateTime(endTime, true) }}
           </div>
           <div class="date">
-            <i class="icon fa-regular fa-calendar"></i>{{ date }}
+            <i class="icon fa-regular fa-calendar"></i>{{ formatDate(date, lang) }}
           </div>
         </div>
         <div class="attendees">
@@ -60,14 +61,15 @@
     </div>
     <div class="meeting-card">
       <div class="display-day flex-col-center">
-        <div class="month content-text">March</div>
-        <div class="date header-text">21</div>
+        <div class="month content-text">{{ formatDay(date) }}</div>
+        <div class="date header-text">{{ formatDay(date, true)}}</div>
       </div>
       <div class="time flex-col-center">
-        <div class="common-text">{{text['home']['start-end']}}</div>
+        <div class="common-text">{{ text["home"]["start-end"] }}</div>
         <div class="content-text">
-          <i class="icon fa-regular fa-clock"></i>{{ startTime }} -
-          {{ endTime }}
+          <i class="icon fa-regular fa-clock"></i
+          >{{ formatDateTime(startTime, true) }} -
+          {{ formatDateTime(endTime, true) }}
         </div>
       </div>
       <div class="line" />
@@ -76,11 +78,11 @@
         <div class="additional-detail">
           <div class="small-text" v-if="file">
             <i class="icon fa-regular fa-file"></i
-            ><span class="attached-file">{{text['home']['file']}}</span>
+            ><span class="attached-file">{{ text["home"]["file"] }}</span>
           </div>
           <div class="small-text" v-if="link">
             <i class="icon fa-solid fa-link"></i
-            ><span class="attached-link">{{text['home']['link']}}</span>
+            ><span class="attached-link">{{ text["home"]["link"] }}</span>
           </div>
           <div class="attendees">
             <i class="icon fa-regular fa-user"></i>
@@ -109,13 +111,18 @@
     </div>
     <div class="btnAction" @click="btnAction">
       <div class="small-text">
-        {{text['home']['showDetail']}}<i class="icon fa-solid fa-circle-arrow-right"></i>
+        {{ text["home"]["showDetail"]
+        }}<i class="icon fa-solid fa-circle-arrow-right"></i>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import {
+  formatDateTimeDetail,
+  formatDateTimeHeader
+} from "@/helpers/formatDateTime";
 export default {
   name: "AttendeeGroup",
   props: [
@@ -139,8 +146,27 @@ export default {
   },
   methods: {
     btnAction() {
-      console.log("go to inbox with id");
+      this.$router.push({ path: `/meetings-inbox/inbox/${this.id}`, });
     },
+    formatDay(date, isDate = false) {
+      const monthNames = ["January", "February", "March", "April", "May", "June","July", "August", "September", "October", "November", "December"];
+      const monthNamesTH = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน","กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+      var r = new Date(date.split("T")[0]);
+      if (isDate == true) {
+        return r.getDate();
+      }
+      if (this.lang == 'th') {
+        return monthNamesTH[r.getMonth()];
+      } else {
+        return monthNames[r.getMonth()];
+      }
+    },
+    formatDateTime(dateTime, isTime) {
+      return formatDateTimeDetail(dateTime, isTime);
+    },
+    formatDate(date, lang) {
+      return formatDateTimeHeader(date, lang);
+    }
   },
   beforeMount() {
     if (this.$cookies.get("lang")) {
@@ -149,7 +175,7 @@ export default {
       this.lang = "en";
     }
     this.text = require(`@/assets/langs/${this.lang}.json`);
-  }
+  },
 };
 </script>
 
@@ -189,7 +215,7 @@ export default {
   display: flex;
   width: 80%;
   .display-day {
-    width: fit-content;
+    width: 9.6rem;
     padding: 1.8rem;
     border-radius: 1.5rem;
     background-color: $primaryViolet;

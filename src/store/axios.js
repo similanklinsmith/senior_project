@@ -32,7 +32,7 @@ instance.interceptors.response.use(
         window.location.reload();
       } catch (err) {
         if (err.response.status == 400) {
-          router.push({ name: "NotFound", params: { isError: true } });
+          router.push({ name: "ReAuthentication" });
         }
       }
     }

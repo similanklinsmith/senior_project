@@ -59,6 +59,10 @@ export default createStore({
     myInboxes: [],
     myInboxDetail: null,
 
+    // incoming lists
+    myIncomingURL: `${BASE_URL}/incoming`,
+    myIncomings: [],
+
     loadingStatus: false,
     success: false,
     failed: false,
@@ -160,6 +164,9 @@ export default createStore({
     },
     GET_MY_INBOX_DETAIL(state, inboxDetail) {
       state.myInboxDetail = inboxDetail;
+    },
+    GET_MY_INCOMING(state, incomings) {
+      state.myIncomings = incomings;
     },
   },
   actions: {
@@ -616,6 +623,22 @@ export default createStore({
         })
         .catch(() => console.log("error occured"));
     },
+    async getMyIncoming(context) {
+      context.commit("GET_LOADING_STATUS", true);
+      try {
+        const data = await customAxios.instance.get(this.state.myIncomingURL, {
+          headers: authHeader(),
+        });
+        context.commit(
+          "GET_MY_INCOMING",
+          data.data.data
+        );
+        context.commit("GET_LOADING_STATUS", false);
+      } catch (error) {
+        context.commit("GET_LOADING_STATUS", false);
+        console.log(error.response);
+      }
+    }
   },
   getters: {
     getterLoadingStatus(state) {
@@ -667,6 +690,9 @@ export default createStore({
     getterMyInboxDetail(state) {
       return state.myInboxDetail;
     },
+    getterMyIncomings(state) {
+      return state.myIncomings;
+    }
   },
   modules: { auth },
 });

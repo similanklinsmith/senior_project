@@ -324,6 +324,9 @@ export default {
   flex-direction: column;
   row-gap: 2rem;
   font-size: 2rem;
+  .grey {
+    font-size: 1.6rem;
+  }
   .attachment-file-label {
     font-weight: 500;
     color: $primaryViolet;
