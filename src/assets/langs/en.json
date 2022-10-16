@@ -315,7 +315,7 @@
     },
     "notFound": {
         "header": "Opps!",
-        "header2": "Need to sign in again",
+        "header2": "Sorry...",
         "subHeader": "We can’t seem to find the page you’re looking for.",
         "subHeader2": "You will be redirected to Sign in page.",
         "backHome": "Back to home",
