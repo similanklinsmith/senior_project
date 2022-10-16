@@ -55,7 +55,7 @@ export default {
   setup() {
     const route = useRoute();
     const isError = route.params.isError ? route.params.isError : false;
-    console.log(isError);
+    console.log(route.params);
     return { isError };
   },
   data() {

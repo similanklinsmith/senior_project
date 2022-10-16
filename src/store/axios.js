@@ -31,7 +31,6 @@ instance.interceptors.response.use(
         localStorage.setItem("user", data.id_token);
         window.location.reload();
       } catch (err) {
-        console.log(err);
         if (err.response.status == 400) {
           router.push({ name: "NotFound", params: { isError: true } });
         }
