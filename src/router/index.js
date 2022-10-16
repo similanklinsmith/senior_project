@@ -100,9 +100,13 @@ const routes = [
     },
   },
   {
+    path: "/reauthentication",
+    name: "ReAuthentication",
+    component: () => import("@/views/exception/ReAuthenticateView.vue"),
+  },
+  {
     path: "/:catchAll(.*)*",
     name: "NotFound",
-    props: true,
     component: () => import("@/views/exception/NotFoundView.vue"),
   },
 ];

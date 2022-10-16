@@ -12,34 +12,20 @@
           src="@/assets/decorations/not_found.png"
           alt="not found illustration"
         />
-        <div class="big-header-text"><span v-if="isError == null">{{text["notFound"]["header"]}}</span><span v-else>{{text["notFound"]["header2"]}}</span></div>
+        <div class="big-header-text">{{ text["notFound"]["header2"] }}</div>
         <div class="remark-text">
-          <span v-if="isError == null">{{text["notFound"]["subHeader"]}}</span><span v-else>{{text["notFound"]["subHeader2"]}}</span>
+          {{ text["notFound"]["subHeader2"] }}
         </div>
-        <span v-if="isError == null">
-          <BaseButton
-           buttonType="common-button"
-           :btnText="text['notFound']['backHome']"
-           textColor="white"
-           textHover="white"
-           color="#7452FF"
-           hoverColor="#23106D"
-           @onClick="$router.push('/')"
-          >
-          </BaseButton>
-        </span>
-        <span v-else>
-          <BaseButton
-           buttonType="common-button"
-           :btnText="text['notFound']['backSigin']"
-           textColor="white"
-           textHover="white"
-           color="#7452FF"
-           hoverColor="#23106D"
-           @onClick="signOutSessionExpired"
-          >
-          </BaseButton>
-        </span>
+        <BaseButton
+          buttonType="common-button"
+          :btnText="text['notFound']['backSigin']"
+          textColor="white"
+          textHover="white"
+          color="#7452FF"
+          hoverColor="#23106D"
+          @onClick="signOutSessionExpired"
+        >
+        </BaseButton>
       </div>
     </div>
   </div>
@@ -47,15 +33,24 @@
 
 <script>
 import BaseButton from "@/components/UI/BaseButton.vue";
+import { signOut } from "firebase/auth";
 export default {
   components: { BaseButton },
-  name: "NotFound",
-  props: ["isError"],
+  name: "ReAuthentication",
   data() {
     return {
       text: null,
       lang: null,
-    }
+    };
+  },
+  methods: {
+    signOutSessionExpired() {
+      signOut(this.$store.state.getAuth).then(() => {
+        this.$router.push("/sign-in");
+      });
+      this.$store.dispatch("auth/logout");
+      this.$store.state.getAuth = null;
+    },
   },
   beforeMount() {
     if (this.$cookies.get("lang")) {
