@@ -12,11 +12,11 @@
           src="@/assets/decorations/not_found.png"
           alt="not found illustration"
         />
-        <div class="big-header-text"><span v-if="isError == false">{{text["notFound"]["header"]}}</span><span v-else>{{text["notFound"]["header2"]}}</span></div>
+        <div class="big-header-text"><span v-if="isError == null">{{text["notFound"]["header"]}}</span><span v-else>{{text["notFound"]["header2"]}}</span></div>
         <div class="remark-text">
-          <span v-if="isError == false">{{text["notFound"]["subHeader"]}}</span><span v-else>{{text["notFound"]["subHeader2"]}}</span>
+          <span v-if="isError == null">{{text["notFound"]["subHeader"]}}</span><span v-else>{{text["notFound"]["subHeader2"]}}</span>
         </div>
-        <span v-if="isError == false">
+        <span v-if="isError == null">
           <BaseButton
            buttonType="common-button"
            :btnText="text['notFound']['backHome']"
@@ -46,18 +46,19 @@
 </template>
 
 <script>
-import { useRoute } from "vue-router";
+// import { useRoute } from "vue-router";
 import BaseButton from "@/components/UI/BaseButton.vue";
 import { signOut } from "firebase/auth";
 export default {
   components: { BaseButton },
   name: "NotFound",
-  setup() {
-    const route = useRoute();
-    const isError = route.params.isError ? route.params.isError : false;
-    console.log(route.params);
-    return { isError };
-  },
+  // setup() {
+  //   const route = useRoute();
+  //   const isError = route.params.isError ? route.params.isError : false;
+  //   console.log(route.params);
+  //   return { isError };
+  // },
+  props: ["isError"],
   data() {
     return {
       text: null,
