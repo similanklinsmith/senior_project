@@ -1,7 +1,7 @@
 <template> 
   <div id="app">
     <SplashView></SplashView>
-    <div v-if="$route.name != 'NotFound' && $route.name != 'sign-in'">
+    <div v-if="$route.name != 'NotFound' && $route.name != 'sign-in' && $route.name != 'ReAuthentication'">
       <div class="modal" v-if="isToggled" @click="isToggled = false"></div>
       <div style="position: relative">
         <HeaderComp
