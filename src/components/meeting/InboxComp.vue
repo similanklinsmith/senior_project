@@ -24,7 +24,7 @@
         <div class="time bold-small-text">{{ formatDateTime(time) }}</div>
       </div>
       <div class="content-inbox small-text" v-if="content">
-        {{ content.length > 50 ? content.substring(0, 50) + "..." : content }}
+        {{ content.length > 25 ? content.substring(0, 25) + "..." : content }}
       </div>
       <div class="content-inbox small-text" v-else>Poll appointments</div>
     </div>

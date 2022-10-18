@@ -87,7 +87,7 @@
           <div
             class="attachment-download"
             v-if="inboxDetail.attached_file"
-            @click="downloadFile(selectedInbox.attached_file)"
+            @click="downloadFile(inboxDetail.attached_file)"
           >
             <div class="file-section">
               <div class="first-section">
@@ -155,6 +155,7 @@ export default {
   methods: {
     ...mapActions(["getMyInboxDetail", "downloadWithAxios"]),
     downloadFile(name) {
+      console.log(name);
       this.$store.dispatch("downloadWithAxios", name);
     },
     copyLink(value) {
