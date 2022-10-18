@@ -169,8 +169,8 @@
                 </div>
               </div>
               <div class="meeting-link-detail">
-                <div class="small-text" id="meeting-link-value">
-                  <span v-if="selectedInbox.attached_link">{{
+                <div class="small-text">
+                  <span id="meeting-link-value" v-if="selectedInbox.attached_link">{{
                     selectedInbox.attached_link
                   }}</span>
                   <span v-else class="grey">-ไม่มีลิงก์การประชุม-</span>
