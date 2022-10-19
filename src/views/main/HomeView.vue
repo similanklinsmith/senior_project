@@ -183,7 +183,7 @@
       <div class="second-body-section">
         <div class="title-section">
           <div class="remark-text">{{text['home']['incomingMeeting']}}</div>
-          <div class="common-text">
+          <div class="common-text" @click="$router.push({path: '/meetings-management'})">
             {{text['home']['seeAllMeeting']}}<i class="icon fa-solid fa-chevron-right"></i>
           </div>
         </div>
