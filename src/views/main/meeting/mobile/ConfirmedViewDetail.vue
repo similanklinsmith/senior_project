@@ -28,7 +28,7 @@
               </div>
               <div
                 :style="
-                  'accepted' in slot.responses[0]
+                  'accepted' in slot.responses[0] && slot.responses[0].accepted.length >= 2
                     ? {}
                     : { 'pointer-events': 'none', filter: 'grayscale(1)' }
                 "
