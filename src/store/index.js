@@ -631,7 +631,9 @@ export default createStore({
         });
         context.commit(
           "GET_MY_INCOMING",
-          data.data.data
+          data.data.data.sort((a, b) => {
+            return new Date(a.meeting_date) - new Date(b.meeting_date);
+          })
         );
         context.commit("GET_LOADING_STATUS", false);
       } catch (error) {
