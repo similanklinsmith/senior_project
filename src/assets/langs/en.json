@@ -29,7 +29,8 @@
         "start-end": "start-end time",
         "file": "attached file",
         "link": "attached link",
-        "showDetail": "show details"
+        "showDetail": "show details",
+        "noIncomingMeeting": "There is no incoming meetings"
     },
     "executive": {
         "headerTab": "My executives",

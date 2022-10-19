@@ -187,7 +187,7 @@
             {{text['home']['seeAllMeeting']}}<i class="icon fa-solid fa-chevron-right"></i>
           </div>
         </div>
-        <div class="incoming-meetings">
+        <div class="incoming-meetings" v-if="getIncomingList.length > 0">
           <AttendeeGroup
             v-for="incoming in getIncomingList"
             :key="incoming.id"
@@ -202,6 +202,7 @@
             :file="incoming.attached_file"
           />
         </div>
+        <div v-else class="bold-content-text no-incoming-meetings">{{text['home']['noIncomingMeeting']}}</div>
         <div class="mobile-see remark-text">
           <BaseButton
             buttonType="common-button"
@@ -582,6 +583,11 @@ export default {
       .incoming-meetings {
         display: flex;
         flex-direction: column;
+      }
+      .no-incoming-meetings {
+        padding: 2rem 0;
+        text-align: center;
+        color: $fadedViolet;
       }
     }
   }
