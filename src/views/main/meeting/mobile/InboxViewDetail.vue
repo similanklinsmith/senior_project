@@ -155,7 +155,6 @@ export default {
   methods: {
     ...mapActions(["getMyInboxDetail", "downloadWithAxios"]),
     downloadFile(name) {
-      console.log(name);
       this.$store.dispatch("downloadWithAxios", name);
     },
     copyLink(value) {
