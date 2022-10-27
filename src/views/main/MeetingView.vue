@@ -237,7 +237,12 @@
               </template>
               <template v-slot:after-icon>
                 <div class="badge">
-                  <div class="bold-smallest-text">1</div>
+                  <div class="bold-smallest-text">                  
+                    {{
+                    $store.state.myPolls.length >= 100
+                      ? "99+"
+                      : $store.state.myPolls.length
+                  }}</div>
                 </div>
               </template>
             </BaseButton>

@@ -149,7 +149,7 @@ export default createStore({
       state.myResultDetail = resultDetail;
     },
     CREATE_MEETING(state, data) {
-      const index = state.myPolls.findIndex((list) => list.schedule_id == data.schedule_id);;
+      const index = state.myPolls.findIndex((list) => list.id == data.schedule_id);;
       if (index !== -1) {
         state.myPolls.splice(index, 1);
       }

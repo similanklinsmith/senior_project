@@ -377,7 +377,7 @@
               />
             </div>
             <div class="remark-text" style="color: white">
-              {{ text["createPoll"]["sending"] }}
+              {{ text["confirmed"]["sending"] }}
             </div>
           </div>
         </div>

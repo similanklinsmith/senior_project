@@ -226,7 +226,8 @@
         "placeholderName": "Search by name",
         "dragDrop": "Drag or Drop File",
         "or": "OR",
-        "selectFile": "Select File"
+        "selectFile": "Select File",
+        "sending":"Creating the meeting..."
     },
     "replied": {
         "placeholder": "Search by title",
