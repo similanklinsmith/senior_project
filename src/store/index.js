@@ -140,6 +140,7 @@ export default createStore({
       const index = state.myBeConfirmeds.findIndex(
         (list) => list.id == data.id
       );
+      console.log(index);
       if (index !== -1) {
         state.myBeConfirmeds.splice(index, 1);
       }
@@ -479,13 +480,14 @@ export default createStore({
             headers: authHeader(),
           }
         );
-        if (response.response.status == 400) {
+        if (response.response) {
+          if (response.response.status == 400) {
           context.commit("GET_FAILED", true)
-        } else {
-          context.commit("REPLY_BE_CONFIRMED_DETAIL", payload);
-          context.commit("GET_SUCCESS", true);
-          setTimeout(() => context.commit("GET_SUCCESS", false), 3000);
         }
+        }
+        context.commit("REPLY_BE_CONFIRMED_DETAIL", payload);
+        context.commit("GET_SUCCESS", true);
+        setTimeout(() => context.commit("GET_SUCCESS", false), 3000);
       } catch (error) {
         console.log(error);
         setTimeout(() => context.commit("GET_FAILED", false), 2500);
