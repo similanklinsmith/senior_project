@@ -36,6 +36,7 @@ instance.interceptors.response.use(
         }
       }
     }
+    return error;
   }
 );
 

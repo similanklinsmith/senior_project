@@ -388,7 +388,6 @@ export default createStore({
             headers: authHeader(),
           }
         );
-        console.log(data.data.data);
         context.commit("GET_MY_POLL_DETAIL", data.data.data);
         context.commit("GET_LOADING_STATUS", false);
         return data.data.data;
@@ -473,18 +472,22 @@ export default createStore({
     },
     async replyToBeConfirmed(context, payload) {
       try {
-        await customAxios.instance.post(
+        const response = await customAxios.instance.post(
           this.state.responseBeConfirmedURL,
           payload,
           {
             headers: authHeader(),
           }
         );
-        context.commit("REPLY_BE_CONFIRMED_DETAIL", payload);
-        context.commit("GET_SUCCESS", true);
-        setTimeout(() => context.commit("GET_SUCCESS", false), 3000);
+        if (response.response.status == 400) {
+          context.commit("GET_FAILED", true)
+        } else {
+          context.commit("REPLY_BE_CONFIRMED_DETAIL", payload);
+          context.commit("GET_SUCCESS", true);
+          setTimeout(() => context.commit("GET_SUCCESS", false), 3000);
+        }
       } catch (error) {
-        console.log(error.response);
+        console.log(error);
         setTimeout(() => context.commit("GET_FAILED", false), 2500);
       }
     },
@@ -640,7 +643,7 @@ export default createStore({
         context.commit("GET_LOADING_STATUS", false);
         console.log(error.response);
       }
-    }
+    },
   },
   getters: {
     getterLoadingStatus(state) {
@@ -694,7 +697,7 @@ export default createStore({
     },
     getterMyIncomings(state) {
       return state.myIncomings;
-    }
+    },
   },
   modules: { auth },
 });

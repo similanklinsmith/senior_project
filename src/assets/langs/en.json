@@ -180,7 +180,8 @@
         "end": "End with",
         "delete": "Delete",
         "required": "required",
-        "timeslots": "Timeslots"
+        "timeslots": "Timeslots",
+        "errorAlreadyReply": "You already replied to this poll appointment, so no need to reply again"
     },
     "confirmed": {
         "placeholder": "Search by title",

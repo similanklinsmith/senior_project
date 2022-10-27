@@ -24,7 +24,7 @@
            textHover="white"
            color="#7452FF"
            hoverColor="#23106D"
-           @onClick="$router.push('/')"
+           @onClick="$router.replace('/')"
           >
           </BaseButton>
         </span>

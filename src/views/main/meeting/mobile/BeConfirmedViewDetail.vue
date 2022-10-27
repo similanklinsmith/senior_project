@@ -55,6 +55,28 @@
         </BaseButton>
       </template>
     </MaskMeetingDetailMobile>
+    <BasePopup
+      v-if="isFailedToReply"
+      @closeModal="isFailedToReply = false"
+      :image="require(`@/assets/decorations/delete_executive.png`)"
+    >
+      <template v-slot:popupContent>
+        {{ text["toBeConfirmed"]["errorAlreadyReply"] }}
+      </template>
+      <template v-slot:buttons>
+        <BaseButton
+          buttonType="common-button"
+          :btnText="text['authentication']['close']"
+          textColor="white"
+          textHover="white"
+          color="#F33C3C"
+          hoverColor="#d93333"
+          width="100%"
+          @onClick="isFailedToReply = false"
+        >
+        </BaseButton>
+      </template>
+    </BasePopup>
   </div>
   <BaseNotFound v-else :isFailed="isFailed" />
 </template>
@@ -64,6 +86,7 @@ import MaskMeetingDetailMobile from "@/components/meeting/MaskMeetingDetailMobil
 import BaseButton from "@/components/UI/BaseButton.vue";
 import BaseNotFound from "@/components/UI/BaseNotFound.vue";
 import ResponseComp from "@/components/meeting/ResponseComp.vue";
+import BasePopup from "@/components/UI/BasePopup.vue";
 import { mapGetters, mapActions } from "vuex";
 import { useRoute } from "vue-router";
 import { formatDateTimeHeader } from "@/helpers/formatDateTime";
@@ -73,6 +96,7 @@ export default {
     MaskMeetingDetailMobile,
     ResponseComp,
     BaseButton,
+    BasePopup,
     BaseNotFound,
   },
   setup() {
@@ -85,15 +109,19 @@ export default {
     return {
       text: null,
       lang: null,
+      isFailedToReply: false,
       isFailed: false,
       isLoading: false,
       inboxDetail: null,
-      dataToBe: {},
+      dataToBe: {
+        id: null,
+        responses: null
+      },
       response: [],
     };
   },
   computed: {
-    ...mapGetters(["getterMyBeConfirmedDetail"]),
+    ...mapGetters(["getterMyBeConfirmedDetail","getterSuccess","getterFailed"]),
     responseAll() {
       var isValid = false;
       if (
@@ -171,10 +199,14 @@ export default {
     async confirmResponse() {
       this.dataToBe.responses = this.response;
       await this.$store.dispatch("replyToBeConfirmed", this.dataToBe);
-      this.dataToBe.id = null;
-      this.selectedId = null;
-      this.inboxDetail = null;
-      this.$router.go(-1);
+      if (this.getterFailed == true) {
+        this.isFailedToReply = true;
+      }else {
+        this.dataToBe.id = null;
+        this.selectedId = null;
+        this.inboxDetail = null;
+        this.$router.back();
+      }
     },
   },
   created() {

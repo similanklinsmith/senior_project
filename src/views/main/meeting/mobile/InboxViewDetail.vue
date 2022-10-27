@@ -235,6 +235,7 @@ export default {
   }
   .attendee,
   .attendee-more {
+    cursor: pointer;
     width: 6rem;
     height: 6rem;
     border-radius: 0.5rem;
@@ -295,6 +296,7 @@ export default {
   align-items: center;
   position: relative;
   .copy-icon {
+    cursor: pointer;
     width: 7.2rem;
     height: 100%;
     position: absolute;
@@ -316,6 +318,8 @@ export default {
     font-size: 2rem;
     color: $darkViolet;
     overflow-x: scroll;
+    word-wrap: break-word;
+    line-height: 1.6;
   }
 }
 .attachment-file {
@@ -332,6 +336,9 @@ export default {
     color: $primaryViolet;
   }
   .attachment-download {
+    &:hover {background-color: $fadedViolet;.file-download {color: $primaryViolet !important;}}
+    transition: 0.3s all ease-in-out;
+    cursor: pointer;
     width: 35rem;
     border-radius: 0.5rem;
     padding: 2rem 2.4rem;

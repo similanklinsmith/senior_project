@@ -73,8 +73,8 @@
     },
     "createPoll": {
         "addAttendee": "เพิ่มผู้เข้าประชุม",
-        "requiredAttendee": "ผู้ร่วมประชุมที่จำเป็น",
-        "addRequiredAttendee": "เพิ่มผู้ร่วมประชุมที่จำเป็น",
+        "requiredAttendee": "ผู้เข้าร่วมประชุมที่จำเป็น",
+        "addRequiredAttendee": "เพิ่มผู้เข้าร่วมประชุมที่จำเป็น",
         "mobileSend": "ส่งแบบสอบถาม",
         "title": "หัวข้อเรื่อง",
         "dateSlot": "ช่วงเวลา",
@@ -180,7 +180,8 @@
         "end": "ถึง",
         "delete": "ลบ",
         "required": "จำเป็น",
-        "timeslots": "ช่วงเวลา"
+        "timeslots": "ช่วงเวลา",
+        "errorAlreadyReply": "แบบสอบถามนี้ท่านเคยได้ทำการตอบแบบสอบถามสำเร็จไปแล้ว จึงไม่จำเป็นต้องตอบอีก"
     },
     "confirmed": {
         "placeholder": "ค้นหาด้วยชื่อเรื่อง",
