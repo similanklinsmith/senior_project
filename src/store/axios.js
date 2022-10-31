@@ -19,7 +19,6 @@ instance.interceptors.response.use(
   async (error) => {
     // let { message } = error;
     let refreshToken = VueCookies.get("refreshToken");
-    console.log(refreshToken);
     if (error.response.status == 401) {
       let refreshTokenUrl = `https://securetoken.googleapis.com/v1/token?key=${process.env.VUE_APP_API_KEY}`;
       try {

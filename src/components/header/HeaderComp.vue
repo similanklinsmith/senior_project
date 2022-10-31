@@ -29,11 +29,12 @@
     </div>
     <div class="last-section">
       <div class="notification" @click="toggleNotiDropdown">
-        <div class="alert-circle">{{ getterMyInboxes.length }}</div>
+        <div class="alert-circle">{{ notificationMeeting.length }}</div>
         <i class="icon fa-solid fa-bell"></i>
         <div
           class="dropdown__content"
           :class="`${isShowNoti ? 'is-show' : ''}`"
+          :style="notificationMeeting.length == 0 ? { marginTop: '14rem !important' } : {}"
           @mouseleave="isShowNoti = false"
         >
           <ul>
@@ -41,10 +42,10 @@
               @click="
                 $router.push({ path: `/meetings-inbox/inbox/${inbox.id}` })
               "
-              v-for="inbox in getterMyInboxes.slice(0, 3)"
+              v-for="inbox in notificationMeeting.slice(0, 3)"
               :key="inbox.id"
             >
-              <div class="noti-container" v-if="getterMyInboxes.length > 0">
+              <div class="noti-container">
                 <div class="mail-icon">
                   <img
                     src="@/assets/decorations/sample_profile.png"
@@ -66,7 +67,10 @@
                   </div>
                 </div>
               </div>
-              <div v-else class="bold-small-text no-incoming">{{text['home']['noIncomingMeeting']}}</div>
+              <div class="line"></div>
+            </li>
+            <li v-if="notificationMeeting.length == 0">
+              <div class="bold-small-text no-incoming">{{text['home']['noIncomingMeeting']}}</div>
               <div class="line"></div>
             </li>
             <li class="see-all">
@@ -219,6 +223,11 @@ export default {
           .includes(this.inputSearch.toLowerCase());
       });
     },
+    notificationMeeting() {
+      return this.getterMyInboxes.filter((inbox) => {
+        return new Date(Date.now()) <= new Date(inbox.create_at);
+      })
+    }
   },
   methods: {
     ...mapActions(["getProfileImage", "getMyInboxes"]),
