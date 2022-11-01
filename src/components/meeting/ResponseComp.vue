@@ -253,7 +253,7 @@ export default {
             to: this.timeSlot.to,
           };
           if (
-            (oCompareEvent.from <= oEvent.to &&
+            (oCompareEvent.from < oEvent.to &&
               oCompareEvent.to > oEvent.from) ||
             (oCompareEvent.to <= oEvent.from && oCompareEvent.from > oEvent.to)
           ) {

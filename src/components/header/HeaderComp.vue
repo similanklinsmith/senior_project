@@ -34,7 +34,7 @@
         <div
           class="dropdown__content"
           :class="`${isShowNoti ? 'is-show' : ''}`"
-          :style="notificationMeeting.length == 0 ? { marginTop: '14rem !important' } : {}"
+          :style="notificationMeeting.length == 0 ? { marginTop: '14rem !important' } : notificationMeeting.length == 1 ? {marginTop: '18rem !important'} : {}"
           @mouseleave="isShowNoti = false"
         >
           <ul>
