@@ -11,7 +11,7 @@
           <div class="say-hi">
             {{text['home']['greeting']}}, <span>{{ user }}</span>
           </div>
-          <div class="num-mention">{{text['home']['preNumMeeting']}} 2 {{text['home']['postNumMeeting']}}</div>
+          <div class="num-mention">{{text['home']['preNumMeeting']}} {{ notificationMeeting.length }} {{text['home']['postNumMeeting']}}</div>
         </div>
         <div class="profile-image" v-if="$store.state.myProfilePic">
           <img
@@ -251,7 +251,8 @@ export default {
       "getterLoadingStatus",
       "getterExecutiveTitles",
       "getterExecutivePositions",
-      "getterMyIncomings"
+      "getterMyIncomings",
+      "getterMyInboxes"
     ]),
     getExecutivesList() {
       return this.$store.getters.getterMyExecutives.slice(0, 2);
@@ -263,6 +264,11 @@ export default {
       let events=[];for(let index=0;index<this.$store.getters.getterMyIncomings.length;index++){var e=new Date(this.$store.getters.getterMyIncomings[index].meeting_start),t=new Date(e),n=10>t.getMinutes()?"0"+t.getMinutes():t.getMinutes(),s=new Date(this.$store.getters.getterMyIncomings[index].meeting_end),i=new Date(s),g=10>i.getMinutes()?"0"+i.getMinutes():i.getMinutes();events.push({start:this.$store.getters.getterMyIncomings[index].meeting_start.split("T")[0]+" "+t.getUTCHours()+":"+n,end:this.$store.getters.getterMyIncomings[index].meeting_end.split("T")[0]+" "+i.getUTCHours()+":"+g,title:this.$store.getters.getterMyIncomings[index].title,content:this.$store.getters.getterMyIncomings[index].meeting_detail})}
       return events;
     },
+    notificationMeeting() {
+      return this.getterMyInboxes.filter((inbox) => {
+        return new Date(Date.now()) == new Date(inbox.create_at);
+      });
+    },
   },
   methods: {
     ...mapActions([
@@ -270,7 +276,8 @@ export default {
       "getExecutiveTitle",
       "getExecutivePosition",
       "getProfileImage",
-      "getMyIncoming"
+      "getMyIncoming",
+      "getMyInboxes"
     ]),
     changeLanguage() {
       this.lang = this.$cookies.set("lang", "th");
@@ -302,6 +309,7 @@ export default {
     this.getExecutivePosition();
     this.getProfileImage();
     this.getMyIncoming();
+    this.getMyInboxes();
   },
   mounted() {
     window.scrollTo(0, 0);

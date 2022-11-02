@@ -30,7 +30,8 @@
         "file": "attached file",
         "link": "attached link",
         "showDetail": "show details",
-        "noIncomingMeeting": "There is no newly created meetings today"
+        "noIncomingMeeting": "There is no newly created meetings today",
+        "newlyIncoming": "Newly created meetings today"
     },
     "executive": {
         "headerTab": "My executives",

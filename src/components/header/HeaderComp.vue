@@ -29,12 +29,12 @@
     </div>
     <div class="last-section">
       <div class="notification" @click="toggleNotiDropdown">
-        <div class="alert-circle">{{ notificationMeeting.length }}</div>
+        <div class="alert-circle">{{ inboxList.length }}</div>
         <i class="icon fa-solid fa-bell"></i>
         <div
           class="dropdown__content"
           :class="`${isShowNoti ? 'is-show' : ''}`"
-          :style="notificationMeeting.length == 0 ? { marginTop: '14rem !important' } : notificationMeeting.length == 1 ? {marginTop: '18rem !important'} : {}"
+          :style="inboxList.length == 0 ? { marginTop: '14rem !important' } : inboxList.length == 1 ? {marginTop: '18rem !important'} : {}"
           @mouseleave="isShowNoti = false"
         >
           <ul>
@@ -42,7 +42,7 @@
               @click="
                 $router.push({ path: `/meetings-inbox/inbox/${inbox.id}` })
               "
-              v-for="inbox in notificationMeeting.slice(0, 3)"
+              v-for="inbox in inboxList.slice(0, 3)"
               :key="inbox.id"
             >
               <div class="noti-container">
@@ -54,7 +54,7 @@
                 </div>
                 <div class="noti-detail">
                   <div class="meeting-title">
-                    <div class="bold-small-text">{{ inbox.title }}</div>
+                    <div class="bold-small-text"><span v-if="inbox.title > 13">{{ inbox.title.substring(0, 13) }}</span><span v-else>{{ inbox.title }}</span></div>
                     <div class="small-text date">
                       {{ formatDateTime(inbox.create_at) }}
                     </div>
@@ -69,7 +69,7 @@
               </div>
               <div class="line"></div>
             </li>
-            <li v-if="notificationMeeting.length == 0">
+            <li v-if="inboxList.length == 0">
               <div class="bold-small-text no-incoming">{{text['home']['noIncomingMeeting']}}</div>
               <div class="line"></div>
             </li>
@@ -197,10 +197,10 @@
 <script>
 import jwtDecrypt from "@/helpers/jwtHelper";
 import { formatDateTimeInbox } from "@/helpers/formatDateTime";
-import { mapGetters, mapActions } from "vuex";
+import { mapActions } from "vuex";
 export default {
   name: "HeaderComp",
-  props: ["headerText"],
+  props: ["headerText", "inboxList"],
   data() {
     return {
       text: null,
@@ -215,22 +215,16 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getterMyInboxes"]),
     filterSearch() {
       return this.searchList.filter((list) => {
         return list.title
           .toLowerCase()
           .includes(this.inputSearch.toLowerCase());
       });
-    },
-    notificationMeeting() {
-      return this.getterMyInboxes.filter((inbox) => {
-        return new Date(Date.now()) <= new Date(inbox.create_at);
-      })
     }
   },
   methods: {
-    ...mapActions(["getProfileImage", "getMyInboxes"]),
+    ...mapActions(["getProfileImage"]),
     formatDateTime(dateTime) {
       return formatDateTimeInbox(dateTime);
     },
@@ -303,7 +297,6 @@ export default {
   },
   created() {
     this.getProfileImage();
-    this.getMyInboxes();
   },
   mounted() {
     window.onscroll = () => {
