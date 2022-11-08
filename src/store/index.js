@@ -12,10 +12,13 @@ export default createStore({
     // auth
     getAuth: null,
     //secretaries
-    secretaryURL: `${BASE_URL}/secretary`,
+    secretaryURL: `${BASE_URL}/profile`,
+    updateProfileURL: `${BASE_URL}/updateProfile`,
+    secretaryTitleURL: `${BASE_URL}/secretary-title`,
     secretaryImageURL: "https://graph.microsoft.com/v1.0/me/photo/$value",
     myProfile: null,
     myProfilePic: null,
+    secretaryTitle: [],
     // executives
     imageURL: `${BASE_URL}/image`,
     executiveTitleURL: `${BASE_URL}/executive-title-fulltitle`,
@@ -63,6 +66,9 @@ export default createStore({
     myIncomingURL: `${BASE_URL}/incoming`,
     myIncomings: [],
 
+    // profile
+    getProfileURL: `${BASE_URL}/profile`,
+
     loadingStatus: false,
     success: false,
     failed: false,
@@ -80,9 +86,15 @@ export default createStore({
     GET_PROFILE(state, profile) {
       state.myProfile = profile;
     },
+    GET_SECRETARY_TITLE(state, title) {
+      state.secretaryTitle = title;
+    },
     GET_PROFILE_PIC(state, pic) {
       localStorage.setItem("profile_image", pic);
       state.myProfilePic = pic;
+    },
+    UPDATE_PROFILE(state, profile) {
+      state.myProfile = profile;
     },
     GET_EXECUTIVES_TITLES(state, titles) {
       state.executiveTitle = titles;
@@ -149,7 +161,9 @@ export default createStore({
       state.myResultDetail = resultDetail;
     },
     CREATE_MEETING(state, data) {
-      const index = state.myPolls.findIndex((list) => list.id == data.schedule_id);;
+      const index = state.myPolls.findIndex(
+        (list) => list.id == data.schedule_id
+      );
       if (index !== -1) {
         state.myPolls.splice(index, 1);
       }
@@ -217,6 +231,33 @@ export default createStore({
         }
       } else {
         this.state.myProfilePic = localStorage.getItem("profile_image");
+      }
+    },
+    async updateProfile(context, payload) {
+      let updatedProfile = payload;
+      try {
+        const data = await customAxios.instance.put(
+          this.state.updateProfileURL,
+          updatedProfile,
+          {
+            headers: authHeader(),
+          }
+        );
+        console.log(payload);
+        console.log(data);
+        context.commit("UPDATE_PROFILE", data.data.data);
+      } catch (error) {
+        console.log(error.response);
+      }
+    },
+    async getSecretaryTitle(context) {
+      try {
+        const data = await customAxios.instance.get(
+          this.state.secretaryTitleURL
+        );
+        context.commit("GET_SECRETARY_TITLE", data.data.data);
+      } catch (error) {
+        console.log(error);
       }
     },
     async getExecutiveTitle(context) {
@@ -482,8 +523,8 @@ export default createStore({
         );
         if (response.response) {
           if (response.response.status == 400) {
-          context.commit("GET_FAILED", true)
-        }
+            context.commit("GET_FAILED", true);
+          }
         }
         context.commit("REPLY_BE_CONFIRMED_DETAIL", payload);
         context.commit("GET_SUCCESS", true);
@@ -699,6 +740,12 @@ export default createStore({
     },
     getterMyIncomings(state) {
       return state.myIncomings;
+    },
+    getterMyProfile(state) {
+      return state.myProfile;
+    },
+    getterSecretaryTitles(state) {
+      return state.secretaryTitle;
     },
   },
   modules: { auth },

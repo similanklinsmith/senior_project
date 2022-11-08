@@ -101,7 +101,7 @@
             alt="sample profile illustration"
           />
         </div>
-        <div class="thin-content-text display-name">{{ user }}</div>
+        <div class="thin-content-text display-name" v-if="getterMyProfile">{{ getterMyProfile.name }}</div>
         <i class="icon fa-solid fa-caret-down dropdown-icon"></i>
         <div
           class="dropdown__content"
@@ -127,8 +127,8 @@
                 />
               </div>
               <div style="text-align: start">
-                <div class="bold-content-text">
-                  {{ user.length > 15 ? user.substring(0, 15) + "..." : user }}
+                <div class="bold-content-text" v-if="getterMyProfile">
+                  {{ getterMyProfile.name.length > 15 ? getterMyProfile.name.substring(0, 15) + "..." : getterMyProfile.name }}
                 </div>
                 <div class="small-text">
                   {{ text["authentication"]["viewProfile"] }}
@@ -195,9 +195,8 @@
 </template>
 
 <script>
-import jwtDecrypt from "@/helpers/jwtHelper";
 import { formatDateTimeInbox } from "@/helpers/formatDateTime";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "HeaderComp",
   props: ["headerText", "inboxList"],
@@ -206,7 +205,6 @@ export default {
       text: null,
       lang: null,
       isShowLang: false,
-      user: "",
       isShowNoti: false,
       isShowProfile: false,
       isShowList: false,
@@ -215,6 +213,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(["getterMyProfile"]),
     filterSearch() {
       return this.searchList.filter((list) => {
         return list.title
@@ -224,7 +223,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["getProfileImage"]),
+    ...mapActions(["getProfileImage", "getMyProfile"]),
     formatDateTime(dateTime) {
       return formatDateTimeInbox(dateTime);
     },
@@ -297,14 +296,12 @@ export default {
   },
   created() {
     this.getProfileImage();
+    this.getMyProfile();
   },
   mounted() {
     window.onscroll = () => {
       this.isShowProfile = false;
     };
-    if (localStorage.getItem("user")) {
-      this.user = `${jwtDecrypt(localStorage.getItem("user")).name}`;
-    }
   },
   beforeMount() {
     if (this.$cookies.get("lang")) {

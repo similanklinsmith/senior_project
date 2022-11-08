@@ -9,7 +9,7 @@
       <div class="mention">
         <div class="welcome">
           <div class="say-hi">
-            {{text['home']['greeting']}}, <span>{{ user }}</span>
+            {{text['home']['greeting']}}, <span v-if="getterMyProfile">{{ getterMyProfile.name }}</span>
           </div>
           <div class="num-mention">{{text['home']['preNumMeeting']}} {{ notificationMeeting.length }} {{text['home']['postNumMeeting']}}</div>
         </div>
@@ -230,7 +230,6 @@ import BaseHeader from "@/components/UI/BaseHeader.vue";
 import AttendeeGroup from "@/components/meeting/AttendeeGroup.vue";
 import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
-import jwtDecrypt from "@/helpers/jwtHelper";
 import { mapGetters, mapActions } from "vuex";
 export default {
   components: { BaseButton, BaseHeader, AttendeeGroup, VueCal },
@@ -240,7 +239,6 @@ export default {
       text: null,
       lang: null,
       profileImage: null,
-      user: "",
       urlImage: this.$store.state.imageURL,
       selectedDate: "",
     };
@@ -252,7 +250,8 @@ export default {
       "getterExecutiveTitles",
       "getterExecutivePositions",
       "getterMyIncomings",
-      "getterMyInboxes"
+      "getterMyInboxes",
+      "getterMyProfile"
     ]),
     getExecutivesList() {
       return this.$store.getters.getterMyExecutives.slice(0, 2);
@@ -277,7 +276,8 @@ export default {
       "getExecutivePosition",
       "getProfileImage",
       "getMyIncoming",
-      "getMyInboxes"
+      "getMyInboxes",
+      "getMyProfile"
     ]),
     changeLanguage() {
       this.lang = this.$cookies.set("lang", "th");
@@ -314,10 +314,6 @@ export default {
   mounted() {
     window.scrollTo(0, 0);
     this.selectedDate = new Date().toISOString().slice(0, 10);
-    if (localStorage.getItem("user")) {
-      this.user = `${jwtDecrypt(localStorage.getItem("user")).name}
-      `;
-    }
   },
   beforeMount() {
     if (this.$cookies.get("lang")) {

@@ -19,7 +19,7 @@
         />
         </div>
         <div class="profile-info">
-          <div class="remark-text">{{ user }}</div>
+          <div class="remark-text" v-if="getterMyProfile">{{ getterMyProfile.name }}</div>
           <div class="content-text">{{ email }}</div>
         </div>
         <div class="next-button">
@@ -105,7 +105,7 @@
 <script>
 import jwtDecrypt from "@/helpers/jwtHelper";
 import BaseButton from "@/components/UI/BaseButton.vue";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "HeaderMobile",
   components: { BaseButton },
@@ -114,19 +114,19 @@ export default {
     return {
       text: null,
       lang: null,
-      user: "",
       email: "",
       isShowProfile: false,
     };
   },
+  computed: { ...mapGetters(["getterMyProfile"]), },
   methods: {
-    ...mapActions(["getProfileImage"]),
+    ...mapActions(["getProfileImage", "getMyProfile"]),
     handleSignOut() {this.$emit("signOut");},
     toggleCloseNav() {this.$emit("toggleCloseNav");},
   },
-  created() {this.getProfileImage();},
+  created() {this.getProfileImage();this.getMyProfile();},
   mounted() {
-    if (localStorage.getItem("user")) {this.user = `${jwtDecrypt(localStorage.getItem("user")).name}`;this.email = `${jwtDecrypt(localStorage.getItem("user")).email}`}
+    if (localStorage.getItem("user")) {this.email = `${jwtDecrypt(localStorage.getItem("user")).email}`}
   },
   beforeMount() {
     if (this.$cookies.get("lang")) {
