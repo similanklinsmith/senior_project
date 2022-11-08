@@ -96,6 +96,24 @@
         </div>
       </div>
     </div>
+    <BaseExecutivesPopup
+      :executives="getExecutivesList"
+      :selectedId="selectedId"
+      v-if="isSearchMobile"
+      @onClickCloseSearch="isSearchMobile = false"
+      @onClickSelectExecutive="selectExecutive"
+    />
+    <div class="mobile-button-actions" v-if="getExecutivesList.length != 0">
+      <div
+        class="mobile-button-search"
+        @click="isSearchMobile = true"
+      >
+        <div class="number-of-executive">
+          <div class="bold-small-text">{{ getExecutivesList.length }}</div>
+        </div>
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -103,18 +121,20 @@
 import BaseHeader from "@/components/UI/BaseHeader.vue";
 import BaseButton from "@/components/UI/BaseButton.vue";
 import ExecutiveComp from "@/components/meeting/ExecutiveComp.vue";
+import BaseExecutivesPopup from "@/components/UI/BaseExecutivesPopup.vue";
 import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
 import { mapGetters, mapActions } from "vuex";
 export default {
   name: "CalendarView",
-  components: { BaseHeader, BaseButton, VueCal, ExecutiveComp },
+  components: { BaseHeader, BaseButton, VueCal, ExecutiveComp, BaseExecutivesPopup },
   data() {
     return {
       selectedDate: "",
       searchInput: "",
       selectedExecutive: null,
       selectedId: null,
+      isSearchMobile: false
     };
   },
   computed: {
@@ -194,7 +214,9 @@ export default {
           row-gap: 1rem;
           position: relative;
           margin-top: 3rem;
-          .label {color:var(--outsideText)}
+          .label {
+            color: var(--outsideText);
+          }
           .search-filter {
             position: relative;
             width: 100%;
@@ -285,6 +307,28 @@ export default {
         width: 100%;
         background-color: $white;
         border-radius: 2.5rem;
+      }
+    }
+  }
+}
+.mobile-button-actions {display: none;right: 0%;bottom: 0%;}
+.mobile-button-search {justify-content: center;align-items: center;color: $white;font-size: 2rem;width: 6.4rem;height: 6.4rem;border-radius: 1rem;background-color: $darkViolet;box-shadow: 1.8rem 1.8rem 1.3rem 0 #ababab4d;transform: translateX(-5rem) translateY(-5rem);position: relative;.number-of-executive {transform: translateX(1rem) translateY(-1rem);position: absolute;top: 0%;right: 0%;background-color: $error;width: 2.4rem;height: 2.4rem;border-radius: 50%;display: flex;align-items: center;justify-content: center;outline: 0.4rem solid $white;}}
+.mobile-button-search:active {animation: press 0.2s 1 linear;}
+.search-mobile-button {display: none;}
+@media (max-width: 26.75em) {
+  .search-mobile-button {display: block;}.mobile-button-actions {position: fixed;display: flex;flex-direction: column;row-gap: 2rem;}.mobile-button-search {display: flex;}
+  .calendar-screen {
+    .body {
+      .first-body-section {
+        grid-template-columns: 1fr;
+        grid-auto-flow: dense;
+        column-gap: 3rem;
+        .calendar-show {
+          height: 100rem;
+        }
+        .first-col {
+          display: none;
+        }
       }
     }
   }
