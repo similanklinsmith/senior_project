@@ -842,9 +842,7 @@ export default {
   mounted() {
     window.scrollTo(0, 0);
     if (localStorage.getItem("user")) {
-      this.secretary = `${
-        jwtDecrypt(localStorage.getItem("user")).name
-      } (${jwtDecrypt(localStorage.getItem("user")).email})`;
+      this.secretary = `(You) ${jwtDecrypt(localStorage.getItem("user")).email}`;
     }
     window.onscroll = () => {this.isShowDropdown = false;};
     this.isAddExecutive = this.isAdd ? true : this.isAddExecutive;
