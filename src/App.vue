@@ -145,6 +145,8 @@ export default {
           return this.text["meeting"]["headerTab"];
         case "setting":
           return this.text["setting"]["headerTab"];
+        case "calendar":
+          return this.text["calendar"]["headerTab"];
         default:
           return "Meeting Overview";
       }

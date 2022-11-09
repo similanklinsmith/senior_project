@@ -70,7 +70,7 @@
               <div class="line"></div>
             </li>
             <li v-if="inboxList.length == 0">
-              <div class="bold-small-text no-incoming">{{text['home']['noIncomingMeeting']}}</div>
+              <div class="bold-small-text no-incoming">{{text['home']['noNewMeeting']}}</div>
               <div class="line"></div>
             </li>
             <li class="see-all">

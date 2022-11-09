@@ -30,7 +30,8 @@
         "file": "attached file",
         "link": "attached link",
         "showDetail": "show details",
-        "noIncomingMeeting": "There is no newly created meetings today",
+        "noNewMeeting": "There is no newly created meetings today",
+        "noIncomingMeeting": "There is not incoming meetings today",
         "newlyIncoming": "Newly created meetings today"
     },
     "executive": {
@@ -364,5 +365,17 @@
         "6": "Result of poll",
         "7": "Replied",
         "8": "Personal setting"
+    },
+    "calendar": {
+        "headerTab": "My Calendar",
+        "header": "Calendar Overview",
+        "subHeader": "This screen illustrates your calendar schedule.",
+        "createMeeting": "Create poll meeting +",
+        "filter": "Filtered by",
+        "label": "Executive label",
+        "placeholder": "Search by name",
+        "focusSearch": "Type to find...",
+        "notFound": "Not Found",
+        "loading": "Loading..."
     }
 }
