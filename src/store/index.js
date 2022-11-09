@@ -69,6 +69,10 @@ export default createStore({
     // profile
     getProfileURL: `${BASE_URL}/profile`,
 
+    // calendar
+    getCalendarURL: `${BASE_URL}/displayAllMeets`,
+    meetings: [],
+
     loadingStatus: false,
     success: false,
     failed: false,
@@ -183,8 +187,21 @@ export default createStore({
     GET_MY_INCOMING(state, incomings) {
       state.myIncomings = incomings;
     },
+    GET_CALENDAR_MEETING(state, meetings) {
+      state.meetings = meetings;
+    },
   },
   actions: {
+    async getAllMeetings(context) {
+      try {
+        const data = await customAxios.instance.get(this.state.getCalendarURL, {
+          headers: authHeader(),
+        });
+        context.commit("GET_CALENDAR_MEETING", data.data.data);
+      } catch (error) {
+        console.log(error.response);
+      }
+    },
     async getMyProfile(context) {
       try {
         const data = await customAxios.instance.get(this.state.secretaryURL, {
@@ -684,7 +701,7 @@ export default createStore({
         context.commit("GET_LOADING_STATUS", false);
       } catch (error) {
         context.commit("GET_LOADING_STATUS", false);
-        console.log(error.response);
+        console.log(error);
       }
     },
   },
@@ -710,7 +727,6 @@ export default createStore({
     getterMyExecutives(state) {
       return state.myExecutives;
     },
-
     getterMyPolls(state) {
       return state.myPolls;
     },
@@ -746,6 +762,9 @@ export default createStore({
     },
     getterSecretaryTitles(state) {
       return state.secretaryTitle;
+    },
+    getterAllMeetings(state) {
+      return state.meetings;
     },
   },
   modules: { auth },
