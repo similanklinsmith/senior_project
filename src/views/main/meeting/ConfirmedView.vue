@@ -870,7 +870,7 @@ export default {
             if (
               (oCompareEvent.start < oEvent.end &&
                 oCompareEvent.end > oEvent.start) ||
-              (oCompareEvent.end <= oEvent.start &&
+              (oCompareEvent.end < oEvent.start &&
                 oCompareEvent.start > oEvent.end)
             ) {
               nOverlaps++;
