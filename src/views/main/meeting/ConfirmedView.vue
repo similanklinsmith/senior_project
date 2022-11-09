@@ -868,9 +868,9 @@ export default {
           for (var j = 0; j < l; j++) {
             var oCompareEvent = events[j];
             if (
-              (oCompareEvent.start <= oEvent.end &&
+              (oCompareEvent.start < oEvent.end &&
                 oCompareEvent.end > oEvent.start) ||
-              (oCompareEvent.end <= oEvent.start &&
+              (oCompareEvent.end < oEvent.start &&
                 oCompareEvent.start > oEvent.end)
             ) {
               nOverlaps++;
