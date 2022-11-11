@@ -96,7 +96,7 @@
                 :formatter="formatter"
                 :style="{ fontSize: '1.6rem !important', marginTop: '1rem' }"
               />
-              <div class="bold-small-text required">{{ errors.dateSlot }}</div>
+              <div class="bold-small-text required">{{ errors.dateSlot }}{{ errors.checkDateSlot }}</div>
             </div>
             <div class="input">
               <label for="duration" class="bold-small-text"
@@ -283,7 +283,8 @@ export default {
   components: { BaseButton, LitepieDatepicker, BaseAlert },
   setup() {
     const dDate = (date) => {
-      return date <= new Date();
+      console.log(new Date().getDate());
+      return date < new Date();
     };
     const formatter = ref({
       date: "YYYY-MM-DD",
@@ -339,9 +340,10 @@ export default {
     attendeesIsValid() {return !!(this.form.selectedAttendees.length != 0);},
     titleIsValid() {return !!this.form.title;},
     dateSlotIsValid() {return !!this.form.dateSlot;},
+    checkDateSlot() {return this.form.dateSlot.split(" ~ ")[0] != new Date().toISOString().split('T')[0] && this.form.dateSlot.split(" ~ ")[0] > new Date().toISOString().split('T')[0];},
     durationIsValid() {return !!this.form.duration;},
     dueDateIsValid() {return !!this.form.dueDate;},
-    dueDateLessIsValid() {return (new Date(this.form.dueDate) < new Date (this.form.dateSlot.split(" ~ ")[0]));},
+    dueDateLessIsValid() {return (new Date(this.form.dueDate) < new Date (this.form.dateSlot.split(" ~ ")[0]) && this.form.dueDate > new Date().toISOString().split('T')[0]);},
   },
   methods: {
     ...mapActions(["getExecutives", "getExecutiveTitle"]),
@@ -376,9 +378,11 @@ export default {
         ? delete this.errors.attendees
         : (this.errors.attendees = this.text['errors']['attendee']);
       this.dateSlotIsValid
-        ? delete this.errors.dateSlot
+        ? (delete this.errors.dateSlot,       this.checkDateSlot
+        ? delete this.errors.checkDateSlot
+        : (this.errors.checkDateSlot = this.text['errors']['dateSlotCheck'])) 
         : (this.errors.dateSlot = this.text['errors']['dateSlot']);
-      if(this.dueDateIsValid){delete this.errors.dueDate; if(this.dueDateLessIsValid){delete this.errors.dueDate}else{this.errors.dueDate="Due date cannot be exceeded date slot"}}else{this.errors.dueDate=this.text['errors']['dueDate']}
+      if(this.dueDateIsValid){delete this.errors.dueDate; if(this.dueDateLessIsValid){delete this.errors.dueDate}else{this.errors.dueDate=this.text['errors']['dueDateExceed']}}else{this.errors.dueDate=this.text['errors']['dueDate']}
       this.durationIsValid
         ? delete this.errors.duration
         : (this.errors.duration = this.text['errors']['duration']);
@@ -434,7 +438,7 @@ export default {
 @import "@/assets/colors/webColors.scss";
 .mobile.remark-text{display:none;}
 .input-mobile-button {display: none;order: 3;}
-.required {color: $error;margin-top: 0.8rem;font-size: 1.4rem !important;}
+.required {color: $error;margin-top: 0.8rem;font-size: 1.4rem !important;line-height: 1.6;}
 .pop-up-loading {position: fixed;z-index: 12;padding: 2.4rem 1.6rem;color: $darkViolet;.flex-col-center {animation-name: floating;-webkit-animation-name: floating;animation-duration: 2s;-webkit-animation-duration: 2s;animation-iteration-count: infinite;-webkit-animation-iteration-count: infinite;}.logo {.primary-violet {color: $primaryViolet;}.yellow {color: $yellow;}.faded-violet {color: $fadedViolet;}}.image {width: 15rem;height: 15rem;img {width: 100%;height: 100%;}}}
 .loading {animation-name: floating;-webkit-animation-name: floating;animation-duration: 3s;-webkit-animation-duration: 3s;animation-iteration-count: infinite;-webkit-animation-iteration-count: infinite;}
 .modal {.sending{color:$yellow}width: 100%;height: 100vh;position: fixed;background-color: rgba(24, 24, 26, 0.4);z-index: 11;display: flex;flex-direction: column;align-items: center;justify-content: center;}
