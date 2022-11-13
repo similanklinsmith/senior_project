@@ -131,8 +131,8 @@
         <i class="fa-solid fa-magnifying-glass"></i>
       </div>
     </div>
-    <teleport to="#portal-target">
-      <div class="modal" @click="isShow = false, selectedEvent = null" v-if="isShow == true"></div>
+    <teleport to="#portal-target" v-if="isShow == true">
+      <div class="modal" @click="isShow = false, selectedEvent = null"></div>
         <div class="pop-up">
           <div class="header-pop-up remark-text">{{ selectedEvent.title }}</div>
           <div class="date content-text">
