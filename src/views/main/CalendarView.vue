@@ -132,7 +132,7 @@
       </div>
     </div>
     <teleport to="#portal-target">
-      <div class="modal" @click="isShow = false, selectedEvent = null" v-if="isShow = true && selectedEvent != null">
+      <div class="modal" @click="isShow = false, selectedEvent = null" v-if="isShow = true">
         <div class="pop-up">
           <div class="header-pop-up remark-text">{{ selectedEvent.title }}</div>
           <div class="date content-text">
