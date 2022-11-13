@@ -132,14 +132,14 @@
       </div>
     </div>
     <teleport to="#portal-target">
-      <div class="modal" @click="isShow = false, selectedEvent = null" v-if="isShow == true">
+      <div class="modal" @click="isShow = false, selectedEvent = null" v-if="isShow == true"></div>
         <div class="pop-up">
           <div class="header-pop-up remark-text">{{ selectedEvent.title }}</div>
           <div class="date content-text">
             <i class="icon fa-regular fa-calendar"></i>{{ selectedEvent.start.format('DD-MM-YYYY') }}
           </div>
           <div class="time content-text">
-            <i class="icon fa-regular fa-clock"></i>{{ selectedEvent.start }} - {{ selectedEvent.end }}
+            <i class="icon fa-regular fa-clock"></i>{{ selectedEvent.start.formatTime() }} - {{ selectedEvent.end.formatTime() }}
           </div>
           <div class="line" />
           <div class="meeting-detail small-text">
@@ -156,7 +156,6 @@
             >
           </BaseButton>
         </div>
-      </div>
   </teleport>
   </div>
 </template>
