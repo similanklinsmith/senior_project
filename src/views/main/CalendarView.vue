@@ -29,6 +29,7 @@
               @cell-focus="selectedDate = $event"
               :selected-date="selectedDate"
               :events="getEvents"
+              :on-event-click="onEventClick"
             >
             </vue-cal>
           </div>
@@ -108,6 +109,7 @@
               :selected-date="selectedDate"
               @cell-focus="selectedDate = $event"
               :events="getEvents"
+              :on-event-click="onEventClick"
             >
             </vue-cal>
           </div>
@@ -129,6 +131,33 @@
         <i class="fa-solid fa-magnifying-glass"></i>
       </div>
     </div>
+    <teleport to="#portal-target">
+      <div class="modal" @click="isShow = false, selectedEvent = null" v-if="isShow = true && selectedEvent != null">
+        <div class="pop-up">
+          <div class="header-pop-up remark-text">{{ selectedEvent.title }}</div>
+          <div class="date content-text">
+            <i class="icon fa-regular fa-calendar"></i>{{ selectedEvent.start.format('DD-MM-YYYY') }}
+          </div>
+          <div class="time content-text">
+            <i class="icon fa-regular fa-clock"></i>{{ selectedEvent.start.split(" ")[1] }} - {{ selectedEvent.end.split(" ")[1] }}
+          </div>
+          <div class="line" />
+          <div class="meeting-detail small-text">
+            {{ selectedEvent.content }}
+          </div>
+          <BaseButton
+            buttonType="common-button"
+            btnText="Close"
+            textColor="white"
+            textHover="white"
+            color="#F33C3C"
+            hoverColor="#d93333"
+            @onClick="isShow = false, selectedEvent = null"
+            >
+          </BaseButton>
+        </div>
+      </div>
+  </teleport>
   </div>
 </template>
 
@@ -159,6 +188,8 @@ export default {
       selectedExecutive: null,
       selectedId: null,
       isSearchMobile: false,
+      isShow: false,
+      selectedEvent: null
     };
   },
   computed: {
@@ -184,9 +215,10 @@ export default {
       });
     },
     getEvents() {let events = [];if (this.selectedId) {for (let index = 0;index < this.$store.getters.getterAllMeetings.length;index++) {if (this.$store.getters.getterAllMeetings[index].attendees.includes(this.selectedId)) {var e = new Date(this.$store.getters.getterAllMeetings[index].start),t = new Date(e),n = 10 > t.getMinutes() ? "0" + t.getMinutes() : t.getMinutes(),s = new Date(this.$store.getters.getterAllMeetings[index].end),i = new Date(s),g = 10 > i.getMinutes() ? "0" + i.getMinutes() : i.getMinutes();events.push({start:this.$store.getters.getterAllMeetings[index].start.split("T")[0] +" " +t.getUTCHours() +":" +n,end:this.$store.getters.getterAllMeetings[index].end.split("T")[0] +" " +i.getUTCHours() +":" +g,title: this.$store.getters.getterAllMeetings[index].title,content:this.$store.getters.getterAllMeetings[index].meeting_detail,});}}} else {for (let index = 0;index < this.$store.getters.getterAllMeetings.length;index++) {var e = new Date(this.$store.getters.getterAllMeetings[index].start),t = new Date(e),n = 10 > t.getMinutes() ? "0" + t.getMinutes() : t.getMinutes(),s = new Date(this.$store.getters.getterAllMeetings[index].end),i = new Date(s),g = 10 > i.getMinutes() ? "0" + i.getMinutes() : i.getMinutes();events.push({start:this.$store.getters.getterAllMeetings[index].start.split("T")[0] +" " +t.getUTCHours() +":" +n,end:this.$store.getters.getterAllMeetings[index].end.split("T")[0] +" " +i.getUTCHours() +":" +g,title: this.$store.getters.getterAllMeetings[index].title,content:this.$store.getters.getterAllMeetings[index].meeting_detail,});}}return events;},
-  },
+    },
   methods: {
     ...mapActions(["getMyExecutives", "getExecutiveTitle", "getAllMeetings"]),
+    onEventClick(event, e) {this.isShow = true, this.selectedEvent = event, e.stopPropagation()},
     onFocus() {
       document.getElementById("search-input-cal").placeholder = this.text['calendar']['focusSearch'];
     },
@@ -230,6 +262,12 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/colors/webColors.scss";
+.meeting-detail::-webkit-scrollbar {display: block !important;-ms-overflow-style: auto !important;scrollbar-width: auto !important;background-color: transparent;width: 1rem;}
+.meeting-detail::-webkit-scrollbar-track {margin: 0 1rem;border-radius: 0.5rem;}
+.meeting-detail::-webkit-scrollbar-thumb {background-color: $grey;border-radius: 0.5rem;transition: all 0.2s ease-in-out;}
+.meeting-detail::-webkit-scrollbar-thumb:hover {background-color: $darkGrey;}
+.pop-up {.meeting-detail{margin-bottom: 1.8rem;height: 12rem;overflow-y: scroll;}.line {width: 100% !important;margin: 1.5rem 0;height: 0.1rem;background-color: $grey;}top: 50%;left: 50%;transform: translate(-50%, -50%);position: fixed;z-index: 12;border-radius: 2.5rem;display: flex;row-gap:1rem;flex-direction: column;background-color: $white;width: 64rem;padding: 2.8rem 2.2rem;animation-name: appears;animation-duration: 0.5s;animation-iteration-count: 1;.date,.time {color: $primaryViolet;.icon {margin-right: 1rem;}}}
+.modal {.sending{color:$yellow}width: 100%;height: 100vh;position: fixed;background-color: rgba(24, 24, 26, 0.4);z-index: 11;display: flex;flex-direction: column;align-items: center;justify-content: center;}
 .selected-executives {background-color: $white;padding: 1.6rem 2rem;border-radius: 1rem;display: flex;align-items: center;column-gap: 1rem;margin-bottom: 1rem;.selected-executive {width: fit-content;height: 3rem;background-color: $fadedViolet;padding: 1rem;border-radius: 1rem;display: flex;align-items: center;color: $primaryViolet;transition: 0.3s all ease-in-out;column-gap: 0.6rem;.icon {color: $white;background-color: $error;border-radius: 50%;height: 1.2rem;width: 1.2rem;padding: 0.2rem;}cursor: pointer;&:hover {background-color: $primaryGrey;color: $darkGrey;}}}
 .calendar-screen {.body {padding: 3rem;.first-body-section {grid-template-columns: 1fr 2fr;column-gap: 3rem;animation-name: appearsBottom;animation-duration: 0.75s;animation-iteration-count: 1;.first-col {display: flex;flex-direction: column;.card {overflow: hidden;position: relative;height: 32rem;width: 100%;background-color: $white;border-radius: 2.5rem;}.filter-executive {width: 100%;height: 54rem;display: flex;flex-direction: column;row-gap: 1rem;position: relative;margin-top: 3rem;.label {color: var(--outsideText);}.search-filter {position: relative;width: 100%;display: flex;align-items: center;justify-items: center;.input-icon {width: 100%;display: flex;align-items: center;justify-items: center;input[type="text"] {padding: 1rem 1.4rem;width: 100%;height: 4rem;border-radius: 0.5rem;border: none;background-color: $white;font-family: "Poppins", sans-serif;}input[type="text"]:focus {outline: none;border: 0.1rem solid $primaryViolet;}input::placeholder {font-size: 1.4rem;color: $darkGrey;}.icon {position: absolute;right: 0;font-size: 1.4rem;margin-right: 1rem;color: $darkGrey;}}}.list-executive-card::-webkit-scrollbar {display: block !important;-ms-overflow-style: auto !important;scrollbar-width: auto !important;background-color: transparent;width: 1.4rem;}.list-executive-card::-webkit-scrollbar-track {margin: 1rem;border-radius: 0.5rem;}.list-executive-card::-webkit-scrollbar-thumb {background-color: $grey;border-radius: 0.5rem;transition: all 0.2s ease-in-out;}.list-executive-card::-webkit-scrollbar-thumb:hover {background-color: $darkGrey;}.list-executive-card {width: 100%;height: 100%;border-radius: 1.5rem;background-color: $white;overflow: hidden;.not-found {padding: 1.8rem;width: 100%;display: flex;align-items: center;justify-content: center;height: 100%;text-align: center;color: $darkGrey;}.loading {animation-name: floating;-webkit-animation-name: floating;animation-duration: 3s;-webkit-animation-duration: 3s;animation-iteration-count: infinite;-webkit-animation-iteration-count: infinite;}}}}.calendar-show {overflow: hidden;position: relative;height: 82rem;width: 100%;background-color: $white;border-radius: 2.5rem;}}}}
 .mobile-button-actions {display: none;right: 0%;bottom: 0%;}.mobile-button-search {justify-content: center;align-items: center;color: $white;font-size: 2rem;width: 6.4rem;height: 6.4rem;border-radius: 1rem;background-color: $darkViolet;box-shadow: 1.8rem 1.8rem 1.3rem 0 #ababab4d;transform: translateX(-5rem) translateY(-5rem);position: relative;.number-of-executive {transform: translateX(1rem) translateY(-1rem);position: absolute;top: 0%;right: 0%;background-color: $error;width: 2.4rem;height: 2.4rem;border-radius: 50%;display: flex;align-items: center;justify-content: center;outline: 0.4rem solid $white;}}.mobile-button-search:active {animation: press 0.2s 1 linear;}.search-mobile-button {display: none;}
