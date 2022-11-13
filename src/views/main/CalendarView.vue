@@ -139,7 +139,7 @@
             <i class="icon fa-regular fa-calendar"></i>{{ selectedEvent.start.format('DD-MM-YYYY') }}
           </div>
           <div class="time content-text">
-            <i class="icon fa-regular fa-clock"></i>{{ selectedEvent.start.split(" ")[1] }} - {{ selectedEvent.end.split(" ")[1] }}
+            <i class="icon fa-regular fa-clock"></i>{{ selectedEvent.start }} - {{ selectedEvent.end }}
           </div>
           <div class="line" />
           <div class="meeting-detail small-text">
