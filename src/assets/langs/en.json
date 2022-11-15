@@ -183,6 +183,7 @@
         "delete": "Delete",
         "required": "required",
         "timeslots": "Timeslots",
+        "suggest": "Please provide all possible time",
         "errorAlreadyReply": "You already replied to this poll appointment, so no need to reply again"
     },
     "confirmed": {
