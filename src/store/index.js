@@ -156,7 +156,6 @@ export default createStore({
       const index = state.myBeConfirmeds.findIndex(
         (list) => list.id == data.id
       );
-      console.log(index);
       if (index !== -1) {
         state.myBeConfirmeds.splice(index, 1);
       }
@@ -260,8 +259,6 @@ export default createStore({
             headers: authHeader(),
           }
         );
-        console.log(payload);
-        console.log(data);
         context.commit("UPDATE_PROFILE", data.data.data);
       } catch (error) {
         console.log(error.response);
@@ -676,7 +673,6 @@ export default createStore({
           responseType: "blob",
         })
         .then((response) => {
-          console.log(response);
           var fileURL = window.URL.createObjectURL(new Blob([response.data]));
           var fileLink = document.createElement("a");
           fileLink.href = fileURL;

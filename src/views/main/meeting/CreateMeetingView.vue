@@ -283,7 +283,6 @@ export default {
   components: { BaseButton, LitepieDatepicker, BaseAlert },
   setup() {
     const dDate = (date) => {
-      console.log(new Date().getDate());
       return date < new Date();
     };
     const formatter = ref({

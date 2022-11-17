@@ -54,14 +54,14 @@
                 </div>
                 <div class="noti-detail">
                   <div class="meeting-title">
-                    <div class="bold-small-text"><span v-if="inbox.title > 13">{{ inbox.title.substring(0, 13) }}</span><span v-else>{{ inbox.title }}</span></div>
+                    <div class="bold-small-text"><span v-if="inbox.title.length > 25">{{ inbox.title.substring(0, 25) }}...</span><span v-else>{{ inbox.title }}</span></div>
                     <div class="small-text date">
                       {{ formatDateTime(inbox.create_at) }}
                     </div>
                   </div>
                   <div class="small-text">
-                    <span v-if="inbox.meeting_detail.length > 13"
-                      >{{ inbox.meeting_detail.substring(0, 13) }}...</span
+                    <span v-if="inbox.meeting_detail.length > 25"
+                      >{{ inbox.meeting_detail.substring(0, 25) }}...</span
                     >
                     <span v-else>{{ inbox.meeting_detail }}</span>
                   </div>
