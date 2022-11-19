@@ -200,6 +200,7 @@
             :location="incoming.location"
             :link="incoming.attached_link"
             :file="incoming.attached_file"
+            @handleClick="navToMeetingDetail"
           />
         </div>
         <div v-else class="bold-content-text no-incoming-meetings">{{text['home']['noIncomingMeeting']}}</div>
@@ -297,6 +298,9 @@ export default {
     },
     navToShowExecutiveDetail(index) {
       this.$router.push({ name: "executive", params: { showIndex: index } });
+    },
+    navToMeetingDetail(id) {
+      this.$router.push({ path: `/meetings-inbox/inbox/${id}`, });
     },
     formatTitle(str) {
       return this.getterExecutiveTitles[str];

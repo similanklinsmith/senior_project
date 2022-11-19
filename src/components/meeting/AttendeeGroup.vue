@@ -146,6 +146,7 @@ export default {
   },
   methods: {
     btnAction() {
+      this.$emit('handleClick', this.id)
       this.$router.push({ path: `/meetings-inbox/inbox/${this.id}`, });
     },
     formatDay(date, isDate = false) {
