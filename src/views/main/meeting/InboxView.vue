@@ -322,7 +322,7 @@ export default {
       return formatDateTimeHeader(date, lang);
     },
     formatDateShort(date) {
-      return formatDateTimeInbox(date);
+      return formatDateTimeInbox(date, false);
     },
     formatTitle(str) {
       return this.getterExecutiveTitles[str];

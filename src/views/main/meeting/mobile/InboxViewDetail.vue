@@ -167,7 +167,7 @@ export default {
       return formatDateTimeHeader(date, lang);
     },
     formatDateShort(date) {
-      return formatDateTimeInbox(date);
+      return formatDateTimeInbox(date, false);
     },
     async getInboxDetail() {
       this.inboxDetail = await this.$store.dispatch(
