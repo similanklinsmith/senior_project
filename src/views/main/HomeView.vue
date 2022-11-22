@@ -267,7 +267,7 @@ export default {
     },
     notificationMeeting() {
       return this.getterMyInboxes.filter((inbox) => {
-        return new Date(Date.now()) == new Date(inbox.create_at);
+        return new Date(Date.now()).toDateString() == new Date(inbox.create_at).toDateString();
       });
     },
   },
