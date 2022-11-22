@@ -36,7 +36,7 @@
           >
             <div
               class="profile-image"
-              v-if="attendee.image == 'default_profile.png'"
+              v-if="attendee.executive.img_profile == 'default_profile.png'"
             >
               <img
                 src="@/assets/decorations/sample_profile.png"
@@ -45,7 +45,7 @@
             </div>
             <div class="real-profile-image" v-else>
               <img
-                :src="urlImage + '/' + attendee.executive.image"
+                :src="urlImage + '/' + attendee.executive.img_profile"
                 alt="sample profile illustration"
                 @error="
                   $event.target.src =
@@ -96,7 +96,6 @@
                 </div>
                 <div class="file-details">
                   <div class="file-name">{{ inboxDetail.attached_file }}</div>
-                  <!-- <div class="file-size">5.28KB</div> -->
                 </div>
               </div>
               <div class="file-download">
@@ -197,192 +196,13 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/colors/webColors.scss";
-.grey {
-  color: $grey;
-}
+.grey {color: $grey;}
 .date-time,
-.attendees-label {
-  color: $darkGrey;
-  font-size: 1.8rem;
-}
-.main-details {
-  display: grid;
-  grid-template-columns: 0.08fr 0.92fr;
-  margin: 2rem 0rem;
-  .label-header,
-  .detail {
-    display: flex;
-    flex-direction: column;
-    row-gap: 2.4rem;
-    width: fit-content;
-    color: $primaryViolet;
-    font-size: 2rem;
-  }
-}
-.attendees {
-  display: flex;
-  column-gap: 2rem;
-  .profile-image {
-    border-radius: 1rem;
-    width: 6rem;
-    height: 6rem;
-    background-color: $fadedViolet;
-    padding: 0.8rem;
-    img {
-      width: 100%;
-      height: 100%;
-    }
-  }
-  .attendee,
-  .attendee-more {
-    cursor: pointer;
-    width: 6rem;
-    height: 6rem;
-    border-radius: 0.5rem;
-    background-color: $fadedViolet;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .attendee-more {
-    background-color: $grey;
-    color: $primaryViolet;
-  }
-}
-.description {
-  display: grid;
-  grid-template-columns: 0.08fr 0.92fr;
-  font-size: 2rem;
-  line-height: 1.6;
-  margin: 2rem 0;
-  .icon {
-    color: $primaryViolet;
-  }
-  .description-content {
-    max-height: 40rem;
-    overflow: scroll;
-  }
-  .description-content::-webkit-scrollbar {
-    display: block !important;
-    -ms-overflow-style: auto !important;
-    scrollbar-width: auto !important;
-    background-color: transparent;
-    width: 1.4rem;
-  }
-  .description-content::-webkit-scrollbar-track {
-    margin: 1rem;
-    border-radius: 0.5rem;
-  }
-  .description-content::-webkit-scrollbar-thumb {
-    background-color: $grey;
-    border-radius: 0.5rem;
-    transition: all 0.2s ease-in-out;
-  }
-  .description-content::-webkit-scrollbar-thumb:hover {
-    background-color: $darkGrey;
-  }
-}
-.meeting-label {
-  font-size: 2rem;
-  font-weight: 500;
-  color: $primaryViolet;
-}
-.meeting-link {
-  width: 100%;
-  background-color: $primaryGrey;
-  border-radius: 0.5rem;
-  display: flex;
-  padding: 2.8rem 1.8rem;
-  align-items: center;
-  position: relative;
-  .copy-icon {
-    cursor: pointer;
-    width: 7.2rem;
-    height: 100%;
-    position: absolute;
-    right: 0%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: rgba(255, 255, 255, 0.5);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(10px);
-    border-radius: 0.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-  }
-  .icon {
-    font-size: 2.4rem;
-    color: $darkGrey;
-  }
-  .meeting-link-text {
-    font-size: 2rem;
-    color: $darkViolet;
-    overflow-x: scroll;
-    word-wrap: break-word;
-    line-height: 1.6;
-  }
-}
-.attachment-file {
-  margin-top: 2rem;
-  display: flex;
-  flex-direction: column;
-  row-gap: 2rem;
-  font-size: 2rem;
-  .grey {
-    font-size: 1.6rem;
-  }
-  .attachment-file-label {
-    font-weight: 500;
-    color: $primaryViolet;
-  }
-  .attachment-download {
-    &:hover {background-color: $fadedViolet;.file-download {color: $primaryViolet !important;}}
-    transition: 0.3s all ease-in-out;
-    cursor: pointer;
-    width: 35rem;
-    border-radius: 0.5rem;
-    padding: 2rem 2.4rem;
-    background-color: $primaryGrey;
-    display: flex;
-    row-gap: 1.5rem;
-    align-items: center;
-    .file-section {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      width: 100%;
-      .first-section {
-        display: flex;
-        column-gap: 1rem;
-        align-items: center;
-        .file-icon {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          width: 4rem;
-          height: 4rem;
-          border-radius: 0.5rem;
-          background-color: $white;
-          font-size: 2rem;
-          color: $primaryViolet;
-        }
-        .file-details {
-          display: flex;
-          flex-direction: column;
-          .file-name {
-            color: $darkViolet;
-          }
-          .file-size {
-            font-size: 1.8rem;
-            color: $darkGrey;
-          }
-        }
-      }
-      .file-download {
-        font-size: 2rem;
-        color: $darkGrey;
-      }
-    }
-  }
-}
+.attendees-label {color: $darkGrey;font-size: 1.8rem;}
+.main-details {display: grid;grid-template-columns: 0.08fr 0.92fr;margin: 2rem 0rem;.label-header,.detail {display: flex;flex-direction: column;row-gap: 2.4rem;width: fit-content;color: $primaryViolet;font-size: 2rem;}}
+.attendees {display: flex;column-gap: 2rem;.profile-image {border-radius: 1rem;width: 6rem;height: 6rem;background-color: $fadedViolet;padding: 0.8rem;img {width: 100%;height: 100%;}}.attendee,.attendee-more {cursor: pointer;width: 6rem;height: 6rem;border-radius: 0.5rem;background-color: $fadedViolet;display: flex;justify-content: center;align-items: center;}.attendee-more {background-color: $grey;color: $primaryViolet;}}
+.description {display: grid;grid-template-columns: 0.08fr 0.92fr;font-size: 2rem;line-height: 1.6;margin: 2rem 0;.icon {color: $primaryViolet;}.description-content {max-height: 40rem;overflow: scroll;}.description-content::-webkit-scrollbar {display: block !important;-ms-overflow-style: auto !important;scrollbar-width: auto !important;background-color: transparent;width: 1.4rem;}.description-content::-webkit-scrollbar-track {margin: 1rem;border-radius: 0.5rem;}.description-content::-webkit-scrollbar-thumb {background-color: $grey;border-radius: 0.5rem;transition: all 0.2s ease-in-out;}.description-content::-webkit-scrollbar-thumb:hover {background-color: $darkGrey;}}
+.meeting-label {font-size: 2rem;font-weight: 500;color: $primaryViolet;}
+.meeting-link {width: 100%;background-color: $primaryGrey;border-radius: 0.5rem;display: flex;padding: 2.8rem 1.8rem;align-items: center;position: relative;.copy-icon {cursor: pointer;width: 7.2rem;height: 100%;position: absolute;right: 0%;display: flex;justify-content: center;align-items: center;background: rgba(255, 255, 255, 0.5);backdrop-filter: blur(5px);-webkit-backdrop-filter: blur(10px);border-radius: 0.5rem;border: 1px solid rgba(255, 255, 255, 0.18);}.icon {font-size: 2.4rem;color: $darkGrey;}.meeting-link-text {font-size: 2rem;color: $darkViolet;overflow-x: scroll;word-wrap: break-word;line-height: 1.6;}}
+.attachment-file {margin-top: 2rem;display: flex;flex-direction: column;row-gap: 2rem;font-size: 2rem;.grey {font-size: 1.6rem;}.attachment-file-label {font-weight: 500;color: $primaryViolet;}.attachment-download {&:hover {background-color: $fadedViolet;.file-download {color: $primaryViolet !important;}}transition: 0.3s all ease-in-out;cursor: pointer;width: 35rem;border-radius: 0.5rem;padding: 2rem 2.4rem;background-color: $primaryGrey;display: flex;row-gap: 1.5rem;align-items: center;.file-section {display: flex;justify-content: space-between;align-items: center;width: 100%;.first-section {display: flex;column-gap: 1rem;align-items: center;.file-icon {display: flex;justify-content: center;align-items: center;width: 4rem;height: 4rem;border-radius: 0.5rem;background-color: $white;font-size: 2rem;color: $primaryViolet;}.file-details {display: flex;flex-direction: column;.file-name {color: $darkViolet;}.file-size {font-size: 1.8rem;color: $darkGrey;}}}.file-download {font-size: 2rem;color: $darkGrey;}}}}
 </style>
