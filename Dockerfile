@@ -1,4 +1,6 @@
 FROM node:14 as build
+RUN apk update && \
+    apk add --no-cache tzdata
 WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json /app/package.json
