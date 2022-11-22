@@ -688,10 +688,11 @@ export default createStore({
         const data = await customAxios.instance.get(this.state.myIncomingURL, {
           headers: authHeader(),
         });
+        console.log(data);
         context.commit(
           "GET_MY_INCOMING",
           data.data.data.sort((a, b) => {
-            return new Date(a.meeting_date) - new Date(b.meeting_date);
+            return new Date(a.meeting_start) - new Date(b.meeting_start);
           })
         );
         context.commit("GET_LOADING_STATUS", false);
