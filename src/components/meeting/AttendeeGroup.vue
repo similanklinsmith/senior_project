@@ -21,7 +21,7 @@
           >
             <div
               class="profile-image"
-              v-if="attendee.image == 'default_profile.png'"
+              v-if="attendee.img_profile == 'default_profile.png'"
             >
               <img
                 src="@/assets/decorations/sample_profile.png"
@@ -30,7 +30,7 @@
             </div>
             <div class="real-profile-image" v-else>
               <img
-                :src="urlImage + '/' + attendee.image"
+                :src="urlImage + '/' + attendee.img_profile"
                 alt="sample profile illustration"
                 @error="
                   $event.target.src =
@@ -190,6 +190,6 @@ export default {
 @media (max-width: 63.5em) {.meeting {padding: 1.4rem 2.2rem;margin-bottom: 1.8rem;}.meeting-card {.time {margin-left: 0rem;}.line {margin: 0 3rem;}.meeting-detail {.additional-detail {column-gap: 1.5rem;.icon {margin-right: 0.6rem;}}}}}
 @media (max-width: 48em) {.meeting-card {width: 85%;.line {margin: 0 2rem;}}}
 @media (max-width: 40rem) {.meeting-card {.meeting-detail {.additional-detail {.attached-file,.attached-link {display: none;}}}}}
-@media (max-width: 26.75em) {.meeting {box-shadow: rgba(0, 0, 0, 0.04) 0px 3px 5px;}.mobile-meeting-card {display: flex;flex-direction: column;width: 100%;.first-section {padding: 4rem 4.8rem;display: flex;flex-direction: column;width: 100%;height: 100%;row-gap: 2.8rem;border-bottom: 1px solid $darkGrey;.date-time {display: flex;column-gap: 3.2rem;color: $primaryViolet;.date,.time {font-size: 2rem;.icon {margin-right: 1rem;}}}.attendees {display: flex;column-gap: 2rem;.attendee {width: 6.4rem;height: 6.4rem;border-radius: 0.5rem;background-color: $fadedViolet;.profile-image {border-radius: 1rem;width: 6.4rem;height: 6.4rem;background-color: $fadedViolet;padding: 0.8rem;img {width: 100%;height: 100%;}}}.attendee-more {width: 6.4rem;height: 6.4rem;border-radius: 0.5rem;background-color: $grey;display: flex;justify-content: center;align-items: center;.remark-text {color: $primaryViolet;}}}}.second-section {padding: 3.6rem 4.8rem;display: flex;justify-content: space-between;align-items: center;.location {color: $primaryViolet;.icon {margin-right: 1rem;font-size: 2rem;}span {color: $highlightViolet;}}.attachments {display: flex;column-gap: 4rem;.file,.link {font-size: 2rem;background-color: $yellow;padding: 2rem;border-radius: 50%;position: relative;display: flex;justify-content: center;align-items: center;.icon {position: absolute;color: $white;}}}}}.meeting {padding: 0;overflow: hidden;margin-bottom: 2.8rem;}.meeting-card {display: none;}.btnAction {display: none;}}
+@media (max-width: 26.75em) {.meeting {box-shadow: rgba(0, 0, 0, 0.04) 0px 3px 5px;}.mobile-meeting-card {display: flex;flex-direction: column;width: 100%;.first-section {padding: 4rem 4.8rem;display: flex;flex-direction: column;width: 100%;height: 100%;row-gap: 2.8rem;border-bottom: 1px solid $darkGrey;.date-time {display: flex;column-gap: 3.2rem;color: $primaryViolet;.date,.time {font-size: 2rem;.icon {margin-right: 1rem;}}}.attendees {display: flex;column-gap: 2rem;.attendee {width: 6.4rem;height: 6.4rem;border-radius: 0.5rem;background-color: $fadedViolet;.real-profile-image {border-radius: 1.6rem;width: 6.4rem;height: 6.4rem;overflow: hidden;img {height: 100%;width: 100%;object-fit: cover;}}.profile-image {border-radius: 1.6rem;width: 6.4rem;height: 6.4rem;background-color: $fadedViolet;padding: 0.8rem;img {width: 100%;height: 100%;}}}.attendee-more {width: 6.4rem;height: 6.4rem;border-radius: 0.5rem;background-color: $grey;display: flex;justify-content: center;align-items: center;.remark-text {color: $primaryViolet;}}}}.second-section {padding: 3.6rem 4.8rem;display: flex;justify-content: space-between;align-items: center;.location {color: $primaryViolet;.icon {margin-right: 1rem;font-size: 2rem;}span {color: $highlightViolet;}}.attachments {display: flex;column-gap: 4rem;.file,.link {font-size: 2rem;background-color: $yellow;padding: 2rem;border-radius: 50%;position: relative;display: flex;justify-content: center;align-items: center;.icon {position: absolute;color: $white;}}}}}.meeting {padding: 0;overflow: hidden;margin-bottom: 2.8rem;}.meeting-card {display: none;}.btnAction {display: none;}}
 @media (max-width: 21.75em) {.mobile-meeting-card {.first-section {padding: 4rem 3.6rem;}.second-section {padding: 3.6rem 3.6rem;}}}
 </style>
