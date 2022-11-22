@@ -24,14 +24,14 @@
         "addExecutive": "Add executive",
         "showExecutive": "Show all",
         "calendar": "Calendar",
-        "incomingMeeting": "Incoming meetings",
+        "incomingMeeting": "Upcoming meetings",
         "seeAllMeeting": "See all meetings",
         "start-end": "start-end time",
         "file": "attached file",
         "link": "attached link",
         "showDetail": "show details",
         "noNewMeeting": "There is no newly created meetings today",
-        "noIncomingMeeting": "There is not incoming meetings today",
+        "noIncomingMeeting": "There is not upcoming meetings today",
         "newlyIncoming": "Newly created meetings today"
     },
     "executive": {
