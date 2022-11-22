@@ -688,7 +688,6 @@ export default createStore({
         const data = await customAxios.instance.get(this.state.myIncomingURL, {
           headers: authHeader(),
         });
-        console.log(data);
         context.commit(
           "GET_MY_INCOMING",
           data.data.data.sort((a, b) => {
