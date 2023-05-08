@@ -1,0 +1,63 @@
+name: ci-cd front-end
+
+on:
+  push:
+    branches: [dev]
+  pull_request:
+    branches: [dev]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Create ENV File
+        run: |
+          touch .env
+          echo VUE_APP_API_PATH=${{ secrets.BACKEND_URL }} >> .env
+          echo VUE_APP_FIREBASE_API_KEY=${{ secrets.FIREBASE_API }} >> .env
+          echo VUE_APP_FIREBASE_AUTH_DOMAIN=${{ secrets.FIREBASE_AUTH }} >> .env
+          echo VUE_APP_FIREBASE_PROJECT_ID=${{ secrets.FIREBASE_PROJECT }} >> .env
+          echo VUE_APP_FIREBASE_STORAGE_BUCKET=${{ secrets.FIREBASE_STORAGE }} >> .env
+          echo VUE_APP_FIREBASE_MESSAGING_SENDER_ID=${{ secrets.FIREBASE_MESSAGING }} >> .env
+          echo VUE_APP_FIREBASE_APP_ID=${{ secrets.FIREBASE_APP }} >> .env
+          echo VUE_APP_FIREBASE_MEASUREMENT_ID=${{ secrets.FIREBASE_MEASUREMENT }} >> .env
+          echo VUE_APP_API_KEY=${{ secrets.API_KEY }} >> .env
+          ls -a
+
+      - name: Build Docker image
+        run: docker build . --tag ghcr.io/momento-appointment-scheduling-system/front-end
+
+      - name: Push Docker image to Github Container registry
+        run: docker push ghcr.io/momento-appointment-scheduling-system/front-end
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login ssh to remote server and deploy container
+        uses: appleboy/ssh-action@v0.1.2
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          username: ${{ secrets.SSH_USERNAME }}
+          script: |
+            export CR_PAT=${{ secrets.GITHUB_TOKEN }}
+            echo $CR_PAT | docker login ghcr.io -u mai126 --password-stdin
+            docker ps
+            docker pull ghcr.io/momento-appointment-scheduling-system/front-end
+            docker rm -f frontend
+            docker images
+            docker-compose up -d
+            docker image prune -f
+            docker ps -a
